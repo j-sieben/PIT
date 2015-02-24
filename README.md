@@ -9,6 +9,7 @@ This tool is designed to help you manage your
   - trace information
   - assertion functions
   - user messages
+
 within a single package, with a single API and least possible code.
 
 Yet, PIT gives you
