@@ -18,7 +18,7 @@ Yet, PIT gives you
   - simple api with least possible code
   
 The code is free to use and I hope that you'll enjoy doing so. Should any errors occur, 
-feel free to describe them here.
+feel free to describe them here, I'll do my best to remove them.
 
 Best regards,
 
