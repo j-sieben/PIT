@@ -15,7 +15,8 @@ Yet, PIT gives you
   - unlimited number of different output channels to write messages to
   - full i18n support, messages are translatable using a XLIFF file and an open source editor
   - possibility to maintain a full call stack with timing and cpu-timing option
-  - simple api with least possible code
+  - fully parameterizable, ability to debug a single session within a connection pool environment
+  - ability to define different debug and tracing settings per session
   
 The code is free to use and I hope that you'll enjoy doing so. Should any errors occur, 
 feel free to describe them here, I'll do my best to remove them.
