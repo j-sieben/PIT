@@ -1,0 +1,404 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package pit_admin</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="DOAG.pit_admin">
+ <META name="description" content="Package to administer PIT.">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>DOAG</SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package pit_admin</P>
+Package to administer PIT. Provides methods to create or maintain messages.<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#get_message_text">get_message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Function to retrieve the text for a given language without replacements
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#merge_message">merge_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to maintain messages
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#translate_message">translate_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to translate a given message
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#check_error">check_error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to check whether a predefined Oracle error shall be redefined
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#get_translation_xml">get_translation_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Function to retrieve an XML file in format XLIFF to translate messages
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#translate_messages">translate_messages</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to import translated messages into the database
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#create_message_package">create_message_package</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to (re-) create package MSG
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="get_message_text"></A>
+<P CLASS="TYPE_TITLE">
+get_message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_message_text(p_message_name     in varchar2,
+                          p_message_language in varchar2 := null)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Function to retrieve the text for a given language without replacements<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This function is used to review the text a given message has in a desired language<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message to retrieve the text for<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle language reference<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="merge_message"></A>
+<P CLASS="TYPE_TITLE">
+merge_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure merge_message(p_message_name     in varchar2,
+                        p_message_text     in clob,
+                        p_severity         in number,
+                        p_message_language in varchar2 default null,
+                        p_error_number     in number default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to maintain messages<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the respective message. Must be unique for the default language<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_text&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message text with replacement anchors in the format #n#, where n is an integer that references up to 50 replacement items<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_severity&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to a severity as defined in PIT.LEVEL_&lt;level&gt; constants. Ranges from PIT.LEVEL_FATAL to PIT.LEVEL_VERBOSE or 20..70<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to the Oracle supported language names, if null, the default language is used (as defined in MESSAGE_LANGUAGES)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_error_number&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional reference to an Oracle system error number. must not be a number of an Oracle predefined error number. If null and the severity of the message is in 20|30, then an error number from the range -20999..-20000 is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="translate_message"></A>
+<P CLASS="TYPE_TITLE">
+translate_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure translate_message(p_message_name     in varchar2,
+                            p_message_text     in clob,
+                            p_message_language in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to translate a given message<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Use this procedure as a shortcut for an already existing message, if the only task is to translate it.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the respective message. Must be unique for the default language<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_text&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message text with replacement anchors in the format #n#, where n is an integer that references up to 50 replacement items<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to the Oracle supported language names<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="check_error"></A>
+<P CLASS="TYPE_TITLE">
+check_error
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure check_error(p_message_name in varchar2, p_error_number in number)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to check whether a predefined Oracle error shall be redefined<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called whenever a new message is inserted into table MESSAGE with an Oracle error number. The function checks whether the Oracle error number is already a defined error, such as -1 and DUP_VAL_ON_INDEX. If so, the procedure throws an error. Limitation: This procedure can only see Exceptions that are defined in packages from SYSTEM or SYS and only exceptions from non wrapped sources.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_error_number&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Error number for which a PIT message shall be created<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="get_translation_xml"></A>
+<P CLASS="TYPE_TITLE">
+get_translation_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_translation_xml(p_target_language in varchar2) return XmlType
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Function to retrieve an XML file in format XLIFF to translate messages<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this function to create an XLIFF-File that can be used to translate all error messages into a target language at once.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle supported language name the messages shall be translated to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="translate_messages"></A>
+<P CLASS="TYPE_TITLE">
+translate_messages
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure translate_messages(p_translation_xml in xmltype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to import translated messages into the database<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+If provided with a translated XLIFF-Instanve, this procedure creates the necessary entries in table MESSAGE for the new language.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_translation_xml&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XLIFF-instance with the translated messages<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="create_message_package"></A>
+<P CLASS="TYPE_TITLE">
+create_message_package
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure create_message_package(p_directory varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to (re-) create package MSG<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+If called with&nbsp; no parameter, this procedure creates package MSG based on the actual messages from table MESSAGE. It automatically maps all custom or oracle errors and creates respective exception variables for them. If called with a directory name, the package is not created but written to the file system for later creation or deployment purposes.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_directory&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional parameter to define a directory object the creation script shall be written to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

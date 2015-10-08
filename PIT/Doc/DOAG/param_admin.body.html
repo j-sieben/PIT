@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body param_admin</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="DOAG.param_admin">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>DOAG</SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body param_admin</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#edit_parameter_group">edit_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#edit_parameter_type">edit_parameter_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#edit_parameter">edit_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="edit_parameter_group"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_group(p_parameter_group_id varchar2,
+                               p_group_description  varchar2,
+                               p_is_modifiable      varchar2)
+
+</PRE>
+<HR>
+<A NAME="edit_parameter_type"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_type(p_parameter_type_id varchar2,
+                              p_type_description  varchar2)
+
+</PRE>
+<HR>
+<A NAME="edit_parameter"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter(p_parameter_id          in varchar2,
+                         p_parameter_group_id    in varchar2,
+                         p_parameter_description in varchar2,
+                         p_string_value          in clob default null,
+                         p_xml_value             in xmltype default null,
+                         p_integer_value         in number default null,
+                         p_float_value           in number default null,
+                         p_date_value            in date default null,
+                         p_timestamp_value       in timestamp with time zone default null,
+                         p_boolean_value         in varchar2 default null,
+                         p_is_modifiable         in varchar2 default null,
+                         p_parameter_type_id     in varchar2 default null,
+                         p_validation_string     in varchar2 default null,
+                         p_validation_message    in varchar2 default null)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

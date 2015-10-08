@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Trigger trg_message_briu</TITLE>
+ <META name="object" content="TRIGGER">
+ <META name="name" content="DOAG.trg_message_briu">
+ <META name="description" content="Asserts that <ul><li>any message with severity &lt;= is provided with an error number, either passed in or -20000.</li>">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>DOAG</SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Trigger trg_message_briu</P>
+<PRE CLASS="DECL_TEXT">
+trigger trg_message_briu before insert or update on message for each row
+
+</PRE><BR>
+Asserts that <ul><li>any message with severity &lt;= is provided with an error number, either passed in or -20000.</li>
+<li>any custom error number is unique and not a predefined Oracle error</li>
+<li>MESSAGE_NAME and MESSAGE_LANGUAGE are uppercase.</li></ul>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

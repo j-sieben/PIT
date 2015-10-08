@@ -1,0 +1,24 @@
+
+create table pit_log (
+  log_id integer, 
+  session_id varchar2(64 char),
+  user_name varchar2(30 byte),
+  log_date timestamp (6), 
+  msg_text clob, 
+  msg_stack varchar2(2000 char), 
+  msg_backtrace varchar2(2000 char),
+  severity number,
+  constraint pk_pit_log primary key (log_id)
+);
+
+comment on table pit_log is 'table for log entry storage of module PIT_TABLE';
+comment on column pit_log.log_id is 'technical key';
+comment on column pit_log.session_id is 'Session-Id, required to attach log messages to sessions';
+comment on column pit_log.user_name is 'connected database user';
+comment on column pit_log.log_date is 'log entry timestamp. Required for PIT_TABLE.purge method';
+comment on column pit_log.msg_text is 'Log message text';
+comment on column pit_log.msg_stack is 'Error stack in case of error';
+comment on column pit_log.msg_backtrace is 'Call stack in case of error';
+comment on column pit_log.severity is 'severity of the message logged';
+
+create index idx_pit_log_ses_user on pit_log(session_id, user_name)

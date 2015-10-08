@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Type message_type</TITLE>
+ <META name="object" content="TYPE">
+ <META name="name" content="DOAG.message_type">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL>DOAG</SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Type message_type</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Attributes"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Attributes
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#message_id">message_id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#message_name">message_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#session_id">session_id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#user_name">user_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#message_text">message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#severity">severity</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#stack">stack</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#backtrace">backtrace</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#message_type">message_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="message_id"></A>
+<P CLASS="TYPE_TITLE">
+message_id
+</P>
+<PRE CLASS="DECL_TEXT">
+message_id number
+</PRE>
+<HR>
+<A NAME="message_name"></A>
+<P CLASS="TYPE_TITLE">
+message_name
+</P>
+<PRE CLASS="DECL_TEXT">
+message_name varchar2(30 char)
+</PRE>
+<HR>
+<A NAME="session_id"></A>
+<P CLASS="TYPE_TITLE">
+session_id
+</P>
+<PRE CLASS="DECL_TEXT">
+session_id varchar2(30 char)
+</PRE>
+<HR>
+<A NAME="user_name"></A>
+<P CLASS="TYPE_TITLE">
+user_name
+</P>
+<PRE CLASS="DECL_TEXT">
+user_name varchar2(30 char)
+</PRE>
+<HR>
+<A NAME="message_text"></A>
+<P CLASS="TYPE_TITLE">
+message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+message_text clob
+</PRE>
+<HR>
+<A NAME="severity"></A>
+<P CLASS="TYPE_TITLE">
+severity
+</P>
+<PRE CLASS="DECL_TEXT">
+severity number(2,0)
+</PRE>
+<HR>
+<A NAME="stack"></A>
+<P CLASS="TYPE_TITLE">
+stack
+</P>
+<PRE CLASS="DECL_TEXT">
+stack varchar2(2000)
+</PRE>
+<HR>
+<A NAME="backtrace"></A>
+<P CLASS="TYPE_TITLE">
+backtrace
+</P>
+<PRE CLASS="DECL_TEXT">
+backtrace varchar2(2000)
+</PRE>
+<HR>
+<A NAME="message_type"></A>
+<P CLASS="TYPE_TITLE">
+message_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Function message_type(self             in out nocopy message_type,
+                      <A HREF=#message_name>message_name</A>     in varchar2,
+                      message_language in varchar2,
+                      <A HREF=#session_id>session_id</A>       in varchar2,
+                      <A HREF=#user_name>user_name</A>        in varchar2,
+                      arg_list         msg_args) return self as result
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

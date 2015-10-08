@@ -1,0 +1,10 @@
+create table message_language(
+   name varchar2(30 char),
+   default_order number(3,0),
+   constraint pk_message_languages primary key(name)
+) organization index;
+
+comment on column message_language.name is 'unique name for message language, primary key';
+comment on column message_language.default_order is 'sorting column to select message in  respective language. Highest number wins. Default-language := 10, 0=language not supported';
+
+comment on table message_language is 'Lookup-table for message languages.';

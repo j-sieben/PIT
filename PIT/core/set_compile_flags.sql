@@ -1,0 +1,1 @@
+alter session set PLSQL_CCFLAGS = 'plsql_ccflags:true, development:true';

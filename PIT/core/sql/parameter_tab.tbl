@@ -1,0 +1,39 @@
+create table parameter_tab(
+   parameter_id varchar2(30 char),
+   parameter_group_id varchar2(30 char),
+   parameter_description varchar2(200 char),
+   string_value clob,
+   xml_value xmltype,
+   integer_value number(38,0),
+   float_value number,
+   date_value date,
+   timestamp_value timestamp with time zone,
+   boolean_value char(1),
+   is_modifiable char(1),
+   parameter_type_id varchar2(30 char),
+   validation_string varchar2(4000 char),
+   validation_message varchar2(4000 char),
+   release_version varchar2(10 char),
+   constraint pk_parameter primary key (parameter_id, parameter_group_id),
+   constraint fk_param_group foreign key (parameter_group_id) references parameter_group(parameter_group_id),
+   constraint fk_param_type foreign key(parameter_type_id) references parameter_type(parameter_type_id),
+   constraint chk_param_bool_value check (boolean_value in ('Y', 'N')),
+   constraint chk_param_is_midifiable check (is_modifiable in ('N'))
+);
+
+comment on table parameter_tab is 'Central parameter table';
+comment on column parameter_tab.parameter_id is 'Primary key, alphnumeric';
+comment on column parameter_tab.parameter_group_id is 'Primary key, alphanumeric, references PARAMETER_GROUP';
+comment on column parameter_tab.parameter_description is 'Longtext of the parameter';
+comment on column parameter_tab.string_value is 'CLOB parameter';
+comment on column parameter_tab.xml_value is 'XML parameter';
+comment on column parameter_tab.integer_value is 'Integer parameter';
+comment on column parameter_tab.float_value is 'Float parameter';
+comment on column parameter_tab.date_value is 'Date parameter';
+comment on column parameter_tab.timestamp_value is 'Timestamp parameter';
+comment on column parameter_tab.boolean_value is 'Boolean parameter';
+comment on column parameter_tab.is_modifiable is 'Flag to indicate whether this parameter may be changed by the end user. Only applicable if parameter group is set to IS_MODIFIABLE. If null, parameter_group setting applies';
+comment on column parameter_tab.parameter_type_id is 'References PARAMETER_TYPE. Typ of editor used to edit parameter value';
+comment on column parameter_tab.validation_string is 'Validation chunk, PL/SQL fragment. Must provide a boolean value, without semikolon. References parameter values via #STRING#|#DATE#|#FLOAT#|#INTEGER#';
+comment on column parameter_tab.validation_message is 'Message to log if parameter validation was unsuccesful';
+comment on column parameter_tab.release_version is 'Release of first deployment of this parameter. Used to check, whether all parameters were succesfully delivered upon last deployment.';
