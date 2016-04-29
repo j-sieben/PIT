@@ -99,7 +99,8 @@ One such context is called the default context. The default context is parameter
 
 ### Output modules
 Another aspect of flexibility is the possibility to easily extend or change output modules. This is accomplished by object oriented programming. PIT uses an object called PIT_MODULE which servers as an abstract class for all output modules. If you install a new output module by inheriting from PIT_MODULE (`create type PIT_CONSOLE under PIT_MODULE` ...) this new module gets known to PIT and may be used immediately without any change to PIT itself.
-A big advantage of this approach is that - because PIT_MODULE implements all necessary functionality as stubs - you only need to implement the behaviour you require for this new output module. Say you plan to create a PIT_MAIL output module. It wouldn't make sense to implement a purge method as a sent mails cannot be purged. So if you don't need it for a given output module, you simply don't implement it. 
+A big advantage of this approach is that - because PIT_MODULE implements all necessary functionality as stubs - you only need to implement the behaviour you require for this new output module. Say you plan to create a PIT_MAIL output module. It wouldn't make sense to implement a purge method as a sent mails cannot be purged. So if you don't need it for a given output module, you simply don't implement it.
+
 Every output module may have its own set of parameters to control the behaviour of the output module.
 
 ## Administration
@@ -113,7 +114,7 @@ To administer PIT, a dedicated admin package is provided. It provides methods to
 With these methods it's easy to maintain and extend an installation file during development to create new messages on the fly. If you do so, the deplyoment file is created just along with your activities. Alternatively, you may want to have PIT_ADMIN create an installation file containing all messages in the database for you.
 
 ## Extensibility
-PIT comes ready for usage with a bunch of output modules created for you. You may want to start your changes by reviewing the output modules and adjust their behaviour. Should an output module be missing, it's easy to create a new one based on the other modules that shio with PIT. I decided to create the necessary object types but only implement the bare minimum of functionality within these types, just enough to call helper packages that carry out the heavy lifting. This way you're not exposed to object oriented programming more than absolutely necessary ... ;-)
+PIT comes ready for usage with a bunch of output modules created for you. You may want to start your changes by reviewing the output modules and adjust their behaviour. Should an output module be missing, it's easy to create a new one based on the other modules that ship with PIT. I decided to create the necessary object types but only implement the bare minimum of functionality within these types, just enough to call helper packages that carry out the heavy lifting. This way you're not exposed to object oriented programming more than absolutely necessary ... ;-)
 Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on CLIENT_IDENTIFIER, as this is the case in APEX environments, or to stick to the USER function to detect a specific user. Should this turn out to not be working for you, you may a new SESSION_ADAPTER that implements your method of detecting the session identity. Which SESSION_ADAPTER is used is based on parameters once again.
 
 ## What's more?
