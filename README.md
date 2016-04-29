@@ -56,8 +56,10 @@ As you can see, the code amount for instrumentation is minimal, no need to hardc
 ## How it works
 ### Messages
 PIT is centered around messages. A message basically consists of a message text, a language and a severity.
-All messages are ready for translation in any target language Oracle supports. To make it convenient to translate messages, all messags can be exported as XLIFF ready to be translated into a target language using any XLIFF editor. After translation, the resulting XLIFF file is simply re-imported into PIT and all messages are automatically translated.
+
 Severities range from 20 (fatal) to 70 (verbose). Along with the severity there is a custom error number that you can assign to a message. These error numbers may reference Oracle error numbers which do not have a predefined exception, such as NO_DATA_FOUND or similar. By assigning an Oracle error number to a message, the Oracle error is automatically mapped to this message. If you provide no Oracle error number, PIT automatically creates a custom error for you. No more hazzle with -20.000 numbers anymore!
+
+Messages are ready for translation in any target language Oracle supports. To make it convenient to translate messages, all messags can be exported as XLIFF ready to be translated into a target language using any XLIFF editor. After translation, the resulting XLIFF file is simply re-imported into PIT and all messages are automatically translated.
 
 All messages are accessible through a package called MSG that holds all of the messages as constants plus exceptions for all messages with severity 20 or 30. So fi if you create a message called CHILD_RECORD_FOUND, severity 30 to Oracle error number -2292, package MSG will contains entries like this:
 ```plsql
