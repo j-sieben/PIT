@@ -70,7 +70,7 @@ as
   pragma exception_init(CHILD_RECORD_FOUND_EXC, -2292);
 ...
 ```
-This package is automatically created through a procedure in the PIT_ADMIN-package and can be rebuilt at any time you see fit. As this package will be created during development time only, this package is a »normal« package in production, either deployed like any other package or created dynamically after creating all required messages.
+This package is automatically created through a procedure in the PIT_ADMIN-package and can be rebuilt at any time you see fit. As this package will be created during development time only, this package is a »normal« package in production, either deployed like any other package or created dynamically after having created all required messages.
 
 ### Using messages
 But now, what do you do with messages?
