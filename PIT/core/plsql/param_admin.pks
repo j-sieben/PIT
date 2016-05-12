@@ -14,8 +14,8 @@ as
    */
   procedure edit_parameter_group(
     p_parameter_group_id varchar2,
-	p_group_description varchar2,
-	p_is_modifiable varchar2);
+    p_group_description varchar2,
+    p_is_modifiable varchar2);
 	
   
   /* Procedure to edit the definition of a parameter type.
@@ -63,5 +63,15 @@ as
     p_parameter_type_id in varchar2 default null,
     p_validation_string in varchar2 default null,
     p_validation_message in varchar2 default null);
+    
+  
+  /* Procedure to delete a parameter
+   * %param p_parameter_id Name of the parameter
+   * %param p_parametergroup Name of the parameter group   
+   * %usage Method is used to delete a parameter from the list of parameters
+   */
+  procedure delete_parameter(
+    p_parameter_id in varchar2,
+    p_parameter_group_id in varchar2);
 end param_admin;
 /

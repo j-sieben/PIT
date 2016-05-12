@@ -22,8 +22,8 @@ select 'LOGGING_PACKAGE_INITIALIZED','AMERICAN','Finished initialization at #1#.
 select 'LOGGING_PACKAGE_INITIALIZED','GERMAN','Initialisierung beendet am #1#. Geladene Module: [#2#]',70, null from dual union all
 select 'CONTEXT_CREATED','AMERICAN','Context ##1# created and added to the available contexts list.',70, null from dual union all
 select 'CONTEXT_CREATED','GERMAN','Kontext #1# erzeugt und zur Liste der Kontexte hinzugefügt.',70, null from dual union all
-select 'CONTEXT_CHANGED','AMERICAN','Context changed from ##1# to ##2#.',70, null from dual union all
-select 'CONTEXT_CHANGED','GERMAN','Kontext von #1# auf #2# geändert.',70, null from dual union all
+select 'CONTEXT_CHANGED','AMERICAN','Context set to ##1#.',70, null from dual union all
+select 'CONTEXT_CHANGED','GERMAN','Kontext auf #1# gesetzt.',70, null from dual union all
 select 'CONTEXT_CREATION_ERROR','AMERICAN','Error initializing a new context.',70, null from dual union all
 select 'CONTEXT_CREATION_ERROR','GERMAN','Fehler bei der Initialisierung eines neuen Kontextes.',70, null from dual union all
 select 'CONTEXT_MISSING','AMERICAN','Tried to call context ##1# but it is not existing.',40, null from dual union all

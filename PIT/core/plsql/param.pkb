@@ -45,7 +45,7 @@ as
            l_is_existing,
            g_param.validation_string,
            g_param.validation_message
-      from &INSTALL_USER..parameter_group pg
+      from DOAG.parameter_group pg
       left join
            (select *
               from parameter p
@@ -183,6 +183,9 @@ as
       from parameter
      where parameter_id = p_parameter_id
        and parameter_group_id = p_parameter_group_id;
+  exception
+    when no_data_found then
+      dbms_output.put_line('Parameter ' || p_parameter_id || ' not found in ' || p_parameter_group_id);
   end get_parameter;
 
 

@@ -1,4 +1,4 @@
-prompt &h2.Checking user &INSTALL_USER.
+prompt &h2.Checking owner user &INSTALL_USER.
 declare
   user_exists exception;
   pragma exception_init(user_exists, -1920);
@@ -12,7 +12,7 @@ exception
 end;
 /
 
-prompt &h2.Checking user &REMOTE_USER.
+prompt &h2.Checking client user &REMOTE_USER.
 declare
   user_exists exception;
   pragma exception_init(user_exists, -1920);

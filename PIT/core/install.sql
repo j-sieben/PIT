@@ -74,6 +74,7 @@ show errors
 
 prompt &s1.Create type PIT_CONTEXT
 @&sql_dir.pit_context.tps
+@&sql_dir.pit_context.tpb
 show errors
 
 prompt &s1.Create type PIT_MODULE

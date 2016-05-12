@@ -217,13 +217,9 @@ as
   /* Traces entering a method, level mandatory
    * %param p_action Short description of what the method is used for.
    *                 You may choose the method name or a free description.
+   *                 As this parameter goes to DBMS_APPLICATION_INFO, it's mandatory
    * %param p_module Short description of what the environment of that method is.
-   *                 If null, it defaults
-   *                 <ul>
-   *                   <li>to the module of the predecessor at the call stack,
-   *                      if existing</li>
-   *                  <li>to the package name</li>
-   *                </ul>
+   *                 As this parameter goes to DBMS_APPLICATION_INFO, it's mandatory
    * %param p_params Instance of <code>msg_params</code> with a list of
    *                 key-value pairs representing parameter name and -value.
    * %param p_client_info Optional value for CLIENT_INFO column of V$SESSION.
@@ -235,8 +231,8 @@ as
    *        for a given use case.
    */
   procedure enter_mandatory(
-    p_action in varchar2 default null,
-    p_module in varchar2 default null,
+    p_action in varchar2,
+    p_module in varchar2,
     p_params in msg_params default null,
     p_client_info in varchar2 default null);
     
@@ -623,6 +619,17 @@ as
     p_trace_timing in boolean,
     p_module_list in varchar2);
   
+  
+  /* Overloaded version to allow to use named contexts
+   * %param p_context_name Name of the context to swithc to.
+   * %usage Call this procedure to set the active context to a predefined context.
+   *        Contexts are defined as parameters with the name pattern
+   *        CONTEXT_<Name> and a string value according to this pattern:
+   *        [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
+   *        fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
+   */
+  procedure set_context(
+    p_context_name in varchar2);
   
   /* Procedure to reset the trace context for the active session to the default values
    * %param p_active_session_only Flag to indicate whether the active session

@@ -6,25 +6,6 @@ as
   c_true constant char(1) := 'Y';
   c_false constant char(1) := 'N';
 
-  /* Context Type Constants: Context values are visible ...
-   * global: ... for any user and any session
-   * force_user: ... only if user matches
-   * force_client_id: ... only if client_identifier matches
-   * force_user_client_id: ... only if user AND client_identifier matches
-   * prefer_client_id: ... if a matching value for that client_identifier exists,
-   *                       it is visible, otherwise a default value is provided
-   * prefer_user_client_id: ... if a matching value for that user AND client_identifier exists,
-   *                            it is visible, otherwise a default value is provided
-   * session: ... only within the session that set the value (pseduo local context)
-   */
-  c_global constant varchar2(20) := 'GLOBAL';
-  c_force_user constant varchar2(20) := 'FORCE_USER';
-  c_force_client_id constant varchar2(20) := 'FORCE_CLIENT_ID';
-  c_force_user_client_id constant varchar2(20) := 'FORCE_USER_CLIENT_ID';
-  c_prefer_client_id constant varchar2(20) := 'PREFER_CLIENT_ID';
-  c_prefer_user_client_id constant varchar2(25) := 'PREFER_USER_CLIENT_ID';
-  c_session constant varchar2(20) := 'SESSION';
-
   -- Parameter Maintenance
   c_parameter_group_id constant varchar2(10) := 'CONTEXT';
   c_parameter_postfix constant varchar2(5) := '_TYPE';
@@ -295,6 +276,37 @@ as
   end clear_value;
 
 
+  function get_first_match(
+    p_context in varchar2,
+    p_attribute_list in args,
+    p_client_id varchar2 default null)
+    return varchar2
+  as
+    l_value varchar2(4000);
+  begin
+    read_settings(p_context);
+    for i in p_attribute_list.first .. p_attribute_list.last loop
+      l_value := sys_context(p_context, p_attribute_list(i));
+      case
+      when l_value is null and g_context_setting.with_fallback
+      then -- Fallback auf allgemeinen Parameter
+        l_value := get_with_client_id(
+                     p_context, p_attribute_list(i), '');
+      when l_value is null and
+           g_context_setting.with_session_id
+      then -- Lese sessionspezifischen Parameter
+        l_value := get_with_client_id(
+                     p_context, p_attribute_list(i),
+                     nvl(p_client_id, sys_context(c_env, c_session_id)));
+      else
+        null;
+      end case;
+      exit when l_value is not null;
+    end loop;
+    return l_value;
+  end get_first_match;
+  
+  
   procedure reset_context(
     p_context in varchar2)
   as

@@ -105,6 +105,17 @@ as
   begin
     print_call_stack(p_call_stack, g_leave_template);
   end leave;
+  
+  procedure context_changed(
+    p_ctx in pit_context)
+  as
+    c_del constant varchar2(5) := ', ';
+  begin
+    dbms_output.put_line(
+      pit.get_message_text(
+        msg.CONTEXT_CHANGED, 
+        msg_args(p_ctx.to_string())));
+  end context_changed;
 
   procedure initialize_module(
     self in out pit_console)

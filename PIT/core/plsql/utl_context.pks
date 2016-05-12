@@ -8,6 +8,25 @@ as
    */
   
   c_no_value varchar2(10) := 'NOVALUE';
+
+  /* Context Type Constants: Context values are visible ...
+   * global: ... for any user and any session
+   * force_user: ... only if user matches
+   * force_client_id: ... only if client_identifier matches
+   * force_user_client_id: ... only if user AND client_identifier matches
+   * prefer_client_id: ... if a matching value for that client_identifier exists,
+   *                       it is visible, otherwise a default value is provided
+   * prefer_user_client_id: ... if a matching value for that user AND client_identifier exists,
+   *                            it is visible, otherwise a default value is provided
+   * session: ... only within the session that set the value (pseduo local context)
+   */
+  c_global constant varchar2(20) := 'GLOBAL';
+  c_force_user constant varchar2(20) := 'FORCE_USER';
+  c_force_client_id constant varchar2(20) := 'FORCE_CLIENT_ID';
+  c_force_user_client_id constant varchar2(20) := 'FORCE_USER_CLIENT_ID';
+  c_prefer_client_id constant varchar2(20) := 'PREFER_CLIENT_ID';
+  c_prefer_user_client_id constant varchar2(25) := 'PREFER_USER_CLIENT_ID';
+  c_session constant varchar2(20) := 'SESSION';
   
   
   /* Procedure to set a value in one of the available contexts
@@ -54,6 +73,21 @@ as
     p_context in varchar2,
     p_attribute in varchar2,
     p_client_id varchar2 default null);
+    
+  
+  /* Function to get a value based on a collection of context attributes
+   * %param p_context Name of the context to write a value to
+   * @param p_attribute_list List of attributes for which a value shall be retrieved
+   * @param p_client_id Optional client id as set at sys_context('USERENV', 'CLIENT_IDENTIFIER')
+   * @return Varchar-value of the parameter
+   * @usage Tries to find a value for each entered attribute name and returns the
+   *        first NOT-NULL-value
+   */
+  function get_first_match(
+    p_context in varchar2,
+    p_attribute_list in args,
+    p_client_id varchar2 default null)
+    return varchar2;
 
 
   /* Procedure to reset one of the available contexts

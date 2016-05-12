@@ -230,8 +230,8 @@ as
   
 
   procedure enter_mandatory(
-    p_action in varchar2 default null,
-    p_module in varchar2 default null,
+    p_action in varchar2,
+    p_module in varchar2,
     p_params in msg_params default null,
     p_client_info in varchar2 default null)
   as
@@ -282,7 +282,7 @@ as
       g_action := g_action || '#' || to_char(g_lineno);
     end if;
     $ELSE
-    -- Ab Version 12 UTL_CALL_STACK in PIT_PKG nutzen
+    -- starting with version 12c, UTL_CALL_STACK is used if parameters are not provided
     g_action := p_action;
     g_module := p_module;
     $END
@@ -500,10 +500,10 @@ as
   
   /* Context Maintenance */
   procedure set_context(
-  p_log_level in integer,
-  p_trace_level in integer,
-  p_trace_timing in boolean,
-  p_module_list in varchar2)
+    p_log_level in integer,
+    p_trace_level in integer,
+    p_trace_timing in boolean,
+    p_module_list in varchar2)
   as
   begin
     pit_pkg.set_context(
@@ -511,6 +511,14 @@ as
       p_trace_level,
       p_trace_timing,
       p_module_list);
+  end set_context;
+  
+  
+  procedure set_context(
+    p_context_name in varchar2)
+  as
+  begin
+    pit_pkg.set_context(p_context_name);
   end set_context;
   
   

@@ -96,5 +96,16 @@ as
            v.boolean_value, v.is_modifiable, v.validation_string, v.validation_message);
   end edit_parameter;
 
+
+  procedure delete_parameter(
+    p_parameter_id in varchar2,
+    p_parameter_group_id in varchar2)
+  as
+  begin
+    delete from parameter_tab
+     where parameter_id = p_parameter_id
+       and parameter_group_id = p_parameter_group_id;
+  end delete_parameter;
+       
 end param_admin;
 /

@@ -16,19 +16,21 @@ create or replace type call_stack_type is object (
   last_resume_point integer,
   last_cpu_resume_point integer,
   trace_timing char(1),
+  trace_settings varchar2(4000),
   member procedure pause,
   member procedure resume,
   member procedure leave,
   constructor function call_stack_type(
     self in out nocopy call_stack_type,
-    id in number,
-    session_id in varchar2,
-    user_name in varchar2,
-    module_name in varchar2,
-    method_name in varchar2,
-    params in msg_params,
-    call_level in integer,
-    trace_timing in char)
+    p_id in number,
+    p_session_id in varchar2,
+    p_user_name in varchar2,
+    p_module_name in varchar2,
+    p_method_name in varchar2,
+    p_params in msg_params,
+    p_call_level in integer,
+    p_trace_timing in char,
+    p_trace_settings in varchar2)
     return self as result
 )
 final instantiable;

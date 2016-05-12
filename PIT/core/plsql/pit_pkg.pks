@@ -18,78 +18,7 @@ as
    */
   procedure initialize;
   
-  /* CONTEXT MAINTENANCE */
-  /* Function to retrieve the actually valid context
-   * %return Instance of context_type-Record that holds the settings for the
-   *         actually valid context
-   */
-  function get_context
-    return context_type;
-    
-    
-  /* Procedure to change the settings in the global PIT_CONTEXT
-     %param p_log_level New log level.
-     %param p_trace_level New trace level
-     %param p_trace_timing Flag to switch timing on or off
-     %param p_module_list Colon-separated list of output modules used
-     %param p_focus Indicates whether changes are made for the active session 
-            only (ACTIVE) or as a new default setting (DEFAULT). Defaults to ACTIVE
-     $usage This procedure is used when log settings shall be changed dynamically
-            Normal usage is to overwrite log settings as defined in the parameters
-            for a given session.
-   */
-  procedure set_context(
-    p_log_level in integer,
-    p_trace_level in integer,
-    p_trace_timing in boolean,
-    p_module_list in varchar2,
-    p_focus in varchar2 default 'ACTIVE');
-    
-  
-  /* Overloaded version that takes an instanvce of CONTEXT_TYPE-record as input parameter
-   * %param p_context Instance of CONTEXT_TYPE-record with the actually valid
-   *        context settings
-   */
-  procedure set_context(
-    p_context in context_type);
-  
-  
-  /* Procedure to reset log settings to the default settings
-     %usage If settings for a session were changed, calling this procedure
-            resets these settings to the default settings as defined by the 
-            parameters
-   */
-  procedure reset_active_context;
-  
-  
-  /* Procedure to reset the complete context to default settings
-     %usage Use this procedure if all session settings shall be reset to the 
-            default settings. Be aware that calling this procedure will reset
-            ALL log settings of ALL sessions to default
-   */
-  procedure reset_context;
-  
-  
-  /* MODULE MAINTENANCE */
-  /* Function to retrieve a list of active modules
-     %return ARGS-type, List of module names
-     %usage Use this function if you require a list of active modules.
-   */
-  function get_active_modules
-   return args
-   pipelined;
    
-   
-  /* Function to retrieve a list of available modules
-     %return ARGS-type, List of module names
-     %usage Use this function if you require a list of available modules.
-            A module is AVAILABLE if it could be initialized succesfully.
-   */
-  function get_available_modules
-   return args
-   pipelined;
-   
-  
   /* CORE */
   /* Logs messages
      %param p_level Log-level. Allows to decide whether PIT should log or not.
@@ -208,6 +137,92 @@ as
     p_affected_id in varchar2,
     p_arg_list msg_args)
     return message_type;
-
+  /* CONTEXT MAINTENANCE */
+  /* Function to retrieve the actually valid context
+   * %return Instance of context_type-Record that holds the settings for the
+   *         actually valid context
+   */
+   
+  
+  /* Functon to retrieve the actual context as an instance of context type
+   * %return Instance of context_type filled with the actually valid settings
+   * %usage is called if an external function wishes to persist the actual
+   *        settings and reset them later
+   */
+  function get_context
+    return context_type;
+    
+    
+  /* Procedure to change the settings in the global PIT_CONTEXT
+     %param p_log_level New log level.
+     %param p_trace_level New trace level
+     %param p_trace_timing Flag to switch timing on or off
+     %param p_module_list Colon-separated list of output modules used
+     %param p_focus Indicates whether changes are made for the active session 
+            only (ACTIVE) or as a new default setting (DEFAULT). Defaults to ACTIVE
+     $usage This procedure is used when log settings shall be changed dynamically
+            Normal usage is to overwrite log settings as defined in the parameters
+            for a given session.
+   */
+  procedure set_context(
+    p_log_level in integer,
+    p_trace_level in integer,
+    p_trace_timing in boolean,
+    p_module_list in varchar2);
+    
+  
+  /* Overloaded version that takes an instanvce of CONTEXT_TYPE-record as input parameter
+   * %param p_context Instance of CONTEXT_TYPE-record with the actually valid
+   *        context settings
+   */
+  procedure set_context(
+    p_context in context_type);
+    
+  
+  /* Overloaded version that expects the name of a named context as defined in the parameters
+   * %param p_context_name Name of a context. Reuqires a matching parameter named CONTEXT_<Name>
+   *        with predefined debug settings in the format [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
+   *        fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
+   */
+  procedure set_context(
+    p_context_name in varchar2);
+  
+  
+  /* Procedure to reset log settings to the default settings
+     %usage If settings for a session were changed, calling this procedure
+            resets these settings to the default settings as defined by the 
+            parameters
+   */
+  procedure reset_active_context;
+  
+  
+  /* Procedure to reset the complete context to default settings
+     %usage Use this procedure if all session settings shall be reset to the 
+            default settings. Be aware that calling this procedure will reset
+            ALL log settings of ALL sessions to default
+   */
+  procedure reset_context;
+  
+  
+  /* MODULE MAINTENANCE */
+  /* Function to retrieve a list of active modules
+     %return ARGS-type, List of module names
+     %usage Use this function if you require a list of active modules.
+   */
+  function get_active_modules
+   return args
+   pipelined;
+   
+   
+  /* Function to retrieve a list of available modules
+     %return ARGS-type, List of module names
+     %usage Use this function if you require a list of available modules.
+            A module is AVAILABLE if it could be initialized succesfully.
+   */
+  function get_available_modules
+   return args
+   pipelined;
+   
+ 
 end pit_pkg;
 /

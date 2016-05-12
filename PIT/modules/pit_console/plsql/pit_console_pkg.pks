@@ -11,6 +11,9 @@ as
 
   procedure leave(
     p_call_stack in call_stack_type);
+    
+  procedure context_changed(
+    p_ctx in pit_context);
 
   procedure initialize_module(
     self in out pit_console);

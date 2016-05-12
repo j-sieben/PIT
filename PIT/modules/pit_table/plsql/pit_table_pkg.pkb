@@ -8,10 +8,12 @@ as
   as
   begin
     insert into pit_log
-      (log_id, session_id, user_name, msg_text, msg_stack, msg_backtrace, severity)
+      (log_id, log_date, session_id, user_name, 
+       msg_text, msg_stack, msg_backtrace, severity)
     values
-      (pit_log_seq.nextval, p_message.session_id, p_message.user_name, p_message.message_text,
-       p_message.stack, p_message.backtrace, p_message.severity);
+      (pit_log_seq.nextval, localtimestamp, 
+       substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
+       p_message.message_text, p_message.stack, p_message.backtrace, p_message.severity);
   end log;
 
 
@@ -37,7 +39,7 @@ as
        wall_clock, elapsed, elapsed_cpu, total_time, total_time_cpu)
     values
       (p_call_stack.id, p_call_stack.call_level, 'ENTER',
-       p_call_stack.session_id, p_call_stack.user_name,
+       substr(p_call_stack.session_id, 1, 64), substr(p_call_stack.user_name, 1, 30),
        p_call_stack.method_name, p_call_stack.module_name,
        p_call_stack.wall_clock, p_call_stack.elapsed,
        p_call_stack.elapsed_cpu, p_call_stack.total, p_call_stack.total_cpu);

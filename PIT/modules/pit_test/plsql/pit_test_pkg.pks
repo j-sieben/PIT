@@ -3,7 +3,6 @@ create or replace package pit_test_pkg
 as
   /* Implementation package for type PIT_TEST */
   
-  
   procedure log (p_message in message_type);
 
   procedure print(p_message in message_type);

@@ -11,7 +11,7 @@ create table pit_call_stack (
 	elapsed_cpu number, 
 	total_time interval day to second, 
 	total_time_cpu number, 
-	constraint pk_pit_call_stack primary key (id) enable,
+	constraint pk_pit_call_stack primary key (id, action) enable,
   constraint chk_pit_action check (action in ('ENTER', 'LEAVE'))
 ) organization index;
 

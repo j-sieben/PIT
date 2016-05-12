@@ -4,6 +4,7 @@ as
   /**
     Package to administer PIT. Provides methods to create or maintain messages.
   */
+  
 
   /* Function to retrieve the text for a given language without replacements
    * %param p_message_name Name of the message to retrieve the text for
@@ -96,6 +97,70 @@ as
    */
   procedure create_message_package(
     p_directory varchar2 default null);
+  
+  
+  
+  /* Procedure to create a named context
+   * %param p_context_name Name of the context. Maximum of 20 byte. Don't use umlauts or special chars
+   * %param p_log_level Log level of the named context
+   * %param p_trace level Trace level of the named context
+   * %param p_trace_timing Flag to indicate whether timing information should be captured
+   * %param p_module_list List of output modules to be used for logging
+   * %param p_comment Optional comment to explain the usage of the named context
+   * %usage Is called to create a named context
+   */
+  procedure create_named_context(
+    p_context_name in varchar2,
+    p_log_level in number,
+    p_trace_level in number,
+    p_trace_timing in boolean,
+    p_module_list in varchar2,
+    p_comment in varchar2 default null);
+  
+  
+  /* Procedure to create a named context
+   * %param p_context_name Name of the context. Maximum of 20 byte. Don't use umlauts or special chars
+   * %param p_settings Settings string in the format LOG_LEVEL(10,20..70)|TRACE_LEVEL (10,20..40)|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST (MODULE_1:MODULE_2)
+   *        Valid examples are: 
+   *        30|10|N|PIT_TABLE:PIT_MAIL, 70|40|Y|PIT_CONSOLE
+   *        If you want to express that no logging should be used, use 10|10|N|
+   * %param p_comment Optional comment to explain the usage of the named context
+   * %usage Is called to create a new named context
+   */
+  procedure create_named_context(
+    p_context_name in varchar2,
+    p_settings in varchar2,
+    p_comment in varchar2 default null);
     
+  
+  /* Procedure to remove a named context
+   * %param p_context_name Name of the context to remove
+   * %usage Is called to remove a named context
+   */
+  procedure remove_named_context(
+    p_context_name in varchar2);
+    
+    
+  /* Procedure to create a context toggle
+   * %param p_toggle_name Name of the context toggle. Maximum of 20 byte. Don't use umlauts or special chars
+   * %param p_module_list Name of the module to toggle the context for. May be a pipe separated list of modules
+   *        Two formats are allowed: Name of a package/method or qualified name of a method in a package (without owner):
+   *        Examples: MY_PACKAGE|MY_OTHER_PACKAGE.MY_PROC
+   * %param p_context_name Name of the context to switch to. Must be an excisting context
+   * %usage Is called to have PIT toggle it's context settings based on entering a module or a list of modules.
+   */
+  procedure create_context_toggle(
+    p_toggle_name in varchar2,
+    p_module_list in varchar2,
+    p_context_name in varchar2,
+    p_comment in varchar2 default null);
+    
+    
+  /* Procedure to remove a context toggle
+   * %param p_toggle_name Name of the context toggle to remove
+   * %usage Is used to remove a context toggle
+   */
+  procedure remove_context_toggle(
+    p_toggle_name in varchar2);
 end pit_admin;
 /
