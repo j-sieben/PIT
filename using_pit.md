@@ -45,7 +45,7 @@ Method `pit.enter` provides different levels of tracing. These levels are:
 
 To make their use convenient, PIT offers dedicated `enter`- and `leave` methods for the respective trace levels, such as `pit.enter_optional` and `pit.leave_optional`. Please make sure that you select a matching `leave` method for the `enter` method you chose. This makes sure that the call stack does not get out of sync, which may happen if a method is pushed on the call stack but never popped.
 
-If you choose `pit.enter_mandatory`, parameters `p_action` and `p_module` are mandatory as well. Reason is that this method also sets `dbms_application_info` which in turn shows in some performance views. Therefore, `pit.enter_mandatory` also offers an optional parameter called `p_client_info` to pass in additional information that also shows up in performance views.
+If you choose `pit.enter_mandatory`, parameters `p_action` and `p_module` are mandatory as well. Reason is that this method also sets `dbms_application_info` which in turn shows in some performance views. Therefore, `pit.enter_mandatory` also offers an optional parameter called `p_client_info` to pass in additional information that also shows up in performance views. Settings for `dbms_application_info` will be set in any case, no matter whether you actually trace your code or not.
 
 Choosing an appropriate enter method is a good practice to allow you to set your trace level easily with a context. As a best practice, you may mark your public methods `pit.enter_mandatory` (with the exception of helper packages probably) and the more important private methods within a package `pit.enter_optional`. You then have another two levels at hand to adjust when a method gets traced.
 
