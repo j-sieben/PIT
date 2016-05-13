@@ -137,5 +137,18 @@ If you code using the "contractor pattern", you want to assert that incoming par
 
 Most methods are provided with overloads for varchar2, number and date, the exists methods take a sql statement as parameter and check whether that statement returns at least one or no row. Only select statements are allowed of course ... The most generic function is `pit.assert` which expects a boolean expression of any kind and returns without result if the condition evaluates to true and throws an exception otherwise.
 
-What makes all assertion methods convenient is that they come with a default message (which of course can be translated as any other message PIT uses). Should you require to do so, you may pass in your own message that gets thrown if the assertion fails. Simply pass in the message name and the message parameters optionally.
+What makes all assertion methods convenient is that they come with a default message (which of course can be translated as any other message PIT uses). Should you require to do so, you may pass in your own message that gets thrown if the assertion fails. Simply pass in the message name and the message parameters optionally. Here's an example on how to check an assertion with a user defined message:
+
+```
+begin
+  pit.assert(
+    p_condition => p_param in (10,20,30),
+    p_messag_name => msg.PARAM_OUT_OF_RANGE, 
+    p_arg_list => msg_args('P_PARAM', '10,20,30', to_char(p_param)));
+  ...
+end;
+```
+
+If the assertion throws an error, this may lead to a message like "Parameter 'P_PARAM' is supposed to be in the range of [10,20,30] but was 45."
+
 
