@@ -38,6 +38,12 @@ If you want to change the standard behaviour which implements all functionality,
 
 Methods `pit.enter`and `pit.leave` are seen as level `TRACE_ALL` so make sure that you choose the specialized enter methods `pit.enter_mandatory` etc. over the generic ones to make full use of this functionality. The same applies to `pit.log` instead of `pit.info` and the like. This is because the `pit.log` methods decide upon parameter `p_severity` passed in whether they fire or not. So this means that there is no generic way of implementing conditional compilation for these methods easily. As a result, these methods fire anyway.
 
-## Recommendation
+## Recommendation for conditional compilation
 
 My recommendation would be to go for the context way as long as performance is acceptable. Only if you encounter serious performance issues which can be deducted to PIT method calls, think about switching certain functionality off using conditional compilation. Remember that this decision is global for your PIT implementation and can't be overwritten by any context parameter afterwards. So if you need to switch logging on at a later time, this won't be possible without recompiling your code.
+
+## Native Compilation
+
+As reports from the hierarchical profiler proof, PIT relies heavily on PL/SQL and less than 5% of it's execution time is spent doing SQL. Measurements vary based on the list of output modules and the work they need to do but they give a good indication on what the general balance between the envrionments is.
+
+Code that prominently works in PL/SQL will benefit from native compilation. Before version 11g, that was a tough one, but now, with `PLSQL_CODE_TYPE` set to `NATIVE`, nothing prevents you from boosting PIT performance. I strongly advise you to use this feature for PIT. In the installation script, this settings is changed for your session. Also, the installation script sets parameter `PLSQL_OPTIMIZE_LEVEL` to 2 to allow for further code enhancements.
