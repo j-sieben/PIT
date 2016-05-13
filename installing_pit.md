@@ -22,7 +22,13 @@ sqlplus <sys_credentials> as sysdba @pit_install DOAG DOAG
 ```
 
 ## Uninstall PIT
-To uninstall PIT, simply call `uninstall_pit.sql` from the installation folder. This script requires a dba account as well, as it removes packages in other schemas. To revoke any granted rights from the PIT owner, call script `revoke_grants.sql` but crosscheck whether grants the user already had before installing PIT shall remain untouched.
+To uninstall PIT, simply call `uninstall_pit.sql` from the installation folder. This script requires a dba account as well, as it removes packages in other schemas. Make sure to pass both shemata, owner and user, in to assure that anything gets uninstalled properly. Here's a sample script of how to uninstall PIT on a windows system:
+
+```
+cd C:\temp\PIT
+set nls_lang=GERMAN_GERMANY.AL32UTF8
+sqlplus <sys_credentials> as sysdba @pit_uninstall DOAG DOAG
+```
 
 ## Client installation (under construction, script will be aviable soon)
 The idea behind running PIT in a mandatory aware environment is to maintain a seperate set of parameters and log tables per user. To achieve this, parameters are stored in a central table at PIT owner but may be overwritten by a local parameter table at PIT user. A view combines both tables, giving the local table precedence over the central parameter table. If a parameter is changed on PIT user side, the change is written into the local table. By using this approach, it's easy to reuse parameters which are defined centrally but overwrite any settings locally which require different settings. On the other hand, no local settings influence other PIT clients.
