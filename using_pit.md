@@ -83,7 +83,7 @@ as
 end MSG;
 ```
 
-This is to assure that you can't loose any error because you mistyped the message name. Additionally, the `MSG`package contains an exception called `CHILD_RECOR_FOUND_ERR`and a pragma to connect the exception to Oracle error -2292. If you want to create messages for your own errors, you do exactly the same what we did in the example above but simply pass in -20000 or null for parameter `p_error_number`. You may as well simply leave it away completely, as it is an optional parameter. If `pit_admin` creates a new message of severity 20 or 30 (`PIT.level_fatal|PIT.level_error`) and no error number is passed in, it assumes a user specific error.
+This is to assure that you can't loose any error because you mistyped the message name. Additionally, the `MSG`package contains an exception called `CHILD_RECOR_FOUND_ERR`and a pragma to connect the exception to Oracle error -2292. If you want to create messages for your own errors, you do exactly the same what we did in the example above but simply pass in -20000 or null for parameter `p_error_number`. You may as well simply omit it completely, as it is an optional parameter. If `pit_admin` creates a new message of severity 20 or 30 (`PIT.level_fatal|PIT.level_error`) and no error number is passed in, it assumes a user specific error.
 
 After you created the message you're ready to use it in your code. As error -2292 is thrown automatically by the Oracle database, you will need to catch it in the exception block. To achieve this, simply write code like this:
 
