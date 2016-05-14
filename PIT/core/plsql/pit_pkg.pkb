@@ -75,12 +75,16 @@ as
   c_print_event constant integer := 4;
   c_enter_event constant integer := 5;
   c_leave_event constant integer := 6;
+  
+  -- defined here to avoid dependency from PIT
+  c_trace_mandatory constant integer := 20;
 
   /* package vars */
   g_active_adapter default_adapter;
   g_language varchar2(30);
   g_user_name varchar2(30);
   g_client_id varchar2(64);
+  g_unrecoverable_error boolean;
 
 
   /********************** GENERIC HELPER FUNCTIONS ****************************/
@@ -598,6 +602,21 @@ as
   end pop_stack;
 
  
+  /* Helper method to clean stack after a fatal error has ocurred.
+   * %usage Called from method LOG if level is C_LEVEL_FATAL. Cleans open
+   *        call stack entries
+   */
+  procedure clean_stack
+  as
+    l_call_stack call_stack_type;
+    l_trace_settings varchar2(4000);
+  begin
+    for i in 1 .. g_call_stack.count loop
+      leave(c_trace_mandatory);
+    end loop;
+  end clean_stack;
+  
+  
   /************************** CENTRAL FUNCTIONALITY **************************/
   /* Helper function to decide whether a message shall be logged.
    * %param p_level log_level for which a decision is requested
@@ -670,12 +689,24 @@ as
     $END
   end get_module_and_action;
   
+  
+  /* Helper to raise an error based on a message_name
+   * %param p_message_name Name of the error to raise
+   */
+  procedure raise_error(
+    p_message_name in varchar2)
+  as
+  begin
+    execute immediate 'begin raise(msg.' || p_message_name || '_ERR; end;';
+  end raise_error;
+  
 
   /****************************** INTERFACE ***********************************/
   procedure initialize
   as
   begin
     -- set package vars
+    g_unrecoverable_error := false;
     select value
       into g_language
       from nls_session_parameters
@@ -700,7 +731,7 @@ as
   as
     l_message message_type;
   begin
-    if log_me(p_level) then
+    if p_level <= pit.level_error or log_me(p_level) then
       -- instantiate message
       l_message := get_message(p_message_name, p_affected_id, p_arg_list);
 
@@ -708,9 +739,6 @@ as
         p_event => c_log_event,
         p_event_focus => c_event_focus_active,
         p_message => l_message);
-    end if;
-    if p_level = pit.level_fatal then
-       raise_error(p_message_name, p_arg_list);
     end if;
   end log;
 
@@ -877,19 +905,43 @@ as
 
 
   procedure raise_error(
+    p_level in number,
     p_message_name varchar2,
+    p_affected_id in number,
     p_arg_list in msg_args)
   as
-    l_message message_type;
-    l_arg_list msg_args := p_arg_list;
+    l_arg_list msg_args;
+    l_error_number number;
   begin
-    if p_arg_list is null and sqlerrm is not null then
-       l_arg_list := msg_args(sqlerrm);
+    if sqlcode = 0 then
+      execute immediate
+        'begin :n := msg.' || p_message_name || '#; end;' using out l_error_number;
+    else
+      l_error_number := sqlcode;
     end if;
-    l_message := get_message(p_message_name, null, l_arg_list);
-
-    raise_application_error(-20000, dbms_lob.substr(l_message.message_text, 1, 2048));
+    l_arg_list := coalesce(p_arg_list, msg_args(to_char(l_error_number)));
+    
+    raise_application_error(
+      l_error_number, 
+      dbms_lob.substr(get_message_text(p_message_name, l_arg_list), 2048, 1));
   end raise_error;
+  
+  
+  procedure handle_error(
+    p_level in number,
+    p_message_name varchar2,
+    p_affected_id in number,
+    p_arg_list in msg_args)
+  as
+    l_message_name varchar2(30);
+  begin
+    log(p_level, p_message_name, p_affected_id, p_arg_list);
+    if p_level = pit.level_fatal then
+      clean_stack;
+      l_message_name := coalesce(p_message_name, msg.FATAL_ERROR_OCCURRED);
+      raise_error(pit.level_fatal, l_message_name, null, p_arg_list);
+    end if;
+  end;    
 
 
   procedure purge(
@@ -921,7 +973,17 @@ as
              user_name => g_user_name,
              arg_list => p_arg_list);
   end get_message;
-
+  
+  
+  function get_message_text(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null)
+    return clob
+  as
+  begin
+    return get_message(p_message_name, null, p_arg_list).message_text;
+  end get_message_text;
+  
 
   /* CONTEXT MAINTENANCE */
   function get_context

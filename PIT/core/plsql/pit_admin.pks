@@ -5,6 +5,18 @@ as
     Package to administer PIT. Provides methods to create or maintain messages.
   */
   
+  -- Installation switches
+  c_level_le_warn constant boolean := TRUE;
+  c_level_le_info constant boolean := TRUE;
+  c_level_le_debug constant boolean := TRUE;
+  c_level_le_all constant boolean := TRUE;
+  
+  c_trace_le_off constant boolean := TRUE;
+  c_trace_le_mandatory constant boolean := TRUE;
+  c_trace_le_optional constant boolean := TRUE;
+  c_trace_le_detailed constant boolean := TRUE;
+  c_trace_le_all constant boolean := TRUE;
+  
 
   /* Function to retrieve the text for a given language without replacements
    * %param p_message_name Name of the message to retrieve the text for

@@ -7,6 +7,7 @@ create or replace type message_type force is object(
   severity number(2,0),
   stack varchar2(2000),
   backtrace varchar2(2000),
+  error_number number (5,0),
   constructor function message_type(
     self in out nocopy message_type,
     message_name in varchar2,
@@ -17,4 +18,4 @@ create or replace type message_type force is object(
     arg_list msg_args)
     return self as result)
   final instantiable;
-/
+ /

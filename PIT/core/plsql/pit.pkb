@@ -19,6 +19,7 @@ as
   
   function level_off
    return number
+   deterministic
   as
   begin
     return 10;
@@ -27,6 +28,7 @@ as
   
   function level_fatal
    return number
+   deterministic
   as
   begin
     return 20;
@@ -35,6 +37,7 @@ as
   
   function level_error
     return number
+    deterministic
   as
   begin
     return 30;
@@ -42,7 +45,8 @@ as
   
   
   function level_warn
-   return number
+    return number
+    deterministic
   as
   begin
     return 40;
@@ -50,7 +54,8 @@ as
   
   
   function level_info
-   return number
+    return number
+    deterministic
   as
   begin
     return 50;
@@ -58,7 +63,8 @@ as
   
   
   function level_debug
-   return number
+    return number
+    deterministic
   as
   begin
     return 60;
@@ -66,7 +72,8 @@ as
   
   
   function level_all
-   return number
+    return number
+    deterministic
   as
   begin
     return 70;
@@ -74,7 +81,8 @@ as
   
   
   function trace_off
-   return number
+    return number
+    deterministic
   as
   begin
     return 10;
@@ -82,7 +90,8 @@ as
   
   
   function trace_mandatory
-   return number
+    return number
+    deterministic
   as
   begin
     return 20;
@@ -90,7 +99,8 @@ as
   
   
   function trace_optional
-   return number
+    return number
+    deterministic
   as
   begin
     return 30;
@@ -98,7 +108,8 @@ as
   
   
   function trace_detailed
-   return number
+    return number
+    deterministic
   as
   begin
     return 40;
@@ -107,6 +118,7 @@ as
   
   function trace_all
    return number
+   deterministic
   as
   begin
     return 50;
@@ -120,7 +132,11 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
+    $IF pit_admin.c_level_le_info $THEN
     pit_pkg.log(level_all, p_message_name, p_affected_id, p_arg_list);
+    $ELSE
+    null;
+    $END
   end verbose;
 
 
@@ -130,7 +146,11 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
+    $IF pit_admin.c_level_le_debug $THEN
     pit_pkg.log(level_debug, p_message_name, p_affected_id, p_arg_list);
+    $ELSE
+    null;
+    $END
   end debug;
 
 
@@ -140,7 +160,11 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
+    $IF pit_admin.c_level_le_info $THEN
     pit_pkg.log(level_info, p_message_name, p_affected_id, p_arg_list);
+    $ELSE
+    null;
+    $END
   end info;
 
 
@@ -150,7 +174,11 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
+    $IF pit_admin.c_level_le_warn $THEN
     pit_pkg.log(level_warn, p_message_name, p_affected_id, p_arg_list);
+    $ELSE
+    null;
+    $END
   end warn;
 
 
@@ -160,7 +188,7 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
-    pit_pkg.log(level_error, p_message_name, p_affected_id, p_arg_list);
+    pit_pkg.raise_error(level_error, p_message_name, p_affected_id, p_arg_list);
   end error;
 
 
@@ -170,7 +198,7 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
-    pit_pkg.log(level_fatal, p_message_name, p_affected_id, p_arg_list);
+    pit_pkg.raise_error(level_fatal, p_message_name, p_affected_id, p_arg_list);
   end fatal;
   
   
@@ -200,7 +228,7 @@ as
     if p_message_name = msg.FATAL_ERROR_OCCURRED then
        stop(p_message_name, p_arg_list);
     else
-       pit_pkg.log(level_error, p_message_name, p_affected_id, p_arg_list);
+       pit_pkg.handle_error(level_error, p_message_name, p_affected_id, p_arg_list);
        leave;
     end if;
   end sql_exception;
@@ -212,8 +240,7 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
-    pit_pkg.log(level_fatal, p_message_name, p_affected_id, p_arg_list);
-    pit_pkg.raise_error(msg.FATAL_ERROR_OCCURRED, null);
+    pit_pkg.handle_error(level_fatal, p_message_name, p_affected_id, p_arg_list);
   end stop;
   
   
@@ -222,10 +249,8 @@ as
     p_arg_list in msg_args default null)
    return clob
   as
-    l_message message_type;
   begin
-    l_message := pit_pkg.get_message(p_message_name, null, p_arg_list);
-    return l_message.message_text;
+    return pit_pkg.get_message_text(p_message_name, p_arg_list);
   end get_message_text;
   
 
@@ -236,7 +261,11 @@ as
     p_client_info in varchar2 default null)
   as
   begin
+    $IF pit_admin.c_trace_le_mandatory $THEN
     enter(p_action, p_module, p_params, trace_mandatory);
+    $ELSE
+    null;
+    $END
   end enter_mandatory;
   
   
@@ -246,7 +275,11 @@ as
     p_params in msg_params default null)
   as
   begin
+    $IF pit_admin.c_trace_le_optional $THEN
     enter(p_action, p_module, p_params, trace_optional);
+    $ELSE
+    null;
+    $END
   end enter_optional;
   
   
@@ -256,7 +289,11 @@ as
     p_params in msg_params default null)
   as
   begin
+    $IF pit_admin.c_trace_le_detailed $THEN
     enter(p_action, p_module, p_params, trace_detailed);
+    $ELSE
+    null;
+    $END
   end enter_detailed;
 
 
@@ -268,6 +305,7 @@ as
     p_client_info in varchar2 default null)
   as
   begin
+    $IF pit_admin.c_trace_le_all $THEN
     $IF dbms_db_version.ver_le_11 $THEN
     -- Nicht zu PIT_PKG verschieben, um korrekten Namen zu erhalten
     if p_action is not null then
@@ -288,27 +326,42 @@ as
     $END
     pit_pkg.enter(
        g_action, g_module, p_params, p_trace_level, p_client_info);
+    $ELSE
+    null;
+    $END
   end enter;
   
   
   procedure leave_mandatory
   as
   begin
+    $IF pit_admin.c_trace_le_mandatory $THEN
     leave(trace_mandatory);
+    $ELSE
+    null;
+    $END
   end leave_mandatory;
   
   
   procedure leave_optional
   as
   begin
+    $IF pit_admin.c_trace_le_optional $THEN
     leave(trace_optional);
+    $ELSE
+    null;
+    $END
   end leave_optional;
   
   
   procedure leave_detailed
   as
   begin
+    $IF pit_admin.c_trace_le_detailed $THEN
     leave(trace_detailed);
+    $ELSE
+    null;
+    $END
   end leave_detailed;
   
   
@@ -316,7 +369,11 @@ as
     p_trace_level in number default pit.trace_all)
   is
   begin
+    $IF pit_admin.c_trace_le_all $THEN
     pit_pkg.leave(p_trace_level);
+    $ELSE
+    null;
+    $END
   end leave;
   
   
@@ -472,8 +529,6 @@ as
     when no_data_found then
        pit.error(p_message_name, p_arg_list);
        raise msg.ASSERTION_FAILED_ERR;
-    when others then
-       pit.sql_exception(msg.SQL_ERROR);
   end assert_exists;
     
     
@@ -493,8 +548,6 @@ as
   exception
     when no_data_found then
        null;
-    when others then
-       pit.sql_exception(msg.SQL_ERROR);
   end assert_not_exists;
   
   

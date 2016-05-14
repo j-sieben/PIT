@@ -30,8 +30,6 @@ prompt &h2.grant user rights
 alter session set current_schema=&INSTALL_USER.;
 prompt &s1.Set Compiler-Flags
 alter session set plsql_ccflags = 'development:&INSTALL_ON_DEV., pit_installed:FALSE';
-alter session set plsql_optimize_level = 3;
-alter session set plsql_code_type='NATIVE';
 
 prompt
 prompt &section.

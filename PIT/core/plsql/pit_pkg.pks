@@ -112,7 +112,9 @@ as
   
   
   /* Raises an error
-     %param p_message_name  Name of the message to log
+     %param p_level Severity of the message to raise (FATAL|ERROR)
+     %param p_message_name  Name of the message to raise 
+     %param p_affected_id ID of an object that is affected by this message
      %param p_arg_list List of replacement values for the message
      %usage This procedure is called from PIT. It takes the message_name and
             constructs an instance of MESSAGE_TYPE for it. It then calls raises
@@ -121,15 +123,36 @@ as
             called <MESSAGE_NAME>_ERR that can be used to capture the error.
    */
   procedure raise_error(
+    p_level in number,
     p_message_name varchar2,
+    p_affected_id in number,
+    p_arg_list in msg_args);
+  
+  
+  /* Handels an error
+     %param p_level Severity of the message to log (FATAL|ERROR)
+     %param p_message_name  Name of the message to log
+     %param p_affected_id ID of an object that is affected by this message
+     %param p_arg_list List of replacement values for the message
+     %usage This procedure is called from PIT. It takes the message_name and
+            constructs an instance of MESSAGE_TYPE for it. It then calls raises
+            an error with the respective message that can be caught by the exception
+            block. Messages with severity error or fatal have an associated error
+            called <MESSAGE_NAME>_ERR that can be used to capture the error.
+   */
+  procedure handle_error(
+    p_level in number,
+    p_message_name varchar2,
+    p_affected_id in number,
     p_arg_list in msg_args);
   
   
   /* Returns an instance of type MESSAGE_TYPE.
      %param p_message_name  Name of the message to log
+     %param p_affected_id ID of an object that is affected by this message
      %param p_arg_list List of replacement values for the message
      %return Instance of the requested message.
-     %usage This procedure is called from PIT. It takes the message_name and
+     %usage This procedure is called from PIT. It takes the message_name,
             constructs an instance of MESSAGE_TYPE and returns the message instance.
    */
   function get_message(
@@ -137,6 +160,21 @@ as
     p_affected_id in varchar2,
     p_arg_list msg_args)
     return message_type;
+    
+    
+  /* Returns the text of a message
+   * %param p_message_name Name of the message to log
+     %param p_arg_list List of replacement values for the message
+     %return Messagetext of the requested message.
+     %usage This procedure is called from PIT. It takes the message_name ,
+            constructs an instance of MESSAGE_TYPE and returns the message text.
+   */
+  function get_message_text(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null)
+    return clob;
+    
+    
   /* CONTEXT MAINTENANCE */
   /* Function to retrieve the actually valid context
    * %return Instance of context_type-Record that holds the settings for the

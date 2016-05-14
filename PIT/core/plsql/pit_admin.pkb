@@ -208,7 +208,7 @@ as
     l_message varchar2(2000);
     l_message_length binary_integer;
     c_msg_too_long constant varchar2(200) := 
-      q'~Message "#MESSAGE#" must not exceed 26 chars but is #LEGNTH#.~';
+      q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
     c_predefined_error constant varchar2(200) :=
       q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
   begin
@@ -352,19 +352,23 @@ as
   as
     c_package_name  constant varchar2(30) := 'msg';
     c_exception_postfix constant varchar2(4) := '_ERR';
+    c_exception_no_postfix constant varchar2(1) := '#';
     c_r constant varchar2(2) := chr(10);
     
     l_sql_text clob := 'create or replace package ' || c_package_name || ' as' || c_r;
     l_constant_template varchar2(200) := 
-      '  #CONSTANT# constant varchar2(30) := ''#CONSTANT#'';' || c_r;
+      q'~  #CONSTANT# constant varchar2(30) := '#CONSTANT#';~' || c_r;
     l_exception_template varchar2(200) := 
       '  #CONSTANT#' || c_exception_postfix || ' exception;' || c_r;
+    l_exception_no_template varchar2(200) := 
+      '  #CONSTANT#' || c_exception_no_postfix || ' constant number(5,0) := #ERROR#;' || c_r;
     l_pragma_template varchar2(200) := 
       '  pragma exception_init(#CONSTANT#' || c_exception_postfix || ', #ERROR#);' || c_r;
     l_end_clause varchar2(20) := 'end ' || c_package_name || ';';
     
     l_constants clob := c_r || '  -- CONSTANTS:' || c_r;
     l_exceptions clob := c_r || '  -- EXCEPTIONS:' || c_r;
+    l_exception_no clob := c_r || '  -- EXCEPTION NUMBERS:' || c_r;
     l_pragmas clob := c_r || '  -- EXCEPTION INIT:' || c_r;
     
     cursor message_cur is
@@ -373,7 +377,10 @@ as
                replace (l_exception_template, '#CONSTANT#', message_name)
              else null end exception_chunk,
              case when custom_error_number is not null then
-               replace(replace (l_pragma_template, '#CONSTANT#', message_name), '#ERROR#', custom_error_number)
+               replace(replace(l_exception_no_template, '#CONSTANT#', message_name), '#ERROR#', custom_error_number)
+             else null end exception_no,
+             case when custom_error_number is not null then
+               replace(replace(l_pragma_template, '#CONSTANT#', message_name), '#ERROR#', custom_error_number)
              else null end pragma_chunk
         from (select message_name, 
                      case custom_error_number
@@ -391,10 +398,12 @@ as
     for msg in message_cur loop
       clob_append(l_constants, msg.constant_chunk);
       clob_append(l_exceptions, msg.exception_chunk);
+      clob_append(l_exception_no, msg.exception_no);
       clob_append(l_pragmas, msg.pragma_chunk);
     end loop;
     clob_append(l_sql_text, l_constants);
     clob_append(l_sql_text, l_exceptions);
+    clob_append(l_sql_text, l_exception_no);
     clob_append(l_sql_text, l_pragmas);
     clob_append(l_sql_text, l_end_clause);
     

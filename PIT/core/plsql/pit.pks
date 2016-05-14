@@ -9,53 +9,53 @@ as
   /* Constant level_off
    * %usage Getter function for debug level OFF
    */
-  function level_off return number;
+  function level_off return number deterministic;
   /* Constant level_fatal
    * %usage Getter function for debug level FATAL
    */
-  function level_fatal return number;
+  function level_fatal return number deterministic;
   /* Constant level_error
    * %usage Getter function for debug level ERROR
    */
-  function level_error return number;
+  function level_error return number deterministic;
   /* Constant level_warn
    * %usage Getter function for debug level WARN
    */
-  function level_warn return number;
+  function level_warn return number deterministic;
   /* Constant level_info
    * %usage Getter function for debug level INFO
    */
-  function level_info return number;
+  function level_info return number deterministic;
   /* Constant level_debug
    * %usage Getter function for debug level DEBUG
    */
-  function level_debug return number;
+  function level_debug return number deterministic;
   /* Constant level_all
    * %usage Getter function for debug level ALL
    */
-  function level_all return number;
+  function level_all return number deterministic;
   
   
   /* Constant trace_off
    * %usage Getter function for trace level OFF
    */
-  function trace_off return number;
+  function trace_off return number deterministic;
   /* Constant trace_mandatory
    * %usage Getter function for trace level MANDATORY
    */
-  function trace_mandatory return number;
+  function trace_mandatory return number deterministic;
   /* Constant trace_optional
    * %usage Getter function for trace level OPTIONAL
    */
-  function trace_optional return number;
+  function trace_optional return number deterministic;
   /* Constant trace_detailed
    * %usage Getter function for trace level DETAILED
    */
-  function trace_detailed return number;
+  function trace_detailed return number deterministic;
   /* Constant trace_all
    * %usage Getter function for trace level ALL
    */
-  function trace_all return number;
+  function trace_all return number deterministic;
   
   /* Captures debug information, level verbose
    * %param p_message_name Name of the message. Reference to package MSG

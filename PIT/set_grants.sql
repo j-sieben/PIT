@@ -3,9 +3,6 @@ prompt &h3.Grant SYSTEM privileges
 prompt &s1.create session, create procedure, create table, create type to &INSTALL_USER.
 grant create session, create procedure, create table, create type to &INSTALL_USER.;
 
-prompt &s1.create session to &REMOTE_USER.
-grant create session to &REMOTE_USER.;
-
 prompt &h3.Grant OBJECT privileges
 prompt &s1.Select on sys.dba_context
 grant select on dba_context to &INSTALL_USER.;

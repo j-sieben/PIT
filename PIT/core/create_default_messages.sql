@@ -8,6 +8,7 @@ select 'FATAL_ERROR_OCCURRED' message_name,
        null custom_error_number
   from dual union all
 select 'FATAL_ERROR_OCCURRED','GERMAN','Ein schwerwiegender Fehler ist aufgetreten: #1#. Die Anwendung kann nicht fortgesetzt werden.',20,null from dual union all
+select 'PASS_MESSAGE','AMERICAN','#1#',70, null from dual union all
 select 'MODULE_NOT_AVAILABLE','AMERICAN','Module #1# has been requested, but is not available.',40, null from dual union all
 select 'MODULE_NOT_AVAILABLE','GERMAN','Modul "#1#" wurde angefordert, ist aber nicht verfügbar.',40, null from dual union all
 select 'MODULE_LIST_LOADED','AMERICAN','Module list has been successfully loaded.',70, null from dual union all
