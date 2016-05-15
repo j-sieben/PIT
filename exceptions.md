@@ -22,11 +22,11 @@ end;
 
 The advantage of this way to throw errors is that it's very common for many programmers to throw errors like this. After catching the error, you reference a message and pass any optional parameters in as you see fit. We'll look at catching and processing error later.
 
-The disadvantage is that you don't have control over the message that will be logged. Imagine a situation where the same error may occur at several positions within your code. Based on where it is thrown, the parameteres to add to the message may vary. In these situations it may be helpful to be able and create the message right where the error occurs, passing in all parameters you have at the moment you throw the error. This is, why a second possibility to throw errors exists.
+The disadvantage is that you don't have control over the message that will be logged. Imagine a situation where the same error may occur at several positions within your code. Based on where it is thrown, the parameteres to add to the message may vary. In these situations it may be helpful to be able to create the message right where the error occurs, including the parameters you have right then. This is why a second way to throw errors exists.
 
 ### Throwing errors using `pit.error` or `pit.fatal`
 
-If you throw an error using these two functions, the basic mimic stays the same. But now you have the option to pass in any arguments to the error you like. This is achieved by passing in the message name and parameters instead of throwing an error. As you recall, every message has got a matching exception, if severity demands for it. This is now used to throw the error based on the message you just created. Review the following code snippet:
+The idea is to create a message of severity error and have it throw the exception for you. Because we create a message rather than throwing an exception we now have the option to pass in any arguments we need. To achieve this, we pass in the message name and parameters as with any other message logging. As you recall, every message has got a matching exception, if severity demands for it. This is now used to throw the error based on the message you just created. Review the following code snippet:
 
 ```
 begin
