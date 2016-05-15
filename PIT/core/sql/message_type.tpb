@@ -37,8 +37,8 @@ as
         self.message_text :=
           replace(self.message_text, '#' || i || '#', arg_list(i));
       end loop;
-      self.message_text := replace(self.message_text, '#SQLERRM#', sqlerrm);
     end if;
+    self.message_text := replace(self.message_text, '#SQLERRM#', sqlerrm);
     return;
   end;
 end;

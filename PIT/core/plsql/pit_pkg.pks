@@ -29,7 +29,7 @@ as
             constructs an instance of MESSAGE_TYPE for it. It then calls any
             log procedure of all active output modules and passes the message.
    */
-  procedure log(
+  procedure log_event(
     p_level in integer,
     p_message_name in varchar2,
     p_affected_id in varchar2,
@@ -51,7 +51,7 @@ as
             This overloaded version is used to provide a mechanism to log different
             messages to a certain set of log modules only
    */
-  procedure log(
+  procedure log_specific(
     p_message_name in varchar2,
     p_affected_id in varchar2,
     p_arg_list in msg_args,
@@ -94,7 +94,7 @@ as
      %usage This procedure is called from PIT to purge the message stack
             p_date_before determines which entries shall be purged.
    */
-  procedure purge(
+  procedure purge_log(
     p_date_before in date);
   
   

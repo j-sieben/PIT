@@ -73,5 +73,18 @@ as
   procedure delete_parameter(
     p_parameter_id in varchar2,
     p_parameter_group_id in varchar2);
+    
+  
+  /* Writes parameters into files per parameter group
+   * %param p_param_group Optional name of a parameter group. Filters list of
+   *        files to write. If set, only this parameter group gets written to file
+   * %param p_directory Optional directory name of the directory to write the files to
+   * %usage Creates files with the actual parameter values
+   */
+  procedure write_parameter_files(
+    p_param_group in varchar2 default null,
+    p_directory in varchar2 default 'DATA_DIR');
+    
+    
 end param_admin;
 /

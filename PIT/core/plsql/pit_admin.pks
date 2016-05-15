@@ -174,5 +174,14 @@ as
    */
   procedure remove_context_toggle(
     p_toggle_name in varchar2);
+    
+    
+  /* Procedure to write all messages to a file
+   * %param p_directory Name of a directory object the file shall be written to
+   */  
+  procedure write_message_file(
+    p_directory in varchar2 := 'DATA_DIR');
+    
+    
 end pit_admin;
 /

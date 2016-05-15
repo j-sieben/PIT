@@ -8,6 +8,8 @@ as
     package_name varchar2(30),
     error_name varchar2(30));
   type predefined_error_t is table of predefined_error_rec index by binary_integer;
+  
+  type char_table is table of varchar2(4000);
 
   /************************* PACKAGE VARIABLES ********************************/
   g_predefined_errors predefined_error_t;
@@ -37,7 +39,7 @@ as
    */
   function bulk_replace(
     p_string in varchar2,
-    p_chunks in args)
+    p_chunks in char_table)
     return varchar2
   as
     l_string varchar2(32767) := p_string;
@@ -90,14 +92,14 @@ as
     
     -- Read default language
     $IF dbms_db_version.ver_le_11 $THEN
-    select name
+    select name default_language
       into g_default_language
       from (select name, rank() over (order by default_order) rang
               from message_language
              where default_order > 0)
      where rang = 1;
     $ELSE
-    select name 
+    select name default_language
       into g_default_language
       from message_language
      where default_order > 0
@@ -214,14 +216,14 @@ as
   begin
     l_message_length := length(p_message_name);
     if l_message_length > 26 then
-      l_message := bulk_replace(c_msg_too_long, args(
+      l_message := bulk_replace(c_msg_too_long, char_table(
                      '#MESSAGE#', p_message_name,
                      '#LENGTH#', l_message_length));
        raise_application_error(-20000, l_message);
     end if;
     if g_predefined_errors.exists(p_error_number) then
       l_predefined_error := g_predefined_errors(p_error_number);
-      l_message := bulk_replace(c_predefined_error, args(
+      l_message := bulk_replace(c_predefined_error, char_table(
                      '#ERROR#', p_error_number,
                      '#NAME#', l_predefined_error.error_name,
                      '#OWNER#', l_predefined_error.owner,
@@ -516,6 +518,71 @@ as
       p_parameter_id => c_toggle_prefix || replace(upper(p_toggle_name), c_toggle_prefix),
       p_parameter_group_id => c_parameter_group);
   end remove_context_toggle;
+  
+  
+  procedure write_message_file(
+    p_directory in varchar2 default 'DATA_DIR')
+  as
+    cursor message_cur is
+      select m.*, rank() over (partition by message_name order by default_order) rang
+        from message m
+        join message_language ml
+          on m.message_language = ml.name
+       where ml.default_order > 0
+       order by m.message_name, ml.default_order;
+    l_script clob;
+    l_chunk varchar2(32767);
+    c_file_name constant varchar2(30) := 'messages.sql';
+    c_start constant varchar2(200) := q'~begin
+~';
+    c_end constant varchar2(200) := q'~
+  commit;
+  pit_admin.create_message_package;
+end;
+/~';
+    c_merge_template constant varchar2(200) := q'~
+  pit_admin.merge_message(
+    p_message_name => '#NAME#',
+    p_message_text => q'ø#TEXT#ø',
+    p_severity => #SEVERITY#,
+    p_message_language => '#LANGUAGE#',
+    p_error_number => #ERRNO#
+  );
+~';
+    c_translate_template constant varchar2(200) := q'~
+  pit_admin.translate_message(
+    p_message_name => '#NAME#',
+    p_message_text => q'ø#TEXT#ø',
+    p_message_language => '#LANGUAGE#'
+  );
+~';
+  begin
+    dbms_lob.createtemporary(l_script, false, dbms_lob.call);
+    dbms_lob.append(l_script, c_start);
+    for msg in message_cur loop
+      case msg.rang
+      when 1 then
+        if l_chunk is not null then
+          dbms_lob.append(l_script, l_chunk);
+        end if;
+        l_chunk := bulk_replace(c_merge_template, char_table(
+                     '#NAME#', msg.message_name,
+                     '#TEXT#', msg.message_text,
+                     '#SEVERITY#', to_char(msg.severity),
+                     '#LANGUAGE#', msg.message_language,
+                     '#ERRNO#', coalesce(to_char(msg.custom_error_number), 'null')));
+      else
+        l_chunk := l_chunk
+                || bulk_replace(c_translate_template, char_table(
+                     '#NAME#', msg.message_name,
+                     '#TEXT#', msg.message_text,
+                     '#LANGUAGE#', msg.message_language));
+      end case;
+    end loop;
+    dbms_lob.append(l_script, l_chunk);
+    dbms_lob.append(l_script, c_end);
+    dbms_xslprocessor.clob2file(l_script, p_directory, c_file_name);
+  end write_message_file;
 
 begin
   initialize;

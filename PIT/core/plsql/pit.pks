@@ -156,12 +156,13 @@ as
    *        log context. If null, the settings of the log context apply
    * %usage Use this method to implement more generic logging mechanisms. 
    */
-  procedure log(
+  procedure log_specific(
     p_message_name in varchar2,
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
     p_log_threshold in number default null,
     p_log_modules in varchar2 default null);
+    
 
   /* sql_exception
    * %param p_message_name Name of the message. Reference to package MSG
@@ -175,8 +176,8 @@ as
    *        so there is no need to call <code>leave</code> explicitly.
    */
   procedure sql_exception(
-    p_message_name in varchar2,
-    p_arg_list in msg_args := null,
+    p_message_name in varchar2 default null,
+    p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null);
   
   
@@ -192,8 +193,8 @@ as
    *        so there is no need to call <code>leave</code> explicitly.
    */
   procedure stop(
-    p_message_name in varchar2,
-    p_arg_list in msg_args := null,
+    p_message_name in varchar2 default null,
+    p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null);
   
   
@@ -319,10 +320,6 @@ as
    *        Also, make sure that the stack level corresponds to the respective
    *        <code>enter_...</code> procedure to avoid call stack confusion if
    *        the trace level is set to a lower level.<br>
-   *        Specify optional parameter <code>p_action</code> if you want to
-   *        assure that the call stack is maintained correctly, as <code>PIT</code>
-   *        will throw an error if this parameter does not match the respective
-   *        action entry on the call stack.<br>
    *        No call to this procedure is required in <code>exception</code>-Blocks
    *        if you called <code>sql_exception</code> or <code>stop</code> within
    *        the exception block, as these procedures handle this call.
@@ -338,10 +335,6 @@ as
    *        Also, make sure that the stack level corresponds to the respective
    *        <code>enter_...</code> procedure to avoid call stack confusion if
    *        the trace level is set to a lower level.<br>
-   *        Specify optional parameter <code>p_action</code> if you want to
-   *        assure that the call stack is maintained correctly, as <code>PIT</code>
-   *        will throw an error if this parameter does not match the respective
-   *        action entry on the call stack.<br>
    *        No call to this procedure is required in <code>exception</code>-Blocks
    *        if you called <code>sql_exception</code> or <code>stop</code> within
    *        the exception block, as these procedures handle this call.
@@ -357,10 +350,6 @@ as
    *        Also, make sure that the stack level corresponds to the respective
    *        <code>enter_...</code> procedure to avoid call stack confusion if
    *        the trace level is set to a lower level.<br>
-   *        Specify optional parameter <code>p_action</code> if you want to
-   *        assure that the call stack is maintained correctly, as <code>PIT</code>
-   *        will throw an error if this parameter does not match the respective
-   *        action entry on the call stack.<br>
    *        No call to this procedure is required in <code>exception</code>-Blocks
    *        if you called <code>sql_exception</code> or <code>stop</code> within
    *        the exception block, as these procedures handle this call.
@@ -375,10 +364,6 @@ as
    *        to make sure that any possible exit point of a method first calls
    *        this procedure to make sure that the call stack is correctly
    *        maintained.<br>
-   *        Specify optional parameter <code>p_action</code> if you want to
-   *        assure that the call stack is maintained correctly, as <code>PIT</code>
-   *        will throw an error if this parameter does not match the respective
-   *        action entry on the call stack.<br>
    *        No call to this procedure is required in <code>exception</code>-Blocks
    *        if you called <code>sql_exception</code> or <code>stop</code> within
    *        the exception block, as these procedures handle this call.<br>
@@ -636,7 +621,7 @@ as
    *        should be reset only.
    * %usage Call this procedure to reset trace/debug setting to the default.<br>
    *        If <code>p_active_session_only</code> is true, other settings
-   *        remain unchanged. If false, any context is immediately set back
+   *        remain unchanged. If false, any active context cross session is set back
    *        to default. This option is useful to clean up any unwanted debugging.
    */
   procedure reset_context(

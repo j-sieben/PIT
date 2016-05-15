@@ -489,7 +489,7 @@ as
       exception
         when others then
           -- ignore instantiation error
-          null;
+          dbms_output.put_line('Error instantiating adapter "' || l_adapter_list(l_idx) || '": ' || sqlerrm);
       end;
       if l_adapter is not null and l_adapter.status = c_adapter_ok then
         g_active_adapter := l_adapter;
@@ -689,17 +689,6 @@ as
     $END
   end get_module_and_action;
   
-  
-  /* Helper to raise an error based on a message_name
-   * %param p_message_name Name of the error to raise
-   */
-  procedure raise_error(
-    p_message_name in varchar2)
-  as
-  begin
-    execute immediate 'begin raise(msg.' || p_message_name || '_ERR; end;';
-  end raise_error;
-  
 
   /****************************** INTERFACE ***********************************/
   procedure initialize
@@ -707,7 +696,7 @@ as
   begin
     -- set package vars
     g_unrecoverable_error := false;
-    select value
+    select value val
       into g_language
       from nls_session_parameters
      where parameter = 'NLS_LANGUAGE';
@@ -723,7 +712,7 @@ as
   end initialize;
 
   /* CORE */
-  procedure log(
+  procedure log_event(
     p_level in integer,
     p_message_name in varchar2,
     p_affected_id in varchar2,
@@ -740,10 +729,10 @@ as
         p_event_focus => c_event_focus_active,
         p_message => l_message);
     end if;
-  end log;
+  end log_event;
 
 
-  procedure log(
+  procedure log_specific(
     p_message_name in varchar2,
     p_affected_id in varchar2,
     p_arg_list in msg_args,
@@ -776,7 +765,7 @@ as
       end if;
 
       -- call super()
-      log(
+      log_event(
         p_level => l_message.severity,
         p_message_name => p_message_name,
         p_affected_id => p_affected_id,
@@ -791,7 +780,7 @@ as
         end if;
       end if;
     end if;
-  end log;
+  end log_specific;
 
 
   procedure enter(
@@ -933,18 +922,16 @@ as
     p_affected_id in number,
     p_arg_list in msg_args)
   as
-    l_message_name varchar2(30);
   begin
-    log(p_level, p_message_name, p_affected_id, p_arg_list);
+    log_event(p_level, p_message_name, p_affected_id, p_arg_list);
     if p_level = pit.level_fatal then
       clean_stack;
-      l_message_name := coalesce(p_message_name, msg.FATAL_ERROR_OCCURRED);
-      raise_error(pit.level_fatal, l_message_name, null, p_arg_list);
+      raise_error(pit.level_fatal, p_message_name, null, p_arg_list);
     end if;
   end;    
 
 
-  procedure purge(
+  procedure purge_log(
     p_date_before in date)
   as
   begin
@@ -955,7 +942,7 @@ as
     exception
       when others then
         pit.error(msg.message_purge_error);
-  end purge;
+  end purge_log;
   
 
   function get_message(

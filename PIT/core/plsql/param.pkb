@@ -1,6 +1,7 @@
 create or replace package body param
 as
   g_parameter_rec parameter%rowtype;
+  
   type param_rec is record(
     is_modifiable boolean,
     is_existing boolean,
@@ -8,7 +9,7 @@ as
     validation_message parameter_tab.validation_message%type);
   g_param param_rec;
 
-  /* Helper */
+  /* Helper */  
   procedure initialize
   as
   begin
@@ -359,7 +360,6 @@ as
     get_parameter(p_parameter_id, p_parameter_group_id);
     return g_parameter_rec.boolean_value = 'Y';
   end get_boolean;
-
 begin
   initialize;
 end param;

@@ -7,6 +7,8 @@ as
   g_lineno number;
   g_caller_t varchar2(30);
   
+  c_pass_message constant varchar2(30) := 'PASS_MESSAGE';
+  
   /******************************* INTERFACE ************************************/
   
   procedure initialize
@@ -133,7 +135,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log(level_all, p_message_name, p_affected_id, p_arg_list);
+    pit_pkg.log_event(level_all, p_message_name, p_affected_id, p_arg_list);
     $ELSE
     null;
     $END
@@ -147,7 +149,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_debug $THEN
-    pit_pkg.log(level_debug, p_message_name, p_affected_id, p_arg_list);
+    pit_pkg.log_event(level_debug, p_message_name, p_affected_id, p_arg_list);
     $ELSE
     null;
     $END
@@ -161,7 +163,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log(level_info, p_message_name, p_affected_id, p_arg_list);
+    pit_pkg.log_event(level_info, p_message_name, p_affected_id, p_arg_list);
     $ELSE
     null;
     $END
@@ -175,7 +177,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_warn $THEN
-    pit_pkg.log(level_warn, p_message_name, p_affected_id, p_arg_list);
+    pit_pkg.log_event(level_warn, p_message_name, p_affected_id, p_arg_list);
     $ELSE
     null;
     $END
@@ -202,7 +204,7 @@ as
   end fatal;
   
   
-  procedure log(
+  procedure log_specific(
     p_message_name in varchar2,
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -210,37 +212,37 @@ as
     p_log_modules in varchar2 default null)
   as
   begin
-    pit_pkg.log(
+    pit_pkg.log_specific(
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
       p_arg_list => p_arg_list,
       p_log_threshold => p_log_threshold,
       p_log_modules => p_log_modules);
-  end log;
+  end log_specific;
   
 
   procedure sql_exception(
-    p_message_name in varchar2,
+    p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null)
   as
+    l_message_name varchar2(30);
   begin
-    if p_message_name = msg.FATAL_ERROR_OCCURRED then
-       stop(p_message_name, p_arg_list);
-    else
-       pit_pkg.handle_error(level_error, p_message_name, p_affected_id, p_arg_list);
-       leave;
-    end if;
+    l_message_name := coalesce(p_message_name, c_pass_message);
+    pit_pkg.handle_error(level_error, l_message_name, p_affected_id, p_arg_list);
+    leave;
   end sql_exception;
 
 
   procedure stop(
-    p_message_name in varchar2,
-    p_arg_list in msg_args := null,
+    p_message_name in varchar2 default null,
+    p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null)
   as
+    l_message_name varchar2(30);
   begin
-    pit_pkg.handle_error(level_fatal, p_message_name, p_affected_id, p_arg_list);
+    l_message_name := coalesce(p_message_name, c_pass_message);
+    pit_pkg.handle_error(level_fatal, l_message_name, p_affected_id, p_arg_list);
   end stop;
   
   
@@ -402,7 +404,7 @@ as
     p_date_before in date)
   as
   begin
-    pit_pkg.purge(p_date_before);
+    pit_pkg.purge_log(p_date_before);
   end purge_log;
   
   
