@@ -38,7 +38,7 @@ begin
   pit.print(msg.STEP_ONE_VIEW_MESSAGE, msg_args(p_param1));
   <do_something_else>
   -- raise an exception
-  pit.error(msg.STEP_TWO_FAILED_EXC);
+  pit.error(msg.STEP_TWO_FAILED_ERR);
   pit.leave;
 exception
   -- catch predefined Oracle errors as usual
@@ -46,7 +46,7 @@ exception
     -- but provide your own exception messages
     pit.sql_exception(msg.NO_ITEMS_IN_STOCK);
   -- catch your own exceptions just the same way
-  when msg.STEP_TWO_FAILED_EXC then
+  when msg.STEP_TWO_FAILED_ERR then
     -- and provide the predefined message along with it
     pit.stop(msg.STEP_TWO_FAILED);
 end my_proc;
