@@ -6,7 +6,7 @@ After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has
 
 To throw an error, there are two different ways with specific advantages.
 
-### Throw and error using `raise`
+### Throwing errors using `raise`
 
 When using the `raise` command, it's very easy to throw an error: 
 
@@ -24,7 +24,7 @@ The advantage of this way to throw errors is that it's very common for many prog
 
 The disadvantage is that you don't have control over the message that will be logged. Imagine a situation where the same error may occur at several positions within your code. Based on where it is thrown, the parameteres to add to the message may vary. In these situations it may be helpful to be able and create the message right where the error occurs, passing in all parameters you have at the moment you throw the error. This is, why a second possibility to throw errors exists.
 
-### Throwing errors with `pit.error` or `pit.fatal`
+### Throwing errors using `pit.error` or `pit.fatal`
 
 If you throw an error using these two functions, the basic mimic stays the same. But now you have the option to pass in any arguments to the error you like. This is achieved by passing in the message name and parameters instead of throwing an error. As you recall, every message has got a matching exception, if severity demands for it. This is now used to throw the error based on the message you just created. Review the following code snippet:
 
