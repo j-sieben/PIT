@@ -11,7 +11,9 @@ as
 
   procedure leave(p_call_stack in call_stack_type);
 
-  procedure purge_log(p_purge_date in date);
+  procedure purge_log(
+    p_purge_date in date,
+    p_severity_greater_equal in number default null);
 
   procedure context_changed;
 

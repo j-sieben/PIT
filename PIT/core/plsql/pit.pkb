@@ -7,7 +7,7 @@ as
   g_lineno number;
   g_caller_t varchar2(30);
   
-  c_pass_message constant varchar2(30) := 'PASS_MESSAGE';
+  c_pass_message constant varchar2(30) := 'PIT_PASS_MESSAGE';
   
   /******************************* INTERFACE ************************************/
   
@@ -401,18 +401,20 @@ as
   
   
   procedure purge_log(
-    p_date_before in date)
+    p_date_before in date,
+    p_severity_greater_equal in number default null)
   as
   begin
-    pit_pkg.purge_log(p_date_before);
+    pit_pkg.purge_log(p_date_before, p_severity_greater_equal);
   end purge_log;
   
   
   procedure purge_log(
-    p_days_before in number)
+    p_days_before in number,
+    p_severity_greater_equal in number default null)
   as
   begin
-    purge_log(trunc(sysdate) - p_days_before);
+    purge_log(trunc(sysdate) - p_days_before, p_severity_greater_equal);
   end purge_log;
   
   
@@ -434,7 +436,6 @@ as
   begin
     if not p_condition then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert;
   
@@ -447,7 +448,6 @@ as
   begin
     if p_condition is not null then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert_is_null;
   
@@ -460,7 +460,6 @@ as
   begin
     if p_condition is not null then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert_is_null;
   
@@ -473,7 +472,6 @@ as
   begin
     if p_condition is not null then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert_is_null;
   
@@ -486,7 +484,6 @@ as
   begin
     if p_condition is null then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert_not_null;
   
@@ -499,7 +496,6 @@ as
   begin
     if p_condition is null then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert_not_null;
   
@@ -512,15 +508,14 @@ as
   begin
     if p_condition is null then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
     end if;
   end assert_not_null;
   
   
   procedure assert_exists(
-    p_stmt  in varchar2,
+    p_stmt in varchar2,
     p_message_name in varchar2 default msg.ASSERT_EXISTS,
-    p_arg_list   msg_args := null)
+    p_arg_list msg_args := null)
   as
     l_stmt varchar2(32767) := 'select * from (#STMT#)';
   begin
@@ -530,7 +525,6 @@ as
   exception
     when no_data_found then
        pit.error(p_message_name, p_arg_list);
-       raise msg.ASSERTION_FAILED_ERR;
   end assert_exists;
     
     
@@ -546,7 +540,6 @@ as
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
     execute immediate l_stmt into l_result;
     pit.error(p_message_name, p_arg_list);
-    raise msg.ASSERTION_FAILED_ERR;
   exception
     when no_data_found then
        null;

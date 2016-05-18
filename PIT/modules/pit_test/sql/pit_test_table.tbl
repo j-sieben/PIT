@@ -4,7 +4,7 @@ create table pit_test_table(
   outcome varchar2(30),
   message message_type,
   call_stack call_stack_type,
-  params varchar2(2000),
+  params varchar2(4000),
   constraint pk_pit_test_table primary key(message_id)
 ) nested table call_stack.params store as pit_test_table_params;
 

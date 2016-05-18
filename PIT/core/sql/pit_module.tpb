@@ -36,7 +36,8 @@ as
   end leave;
   
   member procedure purge (
-    p_purge_date in date := null)
+    p_purge_date in date := null,
+    p_severity_greater_equal in number := null)
   as
   begin
     null;

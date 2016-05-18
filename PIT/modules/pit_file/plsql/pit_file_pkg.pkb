@@ -169,12 +169,12 @@ as
     -- Test
     open_file(c_write_append);
     self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
-    self.status := msg.MODULE_INSTANTIATED;
+    self.status := msg.PIT_MODULE_INSTANTIATED;
   exception
     when others then
       -- KEINEN Fehler werfen, da in Initialisierungsphase!
       self.fire_threshold := pit.level_off;
-      self.status := msg.MODULE_INITIALIZATION_ERROR;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack := dbms_utility.format_error_stack;
   end initialize_module;
 

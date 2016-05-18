@@ -4,6 +4,7 @@ create table message(
    message_text clob, 
    severity number(3,0),
    custom_error_number number,
+   active_error_number number,
    message_id varchar2(50 char) generated always as (case message_language when 'AMERICAN' then message_name else null end) virtual,
    constraint pk_message primary key (message_name, message_language),
    constraint uq_message_message_id unique (message_id),
@@ -13,12 +14,13 @@ create table message(
    constraint nn_message_text check (message_text is not null)
 ) lob (message_text) store as secure_file; 
 
-comment on table message  is 'central log message repository in various languages.';
+comment on table message is 'central log message repository in various languages.';
 comment on column message.message_name is 'Unique message name. Used to reference the message as a constant in package MSG.';
 comment on column message.message_language is 'Languae reference of the message. Taken from Oracle v$nls_valid_values';
 comment on column message.message_text is 'message text. Positional replacement with pattern #n#';
 comment on column message.severity is 'severity of the message. Allowed values between log.level_fatal and log.level_all';
 comment on column message.custom_error_number is 'Optional pointer to an oracle error number. If null, an exception will be generated. To define custom errors, use null.';
+comment on column message.active_error_number is 'If a custom error number of -20000 is used, this field contains the actual error number as processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE.';
 comment on column message.message_id is 'Virtual column as a surrogate primary key for references';
 
 create index idx_message_language_fk on message(message_language);

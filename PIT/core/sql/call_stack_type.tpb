@@ -46,7 +46,6 @@ as
 
   constructor function call_stack_type(
     self in out nocopy call_stack_type,
-    p_id in number,
     p_session_id in varchar2,
     p_user_name in varchar2,
     p_module_name in varchar2,
@@ -62,7 +61,7 @@ as
   begin
     now_time := dbms_utility.get_time;
     now_cpu_time := dbms_utility.get_cpu_time;
-    self.id := p_id;
+    self.id := pit_log_seq.nextval;
     self.session_id := p_session_id;
     self.module_name := p_module_name;
     self.method_name := p_method_name;

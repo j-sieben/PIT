@@ -200,6 +200,22 @@ as
     when no_data_found then
       raise_application_error(-20000, 'Message ' || p_message_name || ' does not exist.');
   end translate_message;
+  
+  
+  procedure remove_message(
+    p_message_name in varchar2)
+  as
+  begin
+    delete from message
+     where message_name = upper(p_message_name);
+  end remove_message;
+    
+    
+  procedure remove_all_messages
+  as
+  begin
+    delete from message;
+  end remove_all_messages;
 
 
   procedure check_error(
@@ -331,6 +347,15 @@ as
       rollback;
       raise;
   end translate_messages;
+  
+  
+  procedure remove_translation(
+    p_language in varchar2)
+  as
+  begin
+    delete from message
+     where message_language = upper(p_language);
+  end remove_translation;
 
 
   procedure clob_append(
@@ -354,7 +379,6 @@ as
   as
     c_package_name  constant varchar2(30) := 'msg';
     c_exception_postfix constant varchar2(4) := '_ERR';
-    c_exception_no_postfix constant varchar2(1) := '#';
     c_r constant varchar2(2) := chr(10);
     
     l_sql_text clob := 'create or replace package ' || c_package_name || ' as' || c_r;
@@ -362,50 +386,50 @@ as
       q'~  #CONSTANT# constant varchar2(30) := '#CONSTANT#';~' || c_r;
     l_exception_template varchar2(200) := 
       '  #CONSTANT#' || c_exception_postfix || ' exception;' || c_r;
-    l_exception_no_template varchar2(200) := 
-      '  #CONSTANT#' || c_exception_no_postfix || ' constant number(5,0) := #ERROR#;' || c_r;
     l_pragma_template varchar2(200) := 
       '  pragma exception_init(#CONSTANT#' || c_exception_postfix || ', #ERROR#);' || c_r;
     l_end_clause varchar2(20) := 'end ' || c_package_name || ';';
     
     l_constants clob := c_r || '  -- CONSTANTS:' || c_r;
     l_exceptions clob := c_r || '  -- EXCEPTIONS:' || c_r;
-    l_exception_no clob := c_r || '  -- EXCEPTION NUMBERS:' || c_r;
     l_pragmas clob := c_r || '  -- EXCEPTION INIT:' || c_r;
     
     cursor message_cur is
+        with messages as(
+             select message_name,
+                    coalesce(active_error_number, custom_error_number) custom_error_number
+               from message m
+              where message_language = g_default_language)
       select replace(l_constant_template, '#CONSTANT#', message_name) constant_chunk,
              case when custom_error_number is not null then
                replace (l_exception_template, '#CONSTANT#', message_name)
              else null end exception_chunk,
              case when custom_error_number is not null then
-               replace(replace(l_exception_no_template, '#CONSTANT#', message_name), '#ERROR#', custom_error_number)
-             else null end exception_no,
-             case when custom_error_number is not null then
                replace(replace(l_pragma_template, '#CONSTANT#', message_name), '#ERROR#', custom_error_number)
              else null end pragma_chunk
-        from (select message_name, 
-                     case custom_error_number
-                     -- Create unique custom error numbers
-                     when -20000 then -21000 + error_counter
-                     else custom_error_number end custom_error_number
-                from (select message_name,
-                             custom_error_number,
-                             -- count -20000-errors to create unique error number
-                             row_number() over (partition by custom_error_number order by message_name) error_counter
-                        from message m
-                       where message_language = g_default_language))
+        from messages
        order by message_name;
   begin
+    -- set active error numbers for -20000 errors
+    merge into message m
+    using (select message_name, message_language, -21000 + dense_rank() over (order by message_name) active_error_number
+             from message
+            where severity <= 30
+              and custom_error_number = -20000) v
+       on (m.message_name = v.message_name
+       and m.message_language = v.message_language)
+     when matched then update set
+          active_error_number = v.active_error_number;    
+    commit;
+    
+    -- create package code
     for msg in message_cur loop
       clob_append(l_constants, msg.constant_chunk);
       clob_append(l_exceptions, msg.exception_chunk);
-      clob_append(l_exception_no, msg.exception_no);
       clob_append(l_pragmas, msg.pragma_chunk);
     end loop;
     clob_append(l_sql_text, l_constants);
     clob_append(l_sql_text, l_exceptions);
-    clob_append(l_sql_text, l_exception_no);
     clob_append(l_sql_text, l_pragmas);
     clob_append(l_sql_text, l_end_clause);
     

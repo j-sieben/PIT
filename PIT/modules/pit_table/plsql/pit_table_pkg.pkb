@@ -18,11 +18,13 @@ as
 
 
   procedure purge(
-    p_date_until in date)
+    p_date_until in date,
+    p_severity_greater_equal in number default null)
   as
   begin
     delete from pit_log
-     where log_date <= p_date_until;
+     where log_date <= p_date_until
+       and severity >= coalesce(p_severity_greater_equal, 0);
     delete from pit_call_stack
      where wall_clock <= p_date_until;
   end;
@@ -73,10 +75,10 @@ as
   as
   begin
     self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
-    self.status := msg.module_instantiated;
+    self.status := msg.PIT_MODULE_INSTANTIATED;
   exception
     when others then
-      self.status := msg.module_initialization_error;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack  := dbms_utility.format_error_stack;
   end initialize_module;
 

@@ -407,21 +407,29 @@ as
   
   /* Procedure to purge the message log. Overloaded
    * %param p_date_until Date to indicate up to when the log should be purged.
+   * %param p_severity_greater_equal Optional severity level that controls which
+   *        severity of messages shall be purged. Includes an message with a 
+   *        severity passed in and greater
    * %usage Call this procedure to clean up logging information. Only useful if
    *        your output modules support purging of log information, such as
    *        <code>PIT_TABLE</code> output module.
    */
   procedure purge_log(
-    p_date_before in date);
+    p_date_before in date,
+    p_severity_greater_equal in number default null);
     
   /* Procedure to purge the message log. Overloaded
    * %param p_days_since Number of days the logging should be kept.
+   * %param p_severity_greater_equal Optional severity level that controls which
+   *        severity of messages shall be purged. Includes an message with a 
+   *        severity passed in and greater
    * %usage Call this procedure to clean up logging information. Only useful if
    *        your output modules support purging of log information, such as
    *        <code>PIT_TABLE</code> output module.
    */
   procedure purge_log(
-    p_days_before in number);
+    p_days_before in number,
+    p_severity_greater_equal in number default null);
   
   
   /* Procedure to purge session related message log.

@@ -14,6 +14,7 @@ create or replace type pit_module as object(
   member procedure leave (
     p_call_stack call_stack_type),
   member procedure purge(
-    p_purge_date in date default null)
+    p_purge_date in date default null,
+    p_severity_greater_equal in number default null)
 ) not final not instantiable;
 /

@@ -16,7 +16,6 @@ as
   c_trace_le_optional constant boolean := TRUE;
   c_trace_le_detailed constant boolean := TRUE;
   c_trace_le_all constant boolean := TRUE;
-  
 
   /* Function to retrieve the text for a given language without replacements
    * %param p_message_name Name of the message to retrieve the text for
@@ -64,6 +63,23 @@ as
     p_message_text in clob,
     p_message_language in varchar2);
     
+    
+  /* Procedure to remoce a single message. Will delete all translations as well
+   * %param p_mesage_name Name of the message to delete
+   * %usage is called to remove mistyped or unnecessary messages in all languages.
+   *        Will not commit nor re-create the MSG package.
+   */
+  procedure remove_message(
+    p_message_name in varchar2);
+    
+  
+  /* Procedure to remove all messages
+   * %usage Is called if a new set of messages shall be installed and all old and
+   *        unneeded messages shall be thrown away.
+   *        Will not commit nor re-create the MSG package.
+   */
+  procedure remove_all_messages;
+    
 
   /* Procedure to check whether a predefined Oracle error shall be redefined
    * %param p_error_number Error number for which a PIT message shall be created
@@ -97,10 +113,19 @@ as
    */
   procedure translate_messages(
     p_translation_xml in xmltype);
-    
+  
+  
+  /* Procedure to remove a translation
+   * %param p_language Oracle language name of the translation to be removed
+   * %usage Is called to remove all messages in the given language.
+   *        Will not commit.
+   */
+  procedure remove_translation(
+    p_language in varchar2);
 
   /* Procedure to (re-) create package MSG
-   * %param p_directory Optional parameter to define a directory object the creation script shall be written to
+   * %param p_directory Optional parameter to define a directory object the creation script shall be written to.
+   *        if null, the code i executed immediately.
    * %usage If called with  no parameter, this procedure creates package MSG based on the actual messages
    *        from table MESSAGE. It automatically maps all custom or oracle errors and creates respective
    *        exception variables for them.

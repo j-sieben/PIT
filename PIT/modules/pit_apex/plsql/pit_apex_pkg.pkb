@@ -37,7 +37,6 @@ as
       g_apex_triggered_context.trace_level := param.get_integer(c_trg_trace_threshold, c_param_group);
       g_apex_triggered_context.trace_timing := param.get_boolean(c_trg_trace_timing, c_param_group);
       g_apex_triggered_context.log_modules := param.get_string(c_trg_log_modules, c_param_group);
-      g_apex_triggered_context.is_default := false;
    end initialize;
 
    function get_message(
@@ -62,12 +61,12 @@ as
     end case;
     return
       message_type(
-        message_name => p_message_name,
-        message_language => g_session_language,
-        affected_id => null,
-        session_id => p_call_stack.session_id,
-        user_name => null,
-        arg_list => msg_args(l_method_name, l_msg_params));
+        p_message_name => p_message_name,
+        p_message_language => g_session_language,
+        p_affected_id => null,
+        p_session_id => p_call_stack.session_id,
+        p_user_name => null,
+        p_arg_list => msg_args(l_method_name, l_msg_params));
    end get_message;
 
   /* valid_environment checks whether module is called within a valid APEX
@@ -103,8 +102,8 @@ as
         l_message := dbms_lob.substr(p_message.message_text, 32760, 1);
       end if;
     case p_message.message_name
-    when msg.code_enter then l_message := '=> ' || l_message;
-    when msg.code_leave then l_message := '<= ' || l_message;
+    when msg.PIT_CODE_ENTER then l_message := '=> ' || l_message;
+    when msg.PIT_CODE_LEAVE then l_message := '<= ' || l_message;
     else null;
     end case;
       apex_debug.log_long_message(
@@ -191,7 +190,7 @@ as
     l_next_param varchar2(32767);
   begin
     if valid_environment then
-      l_message := get_message(msg.code_enter, p_call_stack);
+      l_message := get_message(msg.PIT_CODE_ENTER, p_call_stack);
       debug_message(l_message);
     end if;
   end enter;
@@ -203,7 +202,7 @@ as
     l_message message_type;
   begin
     if valid_environment then
-      l_message := get_message(msg.code_leave, p_call_stack);
+      l_message := get_message(msg.PIT_CODE_LEAVE, p_call_stack);
       debug_message(l_message);
     end if;
   end leave;
@@ -228,14 +227,14 @@ as
   begin
     if valid_environment then
       self.fire_threshold := g_fire_threshold;
-      self.status := msg.module_instantiated;
+      self.status := msg.PIT_MODULE_INSTANTIATED;
     else
-      self.status := msg.MODULE_INITIALIZATION_ERROR;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack  := 'Invalid APEX environment';
     end if;
   exception
     when others then
-      self.status := msg.MODULE_INITIALIZATION_ERROR;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack  := dbms_utility.format_error_stack;
   end initialize_module;
 

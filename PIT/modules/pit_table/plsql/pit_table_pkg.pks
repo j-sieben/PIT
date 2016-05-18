@@ -5,7 +5,9 @@ as
   
   procedure log(p_message in message_type);
   
-  procedure purge(p_date_until in date);
+  procedure purge(
+    p_date_until in date,
+    p_severity_greater_equal in number default null);
   
   procedure enter(
     p_call_stack in call_stack_type);

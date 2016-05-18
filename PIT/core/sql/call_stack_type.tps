@@ -22,7 +22,6 @@ create or replace type call_stack_type is object (
   member procedure leave,
   constructor function call_stack_type(
     self in out nocopy call_stack_type,
-    p_id in number,
     p_session_id in varchar2,
     p_user_name in varchar2,
     p_module_name in varchar2,

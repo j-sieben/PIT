@@ -76,7 +76,7 @@ as
   as
   begin
     self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
-    self.status := msg.MODULE_INSTANTIATED;
+    self.status := msg.PIT_MODULE_INSTANTIATED;
     -- Copy parameters
     g_mail_template := param.get_string(c_template, c_param_group);
     g_param_list(c_host) := param.get_string(c_host, c_param_group);
@@ -87,7 +87,7 @@ as
   exception
     when others then
       self.fire_threshold := pit.level_off;
-      self.status := msg.MODULE_INITIALIZATION_ERROR;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack := dbms_utility.format_error_stack;
   end initialize_module;
 

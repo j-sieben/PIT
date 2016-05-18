@@ -40,9 +40,6 @@ prompt &s1.Create view V_MESSAGE
 prompt &s1.Copy available languages from V$NLS_PARAMETERS
 @core/create_message_languages.sql
 
-prompt &s1.Create internal messages
-@core/create_default_messages.sql
-
 prompt &h3.Create type declarations
 prompt &s1.Create type ARGS
 @&sql_dir.args.tps
@@ -89,6 +86,9 @@ show errors
 prompt &s1.Create package Body PIT_ADMIN
 @&plsql_dir.pit_admin.pkb
 show errors
+
+prompt &s1.Create internal messages
+@core/create_default_messages.sql
 
 prompt &s1.Create package MSG
 @&plsql_dir.msg.pks

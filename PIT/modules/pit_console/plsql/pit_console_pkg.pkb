@@ -1,5 +1,4 @@
-create or replace
-package body pit_console_pkg
+create or replace package body pit_console_pkg
 as
   /* Konstanten und Variablen */
   c_param_group constant varchar2(20 char) := 'PIT';
@@ -9,12 +8,12 @@ as
   c_leave_template constant varchar2(30 char) := c_pit_console || '_LEAVE_TEMPLATE';
   c_message_template constant varchar2(30 char) := c_pit_console || '_MSG_TEMPLATE';
   c_level_indicator  constant varchar2(30 char) := c_pit_console || '_LEVEL_INDICATOR';
-  
+
   g_message_template varchar2(2000);
   g_enter_template varchar2(2000);
   g_leave_template varchar2(2000);
   g_level_indicator varchar2(10);
-  
+
   /* Initialization
    * %usage Reads several parameters into global variables
    */
@@ -61,12 +60,12 @@ as
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;
-    
+
     -- Indent
     l_indent_length := length(g_level_indicator);
     l_indent_length := (p_call_stack.call_level * l_indent_length) - l_indent_length;
     l_indent := lpad(g_level_indicator, l_indent_length, g_level_indicator);
-    
+
     -- Timing
     if p_call_stack.trace_timing = 'Y' then
       l_timing := ' [wc=' || to_char(p_call_stack.wall_clock) ||
@@ -105,7 +104,7 @@ as
   begin
     print_call_stack(p_call_stack, g_leave_template);
   end leave;
-  
+
   procedure context_changed(
     p_ctx in pit_context)
   as
@@ -113,7 +112,7 @@ as
   begin
     dbms_output.put_line(
       pit.get_message_text(
-        msg.CONTEXT_CHANGED, 
+        msg.CTX_CHANGED,
         msg_args(p_ctx.to_string())));
   end context_changed;
 
@@ -122,10 +121,10 @@ as
   as
   begin
     self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
-    self.status := msg.MODULE_INSTANTIATED;
+    self.status := msg.PIT_MODULE_INSTANTIATED;
   exception
     when others then
-      self.status := msg.MODULE_INITIALIZATION_ERROR;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack := dbms_utility.format_error_stack;
   end initialize_module;
 
