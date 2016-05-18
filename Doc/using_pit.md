@@ -200,7 +200,7 @@ Main use obviously is to pass validation messages, status messages and the like 
 
 ## Using PIT to assert conditions
 
-If you code using the "contractor pattern", you want to assert that incoming parameters meet certain conditions. Should an assertion fail, an exception is thrown and an error message needs to be generated. To help you on this, PIT provides a basic set of assertion methods. Here are the methods PIT provides so far:
+If you code using the *Contractor Pattern*, you want to assert that incoming parameters meet certain conditions. Should an assertion fail, an exception is thrown and an error message needs to be generated. To help you on this, PIT provides a basic set of assertion methods. Here are the methods PIT provides so far:
 
 - `pit.assert_is_null`
 - `pit.assert_not_null`
@@ -208,7 +208,7 @@ If you code using the "contractor pattern", you want to assert that incoming par
 - `pit.assert_exists`
 - `pit.assert_not_exists`
 
-Most methods are provided with overloads for varchar2, number and date, the exists methods take a sql statement as parameter and check whether that statement returns at least one or no row. Only select statements are allowed of course ... The most generic function is `pit.assert` which expects a boolean expression of any kind and returns without result if the condition evaluates to true and throws an exception otherwise.
+Most methods are provided with overloads for varchar2, number and date, the exists methods take a sql statement as parameter and check whether that statement returns at least one or no row. Only `select` statements are allowed here of course ... The most generic function is `pit.assert` which expects a boolean expression of any kind and returns without result if the condition evaluates to true and throws an exception otherwise.
 
 What makes all assertion methods convenient is that they come with a default message (which of course can be translated as any other message PIT uses). Should you require to do so, you may pass in your own message that gets thrown if the assertion fails. Simply pass in the message name and the message parameters optionally. Here's an example on how to check an assertion with a user defined message:
 
@@ -222,6 +222,6 @@ begin
 end;
 ```
 
-If the assertion throws an error, this may lead to a message like "Parameter 'P_PARAM' is supposed to be in the range of [10,20,30] but was 45."
+If the assertion throws an error, this may lead to a message like »Parameter 'P_PARAM' is supposed to be in the range of [10,20,30] but was 45.«
 
 
