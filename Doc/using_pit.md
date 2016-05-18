@@ -49,6 +49,79 @@ If you choose `pit.enter_mandatory`, parameters `p_action` and `p_module` are ma
 
 Choosing an appropriate enter method is a good practice to allow you to set your trace level easily with a context. As a best practice, you may mark your public methods `pit.enter_mandatory` (with the exception of helper packages probably) and the more important private methods within a package `pit.enter_optional`. You then have another two levels at hand to adjust when a method gets traced.
 
+## Handling log messages and debugging with PIT
+
+PIT provides several methods to log messages. These methods are there to support the differnt log levels as you saw at the trace sections earlier already. The log levels PIT supports are:
+
+- `pit.level_off` (10)
+- `pit.level_fatal` (20)
+- `pit.level_error` (30)
+- `pit.level_warn` (40)
+- `pit.level_info` (50)
+- `pit.level_debug` (60)
+- `pit.level_all` (70)
+
+According to the trace methods, PIT provides respective log methods, fi `pit.error`. Keep in mind that, despite the trace methods which need to distinguish between entering and leaving methods, this is not required when logging. Therefore, the log level is sufficient as the method name.
+
+As with the trace methods, log methods accept parameters. Here's a list of parameters available for logging:
+- `p_message_name`: Name of the message that should be logged
+- `p_arg_list`: Optional list of arguments that is passed into the message to replace anchors within the message text
+- `p_affected_id`: Optional ID that is used in specific environments to indicate to which instance a message belongs. Is used seldomly.
+- `p_client_info`: Optionally used in `pit.mandatory` only. `pit.mandatory` maintains settings of `dbms_application_info` to indicate what the code is busy with. `p_client_info` may be used to give additional information for this functionality.
+
+To be able to use the log functionality, you must create a message first. This can be done easily with the `pit_admin` package that offers a suite of administrative methods to maintain PIT. Here you see a sample create of a simple informal message:
+
+```
+begin
+  pit_admin.merge_message(
+    p_message_name => 'MY_FIRST_MESSAGE',
+    p_message_text => 'This is my first PIT message. Hello World!',
+    p_severity => pit.level_info, -- or 50
+    p_message_language => 'AMERICAN');
+  
+  pit.translate_message(
+    p_message_name => 'MY_FIRST_MESSAGE',
+    p_message_text => 'Das ist meine erste PIT-Nachricht. Hallo Welt!',
+    p_message_language => 'GERMAN');
+  
+  pit_admin.create_message_package;
+end;
+```
+
+At the end of the script, method `pit_admin.create_message_package` is called to have `pit_admin` (re)-create package `msg` which after then will contain any message defined so far. This package contains a constant of type `varchar2(30)` with the same name as the message and the value of the message name:
+
+``` 
+create or replace package MSG
+as
+  MY_FIRST_MESSAGE constant varchar2(30) := 'MY_FIRST_MESSAGE';
+  ...
+end msg;
+```
+
+So, immediately after creating package `msg`, you're ready to use it in your code. Here's a code snippet that makes use of this newly created message:
+
+```
+begin
+  pit.info(msg.MY_FIRST_MESSAGE);
+end;
+```
+
+Depending on the settings of the context actually in use and the language settings that applies for your session, you may see the following output on the console:
+
+```
+alter session set nls_language=AMERICAN;
+session altered
+
+<code snippet>
+This is my first PIT message. Hello World!
+
+alter session set nls_language=GERMAN;
+session altered
+
+<code_snippet>
+Das ist meine erste PIT-Nachricht. Hallo Welt!
+```
+
 ## Handling exceptions with PIT
 
 To use PIT to handle your errors, you start by creating a new error message. The easiest way to achieve this is to call `pit_admin.merge_message` and `pit_admin.translate_message` for any message and translation you require. As a first example, let's create a message to handle Oracle error `-2292, Child record found`. This error has no predefined exception, so we will create this along with the message creation. After having created your messages, you call procedure `pit_admin.create_message_package` to (re-)create the central message package `MSG`. Here's the code to create this message:
