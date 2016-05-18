@@ -140,12 +140,13 @@ PIT makes havy use of parameters. Parameters are organized in parameter groups o
 A second component that might be reused is a component to maintain globally managed contexts. In order to store parameters in a way that they are accessible cross-session, you need a globally accessed context. Whereas this type of context is very nice in that access to its information does not incur context switches from neither PL/SQL nor SQL, it's not all intuitive to use. A separate package `UTL_CONTEXT` allows for a smoother utilization of globally accessible contexts. Being a separate package it's easy to reuse this package for your own context requirements.
 
 ## Further reading
+
+If you need assistance in installing PIT, read [Installing PIT](https://github.com/j-sieben/PIT/blob/master/Doc/installing_pit.md)
+
 To get familiar with PIT, read [Using PIT](https://github.com/j-sieben/PIT/blob/master/Doc/using_pit.md)
 
 Details to throwing and catching Exceptions can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/exceptions.md)
 
 To learn more about the concept of *Context* and *Toggles* read [Context and Toggles](https://github.com/j-sieben/PIT/blob/master/Doc/handling_contexts.md)
-
-If you need assistance in installing PIT, read [Installing PIT](https://github.com/j-sieben/PIT/blob/master/Doc/installing_pit.md)
 
 Some advice on how to kep pace high with PIT can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/performance.md)
