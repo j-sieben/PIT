@@ -4,14 +4,14 @@
 
 PIT installation is straight forward: Simply call a script file and off you go. There is one thing to keep in mind: PIT is designed such that it can be used in a mandator aware software. This means that in a normal installation one user ownes the PIT software itself, whereas a second user uses the software. It's possible to make owner and user one and the same. In this case, PIT is installed and used in the same schema. Therefore, the installation scripts expects two schemata, the first for the owner of PIT, the second for the respective user.
 
-As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting SQL*Plus to install PIT, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable NLS_LANG to a value of AMERICAN_AMERICA.AL32UTF8. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is AL32UTF8. 
+As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL*Plus* to install PIT, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`. 
 
 ## PIT privileges
 The script to install PIT requires administrative privileges, as it creates users shouldn't they already exist, grants system and object privileges and so forth. If your administrator needs to have an overview about the rights the PIT installation grants to the respective users, you will find them in file `set_grants.sql` in the installation folder plus in the modules folder for specific output modules. As an example, you will find a file named `user_grants.sql` in folder `modules/pit_file` which assigns execute rights on `utl_file` to the owner of PIT.
 
 Additionally, in script `check_user_exists.sql` quota unlimited on tablespace `users` is granted to the PIT owner and PIT user. Adjust this if you need different settings here.
 
-Starting with version 12c, a new privilege `inherit privileges` must be obeyed. The installation script will grant `inherit any privilege` from SYS to the owner of PIT. This grant is revoked after installation to assure that no method of PIT abuses privileges if these methods are called by SYS.
+Starting with Oracle version 12c, a new privilege `inherit privileges` must be obeyed. The installation script will grant `inherit any privilege` from SYS to the owner of PIT. This grant is revoked after installation to assure that no method of PIT abuses privileges if these methods are called by SYS.
 
 So finally, here's an example on how to install PIT on a windows system:
 
