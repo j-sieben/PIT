@@ -168,9 +168,9 @@ begin
     p_arg_list => msg_args('P_PARAM_2'));
   <do something>
 exception
-  when msg.ASSERT_TRUE_ERR then
+  when msg.PARAM_OUT_OF_RANGE_ERR then
     pit.stop;
-  when msg.ASSERT_IS_NOT_NULL_ERR then
+  when msg.PARAM_MUST_EXIST_ERR then
     pit.sql_exception;
 end;
 ```
@@ -188,17 +188,18 @@ exception
     pit.sql_exception(msg.PARAM_MUST_EXIST, msg_args('P_PARAM_2'));
 end;
 ```
+Difference in the second option is that upon asserting you simply refer to a given message of severity `pit.level_error` or stronger. This is to be able to catch it's exception in the exception handler to divide between three `assert` methods which may be called in the called. In the exception block, the message is enriched with parameters, something that has been done in option 1 already. Option 1 therefore is slightly mor elegant in the exception block but more clumsy in the assertion block.
 
 ### Throwing exceptions with `pit.log_specific`
 
-This method is used if certain messages require a defined set of output modules and a given severity. This method logs in any case and may not be controled by a context if parameter `p_log_threshold` is set. If the severity of the message is `level_error` or `level_fatal`, it won't throw an error that is catchable in the exception block. It will simply log the exception and continue. Use it in special cases only. 
+This method is used if certain messages require a defined set of output modules and a given severity. This method logs the message in any case, context control is overriden if parameter `p_log_threshold` is set. If the severity of the message is `level_error` or `level_fatal`, it won't throw an error that is catchable in the exception block. It will simply log the exception and continue. Use it in special cases only. The example shows its usage in an implementation of the *Finite State Machine* pattern. No matter what the settings are when this method is called, it will log this message anyway, using the `PIT_FSM` output module only. After it has been called, the context comes into play again, so normal logging continues.
 
 ```
 begin
   pit.log_specific(
     p_message_name => msg.FSM_STATUS_CHANGED, 
-    p_arg_list => msg_args(fst.DOC_PROCESS_FAILED),
-    p_affected_id => fsm.fsm_id,
+    p_arg_list => msg_args(p_status),
+    p_affected_id => p_fsm_id,
     p_log_threshold => pit.level_verbose,
     p_log_modules => 'PIT_FSM');
 end;
