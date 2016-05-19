@@ -66,8 +66,7 @@ According to the trace methods, PIT provides respective log methods, fi `pit.err
 As with the trace methods, log methods accept parameters. Here's a list of parameters available for logging:
 - `p_message_name`: Name of the message that should be logged
 - `p_arg_list`: Optional list of arguments that is passed into the message to replace anchors within the message text
-- `p_affected_id`: Optional ID that is used in specific environments to indicate to which instance a message belongs. Is used seldomly.
-- `p_client_info`: Optionally used in `pit.mandatory` only. `pit.mandatory` maintains settings of `dbms_application_info` to indicate what the code is busy with. `p_client_info` may be used to give additional information for this functionality.
+- `p_affected_id`: Optional ID that is used in specific environments to indicate to which instance a message belongs. You normally don't need this parameter.
 
 To be able to use the log functionality, you must create a message first. This can be done easily with the `pit_admin` package that offers a suite of administrative methods to maintain PIT. Here you see a sample create of a simple informal message:
 
