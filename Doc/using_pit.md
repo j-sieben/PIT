@@ -68,7 +68,7 @@ As with the trace methods, log methods accept parameters. Here's a list of param
 - `p_arg_list`: Optional list of arguments that is passed into the message to replace anchors within the message text
 - `p_affected_id`: Optional ID that is used in specific environments to indicate to which instance a message belongs. You normally don't need this parameter.
 
-To be able to use the log functionality, you must create a message first. This can be done easily with the `pit_admin` package that offers a suite of administrative methods to maintain PIT. Here you see a sample create of a simple informal message:
+To be able to use the log functionality, you must create a message first. This can be done easily with the `pit_admin` package that offers a suite of administrative methods to maintain PIT. Here you see how a simple informal message is being created:
 
 ```
 begin
@@ -87,7 +87,7 @@ begin
 end;
 ```
 
-At the end of the script, method `pit_admin.create_message_package` is called to have `pit_admin` (re)-create package `msg` which after then will contain any message defined so far. This package contains a constant of type `varchar2(30)` with the same name as the message and the value of the message name:
+At the end of the script, method `pit_admin.create_message_package` is called to have `pit_admin` (re)-create package `MSG`. It rebuilds the package based on the messages found in table `MESSAGE` where the `pit_admin` writes its messages to. It therefore can be called as often as you like and will always resemble the latest status of your messages. Keep in mind that it doesn't contain the messages itself. So if you just correct a typo there's no need to recreate the message package. This package contains a constant of type `varchar2(30)` with the same name as the message and the value of the message name:
 
 ``` 
 create or replace package MSG
@@ -97,7 +97,7 @@ as
 end msg;
 ```
 
-So, immediately after creating package `msg`, you're ready to use it in your code. Here's a code snippet that makes use of this newly created message:
+So, immediately after creating package `MSG`, you're ready to use it in your code. Here's a code snippet that makes use of this newly created message:
 
 ```
 begin
