@@ -15,7 +15,8 @@ as
     p_purge_date in date,
     p_severity_greater_equal in number default null);
 
-  procedure context_changed;
+  procedure context_changed(
+    p_ctx in pit_context);
 
   procedure initialize_module(self in out nocopy pit_test);
 end pit_test_pkg;

@@ -61,12 +61,30 @@ as
   end purge_log;
 
 
-  procedure context_changed
+  procedure context_changed(
+    p_ctx in pit_context)
   as
     c_component constant varchar2(30) := 'CONTEXT_CHANGED';
-  begin
-    insert into pit_test_table(message_id, component, outcome)
-    values (pit_log_seq.nextval, c_component, c_ok);
+    l_settings varchar2(2000);
+    c_del constant char(1 byte) := '|';
+  begin      
+    l_settings := 
+      p_ctx.log_level || c_del ||
+      p_ctx.trace_level || c_del ||
+      p_ctx.trace_timing || c_del ||
+      p_ctx.log_modules;
+    begin
+      select parameter_id
+        into l_settings
+        from parameter
+       where (parameter_id like 'CONTEXT_TEST%'
+          or parameter_id = 'CONTEXT_DEFAULT')
+         and to_char(string_value) = l_settings;
+    exception
+      when no_data_found then null;
+    end;
+    insert into pit_test_table(message_id, component, outcome, params)
+    values (pit_log_seq.nextval, c_component, c_ok, l_settings);
   end context_changed;
 
 

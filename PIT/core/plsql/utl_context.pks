@@ -86,6 +86,7 @@ as
   function get_first_match(
     p_context in varchar2,
     p_attribute_list in args,
+    p_with_name in boolean default false,
     p_client_id varchar2 default null)
     return varchar2;
 

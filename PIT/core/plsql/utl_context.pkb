@@ -279,10 +279,12 @@ as
   function get_first_match(
     p_context in varchar2,
     p_attribute_list in args,
+    p_with_name in boolean default false,
     p_client_id varchar2 default null)
     return varchar2
   as
     l_value varchar2(4000);
+    c_name_delimiter char(1) := '@';
   begin
     read_settings(p_context);
     for i in p_attribute_list.first .. p_attribute_list.last loop
@@ -301,7 +303,13 @@ as
       else
         null;
       end case;
-      exit when l_value is not null;
+      if l_value is not null then
+        if p_with_name then
+          l_value := l_value || c_name_delimiter || p_attribute_list(i);
+        end if;
+        -- Value found, exit loop
+        exit;
+      end if;
     end loop;
     return l_value;
   end get_first_match;

@@ -175,13 +175,6 @@ begin
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'TOGGLE_LOG_ON'
-   ,p_parameter_group_id => 'PIT'
-   ,p_parameter_description => 'Switch, der das Logging für die übergebenen Module einstellt'
-   ,p_string_value => q'øANONYMOUS:TEST.MY_PROC|DEBUGø'
-  );
-
-  param_admin.edit_parameter(
     p_parameter_id => 'XLIFF_SKELETON'
    ,p_parameter_group_id => 'PIT'
    ,p_parameter_description => 'Rahmendokument einer XLIFF-Uebersetzungsdatei fuer Meldungen.'

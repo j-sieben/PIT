@@ -1,5 +1,19 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <UT>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="9393dc28-c79a-4473-8cba-b1ed2738e162" name="Has ENTER component" class="oracle.dbtools.unit_test.process_validation.QueryReturningNoRows">
+         <validation>
+            <class>oracle.dbtools.unit_test.process_validation.QueryReturningNoRows</class>
+            <name>Abfrage gibt keine Zeilen zurück</name>
+            <description>select 1
+  from pit_test_table
+ where component = 'ENTER';</description>
+            <code>select 1
+  from pit_test_table
+ where component = 'ENTER';</code>
+         </validation>
+      </libitem>
+   </object>
    <object class="oracle.dbtools.unit_test.testObjects.UtTest">
       <test id="09C2A5900281410BA7BE11A1FA801588" name="PIT.ENTER_MANDATORY does not create log" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ENTER_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
          <arg id="6B03485F697540B29C64811C8D29F860" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_ACTION" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
@@ -56,22 +70,7 @@ end;</code>
             <parm argId="5A7C01FF306C49FB9E2D32BC16798978" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_PARAMS&quot;/>" test_out_val="true"/>
             <parm argId="6B03485F697540B29C64811C8D29F860" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ACTION&quot;>FOO&lt;/DataValue>" test_out_val="true"/>
             <parm argId="24566D5063D64C1496ADF4EE26821567" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_MODULE&quot;>FOO&#x9;&lt;/DataValue>" test_out_val="true"/>
-            <validation id="65015771E0CA4E1397771835A1C41AA5" apply="true">
-               <validation>
-                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningNoRows</class>
-                  <name>Abfrage gibt keine Zeilen zurück</name>
-                  <description>-- Geben Sie eine Abfrage ein, die erwartungsgemäß null
--- Zeilen zurückgibt. Beispiel:
-select 1
-  from pit_test_table
- where component = 'ENTER';</description>
-                  <code>-- Geben Sie eine Abfrage ein, die erwartungsgemäß null
--- Zeilen zurückgibt. Beispiel:
-select 1
-  from pit_test_table
- where component = 'ENTER';</code>
-               </validation>
-            </validation>
+            <validation id="65015771E0CA4E1397771835A1C41AA5" apply="true" lib_id="9393dc28-c79a-4473-8cba-b1ed2738e162" lib_name="Has ENTER component"/>
          </test_impl>
       </test>
    </object>
@@ -175,6 +174,20 @@ end;</code>
          </startup>
       </libitem>
    </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="ab66aa57-e4ee-4c1f-857f-0121ee9f9da3" name="Has ENTER entry" class="oracle.dbtools.unit_test.process_validation.QueryReturningRows">
+         <validation>
+            <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+            <name>Abfrage gibt Zeilen zurück</name>
+            <description>select 1
+  from pit_test_table
+ where component = 'ENTER'</description>
+            <code>select 1
+  from pit_test_table
+ where component = 'ENTER'</code>
+         </validation>
+      </libitem>
+   </object>
    <object class="oracle.dbtools.unit_test.testObjects.UtTest">
       <test id="3a2ea1cc-89b5-4c7c-a9de-a4003fce29ad" name="PIT.ENTER_MANDATORY creates log" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ENTER_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
          <arg id="ffff77d4-58b9-41b1-b4e8-6bdd9fc6ba34" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_ACTION" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
@@ -207,12 +220,12 @@ end;</code>
                <name>Abfrage dynamischer Werte</name>
                <description>select 'FOO' as P_ACTION,
        'FOO' as P_MODULE,
-       Msg_params(msg_param('Key', 'Value')) as P_PARAMS,
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS,
        'My Info' as P_CLIENT_INFO
   from dual</description>
                <code>select 'FOO' as P_ACTION,
        'FOO' as P_MODULE,
-       Msg_params(msg_param('Key', 'Value')) as P_PARAMS,
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS,
        'My Info' as P_CLIENT_INFO
   from dual</code>
             </dvq>
@@ -220,18 +233,7 @@ end;</code>
             <parm argId="5f6b9993-6ab9-49c8-b887-1dbcf2eebc8e" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_PARAMS&quot;/>" test_out_val="true"/>
             <parm argId="52f23b3c-6365-4b8c-b453-67b622e94baf" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_CLIENT_INFO&quot;/>" test_out_val="true"/>
             <parm argId="302760cb-0931-41bf-bab2-c48227e9abde" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MODULE&quot;/>" test_out_val="true"/>
-            <validation id="a528ef48-4f14-4bea-9cbd-00719e2a1ea9" apply="true">
-               <validation>
-                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
-                  <name>Abfrage gibt Zeilen zurück</name>
-                  <description>select 1
-  from pit_test_table
- where component = 'ENTER'</description>
-                  <code>select 1
-  from pit_test_table
- where component = 'ENTER'</code>
-               </validation>
-            </validation>
+            <validation id="a528ef48-4f14-4bea-9cbd-00719e2a1ea9" apply="true" lib_id="ab66aa57-e4ee-4c1f-857f-0121ee9f9da3" lib_name="Has ENTER entry"/>
          </test_impl>
       </test>
    </object>
@@ -749,11 +751,11 @@ END;
                   <description>select 1
   from pit_test_table
  where component = 'PURGE_LOG'
-   and params = to_char(trunc(sysdate), 'dd.mm.yyyy hh24:mi:ss')</description>
+   and instr(params, to_char(trunc(sysdate), 'dd.mm.yyyy hh24:mi:ss')) > 0</description>
                   <code>select 1
   from pit_test_table
  where component = 'PURGE_LOG'
-   and params = to_char(trunc(sysdate), 'dd.mm.yyyy hh24:mi:ss')</code>
+   and instr(params, to_char(trunc(sysdate), 'dd.mm.yyyy hh24:mi:ss')) > 0</code>
                </validation>
             </validation>
          </test_impl>
@@ -773,11 +775,11 @@ END;
                   <description>select 1
   from pit_test_table
  where component = 'PURGE_LOG'
-   and params = to_char(trunc(sysdate - 3), 'dd.mm.yyyy hh24:mi:ss')</description>
+   and instr(params, to_char(trunc(sysdate - 3), 'dd.mm.yyyy hh24:mi:ss')) > 0</description>
                   <code>select 1
   from pit_test_table
  where component = 'PURGE_LOG'
-   and params = to_char(trunc(sysdate - 3), 'dd.mm.yyyy hh24:mi:ss')</code>
+   and instr(params, to_char(trunc(sysdate - 3), 'dd.mm.yyyy hh24:mi:ss')) > 0</code>
                </validation>
             </validation>
          </test_impl>
@@ -805,6 +807,78 @@ END;
          </test_impl>
       </test>
    </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="b1ed420b-9f9a-4c9f-a22e-0e9541e86f2c" name="PIT.PURGE_LOG deletes severity" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="PURGE_LOG" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="aac8e496-3ffc-448a-b35c-57a247675807" owner="DOAG" object_name="PURGE_LOG" package_name="PIT" object_id="183490" overload="1" argument_name="P_DATE_BEFORE" position="1" sequence="1" data_level="0" data_type="DATE" in_out="IN" pls_type="DATE" char_length="0" char_used="0"/>
+         <arg id="5a83f19f-a646-4622-a535-00b7d596039e" owner="DOAG" object_name="PURGE_LOG" package_name="PIT" object_id="183490" overload="1" argument_name="P_SEVERITY_GREATER_EQUAL" position="2" sequence="2" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" radix="10" pls_type="NUMBER" char_length="0" char_used="0"/>
+         <startup id="c09b4821-0b0a-49bf-8b4b-d1c3df2776a2" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="b73cbf15-9de6-4e5a-a785-957fe80e7d1a" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="2fc4d259-e40c-4aaf-8bd5-2397b1a8ed03" test_id="b1ed420b-9f9a-4c9f-a22e-0e9541e86f2c" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select trunc(sysdate) as P_DATE_BEFORE, 
+       40 as P_SEVERITY_GREATER_EQUAL
+  from dual</description>
+               <code>select trunc(sysdate) as P_DATE_BEFORE, 
+       40 as P_SEVERITY_GREATER_EQUAL
+  from dual</code>
+            </dvq>
+            <parm argId="5a83f19f-a646-4622-a535-00b7d596039e" utiId="2fc4d259-e40c-4aaf-8bd5-2397b1a8ed03" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_SEVERITY_GREATER_EQUAL&quot;/>" test_out_val="true"/>
+            <parm argId="aac8e496-3ffc-448a-b35c-57a247675807" utiId="2fc4d259-e40c-4aaf-8bd5-2397b1a8ed03" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_DATE_BEFORE&quot;/>" test_out_val="true"/>
+            <validation id="7380ff47-1704-4814-a47b-695475a3cb89" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select *
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, '40') > 0</description>
+                  <code>select *
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, '40') > 0</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="b43c6725-eef6-4520-ae47-15d5e5a97bd5" name="Enter Signature" class="oracle.dbtools.unit_test.editor.DynamicValueQuery">
+         <dvq>
+            <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+            <name>Abfrage dynamischer Werte</name>
+            <description>select 'MY_PROC' as P_ACTION, 
+       'TEST' as P_MODULE, 
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS, 
+       'My info' as P_CLIENT_INFO
+  from dual</description>
+            <code>select 'MY_PROC' as P_ACTION, 
+       'TEST' as P_MODULE, 
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS, 
+       'My info' as P_CLIENT_INFO
+  from dual</code>
+         </dvq>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="90fb070d-4e42-4556-bcc4-806e0858830d" name="PIT.ENTER_MANDATORY creates log when toggled on" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ENTER_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="9d431f54-3ac0-4cf2-b854-b495de84f9aa" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_ACTION" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="144c47a0-52b4-4ab0-a7af-b464e5754dee" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" position="1" sequence="4" data_level="1" data_type="OBJECT" in_out="IN" type_owner="DOAG" type_name="MSG_PARAM" char_length="0" char_used="0"/>
+         <arg id="c6271a65-34fb-445f-a0fb-1c76d4d5a368" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_MODULE" position="2" sequence="2" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="a57b4a56-d066-475b-aeda-1eecaff3c0eb" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_PARAMS" position="3" sequence="3" data_level="0" data_type="TABLE" in_out="IN" type_owner="DOAG" type_name="MSG_PARAMS" char_length="0" char_used="0"/>
+         <arg id="1e060c1c-9cea-480a-982b-65dead7e80e3" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_CLIENT_INFO" position="4" sequence="5" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="c029c027-11fc-45e5-b7c6-ee5a533bda3c" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="2b859861-f62b-480f-b7b5-db2c6a286f41" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="e10d2498-b9a1-469b-84d6-1408ced18fb0" test_id="90fb070d-4e42-4556-bcc4-806e0858830d" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY" dq_lib_id="b43c6725-eef6-4520-ae47-15d5e5a97bd5" dq_lib_name="Enter Signature">
+            <parm argId="1e060c1c-9cea-480a-982b-65dead7e80e3" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_CLIENT_INFO&quot;/>" test_out_val="true"/>
+            <parm argId="c6271a65-34fb-445f-a0fb-1c76d4d5a368" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MODULE&quot;/>" test_out_val="true"/>
+            <parm argId="a57b4a56-d066-475b-aeda-1eecaff3c0eb" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_PARAMS&quot;/>" test_out_val="true"/>
+            <parm argId="9d431f54-3ac0-4cf2-b854-b495de84f9aa" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_ACTION&quot;/>" test_out_val="true"/>
+            <validation id="d16a9ec0-e625-4f46-bf85-c9a80d4f8297" apply="true" lib_id="ab66aa57-e4ee-4c1f-857f-0121ee9f9da3" lib_name="Has ENTER entry"/>
+         </test_impl>
+      </test>
+   </object>
    <object class="oracle.dbtools.unit_test.testObjects.UtSuite">
       <suite id="465b7b5d-12f8-4b2a-824c-d6914bf1ba01" name="PIT" coverage="false" source_conn_name="">
          <suite_item test_id="09C2A5900281410BA7BE11A1FA801588" run_start="true" run_teardown="true"/>
@@ -828,6 +902,8 @@ END;
          <suite_item test_id="50b9be50-337c-49bf-9589-0916629b9768" run_start="true" run_teardown="true"/>
          <suite_item test_id="f00d50d2-cba8-4701-862d-88365da8a149" run_start="true" run_teardown="true"/>
          <suite_item test_id="91d82dee-6dfe-4f2f-92d5-21295f113429" run_start="true" run_teardown="true"/>
+         <suite_item test_id="b1ed420b-9f9a-4c9f-a22e-0e9541e86f2c" run_start="true" run_teardown="true"/>
+         <suite_item test_id="90fb070d-4e42-4556-bcc4-806e0858830d" run_start="true" run_teardown="true"/>
       </suite>
    </object>
 </UT>

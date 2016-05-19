@@ -1,4 +1,4 @@
-create type body pit_file
+create or replace type body pit_file
 as
   overriding member procedure log(
     p_message in message_type)
@@ -10,7 +10,8 @@ as
   end log;
 
   overriding member procedure purge(
-    p_purge_date in date)
+    p_purge_date in date,
+    p_severity_greater_equal in number default null)
   as
   begin
     pit_file_pkg.purge;

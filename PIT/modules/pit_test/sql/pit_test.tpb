@@ -1,10 +1,11 @@
   create or replace 
   type body pit_test 
   as
-  overriding member procedure context_changed
+  overriding member procedure context_changed(
+    p_ctx in pit_context)
   as
   begin
-    pit_test_pkg.context_changed;
+    pit_test_pkg.context_changed(p_ctx);
   end context_changed;
   
   overriding member procedure log (

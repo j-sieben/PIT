@@ -11,7 +11,8 @@
   overriding member procedure purge (
     p_purge_date in date default null,
     p_severity_greater_equal in number default null),
-  overriding member procedure context_changed,
+  overriding member procedure context_changed(
+    p_ctx in pit_context),
   constructor function pit_test (
     self in out nocopy pit_test)
     return self as result)

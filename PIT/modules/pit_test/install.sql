@@ -7,6 +7,7 @@ prompt &h2.Delete existing types and packages
 prompt &h2.Create tables for PIT_TEST
 prompt &s1.Create table pit_test_table
 @modules/pit_test/sql/pit_test_table.tbl
+@modules/pit_test/sql/pit_test_table_result.tbl
 
 prompt &h2.Install types and packages for PIT_TEST
 prompt &s1.Create type pit_test
@@ -28,3 +29,4 @@ show errors
 prompt &h2.Create PIT_TEST parameters and messages
 @modules/pit_test/sql/create_parameters.sql
 @modules/pit_test/sql/create_messages.sql
+@modules/pit_test/sql/create_test_results.sql
