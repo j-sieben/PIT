@@ -176,7 +176,7 @@ Method `pit.sql_exception` is used to achieve two goals:
 - It will log the error to all output modules actually parameterized
 - It will cleanly close the call stack, as it includes a call to leave.
 
-If you defined a message for your own exception, simply raise the error by calling `pit.error(msg.CHILD_RECORD_FOUND_ERR);`. In your exception handler, you catch this exception as you would do with any other exception in PIT.
+If you defined a message for your own exception, simply raise the error by calling `pit.error(msg.CHILD_RECORD_FOUND_ERR);`. In your exception handler, you catch this exception as you would do with any other exception in PIT. Further details on throwing and catching exceptions can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/exceptions.md).
 
 ## Handling message parameters
 
