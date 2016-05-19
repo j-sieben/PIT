@@ -38,7 +38,7 @@ begin
   pit.print(msg.STEP_ONE_VIEW_MESSAGE, msg_args(p_param1));
   <do_something_else>
   -- raise an exception
-  pit.error(msg.STEP_TWO_FAILED_ERR);
+  raise msg.STEP_TWO_FAILED_ERR;
   pit.leave;
 exception
   -- catch predefined Oracle errors as usual
