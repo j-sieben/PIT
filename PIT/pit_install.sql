@@ -51,7 +51,7 @@ prompt &h1.Installing PIT output modules
 @modules/pit_apex/install.sql
 @modules/pit_test/install.sql
 @modules/pit_file/install.sql
---@modules/pit_mail/install.sql
+@modules/pit_mail/install.sql
 
 prompt
 prompt &section.

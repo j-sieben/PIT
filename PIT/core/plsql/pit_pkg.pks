@@ -10,12 +10,6 @@ as
     trace_level number,
     trace_timing boolean,
     log_modules varchar2(2000));
-  
-  
-  /* Getter for SYS.STANDARD.USER to avoid environment changes to SQL
-   */
-  function get_user
-    return varchar2;
     
 
   /* Initialization procedure

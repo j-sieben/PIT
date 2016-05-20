@@ -4,8 +4,8 @@ declare
             from all_objects
            where object_name in (
                  'PIT_TEST', -- Typen
-                 'PIT_TEST_PKG', -- Packages
-                 'PIT_TEST_TABLE', -- Tabellen
+                 'PIT_TEST_PKG', 'PIT_TEST_CASES', -- Packages
+                 'PIT_TEST_TABLE', 'PIT_TEST_TABLE_RESULT', -- Tabellen
                  '' -- Sequenzen
                  )
              and object_type not like '%BODY'

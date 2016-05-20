@@ -21,7 +21,8 @@ as
     active_log_modules module_list_type,
     module_list varchar2(4000),
     context_type varchar2(30),
-    allow_toggle boolean);
+    allow_toggle boolean,
+    broadcast_context_switch boolean);
   g_ctx context_rec;
 
   type named_ctx_list_tab is table of context_type index by varchar2(30);
@@ -56,6 +57,7 @@ as
   c_toggle_group constant varchar2(30) := 'TOGGLE';
   c_toggle_prefix constant varchar2(20) := c_toggle_group || '_';
   c_allow_toggle constant varchar2(30) := 'ALLOW_TOGGLE';
+  c_broadcast_context_switch constant varchar2(30) := 'BROADCAST_CONTEXT_SWITCH';
   c_pass_message constant varchar2(30) := 'PIT_PASS_MESSAGE';
   c_ctx_del char(1) := '|';
   c_ctx_name_del char(1) := '@';
@@ -86,107 +88,19 @@ as
   /* package vars */
   g_active_adapter default_adapter;
   g_language varchar2(30);
-  g_user varchar2(30);
   g_user_name varchar2(30);
   g_client_id varchar2(64);
 
 
-  /********************** GENERIC HELPER FUNCTIONS ****************************/
-
-
-  /* Getter for SYS.STANDARD.USER to avoid environment changes to SQL
-   */
-  function get_user
-    return varchar2
-  as
-  begin
-    return g_user;
-  end get_user;
-
-
-  /* Helper to convert a string with a given separator into an instance of type ARGS
-   * %param p_string_value List of items to be split
-   * %param p_delimiter character that separates the items in <code>p_string_value</code>
-   * %return Array of items (up to 50) of <code>varchar2(50)</code>
-   * %usage internal helper to split a string into an array of chars.
-   */
-  function string_to_table(
-    p_string_value in varchar2,
-    p_delimiter in varchar2 := ':')
-    return args
-  as
-    l_arg_list args := args();
-  begin
-    if p_string_value is not null then
-      for i in 1 .. regexp_count(p_string_value, '\' || p_delimiter) + 1 loop
-        l_arg_list.extend;
-        l_arg_list(i) := regexp_substr(p_string_value, '[^\' || p_delimiter || ']+', 1, i);
-      end loop;
-    end if;
-    return l_arg_list;
-  end string_to_table;
-
-
-  /* Helper to raise an event
-   * %param p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
-   * %param p_event_focus Flag to indicate whether the message shall be broadcasted to all
-   *        available modules or only to active ones.
-   * %param p_call_stack Instance of the actual call stack in the event of ENTER|LEAVE
-   * %param p_date_before Date indicating the point in time, up to when the log shall be purged
-   * %param p_message Instance of the message to raise
-   * %usage Called internally as a generic helper to throw messages to output modules
-   */
+  /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
     p_event in integer,
     p_event_focus in varchar2,
     p_call_stack in call_stack_type default null,
     p_date_before in date default null,
     p_severity_greater_equal in number default null,
-    p_message message_type default null)
-  as
-    pragma autonomous_transaction;
-    l_idx varchar2(50);
-    l_ctx pit_context;
-    l_modules module_list_type;
-    l_trace_timing char(1 byte);
-  begin
-
-    case p_event_focus
-      when c_event_focus_all then
-        l_modules := g_available_modules;
-      when c_event_focus_active then
-        l_modules := g_ctx.active_log_modules;
-      else
-      null;
-    end case;
-
-    -- propagate event to output modules
-    -- l_modules is indexed by varchar2, therefore this loop mimic is required
-    l_idx := l_modules.first;
-    while l_idx is not null loop
-      case p_event
-        when c_context_event then
-          l_trace_timing := case when g_ctx.trace_timing then c_true else c_false end;
-          l_ctx := pit_context(g_ctx.log_level, g_ctx.trace_level, l_trace_timing, g_ctx.module_list);
-          l_modules(l_idx).context_changed(l_ctx);
-        when c_log_event then
-          l_modules(l_idx).log(p_message);
-        when c_purge_event then
-          l_modules(l_idx).purge(p_date_before, p_severity_greater_equal);
-        when c_print_event then
-          l_modules(l_idx).print(p_message);
-        when c_enter_event then
-          l_modules(l_idx).enter(p_call_stack);
-        when c_leave_event then
-          l_modules(l_idx).leave(p_call_stack);
-        else
-          null;
-      end case;
-      l_idx := l_modules.next(l_idx);
-    end loop;
-    commit;
-  end raise_event;
-
+    p_message message_type default null);
+    
 
   /************************** MODULE MAINTENANCE ******************************/
   /* Helper to load all output modules installed extending PIT_MODULE
@@ -264,7 +178,7 @@ as
     l_module varchar2(50);
     l_modules module_list_type;
   begin
-    l_module_names := string_to_table(p_requested_modules);
+    l_module_names := pit_util.string_to_table(p_requested_modules);
     for l_idx in 1 .. l_module_names.count loop
        l_module := l_module_names(l_idx);
        if g_available_modules.exists(l_module) then
@@ -284,8 +198,8 @@ as
     p_settings in varchar2)
   as
   begin
-    g_ctx.context_name := substr(p_settings, instr(p_settings, c_ctx_name_del) + 1);
     g_ctx.settings := substr(p_settings, 1, instr(p_settings, c_ctx_name_del) - 1);
+    g_ctx.context_name := substr(g_ctx.settings, instr(p_settings, c_ctx_name_del) + 1);
     g_ctx.log_level := to_number(regexp_substr(g_ctx.settings, c_split_regex, 1, 1));
     g_ctx.trace_level := to_number(regexp_substr(g_ctx.settings, c_split_regex, 1, 2));
     g_ctx.trace_timing := regexp_substr(g_ctx.settings, c_split_regex, 1, 3) = c_true;
@@ -303,12 +217,17 @@ as
   procedure set_active_context(
     p_settings in varchar2)
   as
+    l_raise_focus varchar2(30);
   begin
     if instr(p_settings, g_ctx.settings) = 0 then
       g_active_adapter.get_session_details(g_user_name, g_client_id);
       store_settings_locally(p_settings);
       utl_context.set_value(c_global_context, c_context_active, g_ctx.settings, g_client_id);
-      raise_event(c_context_event, c_event_focus_all);
+      case when g_ctx.broadcast_context_switch 
+        then l_raise_focus := c_event_focus_all;
+        else l_raise_focus := c_event_focus_active;
+      end case;
+      raise_event(c_context_event, l_raise_focus);
     end if;
   end set_active_context;
 
@@ -434,21 +353,6 @@ as
   end get_context_list;
 
 
-  /* Helper method to restore default context after active context is deactivated
-   * %usage Is called if an active context shall be reset. Clear the active settings
-   *        from the context and raises context switch event
-   */
-  procedure restore_context
-  as
-  begin
-    g_active_adapter.get_session_details(g_user_name, g_client_id);
-
-    utl_context.clear_value(c_global_context, c_context_active, g_client_id);
-    get_context_values;
-    raise_event(c_context_event, c_event_focus_all);
-  end restore_context;
-
-
   /************************* ADATPER MAINTENANCE ******************************/
   /* Helper to load and instantiate an adapter to read client information
    * %usage procedure loads and instantiates adapters which are created
@@ -466,7 +370,7 @@ as
     c_stmt_template constant varchar2(200) := 'begin :a := new #ADAPTER#(); end;';
     l_stmt varchar2(200);
   begin
-    l_adapter_list := string_to_table(param.get_string(c_adapter_preference, c_param_group));
+    l_adapter_list := pit_util.string_to_table(param.get_string(c_adapter_preference, c_param_group));
     l_idx := l_adapter_list.first;
     while l_idx is not null loop
       begin
@@ -491,6 +395,35 @@ as
 
 
   /************************** CALL STACK MAINTENANCE **************************/
+  function check_context_toggle(
+    p_trace_settings in varchar2,
+    p_last_entry in number)
+    return varchar2
+  as
+    l_trace_settings varchar2(4000);
+  begin
+    if g_ctx.allow_toggle then
+      if p_last_entry = 0 then
+        -- first entry on stack
+        if p_trace_settings is not null then
+          l_trace_settings := p_trace_settings;
+          set_active_context(l_trace_settings);
+        end if;
+      else
+        -- get last trace settings from stack
+        l_trace_settings := g_call_stack(p_last_entry).trace_settings;
+        -- If a toggle is found, check whether trace settings differs from current setting
+        if p_trace_settings != coalesce(l_trace_settings, 'FOO') then
+          -- Switch settings and persist new trace settings
+          l_trace_settings := p_trace_settings;
+          set_active_context(l_trace_settings);
+        end if;
+      end if;
+    end if;
+    return l_trace_settings;
+  end check_context_toggle;
+  
+  
   /* Method to add a call to the call stack
    * %param p_module Module that was called
    * %param p_action Method of the module that was called
@@ -505,32 +438,12 @@ as
   as
     l_last_entry binary_integer;
     l_last_trace_entry call_stack_type;
-    l_trace_settings varchar2(4000);
   begin
     l_last_entry := g_call_stack.count;
 
-    if l_last_entry > 0 then
-      if g_ctx.allow_toggle then
-        -- is not first entry on stack, read last stack entry
-        l_last_trace_entry := g_call_stack(l_last_entry);
-        -- as a default, continue trace settings from last entry
-        l_trace_settings := g_call_stack(l_last_entry).trace_settings;
-        -- If a toggle is found, check whether trace settings differs from current setting
-        if p_trace_settings is not null and coalesce(l_last_trace_entry.trace_settings, 'FOO') != p_trace_settings then
-          -- Switch settings and persist new trace settings
-          l_trace_settings := p_trace_settings;
-          set_active_context(l_trace_settings);
-        end if;
-      end if;
-      -- maintain timing
-      if g_ctx.trace_timing then
-         g_call_stack(l_last_entry).pause();
-       end if;
-    else
-      l_trace_settings := p_trace_settings;
-      if g_ctx.allow_toggle and p_trace_settings is not null then
-        set_active_context(l_trace_settings);
-      end if;
+    -- maintain timing
+    if l_last_entry > 0 and g_ctx.trace_timing then
+       g_call_stack(l_last_entry).pause();
     end if;
 
     g_call_stack(l_last_entry + 1) :=
@@ -542,7 +455,7 @@ as
           p_params => p_params,
           p_call_level => l_last_entry + 1,
           p_trace_timing => case when g_ctx.trace_timing then c_true else c_false end,
-          p_trace_settings => l_trace_settings);
+          p_trace_settings => check_context_toggle(p_trace_settings, l_last_entry));
   end push_stack;
 
 
@@ -603,6 +516,67 @@ as
 
 
   /************************** CENTRAL FUNCTIONALITY **************************/
+  /* Helper to raise an event
+   * %param p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
+   * %param p_event_focus Flag to indicate whether the message shall be broadcasted to all
+   *        available modules or only to active ones.
+   * %param p_call_stack Instance of the actual call stack in the event of ENTER|LEAVE
+   * %param p_date_before Date indicating the point in time, up to when the log shall be purged
+   * %param p_message Instance of the message to raise
+   * %usage Called internally as a generic helper to throw messages to output modules
+   */
+  procedure raise_event(
+    p_event in integer,
+    p_event_focus in varchar2,
+    p_call_stack in call_stack_type default null,
+    p_date_before in date default null,
+    p_severity_greater_equal in number default null,
+    p_message message_type default null)
+  as
+    pragma autonomous_transaction;
+    l_idx varchar2(50);
+    l_ctx pit_context;
+    l_modules module_list_type;
+    l_trace_timing char(1 byte);
+  begin
+
+    case p_event_focus
+      when c_event_focus_all then
+        l_modules := g_available_modules;
+      when c_event_focus_active then
+        l_modules := g_ctx.active_log_modules;
+      else
+      null;
+    end case;
+
+    -- propagate event to output modules
+    -- l_modules is indexed by varchar2, therefore this loop mimic is required
+    l_idx := l_modules.first;
+    while l_idx is not null loop
+      case p_event
+        when c_context_event then
+          l_trace_timing := case when g_ctx.trace_timing then c_true else c_false end;
+          l_ctx := pit_context(g_ctx.log_level, g_ctx.trace_level, l_trace_timing, g_ctx.module_list);
+          l_modules(l_idx).context_changed(l_ctx);
+        when c_log_event then
+          l_modules(l_idx).log(p_message);
+        when c_purge_event then
+          l_modules(l_idx).purge(p_date_before, p_severity_greater_equal);
+        when c_print_event then
+          l_modules(l_idx).print(p_message);
+        when c_enter_event then
+          l_modules(l_idx).enter(p_call_stack);
+        when c_leave_event then
+          l_modules(l_idx).leave(p_call_stack);
+        else
+          null;
+      end case;
+      l_idx := l_modules.next(l_idx);
+    end loop;
+    commit;
+  end raise_event;
+
+
   /* Helper function to decide whether a message shall be logged.
    * %param p_severity log_level for which a decision is requested
    * %return flag that indicates whether settings allow for logging.
@@ -679,8 +653,6 @@ as
   procedure initialize
   as
   begin
-    -- set package vars
-    g_user := user;
     select value val
       into g_language
       from nls_session_parameters
@@ -688,6 +660,7 @@ as
     g_call_stack.delete;
     g_ctx.context_type := param.get_string(c_context_type, c_context_group);
     g_ctx.allow_toggle := param.get_boolean(c_allow_toggle, c_param_group);
+    g_ctx.broadcast_context_switch := param.get_boolean(c_broadcast_context_switch, c_param_group);
     load_modules;
     load_adapter;
     get_context_list;
@@ -729,6 +702,7 @@ as
     l_message message_type;
     l_ctx_old context_type;
     l_ctx_new context_type;
+    l_context_name varchar2(30);
     l_ctx_change boolean := false;
   begin
     l_ctx_old.log_level := g_ctx.log_level; 
@@ -736,6 +710,7 @@ as
     l_ctx_old.trace_timing := g_ctx.trace_timing;
     l_ctx_old.log_modules := g_ctx.module_list;
     l_ctx_new := l_ctx_old;
+    l_context_name := g_ctx.context_name;
     l_message := get_message(p_message_name, p_affected_id, p_arg_list);
 
     if l_message.severity <= coalesce(p_log_threshold, g_ctx.log_level) then
@@ -754,10 +729,6 @@ as
         set_context(l_ctx_new);
       end if;
 
-      -- call super()
-      -- instantiate message
-      l_message := get_message(p_message_name, p_affected_id, p_arg_list);
-
       raise_event(
         p_event => c_log_event,
         p_event_focus => c_event_focus_active,
@@ -765,7 +736,7 @@ as
 
       -- clean up after setting changes
       if l_ctx_change then
-        if l_ctx_old.log_modules is null then
+        if l_context_name = c_context_default then
           reset_context;
         else
           set_context(l_ctx_old);
@@ -787,7 +758,7 @@ as
     l_trace_me boolean;
   begin
     l_trace_me := trace_me(p_trace_level);
-    case when g_ctx.allow_toggle or l_trace_me then
+    if g_ctx.allow_toggle or l_trace_me then
       get_module_and_action(
         p_module => l_module,
         p_action => l_action);
@@ -801,9 +772,7 @@ as
       if g_ctx.allow_toggle then
         l_trace_me := trace_me(p_trace_level);
       end if;
-    else
-      null;
-    end case;
+    end if;
 
     if l_trace_me then
       raise_event(
@@ -817,9 +786,9 @@ as
       dbms_application_info.set_module(l_module, l_action);
       dbms_application_info.set_client_info(p_client_info);
     end if;
-/*  exception
+  exception
     when others then
-       pit.error(msg.PIT_FAIL_MESSAGE_CREATION, msg_args(sqlerrm));*/
+       pit.error(msg.PIT_FAIL_MESSAGE_CREATION, msg_args(sqlerrm));
   end enter;
 
 
@@ -944,7 +913,7 @@ as
              p_arg_list => p_arg_list);
   exception
     when NO_DATA_FOUND then
-      pit.error(msg.PIT_MSG_NOT_EXISTING, msg_args(p_message_name));
+      pit.stop(msg.PIT_MSG_NOT_EXISTING, msg_args(p_message_name));
   end get_message;
 
 
@@ -979,29 +948,14 @@ as
     p_trace_timing in boolean,
     p_module_list in varchar2)
   as
-    c_log_level constant varchar2(30) := 'P_LOG_LEVEL';
-    c_trace_level constant varchar2(30) := 'P_TRACE_LEVEL';
-    c_null constant varchar2(30) := 'NULL';
-    c_log_range constant varchar2(30) := '10,20..70';
-    c_trace_range constant varchar2(30) := '10,20..50';
+    l_trace_timing char(1 byte);
+    l_trace_settings varchar2(2000);
   begin
-    pit.assert_not_null(p_log_level, msg.ASSERT_IS_NOT_NULL, msg_args(c_log_level));
-    pit.assert_not_null(p_trace_level, msg.ASSERT_IS_NOT_NULL, msg_args(c_trace_level));
-    pit.assert(
-      p_log_level in (10,20,30,40,50,60,70),
-      msg.PIT_PARAM_OUT_OF_RANGE,
-      msg_args(c_log_level, c_log_range, coalesce(to_char(p_log_level), c_null)));
-    pit.assert(
-      p_trace_level in (10,20,30,40,50),
-      msg.PIT_PARAM_OUT_OF_RANGE,
-      msg_args(c_trace_level, c_trace_range, coalesce(to_char(p_trace_level), c_null)));
-    pit.assert(
-      p_module_list is not null or (p_log_level = 10 and p_trace_level = 10),
-      msg.PIT_MODULE_PARAM_MISSING);
-    set_active_context(
-      p_log_level || c_ctx_del || p_trace_level || c_ctx_del ||
-      case when p_trace_timing then c_true else c_false end || c_ctx_del ||
-      p_module_list || c_ctx_name_del || c_context_active);
+    l_trace_timing := case when p_trace_timing then c_true else c_false end;
+    l_trace_settings := pit_util.concatenate(char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), c_ctx_del);
+    pit_util.check_context_settings(c_context_active, l_trace_settings);
+    
+    set_active_context(l_trace_settings || c_ctx_name_del || c_context_active);
   end set_context;
 
 
@@ -1023,7 +977,7 @@ as
     l_context_name varchar2(30);
     l_settings varchar2(4000);
   begin
-    l_context_name := c_context_prefix || replace(upper(p_context_name), c_context_prefix);
+    l_context_name := pit_util.harmonize_name(c_context_prefix, p_context_name);
     if l_context_name = c_context_default then
       reset_active_context;
     else
@@ -1042,8 +996,14 @@ as
 
   procedure reset_active_context
   as
+    l_raise_focus varchar2(30);
   begin
-    restore_context;
+    g_active_adapter.get_session_details(g_user_name, g_client_id);
+
+    utl_context.clear_value(c_global_context, c_context_active, g_client_id);
+    get_context_values;
+    l_raise_focus := case when g_ctx.broadcast_context_switch then c_event_focus_all else c_event_focus_active end;
+    raise_event(c_context_event, l_raise_focus);
   end reset_active_context;
 
 

@@ -9,9 +9,19 @@ prompt &h3.Remove existing installation
 prompt &h3.Installing context parameters
 @&ctx_dir.create_parameters.sql
 
+prompt &h3.Create type declarations
+prompt &s1.Create type ARGS
+@&sql_dir.args.tps
+show errors
+
 prompt &h3.Installing packages
+prompt &s1.Create package UTL_CONTEXT
 @&plsql_dir.utl_context.pks
+show errors
+
+prompt &s1.Create package body UTL_CONTEXT
 @&plsql_dir.utl_context.pkb
+show errors
 
 -- ONLY REQUIRED IF USED STANDALONE
 --prompt &h3.Granting object privileges on utl_context

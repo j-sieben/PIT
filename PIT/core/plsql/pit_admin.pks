@@ -24,8 +24,8 @@ as
    *        desired language 
    */
   function get_message_text(
-    p_message_name in varchar2,
-    p_message_language in varchar2 := null)
+    p_message_name in message.message_name%type,
+    p_message_language in message.message_language%type := null)
     return varchar2;
     
 
@@ -43,11 +43,11 @@ as
    *        from the range -20999..-20000 is used.
    */
   procedure merge_message(
-    p_message_name in varchar2,
-    p_message_text in clob,
-    p_severity in number,
-    p_message_language in varchar2 default null,
-    p_error_number in number default null);
+    p_message_name in message.message_name%type,
+    p_message_text in message.message_text%type,
+    p_severity in message.severity%type,
+    p_message_language in message.message_language%type default null,
+    p_error_number in message.custom_error_number%type default null);
     
 
   /* Procedure to translate a given message
@@ -59,9 +59,9 @@ as
    *        the only task is to translate it.
    */
   procedure translate_message(
-    p_message_name in varchar2,
-    p_message_text in clob,
-    p_message_language in varchar2);
+    p_message_name in message.message_name%type,
+    p_message_text in message.message_text%type,
+    p_message_language in message.message_language%type);
     
     
   /* Procedure to remoce a single message. Will delete all translations as well
@@ -70,7 +70,7 @@ as
    *        Will not commit nor re-create the MSG package.
    */
   procedure remove_message(
-    p_message_name in varchar2);
+    p_message_name in message.message_name%type);
     
   
   /* Procedure to remove all messages
@@ -81,20 +81,6 @@ as
   procedure remove_all_messages;
     
 
-  /* Procedure to check whether a predefined Oracle error shall be redefined
-   * %param p_error_number Error number for which a PIT message shall be created
-   * %usage Is called whenever a new message is inserted into table MESSAGE with an Oracle
-   *        error number. The function checks whether the Oracle error number is already
-   *        a defined error, such as -1 and DUP_VAL_ON_INDEX.
-   *        If so, the procedure throws an error.
-   *        Limitation: This procedure can only see Exceptions that are defined in 
-   *        packages from SYSTEM or SYS and only exceptions from non wrapped sources.
-   */
-  procedure check_error(
-    p_message_name in varchar2,
-    p_error_number in number);
-    
-
   /* Function to retrieve an XML file in format XLIFF to translate messages
    * %param p_target_language Oracle supported language name the messages shall be translated to
    * %return XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor
@@ -102,7 +88,7 @@ as
    *        error messages into a target language at once.
    */
   function get_translation_xml(
-    p_target_language in varchar2)
+    p_target_language in message.message_language%type)
     return XmlType;
     
 
@@ -121,7 +107,7 @@ as
    *        Will not commit.
    */
   procedure remove_translation(
-    p_language in varchar2);
+    p_language in message.message_language%type);
 
   /* Procedure to (re-) create package MSG
    * %param p_directory Optional parameter to define a directory object the creation script shall be written to.

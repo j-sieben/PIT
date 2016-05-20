@@ -1,18 +1,7 @@
 create or replace package body pit_admin
 as
-  /************************ TYPE DECLARATIONS ********************************/
-  
-  type predefined_error_rec is record(
-    source_type varchar2(30),
-    owner varchar2(30),
-    package_name varchar2(30),
-    error_name varchar2(30));
-  type predefined_error_t is table of predefined_error_rec index by binary_integer;
-  
-  type char_table is table of varchar2(4000);
 
   /************************* PACKAGE VARIABLES ********************************/
-  g_predefined_errors predefined_error_t;
   g_default_language varchar2(30);
   
   c_parameter_group constant varchar2(5) := 'PIT';
@@ -24,35 +13,13 @@ as
   c_false constant char(1 byte) := 'N';
   c_xliff_ns constant varchar2(100) := 'urn:oasis:names:tc:xliff:document:1.2';
   c_del char(1 byte) := '|';
-
-  /* Error messages */
-  c_name_too_long constant varchar2(200) := 'Toggle name is too long. Please use a maximum of 20 byte';
-  c_wrong_pattern constant varchar2(200) := '#WHAT# not correct. Please use a valid format as described in the documentation.';
-  c_context_not_existing constant varchar2(200) := 'The context name you entered does not exist. Please create the named context first.';
+  
+  
+  -- ERROR messages
+  c_error_already_assigned constant varchar2(200) := 'This Oracle error number is already assigned to message #ERRNO#';
+  c_message_does_not_exist constant varchar2(200) := 'Message #MESSAGE# does not exist.';
   
   /********************** GENERIC HELPER FUNCTIONS ****************************/
-  /* Helper to bulk-replace chunks in a text
-   * %param p_string Text with replacement anchors
-   * %param p_chunks List of chars for replacement
-   * %return p_string with replacements
-   * %usage Is called to replace more replacement anchors at once
-   */
-  function bulk_replace(
-    p_string in varchar2,
-    p_chunks in char_table)
-    return varchar2
-  as
-    l_string varchar2(32767) := p_string;
-  begin
-    for i in p_chunks.first .. p_chunks.last loop
-      if mod(i, 2) = 1 then
-        l_string := replace(l_string, p_chunks(i), p_chunks(i+1));
-      end if;
-    end loop;
-    return l_string;
-  end bulk_replace;
-  
-
   /* Initialization procedure
    * %usage Called internally. It has the following functionality:
    *        <ul><li>Read all predefined oracle errors from the oracle packages</li>
@@ -60,36 +27,7 @@ as
    */
   procedure initialize
   as
-    cursor predefined_errors_cur is
-        with errors as(
-             select type source_type, owner, name package_name,
-                    upper(substr(text, instr(text, '(') + 1, instr(text, ')') - instr(text, '(') - 1)) init
-               from all_source a
-              where (owner in ('SYS') or owner like 'APEX%')
-                and upper(text) like '%PRAGMA EXCEPTION_INIT%')
-      select source_type, owner, package_name,
-             -- don't convert to numbers here as it's possible that conversion errors occur
-             trim(replace(substr(init, instr(init, ',') + 1), '''', '')) error_number,
-             trim(substr(init, 1, instr(init, ',') - 1)) error_name
-        from errors;
-    l_predefined_error predefined_error_rec;
-    l_error_number number;
-  begin
-    -- scan all_source view for predefined Oracle errors
-    for err in predefined_errors_cur loop
-      begin
-        l_error_number := to_number(err.error_number, '99999');
-        l_predefined_error.source_type := err.source_type;
-        l_predefined_error.owner := err.owner;
-        l_predefined_error.package_name := err.package_name;
-        l_predefined_error.error_name := err.error_name;
-        g_predefined_errors(err.error_number) := l_predefined_error;
-      exception
-        when others then
-          dbms_output.put_line('Error when trying to convert error number ' || err.error_number);
-      end;
-    end loop;
-    
+  begin    
     -- Read default language
     $IF dbms_db_version.ver_le_11 $THEN
     select name default_language
@@ -111,8 +49,8 @@ as
 
   /****************************** INTERFACE ***********************************/
   function get_message_text(
-    p_message_name in varchar2,
-    p_message_language in varchar2 := null)
+    p_message_name in message.message_name%type,
+    p_message_language in message.message_language%type := null)
     return varchar2
   as
     l_message_text message.message_text%type;
@@ -133,17 +71,18 @@ as
 
 
   procedure merge_message(
-    p_message_name in varchar2,
-    p_message_text in clob,
-    p_severity in number,
-    p_message_language in varchar2 default null,
-    p_error_number in number default null)
+    p_message_name in message.message_name%type,
+    p_message_text in message.message_text%type,
+    p_severity in message.severity%type,
+    p_message_language in message.message_language%type default null,
+    p_error_number in message.custom_error_number%type default null)
   as
     l_message_name message.message_name%type;
   begin
     if p_severity in (20,30) then
-      check_error(p_message_name, p_error_number);
+      pit_util.check_error(p_message_name, p_error_number);
     end if;
+    
     merge into message m
     using (select p_message_name message_name,
                   coalesce(p_message_language, g_default_language) message_language,
@@ -161,15 +100,17 @@ as
           values
             (v.message_name, v.message_language, v.message_text, v.severity, v.custom_error_number);
     commit;
+    
   exception
     when dup_val_on_index then
+      -- DUP_VAL_ON_INDEX may occur if a user tries to assign a custom error number twice
       select message_name
         into l_message_name
         from message
        where custom_error_number = p_error_number
          and rownum = 1;
       rollback;
-      raise_application_error(-20000, 'This Oracle error number is already assigned to message ' || l_message_name);
+      raise_application_error(-20000, replace(c_error_already_assigned, '#ERRNO#', l_message_name));
     when others then
       rollback;
       raise;
@@ -177,9 +118,9 @@ as
 
 
   procedure translate_message(
-    p_message_name in varchar2,
-    p_message_text in clob,
-    p_message_language in varchar2)
+    p_message_name in message.message_name%type,
+    p_message_text in message.message_text%type,
+    p_message_language in message.message_language%type)
   as
     l_severity message.severity%type;
     l_error_number message.custom_error_number%type;
@@ -198,12 +139,12 @@ as
       p_error_number => l_error_number);
   exception
     when no_data_found then
-      raise_application_error(-20000, 'Message ' || p_message_name || ' does not exist.');
+      raise_application_error(-20000, replace(c_message_does_not_exist, '#MESSAGE#', p_message_name));
   end translate_message;
   
   
   procedure remove_message(
-    p_message_name in varchar2)
+    p_message_name in message.message_name%type)
   as
   begin
     delete from message
@@ -218,39 +159,8 @@ as
   end remove_all_messages;
 
 
-  procedure check_error(
-    p_message_name in varchar2,
-    p_error_number in number)
-  as
-    l_predefined_error predefined_error_rec;
-    l_message varchar2(2000);
-    l_message_length binary_integer;
-    c_msg_too_long constant varchar2(200) := 
-      q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
-    c_predefined_error constant varchar2(200) :=
-      q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
-  begin
-    l_message_length := length(p_message_name);
-    if l_message_length > 26 then
-      l_message := bulk_replace(c_msg_too_long, char_table(
-                     '#MESSAGE#', p_message_name,
-                     '#LENGTH#', l_message_length));
-       raise_application_error(-20000, l_message);
-    end if;
-    if g_predefined_errors.exists(p_error_number) then
-      l_predefined_error := g_predefined_errors(p_error_number);
-      l_message := bulk_replace(c_predefined_error, char_table(
-                     '#ERROR#', p_error_number,
-                     '#NAME#', l_predefined_error.error_name,
-                     '#OWNER#', l_predefined_error.owner,
-                     '#PKG#', l_predefined_error.package_name));
-      raise_application_error(-20000, l_message);
-    end if;
-  end check_error;
-
-
   function get_translation_xml(
-    p_target_language in varchar2)
+    p_target_language in message.message_language%type)
     return xmltype
   as
     l_xliff xmltype;
@@ -350,28 +260,12 @@ as
   
   
   procedure remove_translation(
-    p_language in varchar2)
+    p_language in message.message_language%type)
   as
   begin
     delete from message
      where message_language = upper(p_language);
   end remove_translation;
-
-
-  procedure clob_append(
-    p_clob in out nocopy clob,
-    p_chunk in clob)
-  as
-    l_length number;
-  begin
-    l_length := dbms_lob.getlength(p_chunk);
-    if l_length > 0 then
-      if p_clob is null then
-        dbms_lob.createtemporary(p_clob, false, dbms_lob.call);
-      end if;
-      dbms_lob.writeappend(p_clob, l_length, p_chunk);
-    end if;
-  end clob_append;
   
 
   procedure create_message_package (
@@ -410,7 +304,7 @@ as
         from messages
        order by message_name;
   begin
-    -- set active error numbers for -20000 errors
+    -- persist active error numbers for -20000 errors in message table
     merge into message m
     using (select message_name, message_language, -21000 + dense_rank() over (order by message_name) active_error_number
              from message
@@ -424,14 +318,14 @@ as
     
     -- create package code
     for msg in message_cur loop
-      clob_append(l_constants, msg.constant_chunk);
-      clob_append(l_exceptions, msg.exception_chunk);
-      clob_append(l_pragmas, msg.pragma_chunk);
+      pit_util.clob_append(l_constants, msg.constant_chunk);
+      pit_util.clob_append(l_exceptions, msg.exception_chunk);
+      pit_util.clob_append(l_pragmas, msg.pragma_chunk);
     end loop;
-    clob_append(l_sql_text, l_constants);
-    clob_append(l_sql_text, l_exceptions);
-    clob_append(l_sql_text, l_pragmas);
-    clob_append(l_sql_text, l_end_clause);
+    pit_util.clob_append(l_sql_text, l_constants);
+    pit_util.clob_append(l_sql_text, l_exceptions);
+    pit_util.clob_append(l_sql_text, l_pragmas);
+    pit_util.clob_append(l_sql_text, l_end_clause);
     
     if p_directory is not null then
       dbms_xslprocessor.clob2file(l_sql_text, p_directory, c_package_name || '.pkg');
@@ -453,7 +347,7 @@ as
     l_settings varchar2(4000);
   begin
     l_trace_timing := case when p_trace_timing then c_true else c_false end;
-    l_settings := p_log_level || c_del || p_trace_level || c_del || l_trace_timing || c_del || p_module_list;
+    l_settings := pit_util.concatenate(char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), c_del);
     create_named_context(p_context_name, l_settings, p_comment);
   end create_named_context;
   
@@ -463,22 +357,14 @@ as
     p_settings in varchar2,
     p_comment in varchar2 default null)
   as
-    l_context varchar2(30);
     c_standard_comment constant varchar2(200) := ' [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]';
-    c_setting_regex constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(Y|N)\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|N\|))$';
   begin
-    -- Check parameters
-    if length(p_context_name) > 20 then 
-      raise_application_error(-20000, c_name_too_long);
-    end if;
-    if not regexp_like(upper(p_settings), c_setting_regex) then
-      raise_application_error(-20000, replace(c_wrong_pattern, '#WHAT#', 'Settings are'));
-    end if;
+    
+    pit_util.check_context_settings(p_context_name, p_settings);
     
     -- Create parameter
-    l_context := c_context_prefix || replace(upper(p_context_name), c_context_prefix);
     param_admin.edit_parameter(
-      p_parameter_id => l_context,  
+      p_parameter_id => pit_util.harmonize_name(c_context_prefix, p_context_name),  
       p_parameter_group_id => c_parameter_group,  
       p_parameter_description => p_comment || c_standard_comment,
       p_string_value => upper(p_settings));
@@ -503,34 +389,18 @@ as
   as
     l_toggle_name varchar(30);
     l_context_name varchar2(30);
-    l_exists char(1);
-    c_module_regex constant varchar2(200) := '^[A-Z_$#.]+(\:[A-Z_$#.]+)*$';
   begin
-    -- Check parameters
-    if length(p_toggle_name) > 20 then 
-      raise_application_error(-20000, c_name_too_long);
-    end if;
-    if not regexp_like(upper(p_module_list), c_module_regex) then
-      raise_application_error(-20000, replace(c_wrong_pattern, '#WHAT#', 'Module list is'));
-    end if;
-    l_context_name := c_context_prefix || replace(upper(p_context_name), c_context_prefix);
-    select c_true
-      into l_exists
-      from parameter_tab
-     where parameter_id = l_context_name
-       and parameter_group_id = c_parameter_group;
-       
+  
+    pit_util.check_toggle_settings(p_toggle_name, p_module_list, p_context_name);
+    
     -- Create parameter
-    l_toggle_name := c_toggle_prefix || replace(upper(p_toggle_name), c_toggle_prefix);
-    l_context_name := replace(l_context_name, c_context_prefix);
+    l_toggle_name := pit_util.harmonize_name(c_toggle_prefix, p_toggle_name);
+    l_context_name := replace(p_context_name, c_context_prefix);
     param_admin.edit_parameter(
       p_parameter_id => l_toggle_name,  
       p_parameter_group_id => c_parameter_group,  
       p_parameter_description => p_comment,
       p_string_value => upper(p_module_list || c_del || l_context_name));
-  exception
-    when no_data_found then
-      raise_application_error(-20000, c_context_not_existing);      
   end create_context_toggle;
     
     
@@ -589,7 +459,7 @@ end;
         if l_chunk is not null then
           dbms_lob.append(l_script, l_chunk);
         end if;
-        l_chunk := bulk_replace(c_merge_template, char_table(
+        l_chunk := pit_util.bulk_replace(c_merge_template, char_table(
                      '#NAME#', msg.message_name,
                      '#TEXT#', msg.message_text,
                      '#SEVERITY#', to_char(msg.severity),
@@ -597,7 +467,7 @@ end;
                      '#ERRNO#', coalesce(to_char(msg.custom_error_number), 'null')));
       else
         l_chunk := l_chunk
-                || bulk_replace(c_translate_template, char_table(
+                || pit_util.bulk_replace(c_translate_template, char_table(
                      '#NAME#', msg.message_name,
                      '#TEXT#', msg.message_text,
                      '#LANGUAGE#', msg.message_language));
@@ -607,6 +477,7 @@ end;
     dbms_lob.append(l_script, c_end);
     dbms_xslprocessor.clob2file(l_script, p_directory, c_file_name);
   end write_message_file;
+  
 
 begin
   initialize;

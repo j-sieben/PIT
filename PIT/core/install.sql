@@ -41,8 +41,8 @@ prompt &s1.Copy available languages from V$NLS_PARAMETERS
 @core/create_message_languages.sql
 
 prompt &h3.Create type declarations
-prompt &s1.Create type ARGS
-@&sql_dir.args.tps
+prompt &s1.Create type CHAR_TABLE
+@&sql_dir.char_table.tps
 show errors
 
 prompt &s1.Create type MSG_ARGS
@@ -83,8 +83,16 @@ prompt &s1.Create package PIT_ADMIN
 @&plsql_dir.pit_admin.pks
 show errors
 
+prompt &s1.Create package PIT_UTIL
+@&plsql_dir.pit_util.pks
+show errors
+
 prompt &s1.Create package Body PIT_ADMIN
 @&plsql_dir.pit_admin.pkb
+show errors
+
+prompt &s1.Create package Body PIT_UTIL
+@&plsql_dir.pit_util.pkb
 show errors
 
 prompt &s1.Create internal messages
@@ -110,10 +118,6 @@ show errors
 prompt &s1.Create package PIT_PKG
 @&plsql_dir.pit_pkg.pks
 show errors  
-
-prompt &s1.Create package PIT_TEST
-@&plsql_dir.pit_test.pks
-show errors 
 
 prompt &s1.Create global context PIT_CTX
 @core/create_global_context.sql
@@ -142,10 +146,6 @@ show errors
 
 prompt &s1.Create package body PIT_PKG
 @&plsql_dir.pit_pkg.pkb
-show errors
-
-prompt &s1.Create package body PIT_TEST
-@&plsql_dir.pit_test.pkb
 show errors
 
 prompt &h2.Enable remote PIT access

@@ -12,7 +12,7 @@ begin
     -- Exclude Oracle predefined errors from package STANDARD
     if :new.custom_error_number != -20000 then
       $IF $$PIT_INSTALLED $THEN
-      pit_admin.check_error(:new.message_name, :new.custom_error_number);
+      pit_util.check_error(:new.message_name, :new.custom_error_number);
       $ELSE
       null;
       $END

@@ -6,7 +6,7 @@ as
     p_session_id out nocopy varchar2)
    as
    begin
-      p_user_name := pit_pkg.get_user;
+      p_user_name := pit_util.get_user;
       p_session_id := sys_context('USERENV', 'CLIENT_IDENTIFIER');
       if p_session_id is null then
          p_session_id := to_char(sys_context('USERENV','SID'));

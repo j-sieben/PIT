@@ -11,8 +11,8 @@ declare
           select object_name name, object_type type
             from all_objects
            where object_name in (
-                 'ARGS', 'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'PIT_MODULE', 'DEFAULT_ADAPTER', 'CALL_STACK_TYPE', 'PIT_MODULE_LIST', 'PIT_CONTEXT', -- Typen
-                 'MSG', 'PIT', 'PIT_PKG', 'PIT_ADMIN', 'PIT_TEST', -- Packages
+                 'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'PIT_MODULE', 'DEFAULT_ADAPTER', 'CALL_STACK_TYPE', 'PIT_MODULE_LIST', 'PIT_CONTEXT', 'CHAR_TABLE', -- Typen
+                 'MSG', 'PIT', 'PIT_PKG', 'PIT_ADMIN', -- Packages
                  'V_MESSAGE_LANGUAGE', 'V_MESSAGE', -- Views
                  'MESSAGE', 'MESSAGE_LANGUAGE',   -- Tabellen
                  'MSG',  -- Synonyme

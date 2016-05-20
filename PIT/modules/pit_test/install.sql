@@ -18,12 +18,20 @@ prompt &s1.Create package PIT_TEST_PKG
 @modules/pit_test/plsql/pit_test_pkg.pks
 show errors
 
+prompt &s1.Create package PIT_TEST_CASES
+@modules/pit_test/plsql/pit_test_cases.pks
+show errors
+
 prompt &s1.Create type body pit_test
 @modules/pit_test/sql/pit_test.tpb
 show errors
 
 prompt &s1.Create package body PIT_TEST_PKG
 @modules/pit_test/plsql/pit_test_pkg.pkb
+show errors
+
+prompt &s1.Create package body PIT_TEST_CASES
+@modules/pit_test/plsql/pit_test_cases.pkb
 show errors
 
 prompt &h2.Create PIT_TEST parameters and messages

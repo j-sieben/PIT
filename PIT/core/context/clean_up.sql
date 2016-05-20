@@ -11,7 +11,7 @@ declare
     select object_name name, object_type type
       from all_objects
      where object_name in (
-           '', -- Typen
+           'ARGS',  -- Typen
            'UTL_CONTEXT', -- Packages
            '', -- Views
            '', -- Tabellen
