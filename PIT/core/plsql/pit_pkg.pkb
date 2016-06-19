@@ -115,7 +115,7 @@ as
       select to_char(type_name) type_name
         from all_types
        where supertype_name = c_base_module
-         and owner = user;
+         and owner = upper('&INSTALL_USER.');
     c_stmt_template constant varchar2(100) := 'begin :i := new #MODULE#(); end;';
     l_stmt varchar2(200);
     l_module_instance pit_module;
@@ -1060,6 +1060,22 @@ as
       pit.error(msg.PIT_FAIL_READ_MODULE_LIST);
       return;
   end get_available_modules;
+
+
+  function cast_to_char_list(
+    p_msg_args msg_args)
+    return msg_args_char
+  as
+    l_arg_list msg_args_char := msg_args_char();
+  begin
+    if p_msg_args is not null then
+      for i in p_msg_args.first .. p_msg_args.last loop
+        l_arg_list.extend;
+        l_arg_list(i) := dbms_lob.substr(p_msg_args(i), 4000, 1);
+      end loop;
+    end if;
+    return l_arg_list;
+  end cast_to_char_list;
 
 
 begin

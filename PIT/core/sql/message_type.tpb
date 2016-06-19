@@ -28,6 +28,7 @@ as
     self.affected_id := p_affected_id;
     self.session_id := p_session_id;
     self.user_name := p_user_name;
+    self.message_args := p_arg_list;
     if sqlcode > 0 then
       self.stack := dbms_utility.format_error_stack;
       self.backtrace := dbms_utility.format_error_backtrace;

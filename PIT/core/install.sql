@@ -49,6 +49,10 @@ prompt &s1.Create type MSG_ARGS
 @&sql_dir.msg_args.tps
 show errors
 
+prompt &s1.Create type MSG_ARGS_CHAR
+@&sql_dir.msg_args_char.tps
+show errors
+
 prompt &s1.Create type MSG_PARAM
 @&sql_dir.msg_param.tps
 show errors

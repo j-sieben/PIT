@@ -9,6 +9,7 @@ create or replace type message_type force is object(
   stack varchar2(2000),
   backtrace varchar2(2000),
   error_number number (5,0),
+  message_args msg_args,
   constructor function message_type(
     self in out nocopy message_type,
     p_message_name in varchar2,

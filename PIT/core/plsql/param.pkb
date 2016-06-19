@@ -46,7 +46,7 @@ as
            l_is_existing,
            g_param.validation_string,
            g_param.validation_message
-      from DOAG.parameter_group pg
+      from &INSTALL_USER..parameter_group pg
       left join
            (select *
               from parameter p
