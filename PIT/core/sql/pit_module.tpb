@@ -1,4 +1,4 @@
-create type body pit_module 
+create or replace type body pit_module 
 as
   member procedure context_changed(
     p_ctx in pit_context)

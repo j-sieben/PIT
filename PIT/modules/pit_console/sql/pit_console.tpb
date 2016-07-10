@@ -1,4 +1,4 @@
-create type body pit_console 
+create or replace type body pit_console 
 as
   overriding member procedure log(
     p_message in message_type)

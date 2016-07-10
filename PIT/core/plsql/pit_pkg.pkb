@@ -624,7 +624,8 @@ as
     p_module in out nocopy varchar2,
     p_action in out nocopy varchar2)
   as
-    $IF dbms_db_version.ver_le_12 $THEN
+    $IF dbms_db_version.ver_le_11 $THEN
+    $ELSE
     l_module_position integer;
     l_action_position integer;
     l_qualified_name utl_call_stack.unit_qualified_name;
@@ -632,7 +633,9 @@ as
     l_trace_depth integer := 5;
     $END
   begin
-    $IF dbms_db_version.ver_le_12 $THEN
+    $IF dbms_db_version.ver_le_11 $THEN
+    null;
+    $ELSE
     if p_action is null or p_module is null then
       l_qualified_name := utl_call_stack.subprogram(l_trace_depth);
       l_module_position := greatest(least(l_qualified_name.count - 1, 1), 1);
@@ -643,8 +646,6 @@ as
       p_module := lower(coalesce(p_module, l_qualified_name(l_module_position)));
     end if;
     p_action := lower(coalesce(p_action, l_qualified_name(l_action_position)));
-    $ELSE
-    null;
     $END
   end get_module_and_action;
 
