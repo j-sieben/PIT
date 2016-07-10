@@ -173,7 +173,7 @@ as
         end;
         case l_context_type
         when c_global then
-          null;
+          g_context_setting.with_fallback := true;
         when c_force_user then
           g_context_setting.with_user_name := true;
         when c_force_client_id then
