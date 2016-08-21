@@ -2,19 +2,19 @@
 declare
   cursor synonym_cur is
       with synonyms as(
-           select 'PIT' synonym_name from dual union all
+           select 'PIT' synonym_name 
+             from dual 
+           union all
            select 'MSG' from dual union all
            select 'MSG_ARGS' from dual union all
            select 'MSG_PARAM' from dual union all
            select 'MSG_PARAMS' from dual)
     select s.synonym_name,
-           case when a.synonym_name is not null then 'Y' else 'N' end delete_flag
+           case when a.synonym_name is not null then 'Y' end delete_flag
       from synonyms s
-      left join
-           (select synonym_name
-              from all_synonyms 
-             where owner = upper('&REMOTE_USER.')) a 
-        on s.synonym_name = a.synonym_name;
+      left join all_synonyms  a 
+        on s.synonym_name = a.synonym_name
+     where a.owner = upper('&REMOTE_USER.');
 begin
   if '&INSTALL_USER.' != '&REMOTE_USER.' then
     dbms_output.put_line('&h3.Grant execute on pit packages to &REMOTE_USER. and maintain synonyms');
