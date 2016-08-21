@@ -10,7 +10,7 @@ declare
            select 'MSG' from dual union all
            select 'MSG_ARGS' from dual)
     select s.synonym_name,
-           case when a.synonym_name is not null then '>' else 'N' end delete_flag
+           case when a.synonym_name is not null then 'Y' else 'N' end delete_flag
       from synonyms s
       left join
            (select synonym_name
