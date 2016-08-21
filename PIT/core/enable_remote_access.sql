@@ -8,7 +8,9 @@ declare
       with synonyms as(
            select 'PIT' synonym_name from dual union all
            select 'MSG' from dual union all
-           select 'MSG_ARGS' from dual)
+           select 'MSG_ARGS' from dual union all
+           select 'MSG_PARAM' from dual union all
+           select 'MSG_PARAM' from dual)
     select s.synonym_name,
            case when a.synonym_name is not null then 'Y' else 'N' end delete_flag
       from synonyms s
