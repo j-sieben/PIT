@@ -1,11 +1,13 @@
 # Handling context
 In PIT, a context is a small collection of four parameters:
-- Log level (10, 20, .. 70)
-- Trace level (10, 20, .. 50)
-- Trace timing flag (Y|N)
-- List of output modules (PIT_TABLE:PIT_APEX ...)
+- Log level (`10, 20, .. 70`) or `pit.level_off .. pit.level_debug`
+- Trace level (`10, 20, .. 50`) or `pit.trace_off .. pit.trace_detailed`
+- Trace timing flag (`Y|N`)
+- List of output modules (`PIT_TABLE:PIT_APEX` ...)
 
 You may have any number of contexts defined for your application. To define a context, you create a parameter with the naming convention `CONTEXT_<Name>` and a string value of the four beforementioned parameters, separated by pipe signs (|). Package `pit_admin` provides methods named `pit_admin.create_named_context` to help you create these parameters. The methods are overloaded and give you the choice of passing the four parameters in separately or as a preformatted settings string. Using these methods has the advantage of cross checking the values and giving you exceptions if you define values that are not supported.
+
+Please respect the ranges defined above for log and trace level. Also keep in mind that the list of output modules must be provided as a colon-separated list. All packages check input to assure that no undefined values are used.
 
 One special context is called `CONTEXT_DEFAULT`. It serves as the basic setting for your logging. You may define it differently on development and production systems, but you should make sure that it's always present. If you want to switch off logging completely, you can pass in `10|10|N|` to indicate this, but PIT will throw fatal and error log levels anyway. If you don't paramterize at least one output module, danger is that errors may get lost undocumented.
 
@@ -64,7 +66,7 @@ To enable this option, a global PIT parameter called `ALLOW_TOGGLE` needs to be 
 
 The following named contexts are defined (by calling `pit_admin.create_named_context(...)`):
 
-- `CONTEXT_LOG_ALL`, settings: `70|70|Y|PIT_CONSOLE`
+- `CONTEXT_LOG_ALL`, settings: `70|50|Y|PIT_CONSOLE`
 - `CONTEXT_LOG_OFF`, settings: `10|10|N|`
 
 Now, two parameters to toggle the settings are defined (by calling `pit_admin.create_context_toggle(...)`):
