@@ -10,7 +10,7 @@ declare
            select 'MSG' from dual union all
            select 'MSG_ARGS' from dual union all
            select 'MSG_PARAM' from dual union all
-           select 'MSG_PARAM' from dual)
+           select 'MSG_PARAMS' from dual)
     select s.synonym_name,
            case when a.synonym_name is not null then 'Y' else 'N' end delete_flag
       from synonyms s
