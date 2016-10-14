@@ -28,6 +28,13 @@ begin
   );
 
   param_admin.edit_parameter(
+    p_parameter_id => 'PIT_CTX_&INSTALL_USER._TYPE'
+   ,p_parameter_group_id => 'CONTEXT'
+   ,p_parameter_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
+   ,p_string_value => q'øPREFER_USER_CLIENT_IDø'
+  );
+
+  param_admin.edit_parameter(
     p_parameter_id => 'BROADCAST_CONTEXT_SWITCH'
    ,p_parameter_group_id => 'PIT'
    ,p_parameter_description => 'Flag to indicate whether context switches are sent to all available modules (true) or to active modules only'

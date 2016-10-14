@@ -1,21 +1,4 @@
-set verify off
-set serveroutput on
-set echo off
-set feedback off
-set lines 120
-set pages 9999
-whenever sqlerror exit
-clear screen
-
-define INSTALL_USER = &1.;
-define REMOTE_USER = &2.;
-define INSTALL_ON_DEV = true
-
-define section="********************************************************************************"
-define h1="*** "
-define h2="**  "
-define h3="*   "
-define s1=".    - "
+@init.sql &1. &2.
 
 alter session set current_schema=sys;
 prompt
@@ -56,6 +39,9 @@ prompt &h1.Installing PIT output modules
 prompt
 prompt &section.
 prompt &h1.Finalize installation
+
+@check_has_client install_client.sql
+
 prompt &h2.Revoke user rights
 @revoke_grants.sql
 

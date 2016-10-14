@@ -15,7 +15,7 @@ declare
                  '', -- Packages
                  '', '', -- Views
                  '',   -- Tabellen
-                 'PIT', 'MSG', 'MSG_ARGS',  -- Synonyme
+                 'PIT', 'MSG', 'MSG_ARGS', 'MSG_PARAM', 'MSG_PARAMS',  -- Synonyme
                  '' -- Sequenzen
                  )
              and object_type not like '%BODY'
@@ -27,7 +27,7 @@ begin
       execute immediate 'drop ' || obj.type || ' ' || obj.name ||
                         case obj.type 
                         when 'TYPE' then ' force' 
-                        when 'TABLE' then ' cascade constraints' 
+                        when 'TABLE' then ' cascade constraints purge' 
                         end;
      dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.name || ' deleted.');
     

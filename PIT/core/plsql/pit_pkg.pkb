@@ -34,31 +34,31 @@ as
 
   /************************* PACKAGE VARIABLES ********************************/
   /* parameter constants */
-  c_param_group constant varchar2(20) := 'PIT';
-  c_base_module constant varchar2(20) := 'PIT_MODULE';
+  c_param_group constant varchar2(30 byte) := 'PIT';
+  c_base_module constant varchar2(30 byte) := 'PIT_MODULE';
 
   /* log level constants */
-  c_focus_active constant varchar2(15) := 'ACTIVE';
-  c_focus_default constant varchar2(10) := 'DEFAULT';
-  c_log_level constant varchar2(15) := '_LOG_LEVEL';
-  c_trace_level constant varchar2(15) := '_TRACE_LEVEL';
-  c_trace_timing constant varchar2(20) := '_TRACE_TIMING';
-  c_modules constant varchar2(15) := '_MODULES';
-  c_log_modules constant varchar2(20) := '_LOG_MODULES';
-  c_adapter_preference constant varchar2(20) := 'ADAPTER_PREFERENCE';
+  c_focus_active constant varchar2(30 byte) := 'ACTIVE';
+  c_focus_default constant varchar2(30 byte) := 'DEFAULT';
+  c_log_level constant varchar2(30 byte) := '_LOG_LEVEL';
+  c_trace_level constant varchar2(30 byte) := '_TRACE_LEVEL';
+  c_trace_timing constant varchar2(30 byte) := '_TRACE_TIMING';
+  c_modules constant varchar2(30 byte) := '_MODULES';
+  c_log_modules constant varchar2(30 byte) := '_LOG_MODULES';
+  c_adapter_preference constant varchar2(30 byte) := 'ADAPTER_PREFERENCE';
 
   /* context constants */
-  c_global_context constant varchar2(20) := 'PIT_CTX';
-  c_context_type constant varchar2(30) := c_global_context || '_TYPE';
-  c_context_group constant varchar2(30) := 'CONTEXT';
-  c_context_prefix constant varchar2(20) := c_context_group || '_';
-  c_context_default constant varchar2(30) := c_context_group || '_DEFAULT';
-  c_context_active constant varchar2(30) := c_context_group || '_ACTIVE';
-  c_toggle_group constant varchar2(30) := 'TOGGLE';
+  c_global_context constant varchar2(30 byte) := substr('PIT_CTX_&INSTALL_USER.', 1, 30);
+  c_context_type constant varchar2(30 byte) := c_global_context || '_TYPE';
+  c_context_group constant varchar2(30 byte) := 'CONTEXT';
+  c_context_prefix constant varchar2(30 byte) := c_context_group || '_';
+  c_context_default constant varchar2(30 byte) := c_context_group || '_DEFAULT';
+  c_context_active constant varchar2(30 byte) := c_context_group || '_ACTIVE';
+  c_toggle_group constant varchar2(30 byte) := 'TOGGLE';
   c_toggle_prefix constant varchar2(20) := c_toggle_group || '_';
-  c_allow_toggle constant varchar2(30) := 'ALLOW_TOGGLE';
-  c_broadcast_context_switch constant varchar2(30) := 'BROADCAST_CONTEXT_SWITCH';
-  c_pass_message constant varchar2(30) := 'PIT_PASS_MESSAGE';
+  c_allow_toggle constant varchar2(30 byte) := 'ALLOW_TOGGLE';
+  c_broadcast_context_switch constant varchar2(30 byte) := 'BROADCAST_CONTEXT_SWITCH';
+  c_pass_message constant varchar2(30 byte) := 'PIT_PASS_MESSAGE';
   c_ctx_del char(1) := '|';
   c_ctx_name_del char(1) := '@';
 
@@ -115,7 +115,7 @@ as
       select to_char(type_name) type_name
         from all_types
        where supertype_name = c_base_module
-         and owner = upper('&INSTALL_USER.');
+         and owner = '&INSTALL_USER.';
     c_stmt_template constant varchar2(100) := 'begin :i := new #MODULE#(); end;';
     l_stmt varchar2(200);
     l_module_instance pit_module;
@@ -437,7 +437,6 @@ as
     p_trace_settings in varchar2 default null)
   as
     l_last_entry binary_integer;
-    l_last_trace_entry call_stack_type;
   begin
     l_last_entry := g_call_stack.count;
 

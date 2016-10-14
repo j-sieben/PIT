@@ -59,8 +59,6 @@ as
     now_time integer;
     now_cpu_time integer;
   begin
-    now_time := dbms_utility.get_time;
-    now_cpu_time := dbms_utility.get_cpu_time;
     self.id := pit_log_seq.nextval;
     self.session_id := p_session_id;
     self.module_name := p_module_name;
@@ -71,6 +69,8 @@ as
     self.trace_timing := p_trace_timing;
     self.trace_settings := p_trace_settings;
     if self.trace_timing = 'Y' then
+      now_time := dbms_utility.get_time;
+      now_cpu_time := dbms_utility.get_cpu_time;
       self.wall_clock := localtimestamp;
       self.elapsed := null;
       self.elapsed_cpu := null;

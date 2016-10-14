@@ -2,7 +2,7 @@ create or replace package body utl_context
 as
   /* PACKAGE CONSTANTS */
   -- Global Constants
-  c_package_name constant varchar2(20) := $$PLSQL_UNIT;
+  c_package_name constant varchar2(30 byte) := $$PLSQL_UNIT;
   c_true constant char(1) := 'Y';
   c_false constant char(1) := 'N';
 
@@ -142,7 +142,8 @@ as
                   then c_true else c_false
                   end is_global
         from dba_context
-       where package = c_package_name;
+       where package = c_package_name
+         and schema = '&INSTALL_USER.';
     l_dummy varchar2(30);
     l_context_type varchar2(30);
     l_parameter_id varchar2(30);
@@ -154,22 +155,19 @@ as
       g_context_setting.is_global := case ctx.is_global
         when c_true then true else false end;
       if g_context_setting.is_global then
-        l_parameter_id :=
-          ctx.namespace || c_parameter_postfix;
+        l_parameter_id := replace(ctx.namespace, '_&INSTALL_USER.') || c_parameter_postfix;
         begin
-          l_context_type := to_char(param.get_string(
-            l_parameter_id, c_parameter_group_id));
+          l_context_type := to_char(param.get_string(l_parameter_id, c_parameter_group_id));
         exception
           when no_data_found then
-            -- Parameter for context missing
-            insert into parameter_tab(
-              parameter_id, parameter_group_id, string_value,
-              parameter_type_id, validation_string)
-            values (
-              l_parameter_id, c_parameter_group_id,
-              to_clob(c_global), c_parameter_type,
-              c_validation_string);
             l_context_type := c_global;
+            param_admin.edit_parameter(
+              p_parameter_id => l_parameter_id,
+              p_parameter_group_id => c_parameter_group_id, 
+              p_parameter_description => 'Type of context ' || l_parameter_id,
+              p_string_value => l_context_type,
+              p_parameter_type_id => c_parameter_type,
+              p_validation_string => c_validation_string);
         end;
         case l_context_type
         when c_global then
@@ -195,8 +193,7 @@ as
           null;
         end case;
       end if;
-      g_context_settings(ctx.namespace) :=
-        g_context_setting;
+      g_context_settings(ctx.namespace) := g_context_setting;
     end loop;
   end initialize;
   
@@ -249,8 +246,7 @@ as
     case
     when l_value is null and g_context_setting.with_fallback
     then -- Fallback auf allgemeinen Parameter
-      l_value := get_with_client_id(
-                   p_context, p_attribute, '');
+      l_value := get_with_client_id(p_context, p_attribute, '');
     when l_value is null and
          g_context_setting.with_session_id
     then -- Lese sessionspezifischen Parameter

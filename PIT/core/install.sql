@@ -1,88 +1,93 @@
+
+prompt
+prompt &h1.Installing parameter package
+@core/parameters/install.sql
+
+prompt
+prompt &h1.Installing context package
+@core/context/install.sql
+
 define sql_dir=core/sql/
 define plsql_dir=core/plsql/
 
-prompt &h2.Installing parameter package
-@core/parameters/install.sql
-
-prompt &h2.Installing context package
-@core/context/install.sql
-
-prompt &h3.Check installation prerquisites
+prompt
+prompt &h1.Installing PIT core
+prompt &h2.Check installation prerequisites
 @core/check_prerequisites.sql
 
-prompt &h3.Remove existing installation
+prompt &h2.Remove existing installation
 @core/clean_up_install.sql
 
-prompt &h3.Setting compile flags
+prompt &h2.Setting compile flags
 @core/set_compile_flags.sql
 
-prompt &h3.Create sequences
+prompt &h2.Create sequences
 prompt &s1.Create sequence PIT_LOG_SEQ
-@&sql_dir.pit_log_seq.seq
+@&sql_dir.sequences/pit_log_seq.seq
 
-prompt &h3.Create tables and initial data
+prompt &h2.Create tables and initial data
 prompt &s1.Create table MESSAGE_LANGUAGE
-@&sql_dir.message_language.tbl
+@&sql_dir.tables/message_language.tbl
 
 prompt &s1.Create view V_MESSAGE_LANGUAGE
-@&sql_dir.v_message_language.vw
+@&sql_dir.views/v_message_language.vw
 
 prompt &s1.Create table MESSAGE
-@&sql_dir.message.tbl
+@&sql_dir.tables/message.tbl
 
 prompt &s1.Create trigger TRG_MESSAGE_BRIU
-@&plsql_dir.trg_message_briu.trg
+@&sql_dir.triggers/trg_message_briu.trg
 show errors
 
 prompt &s1.Create view V_MESSAGE
-@&sql_dir.v_message.vw
+@&sql_dir.views/v_message.vw
 
 prompt &s1.Copy available languages from V$NLS_PARAMETERS
 @core/create_message_languages.sql
 
-prompt &h3.Create type declarations
+prompt &h2.Create type declarations
 prompt &s1.Create type CHAR_TABLE
-@&sql_dir.char_table.tps
+@&sql_dir.types/char_table.tps
 show errors
 
 prompt &s1.Create type MSG_ARGS
-@&sql_dir.msg_args.tps
+@&sql_dir.types/msg_args.tps
 show errors
 
 prompt &s1.Create type MSG_ARGS_CHAR
-@&sql_dir.msg_args_char.tps
+@&sql_dir.types/msg_args_char.tps
 show errors
 
 prompt &s1.Create type MSG_PARAM
-@&sql_dir.msg_param.tps
+@&sql_dir.types/msg_param.tps
 show errors
 
 prompt &s1.Create type MSG_PARAMS
-@&sql_dir.msg_params.tps
+@&sql_dir.types/msg_params.tps
 show errors
 
 prompt &s1.Create type MESSAGE_TYPE
-@&sql_dir.message_type.tps
+@&sql_dir.types/message_type.tps
 show errors
 
 prompt &s1.Create type CALL_STACK_TYPE
-@&sql_dir.call_stack_type.tps
+@&sql_dir.types/call_stack_type.tps
 show errors
 
 prompt &s1.Create type DEFAULT_ADAPTER
-@&sql_dir.default_adapter.tps
+@&sql_dir.types/default_adapter.tps
 show errors
 
 prompt &s1.Create type PIT_CONTEXT
-@&sql_dir.pit_context.tps
-@&sql_dir.pit_context.tpb
+@&sql_dir.types/pit_context.tps
+@&sql_dir.types/pit_context.tpb
 show errors
 
 prompt &s1.Create type PIT_MODULE
-@&sql_dir.pit_module.tps
+@&sql_dir.types/pit_module.tps
 show errors
 
-prompt &h3.Create package declarations
+prompt &h2.Create package declarations
 prompt &s1.Create package PIT_ADMIN
 @&plsql_dir.pit_admin.pks
 show errors
@@ -126,24 +131,24 @@ show errors
 prompt &s1.Create global context PIT_CTX
 @core/create_global_context.sql
 
-prompt &h3.Create type bodies
+prompt &h2.Create type bodies
 prompt &s1.Create type body MESSAGE_TYPE
-@&sql_dir.message_type.tpb
+@&sql_dir.types/message_type.tpb
 show errors
 
 prompt &s1.Create type body CALL_STACK_TYPE
-@&sql_dir.call_stack_type.tpb
+@&sql_dir.types/call_stack_type.tpb
 show errors
 
 prompt &s1.Create type body DEFAULT_ADAPTER
-@&sql_dir.default_adapter.tpb
+@&sql_dir.types/default_adapter.tpb
 show errors
 
 prompt &s1.Create type body PIT_MODULE
-@&sql_dir.pit_module.tpb
+@&sql_dir.types/pit_module.tpb
 show errors
 
-prompt &h3.Create package bodies
+prompt &h2.Create package bodies
 prompt &s1.Create package body PIT
 @&plsql_dir.pit.pkb
 show errors
@@ -151,6 +156,3 @@ show errors
 prompt &s1.Create package body PIT_PKG
 @&plsql_dir.pit_pkg.pkb
 show errors
-
-prompt &h2.Enable remote PIT access
-@core/enable_remote_access.sql
