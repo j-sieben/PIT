@@ -12,16 +12,16 @@ as
   as
     l_errm varchar2(2000);
   begin
-    select message_text, severity, error_number
+    select pms_text, pms_pse_id, error_number
       into self.message_text, self.severity, self.error_number
-      from (select message_language,
-                   message_text,
-                   severity,
-                   coalesce(active_error_number, custom_error_number) error_number,
-                   rank() over (order by l.default_order desc) ranking
-              from message m
-              join v_message_language l on m.message_language = l.name
-             where m.message_name = p_message_name)
+      from (select pms_pml_name,
+                   pms_text,
+                   pms_pse_id,
+                   coalesce(pms_active_error, pms_custom_error) error_number,
+                   rank() over (order by l.pml_default_order desc) ranking
+              from pit_message m
+              join pit_message_language_v l on m.pms_pml_name = l.pml_name
+             where m.pms_name = p_message_name)
      where ranking = 1;
     self.id := pit_log_seq.nextval;
     self.message_name := p_message_name;

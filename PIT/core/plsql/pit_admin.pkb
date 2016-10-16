@@ -32,16 +32,16 @@ as
     $IF dbms_db_version.ver_le_11 $THEN
     select name default_language
       into g_default_language
-      from (select name, rank() over (order by default_order) rang
-              from message_language
-             where default_order > 0)
+      from (select name, rank() over (order by pml_default_order) rang
+              from pit_message_language
+             where pml_default_order > 0)
      where rang = 1;
     $ELSE
-    select name default_language
+    select pml_name default_language
       into g_default_language
-      from message_language
-     where default_order > 0
-     order by default_order
+      from pit_message_language
+     where pml_default_order > 0
+     order by pml_default_order
      fetch first 1 rows only;
     $END
   end initialize;
@@ -49,21 +49,21 @@ as
 
   /****************************** INTERFACE ***********************************/
   function get_message_text(
-    p_message_name in message.message_name%type,
-    p_message_language in message.message_language%type := null)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type := null)
     return varchar2
   as
-    l_message_text message.message_text%type;
+    l_pms_text pit_message.pms_text%type;
   begin
-    select message_text
-      into l_message_text
-      from (select message_text, severity,
-                   rank() over (order by l.default_order desc) ranking
-              from message m
-              join v_message_language l on m.message_language = l.name
-             where m.message_name = coalesce(p_message_name, g_default_language))
+    select pms_text
+      into l_pms_text
+      from (select pms_text, pms_pse_id,
+                   rank() over (order by l.pml_default_order desc) ranking
+              from pit_message m
+              join pit_message_language_v l on m.pms_pml_name = l.pml_name
+             where m.pms_name = coalesce(p_pms_name, g_default_language))
       where ranking = 1;
-    return l_message_text;
+    return l_pms_text;
   exception
     when no_data_found then
       return null;
@@ -71,46 +71,46 @@ as
 
 
   procedure merge_message(
-    p_message_name in message.message_name%type,
-    p_message_text in message.message_text%type,
-    p_severity in message.severity%type,
-    p_message_language in message.message_language%type default null,
-    p_error_number in message.custom_error_number%type default null)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type default null,
+    p_error_number in pit_message.pms_custom_error%type default null)
   as
-    l_message_name message.message_name%type;
+    l_pms_name pit_message.pms_name%type;
   begin
-    if p_severity in (20,30) then
-      pit_util.check_error(p_message_name, p_error_number);
+    if p_pms_pse_id in (20,30) and p_error_number != -20000 then
+      pit_util.check_error(p_pms_name, p_error_number);
     end if;
     
-    merge into message m
-    using (select p_message_name message_name,
-                  coalesce(p_message_language, g_default_language) message_language,
-                  p_message_text message_text,
-                  p_severity severity,
-                  p_error_number custom_error_number
+    merge into pit_message m
+    using (select upper(p_pms_name) pms_name,
+                  upper(coalesce(p_pms_pml_name, g_default_language)) pms_pml_name,
+                  p_pms_text pms_text,
+                  p_pms_pse_id pms_pse_id,
+                  p_error_number pms_custom_error
              from dual) v
-       on (m.message_name = v.message_name and m.message_language = v.message_language)
+       on (m.pms_name = v.pms_name and m.pms_pml_name = v.pms_pml_name)
      when matched then update set
-          m.message_text = v.message_text,
-          m.severity = v.severity,
-          m.custom_error_number = v.custom_error_number
+          m.pms_text = v.pms_text,
+          m.pms_pse_id = v.pms_pse_id,
+          m.pms_custom_error = v.pms_custom_error
      when not matched then insert
-            (message_name, message_language, message_text, severity, custom_error_number)
+            (pms_name, pms_pml_name, pms_text, pms_pse_id, pms_custom_error)
           values
-            (v.message_name, v.message_language, v.message_text, v.severity, v.custom_error_number);
+            (v.pms_name, v.pms_pml_name, v.pms_text, v.pms_pse_id, v.pms_custom_error);
     commit;
     
   exception
     when dup_val_on_index then
       -- DUP_VAL_ON_INDEX may occur if a user tries to assign a custom error number twice
-      select message_name
-        into l_message_name
-        from message
-       where custom_error_number = p_error_number
+      select pms_name
+        into l_pms_name
+        from pit_message
+       where pms_custom_error = p_error_number
          and rownum = 1;
       rollback;
-      raise_application_error(-20000, replace(c_error_already_assigned, '#ERRNO#', l_message_name));
+      raise_application_error(-20000, replace(c_error_already_assigned, '#ERRNO#', l_pms_name));
     when others then
       rollback;
       raise;
@@ -118,49 +118,49 @@ as
 
 
   procedure translate_message(
-    p_message_name in message.message_name%type,
-    p_message_text in message.message_text%type,
-    p_message_language in message.message_language%type)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type)
   as
-    l_severity message.severity%type;
-    l_error_number message.custom_error_number%type;
+    l_pms_pse_id pit_message.pms_pse_id%type;
+    l_error_number pit_message.pms_custom_error%type;
   begin
-    select severity, custom_error_number
-      into l_severity, l_error_number
-      from message
-     where message_name = p_message_name
-       and message_language = g_default_language;
+    select pms_pse_id, pms_custom_error
+      into l_pms_pse_id, l_error_number
+      from pit_message
+     where pms_name = p_pms_name
+       and pms_pml_name = g_default_language;
 
     merge_message(
-      p_message_name => p_message_name,
-      p_message_text => p_message_text,
-      p_severity => l_severity,
-      p_message_language => p_message_language,
+      p_pms_name => p_pms_name,
+      p_pms_text => p_pms_text,
+      p_pms_pse_id => l_pms_pse_id,
+      p_pms_pml_name => p_pms_pml_name,
       p_error_number => l_error_number);
   exception
     when no_data_found then
-      raise_application_error(-20000, replace(c_message_does_not_exist, '#MESSAGE#', p_message_name));
+      raise_application_error(-20000, replace(c_message_does_not_exist, '#MESSAGE#', p_pms_name));
   end translate_message;
   
   
   procedure remove_message(
-    p_message_name in message.message_name%type)
+    p_pms_name in pit_message.pms_name%type)
   as
   begin
-    delete from message
-     where message_name = upper(p_message_name);
+    delete from pit_message
+     where pms_name = upper(p_pms_name);
   end remove_message;
     
     
   procedure remove_all_messages
   as
   begin
-    delete from message;
+    delete from pit_message;
   end remove_all_messages;
 
 
   function get_translation_xml(
-    p_target_language in message.message_language%type)
+    p_target_language in pit_message.pms_pml_name%type)
     return xmltype
   as
     l_xliff xmltype;
@@ -178,7 +178,7 @@ as
              xmlattributes(c_xliff_ns "xmlns"),
              xmlagg(
                xmlelement("trans-unit",
-                 xmlattributes(t.message_name "id"),
+                 xmlattributes(t.pms_name "id"),
                  xmlelement("source",
                    xmlattributes(t.source_language "xml:lang"),
                    t.source_text
@@ -191,19 +191,19 @@ as
              )
            ) xml_result
       into l_xliff
-      from (select message_name,
+      from (select pms_name,
                    l_source_iso_code source_language,
                    l_target_iso_code target_language,
                    max(
                      decode(
-                       message_language,
-                       l_source_language, to_char(message_text))) source_text,
+                       pms_pml_name,
+                       l_source_language, to_char(pms_text))) source_text,
                    max(
                      decode(
-                       message_language,
-                       p_target_language, to_char(message_text))) target_text
-              from message m
-             group by message_name) t;
+                       pms_pml_name,
+                       p_target_language, to_char(pms_text))) target_text
+              from pit_message m
+             group by pms_name) t;
 
     select updatexml(
              xml_value,
@@ -224,33 +224,33 @@ as
     p_translation_xml in xmltype)
   as
   begin
-    merge into message m
-    using (select m.message_name as message_name,
-                  utl_i18n.map_language_from_iso(d.message_language) message_language,
-                  d.translation as message_text,
-                  m.severity,
-                  m.custom_error_number
+    merge into pit_message m
+    using (select m.pms_name as pms_name,
+                  utl_i18n.map_language_from_iso(d.pms_pml_name) pms_pml_name,
+                  d.translation as pms_text,
+                  m.pms_pse_id,
+                  m.pms_custom_error
              from xmltable(
                     xmlnamespaces(default 'urn:oasis:names:tc:xliff:document:1.2'),
                     '/xliff/file/body/trans-unit'
                     passing p_translation_xml
                     columns
-                    message_name varchar2(30 char) path '/trans-unit/@id',
-                    message_language varchar2(30 char) path '/trans-unit/target/@xml:lang',
+                    pms_name varchar2(30 char) path '/trans-unit/@id',
+                    pms_pml_name varchar2(30 char) path '/trans-unit/target/@xml:lang',
                     translation clob path '/trans-unit/target') d
-             join message m
-               on m.message_name = d.message_name
-              and m.message_language =
-                    utl_i18n.map_language_from_iso(d.message_language)) v
-    on (m.message_name = v.message_name and m.message_language = v.message_language)
+             join pit_message m
+               on m.pms_name = d.pms_name
+              and m.pms_pml_name =
+                    utl_i18n.map_language_from_iso(d.pms_pml_name)) v
+    on (m.pms_name = v.pms_name and m.pms_pml_name = v.pms_pml_name)
     when matched then update set
-         m.message_text = v.message_text
+         m.pms_text = v.pms_text
     when not matched then insert
-         (message_name, message_language, message_text,
-          severity, custom_error_number)
+         (pms_name, pms_pml_name, pms_text,
+          pms_pse_id, pms_custom_error)
          values
-         (v.message_name, v.message_language, v.message_text,
-          v.severity, v.custom_error_number);
+         (v.pms_name, v.pms_pml_name, v.pms_text,
+          v.pms_pse_id, v.pms_custom_error);
     commit;
   exception
     when others then
@@ -260,11 +260,11 @@ as
   
   
   procedure remove_translation(
-    p_language in message.message_language%type)
+    p_language in pit_message.pms_pml_name%type)
   as
   begin
-    delete from message
-     where message_language = upper(p_language);
+    delete from pit_message
+     where pms_pml_name = upper(p_language);
   end remove_translation;
   
 
@@ -290,30 +290,30 @@ as
     
     cursor message_cur is
         with messages as(
-             select message_name,
-                    coalesce(active_error_number, custom_error_number) custom_error_number
-               from message m
-              where message_language = g_default_language)
-      select replace(l_constant_template, '#CONSTANT#', message_name) constant_chunk,
-             case when custom_error_number is not null then
-               replace (l_exception_template, '#CONSTANT#', message_name)
+             select pms_name,
+                    coalesce(pms_active_error, pms_custom_error) pms_custom_error
+               from pit_message m
+              where pms_pml_name = g_default_language)
+      select replace(l_constant_template, '#CONSTANT#', pms_name) constant_chunk,
+             case when pms_custom_error is not null then
+               replace (l_exception_template, '#CONSTANT#', pms_name)
              else null end exception_chunk,
-             case when custom_error_number is not null then
-               replace(replace(l_pragma_template, '#CONSTANT#', message_name), '#ERROR#', custom_error_number)
+             case when pms_custom_error is not null then
+               replace(replace(l_pragma_template, '#CONSTANT#', pms_name), '#ERROR#', pms_custom_error)
              else null end pragma_chunk
         from messages
-       order by message_name;
+       order by pms_name;
   begin
     -- persist active error numbers for -20000 errors in message table
-    merge into message m
-    using (select message_name, message_language, -21000 + dense_rank() over (order by message_name) active_error_number
-             from message
-            where severity <= 30
-              and custom_error_number = -20000) v
-       on (m.message_name = v.message_name
-       and m.message_language = v.message_language)
+    merge into pit_message m
+    using (select pms_name, pms_pml_name, -21000 + dense_rank() over (order by pms_name) pms_active_error
+             from pit_message
+            where pms_pse_id <= 30
+              and pms_custom_error = -20000) v
+       on (m.pms_name = v.pms_name
+       and m.pms_pml_name = v.pms_pml_name)
      when matched then update set
-          active_error_number = v.active_error_number;    
+          pms_active_error = v.pms_active_error;    
     commit;
     
     -- create package code
@@ -418,12 +418,12 @@ as
     p_directory in varchar2 default 'DATA_DIR')
   as
     cursor message_cur is
-      select m.*, rank() over (partition by message_name order by default_order) rang
-        from message m
-        join message_language ml
-          on m.message_language = ml.name
-       where ml.default_order > 0
-       order by m.message_name, ml.default_order;
+      select m.*, rank() over (partition by pms_name order by pml_default_order) rang
+        from pit_message m
+        join pit_message_language ml
+          on m.pms_pml_name = ml.pml_name
+       where ml.pml_default_order > 0
+       order by m.pms_name, ml.pml_default_order;
     l_script clob;
     l_chunk varchar2(32767);
     c_file_name constant varchar2(30) := 'messages.sql';
@@ -436,18 +436,18 @@ end;
 /~';
     c_merge_template constant varchar2(200) := q'~
   pit_admin.merge_message(
-    p_message_name => '#NAME#',
-    p_message_text => q'ø#TEXT#ø',
-    p_severity => #SEVERITY#,
-    p_message_language => '#LANGUAGE#',
+    p_pms_name => '#NAME#',
+    p_pms_text => q'ø#TEXT#ø',
+    p_pms_pse_id => #pms_pse_id#,
+    p_pms_pml_name => '#LANGUAGE#',
     p_error_number => #ERRNO#
   );
 ~';
     c_translate_template constant varchar2(200) := q'~
   pit_admin.translate_message(
-    p_message_name => '#NAME#',
-    p_message_text => q'ø#TEXT#ø',
-    p_message_language => '#LANGUAGE#'
+    p_pms_name => '#NAME#',
+    p_pms_text => q'ø#TEXT#ø',
+    p_pms_pml_name => '#LANGUAGE#'
   );
 ~';
   begin
@@ -460,17 +460,17 @@ end;
           dbms_lob.append(l_script, l_chunk);
         end if;
         l_chunk := pit_util.bulk_replace(c_merge_template, char_table(
-                     '#NAME#', msg.message_name,
-                     '#TEXT#', msg.message_text,
-                     '#SEVERITY#', to_char(msg.severity),
-                     '#LANGUAGE#', msg.message_language,
-                     '#ERRNO#', coalesce(to_char(msg.custom_error_number), 'null')));
+                     '#NAME#', msg.pms_name,
+                     '#TEXT#', msg.pms_text,
+                     '#pms_pse_id#', to_char(msg.pms_pse_id),
+                     '#LANGUAGE#', msg.pms_pml_name,
+                     '#ERRNO#', coalesce(to_char(msg.pms_custom_error), 'null')));
       else
         l_chunk := l_chunk
                 || pit_util.bulk_replace(c_translate_template, char_table(
-                     '#NAME#', msg.message_name,
-                     '#TEXT#', msg.message_text,
-                     '#LANGUAGE#', msg.message_language));
+                     '#NAME#', msg.pms_name,
+                     '#TEXT#', msg.pms_text,
+                     '#LANGUAGE#', msg.pms_pml_name));
       end case;
     end loop;
     dbms_lob.append(l_script, l_chunk);

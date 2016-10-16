@@ -70,7 +70,8 @@ as
   
   /**** VALIDATION HELPER ****/
   /* Helper to check whether a predefined Oracle error shall be redefined
-   * %param p_error_number Error number for which a PIT message shall be created
+   * %param p_pms_name Name of the message to check the error for
+   * %param p_pms_custom_error Error number for which a PIT message shall be created
    * %usage Is called whenever a new message is inserted into table MESSAGE with an Oracle
    *        error number. The function checks whether the Oracle error number is already
    *        a defined error, such as -1 and DUP_VAL_ON_INDEX.
@@ -79,8 +80,8 @@ as
    *        packages from SYSTEM or SYS and only exceptions from non wrapped sources.
    */
   procedure check_error(
-    p_message_name in message.message_name%type,
-    p_error_number in message.custom_error_number%type);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_custom_error in pit_message.pms_custom_error%type);
     
     
   /* Helper to validate named context settings

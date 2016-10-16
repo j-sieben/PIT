@@ -1,4 +1,4 @@
-@init.sql &1. &2.
+@init.sql &1. &2. &3.
 
 alter session set current_schema=sys;
 prompt

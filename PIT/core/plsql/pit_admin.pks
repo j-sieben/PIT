@@ -18,59 +18,59 @@ as
   c_trace_le_all constant boolean := TRUE;
 
   /* Function to retrieve the text for a given language without replacements
-   * %param p_message_name Name of the message to retrieve the text for
-   * %param p_message_language Oracle language reference
+   * %param p_pms_name Name of the message to retrieve the text for
+   * %param p_pms_pml_name Oracle language reference
    * %usage This function is used to review the text a given message has in a 
    *        desired language 
    */
   function get_message_text(
-    p_message_name in message.message_name%type,
-    p_message_language in message.message_language%type := null)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type := null)
     return varchar2;
     
 
   /* Procedure to maintain messages
-   * %param p_message_name Name of the respective message. Must be unique for the default language
-   * %param p_message_text Message text with replacement anchors in the format #n#, 
+   * %param p_pms_name Name of the respective pit_message. Must be unique for the default language
+   * %param p_pms_text Message text with replacement anchors in the format #n#, 
    *        where n is an integer that references up to 50 replacement items
-   * %param p_severity Reference to a severity as defined in PIT.LEVEL_<level> constants.
+   * %param p_pms_pse_id Reference to a severity as defined in PIT.LEVEL_<level> constants.
    *        Ranges from PIT.LEVEL_FATAL to PIT.LEVEL_VERBOSE or 20..70
-   * %param p_message_language Reference to the Oracle supported language names, 
-   *        if null, the default language is used (as defined in MESSAGE_LANGUAGES)
+   * %param p_pms_pml_name Reference to the Oracle supported language names, 
+   *        if null, the default language is used (as defined in pms_pml_nameS)
    * %param p_error_number Optional reference to an Oracle system error number.
    *        must not be a number of an Oracle predefined error number. If null
    *        and the severity of the message is in 20|30, then an error number
    *        from the range -20999..-20000 is used.
    */
   procedure merge_message(
-    p_message_name in message.message_name%type,
-    p_message_text in message.message_text%type,
-    p_severity in message.severity%type,
-    p_message_language in message.message_language%type default null,
-    p_error_number in message.custom_error_number%type default null);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type default null,
+    p_error_number in pit_message.pms_custom_error%type default null);
     
 
   /* Procedure to translate a given message
-   * %param p_message_name Name of the respective message. Must be unique for the default language
-   * %param p_message_text Message text with replacement anchors in the format #n#, 
+   * %param p_pms_name Name of the respective pit_message. Must be unique for the default language
+   * %param p_pms_text Message text with replacement anchors in the format #n#, 
    *        where n is an integer that references up to 50 replacement items
-   * %param p_message_language Reference to the Oracle supported language names
+   * %param p_pms_pml_name Reference to the Oracle supported language names
    * %usage Use this procedure as a shortcut for an already existing message, if
    *        the only task is to translate it.
    */
   procedure translate_message(
-    p_message_name in message.message_name%type,
-    p_message_text in message.message_text%type,
-    p_message_language in message.message_language%type);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type);
     
     
-  /* Procedure to remoce a single message. Will delete all translations as well
+  /* Procedure to remoce a single pit_message. Will delete all translations as well
    * %param p_mesage_name Name of the message to delete
    * %usage is called to remove mistyped or unnecessary messages in all languages.
    *        Will not commit nor re-create the MSG package.
    */
   procedure remove_message(
-    p_message_name in message.message_name%type);
+    p_pms_name in pit_message.pms_name%type);
     
   
   /* Procedure to remove all messages
@@ -88,7 +88,7 @@ as
    *        error messages into a target language at once.
    */
   function get_translation_xml(
-    p_target_language in message.message_language%type)
+    p_target_language in pit_message.pms_pml_name%type)
     return XmlType;
     
 
@@ -107,13 +107,13 @@ as
    *        Will not commit.
    */
   procedure remove_translation(
-    p_language in message.message_language%type);
+    p_language in pit_message.pms_pml_name%type);
 
   /* Procedure to (re-) create package MSG
    * %param p_directory Optional parameter to define a directory object the creation script shall be written to.
    *        if null, the code i executed immediately.
    * %usage If called with  no parameter, this procedure creates package MSG based on the actual messages
-   *        from table MESSAGE. It automatically maps all custom or oracle errors and creates respective
+   *        from table pit_message. It automatically maps all custom or oracle errors and creates respective
    *        exception variables for them.
    *        If called with a directory name, the package is not created but written to 
    *        the file system for later creation or deployment purposes.

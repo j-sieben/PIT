@@ -14,8 +14,8 @@ declare
                  'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'MSG_ARGS_CHAR', 'PIT_MODULE', 
                  'DEFAULT_ADAPTER', 'CALL_STACK_TYPE', 'PIT_MODULE_LIST', 'PIT_CONTEXT', 'CHAR_TABLE', -- Typen
                  'MSG', 'PIT', 'PIT_PKG', 'PIT_ADMIN', -- Packages
-                 'V_MESSAGE_LANGUAGE', 'V_MESSAGE', -- Views
-                 'MESSAGE', 'MESSAGE_LANGUAGE',   -- Tabellen
+                 'PIT_MESSAGE_LANGUAGE_V', 'PIT_MESSAGE_V', -- Views
+                 'PIT_MESSAGE', 'PIT_MESSAGE_LANGUAGE', 'PIT_MESSAGE_SEVERITY', 'PIT_TRACE_LEVEL',  -- Tabellen
                  'MSG',  -- Synonyme
                  'PIT_LOG_SEQ' -- Sequenzen
                  )

@@ -1,0 +1,10 @@
+create table pit_message_language(
+   pml_name varchar2(30 char),
+   pml_default_order number(3,0),
+   constraint pit_message_language_pk primary key(pml_name)
+) organization index;
+
+comment on column pit_message_language.pml_name is 'Unique name for message language, primary key';
+comment on column pit_message_language.pml_default_order is 'Sorting column to select message in  respective language. Highest number wins. Default-language := 10, 0=language not supported';
+
+comment on table pit_message_language is 'Lookup-table for message languages.';

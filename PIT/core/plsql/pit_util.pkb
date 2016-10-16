@@ -155,8 +155,8 @@ as
   
   /**** VALIDATION ****/
   procedure check_error(
-    p_message_name in message.message_name%type,
-    p_error_number in message.custom_error_number%type)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_custom_error in pit_message.pms_custom_error%type)
   as
     l_predefined_error predefined_error_rec;
     l_message varchar2(2000);
@@ -166,17 +166,17 @@ as
     c_predefined_error constant varchar2(200) :=
       q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
   begin
-    l_message_length := length(p_message_name);
+    l_message_length := length(p_pms_name);
     if l_message_length > 26 then
       l_message := pit_util.bulk_replace(c_msg_too_long, char_table(
-                     '#MESSAGE#', p_message_name,
+                     '#MESSAGE#', p_pms_name,
                      '#LENGTH#', l_message_length));
        raise_application_error(-20000, l_message);
     end if;
-    if g_predefined_errors.exists(p_error_number) then
-      l_predefined_error := g_predefined_errors(p_error_number);
+    if g_predefined_errors.exists(p_pms_custom_error) then
+      l_predefined_error := g_predefined_errors(p_pms_custom_error);
       l_message := pit_util.bulk_replace(c_predefined_error, char_table(
-                     '#ERROR#', p_error_number,
+                     '#ERROR#', p_pms_custom_error,
                      '#NAME#', l_predefined_error.error_name,
                      '#OWNER#', l_predefined_error.owner,
                      '#PKG#', l_predefined_error.package_name));

@@ -26,21 +26,27 @@ prompt &s1.Create sequence PIT_LOG_SEQ
 @&sql_dir.sequences/pit_log_seq.seq
 
 prompt &h2.Create tables and initial data
-prompt &s1.Create table MESSAGE_LANGUAGE
-@&sql_dir.tables/message_language.tbl
+prompt &s1.Create table PIT_MESSAGE_SEVERITY
+@&sql_dir.tables/pit_message_severity.tbl
 
-prompt &s1.Create view V_MESSAGE_LANGUAGE
-@&sql_dir.views/v_message_language.vw
+prompt &s1.Create table PIT_TRACE_LEVEL
+@&sql_dir.tables/pit_trace_level.tbl
 
-prompt &s1.Create table MESSAGE
-@&sql_dir.tables/message.tbl
+prompt &s1.Create table PIT_MESSAGE_LANGUAGE
+@&sql_dir.tables/pit_message_language.tbl
 
-prompt &s1.Create trigger TRG_MESSAGE_BRIU
-@&sql_dir.triggers/trg_message_briu.trg
-show errors
+prompt &s1.Create view PIT_MESSAGE_LANGUAGE_V
+@&sql_dir.views/pit_message_language_v.vw
 
-prompt &s1.Create view V_MESSAGE
-@&sql_dir.views/v_message.vw
+prompt &s1.Create table PIT_MESSAGE
+@&sql_dir.tables/pit_message.tbl
+
+prompt &s1.Create trigger PIT_MESSAGE_TRG_BRIU
+--@&sql_dir.triggers/pit_message_trg_briu.trg
+--show errors
+
+prompt &s1.Create view PIT_MESSAGE_V
+@&sql_dir.views/pit_message_v.vw
 
 prompt &s1.Copy available languages from V$NLS_PARAMETERS
 @core/create_message_languages.sql

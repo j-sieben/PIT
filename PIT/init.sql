@@ -9,11 +9,15 @@ clear screen
 
 col install_user new_val INSTALL_USER format a30
 col remote_user new_val REMOTE_USER format a30
+col default_language new_val DEFAULT_LANGUAGE format a30
+
 
 select upper('&1.') install_user,
-       upper('&2.') remote_user
-  from dual;
-
+       upper('&2.') remote_user,
+       upper('&3.') default_language
+  from V$NLS_VALID_VALUES
+ where parameter = 'LANGUAGE'
+   and (value = upper('&3.') or '&3.' is null);
 
 define INSTALL_ON_DEV = false
 

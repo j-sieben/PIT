@@ -1,0 +1,36 @@
+create table pit_message(
+   pms_name varchar2(30 char), 
+   pms_pml_name varchar2(30 char),
+   pms_text clob, 
+   pms_pse_id number(3,0),
+   pms_custom_error number,
+   pms_active_error number,
+   pms_id varchar2(50 char) generated always as (case pms_pml_name when '&DEFAULT_LANGUAGE.' then pms_name else null end) virtual,
+   constraint pit_message_pk primary key (pms_name, pms_pml_name),
+   constraint pms_id_u unique (pms_id),
+   constraint pms_pml_name_fk foreign key (pms_pml_name)
+      references pit_message_language(pml_name),
+   constraint pms_pse_id_fk foreign key (pms_pse_id)
+      references pit_message_severity(pse_id),
+   constraint pms_text_nn check (pms_text is not null)
+);
+
+comment on table pit_message is 'central log message repository in various languages.';
+comment on column pit_message.pms_name is 'Unique message name. Used to reference the message as a constant in package MSG.';
+comment on column pit_message.pms_pml_name is 'Languae reference of the message. Taken from Oracle v$nls_valid_values';
+comment on column pit_message.pms_text is 'message text. Positional replacement with pattern #n#';
+comment on column pit_message.pms_pse_id is 'severity of the message. Reference to PIT_MESSAGE_SEVERITY';
+comment on column pit_message.pms_custom_error is 'Optional pointer to an oracle error number. If null, an exception will be generated. To define custom errors, use null.';
+comment on column pit_message.pms_active_error is 'If a custom error number of -20000 is used, this field contains the actual error number as processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE.';
+comment on column pit_message.pms_id is 'Virtual column as a surrogate primary key for references';
+
+
+create index pit_pms_pml_name_fk_idx on pit_message(pms_pml_name);
+-- Unique conditional index to prevent server errors to be initialized more than once
+create unique index pms_custom_error_u on pit_message(
+  case 
+  when coalesce(pms_custom_error, -20000) != -20000 
+   and pms_pml_name = '&DEFAULT_LANGUAGE.'
+  then pms_custom_error
+  else null end);
+
