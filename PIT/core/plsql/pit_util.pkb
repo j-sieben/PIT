@@ -234,8 +234,8 @@ as
     select c_true
       into l_exists
       from parameter_tab
-     where parameter_id = l_context_name
-       and parameter_group_id = c_parameter_group;
+     where par_id = l_context_name
+       and par_pgr_id = c_parameter_group;
   exception
     when no_data_found then
       raise_application_error(-20000, c_context_not_existing);      

@@ -1,25 +1,25 @@
 create table parameter_local(
-   parameter_id varchar2(30 char),
-   parameter_group_id varchar2(30 char),
-   string_value clob,
-   xml_value xmltype,
-   integer_value number(38,0),
-   float_value number,
-   date_value date,
-   timestamp_value timestamp with time zone,
-   boolean_value char(1),
-   constraint pk_parameter_local primary key (parameter_id, parameter_group_id),
-   constraint fk_loc_param_group foreign key (parameter_group_id) references &INSTALL_USER..parameter_group(parameter_group_id),
-   constraint chk_loc_param_bool_value check (boolean_value in ('Y', 'N'))
+   par_id varchar2(30 char),
+   par_pgr_id varchar2(30 char),
+   par_string_value clob,
+   par_xml_value xmltype,
+   par_integer_value number(38,0),
+   par_float_value number,
+   par_date_value date,
+   par_timestamp_value timestamp with time zone,
+   par_boolean_value char(1),
+   constraint parameter_local_pk primary key (par_id, par_pgr_id),
+   constraint par_pgr_id_fk foreign key (par_pgr_id) references &INSTALL_USER..parameter_group(par_pgr_id),
+   constraint par_boolean_value_chk check (par_boolean_value in ('Y', 'N'))
 );
 
 comment on table parameter_local is 'Local table to store overwritten parameters';
-comment on column parameter_local.parameter_id is 'Primary key';
-comment on column parameter_local.parameter_group_id is 'Primary key, reference to &INSTALL_USER..parameter_group(parameter_group_id)';
-comment on column parameter_local.string_value is 'CLOB parameter value';
-comment on column parameter_local.xml_value is 'XML parameter value';
-comment on column parameter_local.integer_value is 'Integer parameter value';
-comment on column parameter_local.float_value is 'Float parameter value';
-comment on column parameter_local.date_value is 'Date parameter value';
-comment on column parameter_local.timestamp_value is 'Timestamp parameter value';
-comment on column parameter_local.boolean_value is 'Boolean parameter value, only Y|N are allowed';
+comment on column parameter_local.par_id is 'Primary key';
+comment on column parameter_local.par_pgr_id is 'Primary key, reference to &INSTALL_USER..parameter_group(par_pgr_id)';
+comment on column parameter_local.par_string_value is 'CLOB parameter value';
+comment on column parameter_local.par_xml_value is 'XML parameter value';
+comment on column parameter_local.par_integer_value is 'Integer parameter value';
+comment on column parameter_local.par_float_value is 'Float parameter value';
+comment on column parameter_local.par_date_value is 'Date parameter value';
+comment on column parameter_local.par_timestamp_value is 'Timestamp parameter value';
+comment on column parameter_local.par_boolean_value is 'Boolean parameter value, only Y|N are allowed';

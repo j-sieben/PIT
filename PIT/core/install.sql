@@ -42,16 +42,15 @@ prompt &s1.Create table PIT_MESSAGE
 @&sql_dir.tables/pit_message.tbl
 
 prompt &s1.Create trigger PIT_MESSAGE_TRG_BRIU
---@&sql_dir.triggers/pit_message_trg_briu.trg
---show errors
 
 prompt &s1.Create view PIT_MESSAGE_V
 @&sql_dir.views/pit_message_v.vw
 
-prompt &s1.Copy available languages from V$NLS_PARAMETERS
-@core/create_message_languages.sql
-
 prompt &h2.Create type declarations
+prompt &s1.Create type ARGS
+@&sql_dir.types/args.tps
+show errors
+
 prompt &s1.Create type CHAR_TABLE
 @&sql_dir.types/char_table.tps
 show errors
@@ -93,6 +92,14 @@ prompt &s1.Create type PIT_MODULE
 @&sql_dir.types/pit_module.tps
 show errors
 
+prompt &s1.Create type PIT_MODULE_META
+@&sql_dir.types/pit_module_meta.tps
+show errors
+
+prompt &s1.Create type PIT_MODULE_IIST
+@&sql_dir.types/pit_module_list.tps
+show errors
+
 prompt &h2.Create package declarations
 prompt &s1.Create package PIT_ADMIN
 @&plsql_dir.pit_admin.pks
@@ -123,6 +130,9 @@ show errors
 alter package param compile body;
 show errors
 
+prompt &s1.Reset package state
+call dbms_session.reset_package();
+
 prompt &s1.Create default parameters
 @core/create_parameters.sql
 
@@ -134,7 +144,7 @@ prompt &s1.Create package PIT_PKG
 @&plsql_dir.pit_pkg.pks
 show errors  
 
-prompt &s1.Create global context PIT_CTX
+prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
 @core/create_global_context.sql
 
 prompt &h2.Create type bodies

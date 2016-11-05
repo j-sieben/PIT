@@ -13,7 +13,7 @@ comment on table pit_trace_level is 'Lookup-table for message severities.';
 
 
 merge into pit_trace_level pse
-using (select 10 ptl_id, 'TRACE_OFF' ptl_name, 'Logging aus' ptl_display_name
+using (select 10 ptl_id, 'TRACE_OFF' ptl_name, 'Tracing aus' ptl_display_name
          from dual
         union all
        select 20, 'TRACE_MANDATORY', 'Verpflichtend' from dual union all

@@ -1,4 +1,16 @@
-@init.sql &1. &2. &3.
+/*
+  Script to install PIT
+  Usage:
+  Call this script either directly or by using the bat/sh script files.
+  
+  Parameters:
+  - INSTALL_USER: database user who owns PIT
+  - REMOTE_USER: database user who works with PIT. May be the same as INSTALL_USER
+  - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
+  - APEX_WORKSPACE: Name of the APEX workspace INSTALL_USER has granted all rights to admin PIT to
+*/
+
+@init.sql &1. &2. &3. &4.
 
 alter session set current_schema=sys;
 prompt
@@ -33,8 +45,13 @@ prompt &h1.Installing PIT output modules
 @modules/pit_table/install.sql
 @modules/pit_apex/install.sql
 --@modules/pit_test/install.sql
---@modules/pit_file/install.sql
---@modules/pit_mail/install.sql
+@modules/pit_file/install.sql
+@modules/pit_mail/install.sql
+
+prompt
+prompt &section.
+prompt &h1.Installing APEX application
+@apex/install.sql
 
 prompt
 prompt &section.

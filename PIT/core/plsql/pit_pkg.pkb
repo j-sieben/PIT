@@ -300,18 +300,18 @@ as
     cursor context_cur is
         with toggles as (
              select c_toggle_prefix ||
-                    replace(to_char(substr(string_value, 1,
-                            instr(string_value, c_ctx_del) - 1)), c_list_del, c_list_del || c_toggle_prefix) tgl_name,
-                    c_context_prefix || to_char(substr(string_value, instr(string_value, c_ctx_del) + 1)) ctx_name
+                    replace(to_char(substr(par_string_value, 1,
+                            instr(par_string_value, c_ctx_del) - 1)), c_list_del, c_list_del || c_toggle_prefix) tgl_name,
+                    c_context_prefix || to_char(substr(par_string_value, instr(par_string_value, c_ctx_del) + 1)) ctx_name
                from parameter_tab
-              where parameter_id like c_toggle_prefix || '%'
-                and parameter_group_id = c_param_group),
+              where par_id like c_toggle_prefix || '%'
+                and par_pgr_id = c_param_group),
              contexts as (
-             select parameter_id ctx_name,
-                    to_char(string_value) string_value
+             select par_id ctx_name,
+                    to_char(par_string_value) string_value
                from parameter_tab
-              where parameter_id like c_context_prefix || '%'
-                and parameter_group_id = c_param_group
+              where par_id like c_context_prefix || '%'
+                and par_pgr_id = c_param_group
              )
       select to_char(tgl_name) name, c.string_value setting
         from toggles t
@@ -1016,6 +1016,29 @@ as
 
 
   /* MODULE MAINTENANCE */
+  function get_modules
+    return pit_module_list
+    pipelined
+  as
+    l_idx varchar2(30 byte);
+    l_available char(1 byte);
+    l_active char(1 byte);
+  begin
+    if g_all_modules.count > 0 then
+      get_context_values;
+      -- g_ctx.active_log_modules indexed by varchar2, therefore while loop is required
+      l_idx := g_all_modules.first;
+      while l_idx is not null loop
+        l_available := case when g_available_modules.exists(l_idx) then c_true else c_false end;
+        l_active := case when g_ctx.active_log_modules.exists(l_idx) then c_true else c_false end;
+        pipe row(pit_module_meta(l_idx, l_available, l_active));
+        l_idx := g_all_modules.next(l_idx);
+      end loop;
+    end if;
+    return;
+  end get_modules;
+  
+  
   function get_active_modules
     return args
     pipelined

@@ -248,6 +248,15 @@ as
   
   
   /* MODULE MAINTENANCE */
+  /* Function to retrieve a list of all installed modules
+   * %return PIT_MODULE_LIST-type, List of modules, availabilty and active status
+   * %usage Use this function if you require a list of all installed modules.
+   */
+  function get_modules
+    return pit_module_list
+    pipelined;
+    
+    
   /* Function to retrieve a list of active modules
    * %return ARGS-type, List of module names
    * %usage Use this function if you require a list of active modules.

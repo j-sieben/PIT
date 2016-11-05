@@ -35,7 +35,7 @@ as
     || c_package_name
     || '.';
   $END
-  
+
   /* PACKAGE VARS */
   type context_setting_rec is record(
     is_global boolean,
@@ -76,8 +76,8 @@ as
       $END
     end if;
   end check_param;
-  
-  
+
+
   /* Helper to read metadata for a maintained context
    * @param p_context Name of the context to read
    * @usage Is called internally to read metadata according to type context_setting_rec
@@ -109,7 +109,7 @@ as
 
   /* Helper function to wrap a call to sys_contexrt('USERENV', 'CLIENT_IDENTIFIER')
    * @usage if the settings for a given context require a client id, this
-   *        function returns its value, otherwise null. 
+   *        function returns its value, otherwise null.
    *        If the context requires a client_id, this function returns
    *        - the client id
    *        - the client_identifier
@@ -131,8 +131,8 @@ as
       return null;
     end case;
   end get_client_id;
-  
-  
+
+
   /* Initialization procedure */
   procedure initialize
   as
@@ -155,19 +155,19 @@ as
       g_context_setting.is_global := case ctx.is_global
         when c_true then true else false end;
       if g_context_setting.is_global then
-        l_parameter_id := replace(ctx.namespace, '_&INSTALL_USER.') || c_parameter_postfix;
+        l_parameter_id := replace(ctx.namespace, '_APEX_BUCH') || c_parameter_postfix;
         begin
           l_context_type := to_char(param.get_string(l_parameter_id, c_parameter_group_id));
         exception
           when no_data_found then
             l_context_type := c_global;
             param_admin.edit_parameter(
-              p_parameter_id => l_parameter_id,
-              p_parameter_group_id => c_parameter_group_id, 
-              p_parameter_description => 'Type of context ' || l_parameter_id,
-              p_string_value => l_context_type,
-              p_parameter_type_id => c_parameter_type,
-              p_validation_string => c_validation_string);
+              p_par_id => l_parameter_id,
+              p_par_pgr_id => c_parameter_group_id,
+              p_par_description => 'Type of context ' || l_parameter_id,
+              p_par_string_value => l_context_type,
+              p_par_pat_id => c_parameter_type,
+              p_par_validation_string => c_validation_string);
         end;
         case l_context_type
         when c_global then
@@ -196,8 +196,8 @@ as
       g_context_settings(ctx.namespace) := g_context_setting;
     end loop;
   end initialize;
-  
-  
+
+
   procedure set_value(
     p_context in varchar2,
     p_attribute in varchar2,
@@ -309,8 +309,8 @@ as
     end loop;
     return l_value;
   end get_first_match;
-  
-  
+
+
   procedure reset_context(
     p_context in varchar2)
   as

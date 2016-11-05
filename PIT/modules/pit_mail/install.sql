@@ -12,7 +12,7 @@ prompt
 prompt &section.
 prompt &h1.Module PIT_MAIL
 prompt &h2.Delete existing types and packages
-@&mail_dir.clean_up.sql
+@&mail_dir.clean_up_install.sql
 
 prompt &h2.Grant user rights to &INSTALL_USER.
 @&mail_dir.user_grants.sql

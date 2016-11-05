@@ -1,9 +1,9 @@
 create table parameter_type(
-   parameter_type_id varchar2(30 char),
-   type_description varchar2(255),
-   constraint pk_parameter_type primary key (parameter_type_id)
+   pat_id varchar2(30 char),
+   pat_description varchar2(255),
+   constraint parameter_type_pk primary key (pat_id)
 ) organization index;
 
 comment on table parameter_type is 'Lookup for parameter types. Used to control the editor that is instantiated to edit parameter values.';
-comment on column parameter_type.parameter_type_id is 'Primary key, alphanumeric';
-comment on column parameter_type.type_description is 'Longtext of the parameter type';
+comment on column parameter_type.pat_id is 'Primary key, alphanumeric';
+comment on column parameter_type.pat_description is 'Longtext of the parameter type';

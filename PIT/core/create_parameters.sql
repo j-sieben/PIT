@@ -1,51 +1,51 @@
 begin
 
   param_admin.edit_parameter_group(
-    p_parameter_group_id => 'PIT',
-    p_group_description => 'Parameter for PIT',
-    p_is_modifiable => 'Y'
+    p_pgr_id => 'PIT',
+    p_pgr_description => 'Parameter for PIT',
+    p_pgr_is_modifiable => true
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'ADAPTER_PREFERENCE'
-   ,p_parameter_group_id => 'PIT'
-   ,p_parameter_description => 'Order in which PIT tries to use adapter preferences (left ot right)'
-   ,p_string_value => q'øAPEX_ADAPTER:DEFAULT_ADAPTERø'
+    p_par_id => 'ADAPTER_PREFERENCE'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Order in which PIT tries to use adapter preferences (left ot right)'
+   ,p_par_string_value => q'øAPEX_ADAPTER:DEFAULT_ADAPTERø'
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'ALLOW_TOGGLE'
-   ,p_parameter_group_id => 'PIT'
-   ,p_parameter_description => 'Flag to indicate whether PIT utilizes toggle functionality'
-   ,p_boolean_value => 'Y'
+    p_par_id => 'ALLOW_TOGGLE'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Flag to indicate whether PIT utilizes toggle functionality'
+   ,p_par_boolean_value => true
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'PIT_CTX_TYPE'
-   ,p_parameter_group_id => 'CONTEXT'
-   ,p_parameter_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
-   ,p_string_value => q'øPREFER_USER_CLIENT_IDø'
+    p_par_id => 'PIT_CTX_TYPE'
+   ,p_par_pgr_id => 'CONTEXT'
+   ,p_par_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
+   ,p_par_string_value => q'øPREFER_USER_CLIENT_IDø'
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'PIT_CTX_&INSTALL_USER._TYPE'
-   ,p_parameter_group_id => 'CONTEXT'
-   ,p_parameter_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
-   ,p_string_value => q'øPREFER_USER_CLIENT_IDø'
+    p_par_id => 'PIT_CTX_&INSTALL_USER._TYPE'
+   ,p_par_pgr_id => 'CONTEXT'
+   ,p_par_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
+   ,p_par_string_value => q'øPREFER_USER_CLIENT_IDø'
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'BROADCAST_CONTEXT_SWITCH'
-   ,p_parameter_group_id => 'PIT'
-   ,p_parameter_description => 'Flag to indicate whether context switches are sent to all available modules (true) or to active modules only'
-   ,p_boolean_value => 'N'
+    p_par_id => 'BROADCAST_CONTEXT_SWITCH'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Flag to indicate whether context switches are sent to all available modules (true) or to active modules only'
+   ,p_par_boolean_value => false
   );
 
   param_admin.edit_parameter(
-    p_parameter_id => 'XLIFF_SKELETON'
-   ,p_parameter_group_id => 'PIT'
-   ,p_parameter_description => 'template for XLIFF translation files for messages.'
-   ,p_xml_value => xmltype(q'ø<?xml version="1.0"?>
+    p_par_id => 'XLIFF_SKELETON'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'template for XLIFF translation files for messages.'
+   ,p_par_xml_value => xmltype(q'ø<?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file original="pit_message_translation.xml" source-language="en" target-language="de" datatype="html">
     <header/>

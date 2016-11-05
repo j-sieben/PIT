@@ -635,12 +635,31 @@ as
   procedure reset_context(
     p_active_session_only in boolean default true);
   
-  /* Pipilined function to retrieve the list of available output modules
+  /* Pipelined function to retrieve a list of all installed modules
+   * %return PIT_MODULE_LIST-type, List of modules, availabilty and active status
+   * %usage Use this function if you require a list of all installed modules.
+   */
+  function get_modules
+    return pit_module_list
+    pipelined;
+    
+  /* Pipelined function to retrieve the list of available output modules
    * %usage Helper function to get a list of available ourput modules.<br>
    *        Useful to populate a drop down list of output modules.
    */
-  function get_module_list
-    return args pipelined;
+  function get_available_modules
+    return args 
+    pipelined;
+    
+    
+  /* Pipelined function to retrieve the list of active output modules
+   * %usage Helper function to get a list of active ourput modules.<br>
+   *        Useful to populate a drop down list of output modules.
+   */
+  function get_active_modules
+    return args 
+    pipelined;
+    
   
   /* Re-initializes the PIT
    * %usage Initializes the package. Either called implicitly upon first

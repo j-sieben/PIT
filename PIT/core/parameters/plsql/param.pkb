@@ -1,48 +1,46 @@
 create or replace package body param
 as
+
+  c_true constant parameter_group.pgr_is_modifiable%type := 'Y';
+  c_false constant parameter_group.pgr_is_modifiable%type := 'N';
+  
   g_parameter_rec parameter%rowtype;
   
   type param_rec is record(
     is_modifiable boolean,
     is_existing boolean,
-    validation_string parameter_tab.validation_string%type,
-    validation_message parameter_tab.validation_message%type);
+    validation_string parameter_tab.par_validation_string%type,
+    validation_message parameter_tab.par_validation_message%type);
   g_param param_rec;
 
   /* Helper */  
-  procedure initialize
-  as
-  begin
-    null;
-  end initialize;
-
   /* Procedure reads metadata for parameters
-   * %param p_parameter_id Name of the parameter
-   * %param p_parameter_group_id Name of the parameter group
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
    * %usage Is called internally to read settings regarding modifiability etc.
    */
   procedure get_parameter_settings(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
   as
-    l_is_group_modifiable parameter_group.is_modifiable%type := 'N';
-    l_is_modifiable parameter_tab.is_modifiable%type := 'N';
+    l_pgr_is_modifiable parameter_group.pgr_is_modifiable%type := c_false;
+    l_par_is_modifiable parameter_tab.par_is_modifiable%type := c_false;
     l_is_existing char(1);
   begin
     select -- Ist Gruppe nicht modifizierbar, Einzeleinstellung uebersteuern,
            -- ansonsten Parametereinstellung
            case
-             when pg.is_modifiable = 'Y' then
-               nvl(p.is_modifiable, 'Y')
+             when pg.pgr_is_modifiable = c_true then
+               coalesce(p.par_is_modifiable, c_true)
              else
-               'N'
+               c_false
            end is_modifiable,
-		   -- Nur existierende Parameter duerfen editiert werden
-		   -- (Neuanlage von Parametern ueber PARAM_ADMIN)
-           nvl2(p.parameter_id, 'Y', 'N') is_existing,
-           validation_string,
-           validation_message
-      into l_is_modifiable,
+           -- Nur existierende Parameter duerfen editiert werden
+           -- (Neuanlage von Parametern ueber PARAM_ADMIN)
+           nvl2(p.par_id, c_true, c_false) is_existing,
+           par_validation_string,
+           par_validation_message
+      into l_par_is_modifiable,
            l_is_existing,
            g_param.validation_string,
            g_param.validation_message
@@ -50,12 +48,12 @@ as
       left join
            (select *
               from parameter p
-             where parameter_id = p_parameter_id
-               and parameter_group_id = p_parameter_group_id) p
-        on pg.parameter_group_id = p.parameter_group_id
-     where pg.parameter_group_id = p_parameter_group_id;
-    g_param.is_modifiable := l_is_modifiable = 'Y';
-    g_param.is_existing := l_is_existing = 'Y';
+             where par_id = p_par_id
+               and par_pgr_id = p_pgr_id) p
+        on pg.pgr_id = p.par_pgr_id
+     where pg.pgr_id = p_pgr_id;
+    g_param.is_modifiable := l_par_is_modifiable = c_true;
+    g_param.is_existing := l_is_existing = c_true;
   exception
     when no_data_found then
       g_param.is_modifiable := false;
@@ -79,16 +77,16 @@ as
       when p_boolean_value is null then
         p_return_value := null;
       when p_boolean_value then
-        p_return_value := 'Y';
+        p_return_value := c_true;
       else
-        p_return_value := 'N';
+        p_return_value := c_false;
     end case;
   end get_bool;
 
 
   /* Helper to store a new parameter value at the database
-   * %param p_parameter_id Name of the parameter
-   * %param p_parameter_group_id Name of the parameter group
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
    * %param p_string_value CLOB parameter value
    * %param p_xml_value XML parameter value
    * %param p_integer_value Integer parameter value
@@ -100,8 +98,8 @@ as
    * %usage Is called from the Setter Methods to adjust a parameter value.
    */
   procedure set_parameter(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
+    p_par_id in varchar2,
+    p_pgr_id in varchar2,
     p_string_value in clob default null,
     p_xml_value in xmltype default null,
     p_integer_value in number default null,
@@ -115,7 +113,7 @@ as
     l_stmt varchar2(4000);
     l_valid integer;
   begin
-    get_parameter_settings(p_parameter_id, p_parameter_group_id);
+    get_parameter_settings(p_par_id, p_pgr_id);
     get_bool(p_boolean_value, l_boolean);
     -- Validiere Parameter
     if g_param.validation_string is not null then
@@ -136,231 +134,228 @@ as
     end if;
     if g_param.is_existing and g_param.is_modifiable then
       merge into parameter_tab p
-      using (select p_parameter_id parameter_id,
-                    p_parameter_group_id parameter_group_id,
-                    p_string_value string_value,
-                    p_xml_value xml_value,
-                    p_integer_value integer_value,
-                    p_float_value float_value,
-                    p_date_value date_value,
-                    p_timestamp_value timestamp_value,
-                    l_boolean boolean_value
+      using (select p_par_id par_id,
+                    p_pgr_id par_pgr_id,
+                    p_string_value par_string_value,
+                    p_xml_value par_xml_value,
+                    p_integer_value par_integer_value,
+                    p_float_value par_float_value,
+                    p_date_value par_date_value,
+                    p_timestamp_value par_timestamp_value,
+                    l_boolean par_boolean_value
                from dual) v
-         on (p.parameter_id = v.parameter_id
-         and p.parameter_group_id = v.parameter_group_id)
+         on (p.par_id = v.par_id
+         and p.par_pgr_id = v.par_pgr_id)
        when matched then update set
-            p.string_value = v.string_value,
-            p.xml_value = v.xml_value,
-            p.integer_value = v.integer_value,
-            p.float_value = v.float_value,
-            p.date_value = v.date_value,
-            p.timestamp_value = v.timestamp_value,
-            p.boolean_value = v.boolean_value
+            p.par_string_value = v.par_string_value,
+            p.par_xml_value = v.par_xml_value,
+            p.par_integer_value = v.par_integer_value,
+            p.par_float_value = v.par_float_value,
+            p.par_date_value = v.par_date_value,
+            p.par_timestamp_value = v.par_timestamp_value,
+            p.par_boolean_value = v.par_boolean_value
        when not matched then insert
-            (parameter_id, parameter_group_id, string_value, xml_value,
-             integer_value, float_value, date_value, timestamp_value,
-             boolean_value)
+            (par_id, par_pgr_id, par_string_value, par_xml_value, par_integer_value, 
+             par_float_value, par_date_value, par_timestamp_value, par_boolean_value)
             values
-            (v.parameter_id, v.parameter_group_id, v.string_value, v.xml_value,
-             v.integer_value, v.float_value, v.date_value, v.timestamp_value,
-             v.boolean_value);
+            (v.par_id, v.par_pgr_id, v.par_string_value, v.par_xml_value, v.par_integer_value, 
+             v.par_float_value, v.par_date_value, v.par_timestamp_value, v.par_boolean_value);
     end if;
   end set_parameter;
 
 
   /* Helper method to read a row of parameter into a record
-   * %param p_parameter_id Name of the parameter
-   * %param p_parameter_group_id Name of the parameter group
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
    * %usage Is called internally by the Getter Methods to copy a row of parameter
    *        into the global variable g_parameter_rec.
    */
   procedure get_parameter(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
+    p_par_id in varchar2,
+    p_pgr_id in varchar2)
   as
   begin
     select *
       into g_parameter_rec
       from parameter
-     where parameter_id = p_parameter_id
-       and parameter_group_id = p_parameter_group_id;
+     where par_id = p_par_id
+       and par_pgr_id = p_pgr_id;
   exception
     when no_data_found then
-      dbms_output.put_line('Parameter ' || p_parameter_id || ' not found in ' || p_parameter_group_id);
+      dbms_output.put_line('Parameter ' || p_par_id || ' not found in ' || p_pgr_id);
   end get_parameter;
 
 
   /* SETTER */
   procedure set_string(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
-    p_parameter_value in clob,
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_string_value%type,
     p_is_modifiable in boolean default false)
   as
   begin
     set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_string_value => p_parameter_value,
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_string_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_string;
 
   procedure set_xml(
-  p_parameter_id in varchar2,
-  p_parameter_group_id in varchar2,
-  p_parameter_value in xmltype,
-  p_is_modifiable in boolean default false)
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_xml_value%type,
+    p_is_modifiable in boolean default false)
   as
   begin
     set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_xml_value => p_parameter_value,
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_xml_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_xml;
 
-  procedure set_integer(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
-    p_parameter_value in number,
-    p_is_modifiable in boolean default false)
-  as
-  begin
-    set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_integer_value => p_parameter_value,
-      p_is_modifiable => p_is_modifiable);
-  end set_integer;
-
   procedure set_float(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
-    p_parameter_value in number,
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_float_value%type,
     p_is_modifiable in boolean default false)
   as
   begin
     set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_float_value => p_parameter_value,
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_float_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_float;
 
-  procedure set_date(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
-    p_parameter_value in date,
+  procedure set_integer(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_integer_value%type,
     p_is_modifiable in boolean default false)
   as
   begin
     set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_date_value => p_parameter_value,
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_integer_value => p_par_value,
+      p_is_modifiable => p_is_modifiable);
+  end set_integer;
+
+  procedure set_date(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_date_value%type,
+    p_is_modifiable in boolean default false)
+  as
+  begin
+    set_parameter(
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_date_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_date;
 
   procedure set_timestamp(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
-    p_parameter_value in timestamp with time zone,
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_timestamp_value%type,
     p_is_modifiable in boolean default false)
   as
   begin
     set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_timestamp_value => p_parameter_value,
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_timestamp_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_timestamp;
 
   procedure set_boolean(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2,
-    p_parameter_value in boolean,
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in boolean,
     p_is_modifiable in boolean default false)
   as
   begin
     set_parameter(
-      p_parameter_id => p_parameter_id,
-      p_parameter_group_id => p_parameter_group_id,
-      p_boolean_value => p_parameter_value,
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_boolean_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_boolean;
 
 
   /* GETTER */
   function get_string(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
-    return clob
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
+   return parameter_tab.par_string_value%type
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.string_value;
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_string_value;
   end get_string;
 
   function get_xml(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
-    return xmltype
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_tab.par_xml_value%type
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.xml_value;
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_xml_value;
   end get_xml;
 
   function get_float(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
-    return number
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_tab.par_float_value%type
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.float_value;
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_float_value;
   end get_float;
 
   function get_integer(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
-    return number
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_tab.par_integer_value%type
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.integer_value;
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_integer_value;
   end get_integer;
 
   function get_date(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
-    return date
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_tab.par_date_value%type
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.date_value;
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_date_value;
   end get_date;
 
   function get_timestamp(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
-    return timestamp with time zone
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_tab.par_timestamp_value%type
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.timestamp_value;
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_timestamp_value;
   end get_timestamp;
 
   function get_boolean(
-    p_parameter_id in varchar2,
-    p_parameter_group_id in varchar2)
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
     return boolean
   as
   begin
-    get_parameter(p_parameter_id, p_parameter_group_id);
-    return g_parameter_rec.boolean_value = 'Y';
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_boolean_value = c_true;
   end get_boolean;
-begin
-  initialize;
+  
 end param;
 /

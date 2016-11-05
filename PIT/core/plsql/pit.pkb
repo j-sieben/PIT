@@ -582,8 +582,27 @@ as
   end reset_context;
   
   
-  function get_module_list
-   return args pipelined
+  function get_modules
+    return pit_module_list
+    pipelined
+  as
+    cursor modules is
+      select pit_module_meta(module_name, module_available, module_active) module
+        from table(pit_pkg.get_modules);
+  begin
+    for module in modules loop
+       pipe row (module.module);
+    end loop;
+    return;
+  exception
+    when no_data_needed then
+      null;
+  end get_modules;
+    
+    
+  function get_available_modules
+    return args 
+    pipelined
   as
     cursor modules is
       select column_value
@@ -596,7 +615,25 @@ as
   exception
     when no_data_needed then
       null;
-  end get_module_list;
+  end get_available_modules;
+    
+    
+  function get_active_modules
+    return args 
+    pipelined
+  as
+    cursor modules is
+      select column_value
+        from table(pit_pkg.get_active_modules);
+  begin
+    for module in modules loop
+       pipe row (module.column_value);
+    end loop;
+    return;
+  exception
+    when no_data_needed then
+      null;
+  end get_active_modules;
   
   
 begin

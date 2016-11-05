@@ -66,11 +66,14 @@ as
     
   /* Procedure to remoce a single pit_message. Will delete all translations as well
    * %param p_mesage_name Name of the message to delete
+   * %param p_pms pse_id Language of the message to delete. If Default language,
+   *        all translations are deleted, otherwise only the translated message
    * %usage is called to remove mistyped or unnecessary messages in all languages.
    *        Will not commit nor re-create the MSG package.
    */
   procedure remove_message(
-    p_pms_name in pit_message.pms_name%type);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message.pms_pml_name%type);
     
   
   /* Procedure to remove all messages
@@ -83,13 +86,16 @@ as
 
   /* Function to retrieve an XML file in format XLIFF to translate messages
    * %param p_target_language Oracle supported language name the messages shall be translated to
+   * %param p_message_pattern Optional pattern that restricts number of messages
+   *        by filtering messages that start with P_MESSAGE_PATTERN
    * %return XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor
    * %usage Call this function to create an XLIFF-File that can be used to translate all
    *        error messages into a target language at once.
    */
   function get_translation_xml(
-    p_target_language in pit_message.pms_pml_name%type)
-    return XmlType;
+    p_target_language in pit_message.pms_pml_name%type,
+    p_message_pattern in varchar2 default null)
+    return xmltype;
     
 
   /* Procedure to import translated messages into the database
@@ -108,6 +114,7 @@ as
    */
   procedure remove_translation(
     p_language in pit_message.pms_pml_name%type);
+    
 
   /* Procedure to (re-) create package MSG
    * %param p_directory Optional parameter to define a directory object the creation script shall be written to.
@@ -120,9 +127,27 @@ as
    */
   procedure create_message_package(
     p_directory varchar2 default null);
+    
   
+  /* Function to get messages as a CLOB instance
+   * %param p_message_pattern Optional pattern that restricts number of messages
+   *        by filtering messages that start with P_MESSAGE_PATTERN
+   * %return XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor
+   * %usage Call this function to create an XLIFF-File that can be used to translate all
+   *        error messages into a target language at once.
+   */
+  function get_messages(
+    p_message_pattern in varchar2 default null)
+    return clob;
+    
   
-  
+  /* Procedure to write all messages to a file
+   * %param p_directory Name of a directory object the file shall be written to
+   */  
+  procedure write_message_file(
+    p_directory in varchar2 := 'DATA_DIR');
+    
+    
   /* Procedure to create a named context
    * %param p_context_name Name of the context. Maximum of 20 byte. Don't use umlauts or special chars
    * %param p_log_level Log level of the named context
@@ -184,15 +209,7 @@ as
    * %usage Is used to remove a context toggle
    */
   procedure remove_context_toggle(
-    p_toggle_name in varchar2);
-    
-    
-  /* Procedure to write all messages to a file
-   * %param p_directory Name of a directory object the file shall be written to
-   */  
-  procedure write_message_file(
-    p_directory in varchar2 := 'DATA_DIR');
-    
+    p_toggle_name in varchar2); 
     
 end pit_admin;
 /

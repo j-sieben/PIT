@@ -1,1 +1,1 @@
-alter session set PLSQL_CCFLAGS = 'plsql_ccflags:true, development:true';
+alter session set PLSQL_CCFLAGS = 'pit_installed:true, development:true';
