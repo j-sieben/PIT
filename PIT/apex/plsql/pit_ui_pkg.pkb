@@ -174,6 +174,7 @@ as
   end translate_messages;
 
 
+  /* NAMED CONTEXTS */
   procedure merge_named_context(
     p_context_name in varchar2,
     p_log_level in number,
@@ -221,6 +222,7 @@ as
   end delete_named_context;
   
   
+  /* TOGGLES */
   procedure merge_context_toggle(
     p_toggle_name in varchar2,
     p_module_list in varchar2,
@@ -262,6 +264,7 @@ as
   end delete_context_toggle;
 
 
+  /* PARAMETER */
   function validate_is_integer(
     p_value in varchar2)
     return varchar2
