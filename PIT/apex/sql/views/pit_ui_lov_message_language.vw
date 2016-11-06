@@ -1,4 +1,4 @@
-create or replace view ui_lov_pit_message_language as
+create or replace view pit_ui_lov_message_language as
 select pml.pml_display_name d, 
        pml.pml_name r, 
        case when pms.pml_name is not null then 'Y' else 'N' end pml_in_use

@@ -1,4 +1,4 @@
-create or replace view ui_pit_admin_message_main as
+create or replace view pit_ui_admin_message_main as
   with message_raw as(
        select distinct pms.rowid row_id, pms_name, pms_pml_name, pms_pse_id, pms_custom_error, dbms_lob.substr(pms_text, 4000, 1) pms_text, src.name pms_used_at,
               case when src.name like 'PIT%' or src.name in ('UTL_CONTEXT', 'PARAM', 'PARAM_ADMIN') then 'Y' else null end pms_is_system_message
