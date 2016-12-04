@@ -30,9 +30,9 @@ as
   begin
     -- Read default language
     $IF dbms_db_version.ver_le_11 $THEN
-    select name default_language
+    select pml_name default_language
       into g_default_language
-      from (select name, rank() over (order by pml_default_order) rang
+      from (select pml_name, rank() over (order by pml_default_order) rang
               from pit_message_language
              where pml_default_order > 0)
      where rang = 1;
@@ -78,17 +78,24 @@ as
     p_error_number in pit_message.pms_custom_error%type default null)
   as
     l_pms_name pit_message.pms_name%type;
+    l_error_number pit_message.pms_custom_error%type;
   begin
-    if p_pms_pse_id in (20,30) and p_error_number != -20000 then
+    case
+    when p_pms_pse_id in (20,30) and p_error_number != -20000 then
       pit_util.check_error(p_pms_name, p_error_number);
-    end if;
+      l_error_number := p_error_number;
+    when p_pms_pse_id in (20,30) then
+      l_error_number := -20000;
+    else
+      null;
+    end case;
 
     merge into pit_message m
     using (select upper(p_pms_name) pms_name,
                   upper(coalesce(p_pms_pml_name, g_default_language)) pms_pml_name,
                   p_pms_text pms_text,
                   p_pms_pse_id pms_pse_id,
-                  p_error_number pms_custom_error
+                  l_error_number pms_custom_error
              from dual) v
        on (m.pms_name = v.pms_name and m.pms_pml_name = v.pms_pml_name)
      when matched then update set
@@ -344,8 +351,8 @@ as
       execute immediate l_sql_text;
     end if;
   end create_message_package;
-  
-    
+
+
   function get_messages(
     p_message_pattern in varchar2 default null)
     return clob
@@ -385,7 +392,7 @@ end;
 ~';
   begin
     dbms_lob.createtemporary(l_script, false, dbms_lob.call);
-    
+
     for msg in message_cur(p_message_pattern) loop
       case msg.rang
       when 1 then
@@ -406,11 +413,11 @@ end;
                      '#LANGUAGE#', msg.pms_pml_name));
       end case;
     end loop;
-    
+
     dbms_lob.append(l_script, c_start);
     dbms_lob.append(l_script, l_chunk);
     dbms_lob.append(l_script, c_end);
-    
+
     return l_script;
   end get_messages;
 
@@ -501,7 +508,7 @@ end;
       p_par_id => c_toggle_prefix || replace(upper(p_toggle_name), c_toggle_prefix),
       p_par_pgr_id => c_parameter_group);
   end remove_context_toggle;
-  
+
 begin
   initialize;
 end pit_admin;

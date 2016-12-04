@@ -8,6 +8,18 @@ as
      - Erzeugen, Editieren und Loeschen von Parametern / Parametergruppen
      - Export von Nachrichten, Kontexten, Parametern
    */
+   
+   
+  /* Prozedur zur Verwaltung der Standardsprachen
+   * %param p_pml_list Liste der Sprachen in der Reihenfolge ihrer Verwendung
+   * %usage Wird verwendet, um die Spracheinstellungen fuer PIT einzustellen.
+   *        Die Standardsprache kann hier nicht geaendert werden, die wurde bei 
+   *        der Installation von PIT festgelegt. Hier kann nur definiert werden,
+   *        Welce Uebersetzungen mit welchem Vorrang verwendet werden sollen.
+   */
+  procedure set_language_settings(
+    p_pml_list in varchar2);
+    
   
   /* Prozedur zur Verwaltung von Meldungen
    * %param p_pms_name Name der Meldung

@@ -12,8 +12,8 @@ as
     return blob
   as
     l_blob blob;
-    l_lang_context  integer := DBMS_LOB.DEFAULT_LANG_CTX;
-    l_warning       integer := DBMS_LOB.WARN_INCONVERTIBLE_CHAR;
+    l_lang_context  integer := dbms_lob.DEFAULT_LANG_CTX;
+    l_warning       integer := dbms_lob.WARN_INCONVERTIBLE_CHAR;
     l_dest_offset   integer := 1;
     l_source_offset integer := 1;
   begin
@@ -23,10 +23,10 @@ as
       dbms_lob.converttoblob (
         dest_lob => l_blob,
         src_clob => p_clob,
-        amount => DBMS_LOB.LOBMAXSIZE,
+        amount => dbms_lob.LOBMAXSIZE,
         dest_offset => l_dest_offset,
         src_offset => l_source_offset,
-        blob_csid => DBMS_LOB.DEFAULT_CSID,
+        blob_csid => dbms_lob.DEFAULT_CSID,
         lang_context => l_lang_context,
         warning => l_warning
       );
@@ -78,6 +78,38 @@ as
     
     pit.leave_optional;
   end download_clob;
+  
+  
+  /* INTERFACE */
+  procedure set_language_settings(
+    p_pml_list in varchar2)
+  as
+    l_pml_list wwv_flow_global.vc_arr2;
+    l_pml_default_order pit_message_language.pml_default_order%type;
+  begin
+    pit.enter_mandatory(
+      p_action => 'set_language_settings',
+      p_module => c_pkg,
+      p_params => msg_params(
+                    msg_param('p_pml_list', p_pml_list)));
+    
+    update pit_message_language
+       set pml_default_order = 0
+     where pml_default_order != 10;
+    
+    if p_pml_list is not null then
+      l_pml_list := apex_util.string_to_table(p_pml_list);
+      l_pml_default_order := (l_pml_list.count + 1) * 10;
+      for i in l_pml_list.first .. l_pml_list.last loop
+        update pit_message_language
+           set pml_default_order = l_pml_default_order
+         where pml_name = l_pml_list(i);
+        l_pml_default_order := l_pml_default_order - 10;
+      end loop;
+    end if;
+    
+    pit.leave_mandatory;
+  end set_language_settings;
   
 
   procedure merge_message(

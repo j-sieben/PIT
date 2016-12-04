@@ -14,7 +14,6 @@ comment on table pit_message_language is 'Lookup-table for message languages.';
 merge into pit_message_language m
 using (select value pml_name, 
               case value 
-              when '&DEFAULT_LANGUAGE.' then 50 
               when '&DEFAULT_LANGUAGE.' then 10
               else 0 end pml_default_order,
               case value when 'GERMAN' then 'Deutsch'

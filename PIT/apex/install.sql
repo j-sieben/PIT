@@ -24,8 +24,14 @@ prompt &s1.View PIT_UI_ADMIN_PIT_MODULE
 prompt &s1.View PIT_UI_EDIT_CONTEXT
 @&sql_dir.views/pit_ui_edit_context.vw
 
+prompt &s1.View PIT_UI_EDIT_MESSAGE_TRANS
+@&sql_dir.views/pit_ui_edit_message_trans.vw
+
 prompt &s1.View PIT_UI_EDIT_TOGGLE
 @&sql_dir.views/pit_ui_edit_toggle.vw
+
+prompt &s1.View PIT_UI_LANG_SETTINGS_DEFAULT
+@&sql_dir.views/pit_ui_lang_settings_default.vw
 
 prompt &s1.View PIT_UI_LIST_ACTIVE_FOR_PAGE
 @&sql_dir.views/pit_ui_list_active_for_page.vw
@@ -71,7 +77,7 @@ show errors
 
 prompt &h2.Install APEX-application
 prompt &s1.Prepare installation
-@&apex_dir.apex/pit_ui_pkg.pks
+@&apex_dir.apex/prepare_apex_import.sql
 
 
 prompt &s1.Install application
