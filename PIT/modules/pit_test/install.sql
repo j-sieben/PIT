@@ -40,6 +40,6 @@ prompt &s1.Create package body PIT_TEST_CASES
 show errors
 
 prompt &h2.Create PIT_TEST parameters and messages
-@modules/pit_test/sql/create_parameters.sql
-@modules/pit_test/sql/create_messages.sql
-@modules/pit_test/sql/create_test_results.sql
+@&test_dir.create_parameters.sql
+@&test_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
+@&test_dir.create_test_results.sql

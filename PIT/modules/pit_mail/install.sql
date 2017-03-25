@@ -20,7 +20,8 @@ prompt &h2.Grant user rights to &INSTALL_USER.
 prompt &h2.Create types and packages for PIT_MAIL
 prompt &s1.Create PIT_MAIL parameters
 @&mail_dir.create_parameters.sql
-
+prompt &s1.Create PIT_MAIL messages
+@&mail_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
 prompt &s1.Create type PIT_mail
 @&sql_dir.types/pit_mail.tps
 show errors

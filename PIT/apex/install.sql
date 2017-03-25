@@ -62,7 +62,7 @@ prompt &s1.View PIT_UI_LOV_TRACE_LEVEL
 
 
 prompt &h2.Create UI-MESSAGES
-@@&apex_dir.create_messages.sql
+@@&apex_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
 
 
 prompt &h2.Create UI-PACKAGES

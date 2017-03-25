@@ -33,9 +33,6 @@ show errors
 prompt &s1.Create PIT_FILE parameters
 @&file_dir.create_parameters.sql
 
-prompt &s1.Create PIT_FILE messages
-@&file_dir.create_messages.sql
-
 prompt ### CAVE ###
 prompt Please remember to create a directory called PIT_FILE_DIR before use.
 prompt This directory is required to enable PIT to store files.

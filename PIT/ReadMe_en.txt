@@ -11,10 +11,11 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 sqlplus / as sysdba
 
 - run pit_install.sql and pass the user where pit should go as parameter 1
-  If you plan to run PIT in a mandator version, pass in the mandator as parameter 2,
-  otherwise repeat the name of the owner as parameter 2
+- If you plan to run PIT in a mandator version, pass in the mandator as parameter 2, otherwise repeat the name of the owner as parameter 2
+- Provide an Oracle language name to define the default language of PIT
+- Provide an APEX workspace name where the PIT admin application can be installed at (needs access to PIT owner schema)
 
-@pit_install.sql DOAG DOAG
+@pit_install.sql DOAG DOAG AMERICAN
 
 - If you plan to use output module PIT_FILE make sure that you have created a 
   directory named PIT_FILE_DIR that points to a path the database has access to:

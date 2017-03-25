@@ -1,3 +1,6 @@
+prompt
+prompt &h1. Check whether UTL_TEXT exists
+@core/check_has_utl_text.sql core/utl_text/install.sql
 
 prompt
 prompt &h1.Installing parameter package
@@ -118,7 +121,7 @@ prompt &s1.Create package Body PIT_UTIL
 show errors
 
 prompt &s1.Create internal messages
-@core/create_default_messages.sql
+@core/messages/&DEFAULT_LANGUAGE./create_messages.sql
 
 prompt &s1.Create package MSG
 @&plsql_dir.msg.pks

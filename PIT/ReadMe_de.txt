@@ -7,14 +7,17 @@ Beachten Sie bitte folgendes vor der Installation:
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-- Melden Sie sich anschließend an sqlplus als SYS an
+- Melden Sie sich anschliessend an sqlplus als SYS an
 
 sqlplus / as sysdba
 
-- Fuehren Sie das Skript pit_install.sql aus, uebergeben Sie den Schemanamen, 
-  in dem das Package installiert werden soll, als Parameter
+- Fuehren Sie das Skript pit_install.sql aus, uebergeben Sie …
+  - das Schema, in dem das Package installiert werden soll, 
+  - das Schema, das als Client Zugriff auf PIT erhalten soll (kann auch identisch mit dem Eigentuemer sein)
+  - die Default-Sprache als Oracle-Sprachname
+  - den Namen des APEX-Workspaces zur Installation der PIT-Administrationsumgebung
 
-@pit_install.sql DOAG DOAG
+@pit_install.sql DOAG DOAG GERMAN
 
 - Vor der Verwendung des Ausgabemoduls PIT_FILE muss ein Directory
   mit dem Namen PIT_FILE_DIR angelegt werden und auf einen Pfad zeigen,

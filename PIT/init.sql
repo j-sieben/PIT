@@ -18,7 +18,7 @@ select upper('&1.') install_user,
        upper('&3.') default_language
   from V$NLS_VALID_VALUES
  where parameter = 'LANGUAGE'
-   and (value = upper('&3.') or '&3.' is null);
+   and value = upper('&3.');
    
 select upper('&4.') apex_ws
   from apex_workspaces
