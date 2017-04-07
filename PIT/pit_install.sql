@@ -53,7 +53,13 @@ prompt &section.
 prompt &h1.Installing APEX application
 @apex/install.sql
 
-@init.sql &1. &2. &3. &4.
+set verify off
+set serveroutput on
+set echo off
+set feedback off
+set lines 120
+set pages 9999
+whenever sqlerror exit
 
 prompt
 prompt &section.

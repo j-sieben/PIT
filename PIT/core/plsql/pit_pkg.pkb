@@ -630,13 +630,20 @@ as
     l_qualified_name utl_call_stack.unit_qualified_name;
     -- variable to adjust recursive call level for UTL_CALL_STACK
     l_trace_depth integer := 5;
+    l_invalid_depth exception;
+    pragma exception_init(l_invalid_depth, -64610);
     $END
   begin
     $IF dbms_db_version.ver_le_11 $THEN
     null;
     $ELSE
     if p_action is null or p_module is null then
-      l_qualified_name := utl_call_stack.subprogram(l_trace_depth);
+      begin
+        l_qualified_name := utl_call_stack.subprogram(l_trace_depth);
+      exception
+        when l_invalid_depth then
+          l_qualified_name := utl_call_stack.subprogram(3);
+      end;
       l_module_position := greatest(least(l_qualified_name.count - 1, 1), 1);
       l_action_position := l_qualified_name.count;
     end if;

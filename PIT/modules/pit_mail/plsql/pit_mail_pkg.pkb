@@ -83,7 +83,6 @@ as
     g_param_list(c_from) := param.get_string(c_from, c_param_group);
     g_param_list(c_to) := param.get_string(c_to, c_param_group);
     g_param_list(c_subject) := param.get_string(c_subject, c_param_group);
-    g_param_list(c_return) := param.get_string(c_return, c_param_group);
   exception
     when others then
       self.fire_threshold := pit.level_off;
