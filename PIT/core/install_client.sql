@@ -4,6 +4,8 @@ define sql_dir=&core_dir./sql/
 
 prompt
 prompt &h2.Granting access to PIT to &REMOTE_USER.
+@&core_dir.grant_client_rights.sql
+
 prompt &h3.Change current schema to &REMOTE_USER.
 alter session set current_schema=&REMOTE_USER.;
 

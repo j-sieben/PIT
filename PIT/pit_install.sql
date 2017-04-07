@@ -53,6 +53,8 @@ prompt &section.
 prompt &h1.Installing APEX application
 @apex/install.sql
 
+@init.sql &1. &2. &3. &4.
+
 prompt
 prompt &section.
 prompt &h1.Finalize installation
