@@ -517,23 +517,23 @@ as
     p_message_name in varchar2 default msg.ASSERT_EXISTS,
     p_arg_list msg_args := null)
   as
-    l_stmt varchar2(32767) := 'select * from (#STMT#) where rownum = 1';
+    l_stmt varchar2(32767) := 'select * from dual where exists (#STMT#)';
   begin
     pit.assert_not_null(l_stmt);
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
     execute immediate l_stmt;
   exception
     when no_data_found then
-       pit.error(p_message_name, p_arg_list);
+      pit.error(p_message_name, p_arg_list);
   end assert_exists;
     
     
   procedure assert_not_exists(
     p_stmt  in varchar2,
     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-    p_arg_list   msg_args := null)
+    p_arg_list msg_args := null)
   as
-    l_stmt varchar2(32767) := 'select * from (#STMT#)';
+    l_stmt varchar2(32767) := 'select * from dual where not exists (#STMT#)';
     l_result sys_refcursor;
   begin
     pit.assert_not_null(l_stmt);
@@ -542,7 +542,7 @@ as
     pit.error(p_message_name, p_arg_list);
   exception
     when no_data_found then
-       null;
+      null;
   end assert_not_exists;
   
   
