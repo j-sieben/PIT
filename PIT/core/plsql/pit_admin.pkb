@@ -292,6 +292,8 @@ as
     c_package_name  constant varchar2(30) := 'msg';
     c_exception_postfix constant varchar2(4) := '_ERR';
     c_r constant varchar2(2) := chr(10);
+    c_package constant varchar2(30 byte) := 'PACKAGE';
+    c_package_body constant varchar2(30 byte) := 'PACKAGE BODY';
 
     l_sql_text clob := 'create or replace package ' || c_package_name || ' as' || c_r;
     l_constant_template varchar2(200) :=
@@ -305,6 +307,8 @@ as
     l_constants clob := c_r || '  -- CONSTANTS:' || c_r;
     l_exceptions clob := c_r || '  -- EXCEPTIONS:' || c_r;
     l_pragmas clob := c_r || '  -- EXCEPTION INIT:' || c_r;
+    c_recompile_stmt varchar2(1000) := q'^alter package #OWNER#.#NAME# compile ^';
+    l_stmt varchar2(1000);
 
     cursor message_cur is
         with messages as(
@@ -321,6 +325,17 @@ as
              else null end pragma_chunk
         from messages
        order by pms_name;
+       
+    cursor invalid_objects_cur is
+      select owner, object_name, object_type,
+             case object_type
+             when c_package then 1
+             when c_package_body then 2
+             else 2 end recompile_order
+        from all_objects
+       where object_type in (c_package, c_package_body)
+         and status != 'VALID'
+       order by recompile_order;
   begin
     -- persist active error numbers for -20000 errors in message table
     merge into pit_message m
@@ -350,6 +365,22 @@ as
     else
       execute immediate l_sql_text;
     end if;
+    
+    for obj in invalid_objects_cur loop
+      l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
+                  '#OWNER#', obj.owner, '#NAME#', obj.object_name));
+      begin
+        if obj.object_type = c_package then
+          execute immediate l_stmt;
+        else
+          execute immediate l_stmt || 'body';
+        end if;
+      exception
+        when others then
+          dbms_output.put_line(
+            'Error when compiling ' || obj.object_type || ' ' || obj.owner || '.' || obj.object_name || ': ' || sqlerrm);
+      end;
+    end loop;
   end create_message_package;
 
 

@@ -517,7 +517,7 @@ as
     p_message_name in varchar2 default msg.ASSERT_EXISTS,
     p_arg_list msg_args := null)
   as
-    l_stmt varchar2(32767) := 'select * from (#STMT#)';
+    l_stmt varchar2(32767) := 'select * from (#STMT#) where rownum = 1';
   begin
     pit.assert_not_null(l_stmt);
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);

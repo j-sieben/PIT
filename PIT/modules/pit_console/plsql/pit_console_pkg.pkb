@@ -57,6 +57,9 @@ as
     l_indent_length number;
     l_timing varchar2(100);
     l_message varchar2(32767);
+    l_postfix varchar2(32767);
+    l_param varchar2(1000);
+    c_etc constant char(1 char) := '…';
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;
@@ -65,6 +68,25 @@ as
     l_indent_length := length(g_level_indicator);
     l_indent_length := (p_call_stack.call_level * l_indent_length) - l_indent_length;
     l_indent := lpad(g_level_indicator, l_indent_length, g_level_indicator);
+    
+    -- Parameters
+    if p_call_stack.params is not null then
+      l_postfix := ' [';
+      for i in p_call_stack.params.first .. p_call_stack.params.last loop
+        l_param := case i when 1 then null else '; ' end 
+                || p_call_stack.params(i).p_param || '="' 
+                || case when length(p_call_stack.params(i).p_value) > 49 
+                        then substr(p_call_stack.params(i).p_value, 1, 49) || c_etc
+                        else p_call_stack.params(i).p_value end || '"';
+        if length(l_postfix || l_param) < 2000 then
+          l_postfix := l_postfix || l_param;
+        else
+          l_postfix := l_postfix || c_etc;
+          exit;
+        end if;
+      end loop;
+      l_postfix := l_postfix || ']';
+    end if;
 
     -- Timing
     if p_call_stack.trace_timing = 'Y' then
