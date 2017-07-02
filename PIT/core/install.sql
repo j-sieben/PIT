@@ -127,14 +127,6 @@ prompt &s1.Create package MSG
 @&plsql_dir.msg.pks
 show errors
 
-prompt &s1.Recompile package params
-alter package param compile;
-show errors
-alter package param compile body;
-show errors
-
-prompt &s1.Reset package state
-call dbms_session.reset_package();
 
 prompt &s1.Create default parameters
 @core/create_parameters.sql

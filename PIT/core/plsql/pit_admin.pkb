@@ -4,6 +4,7 @@ as
   /************************* PACKAGE VARIABLES ********************************/
   g_default_language varchar2(30);
 
+  c_pkg constant varchar2(30 byte) := $$PLSQL_UNIT;
   c_parameter_group constant varchar2(5) := 'PIT';
   c_context_group constant varchar2(30) := 'CONTEXT';
   c_context_prefix constant varchar2(30) := c_context_group || '_';
@@ -13,13 +14,104 @@ as
   c_false constant char(1 byte) := 'N';
   c_xliff_ns constant varchar2(100) := 'urn:oasis:names:tc:xliff:document:1.2';
   c_del char(1 byte) := '|';
+  c_min_error constant number := -20999;
+  c_max_error constant number := -20000;
 
 
   -- ERROR messages
   c_error_already_assigned constant varchar2(200) := 'This Oracle error number is already assigned to message #ERRNO#';
   c_message_does_not_exist constant varchar2(200) := 'Message #MESSAGE# does not exist.';
+  c_error_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 26 chars for error messages';
+  c_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 30 chars';
+  
 
   /********************** GENERIC HELPER FUNCTIONS ****************************/
+  /* Procedure to recompile invalid objects
+   * %usage Called internally when recreating MSG package to recompile packages
+   *        with dependencies on MSG
+   */
+  procedure recompile_invalid_objects
+  as
+    -- Constants
+    c_compile_error constant varchar2(200) := 'Error when compiling #TYPE# #OWNER#.#NAME#: #ERROR#';
+    c_invalid_object constant varchar2(200) := 'Invalid: #TYPE# #OWNER#.#NAME#';
+    c_compiled constant varchar2(200) := '#TYPE# #OWNER#.#NAME# compiled';
+    c_package constant varchar2(30 byte) := 'PACKAGE';
+    c_package_body constant varchar2(30 byte) := 'PACKAGE BODY';
+    c_recompile_stmt constant varchar2(1000) := q'^alter #TYPE# #OWNER#.#NAME# compile ^';
+    c_max_compile_runs constant number := 3;
+    
+    -- Variables
+    l_stmt varchar2(1000);
+    l_index binary_integer;
+    l_no binary_integer;
+    
+    -- Exceptions
+    compilation_error exception;
+    pragma exception_init(compilation_error, -24344);
+    
+    -- Cursors
+    cursor invalid_objects_cur is
+      select distinct obj.owner, obj.object_name, obj.object_type, count(*) over () cnt,
+             case obj.object_type
+             when c_package then 1
+             when c_package_body then 2
+             else 2 end recompile_order
+        from all_dependencies dep
+        join all_objects obj
+          on dep.type = obj.object_type
+         and dep.name = obj.object_name
+       where obj.status != 'VALID'
+         and obj.owner = sys_context('USERENV', 'CURRENT_SCHEMA')
+         and obj.object_name != c_pkg
+       order by obj.object_name, recompile_order;
+  begin
+    l_index := dbms_application_info.set_session_longops_nohint;
+    for i in 1 .. c_max_compile_runs loop
+      dbms_output.put_line('compile Run ' || i);
+      for obj in invalid_objects_cur loop
+        l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
+                    '#OWNER#', obj.owner, 
+                    '#TYPE#', replace(obj.object_type, ' BODY'),
+                    '#NAME#', obj.object_name));
+        dbms_application_info.set_session_longops(
+          l_index, l_no, 'Compiling ' || obj.object_type || obj.object_name, 0, 0, i, obj.cnt);
+        if i < c_max_compile_runs then
+          begin
+            case obj.object_type 
+            when c_package_body then
+              execute immediate l_stmt || 'body';
+            else
+              execute immediate l_stmt;
+            end case;
+            dbms_output.put_line(
+              pit_util.bulk_replace(c_compiled, char_table(
+                '#TYPE#', obj.object_type,
+                '#OWNER#', obj.owner,
+                '#NAME#', obj.object_name)));
+          exception
+            when compilation_error then
+              null;
+            when others then
+              dbms_output.put_line(
+                pit_util.bulk_replace(c_compile_error, char_table(
+                  '#TYPE#', obj.object_type,
+                  '#OWNER#', obj.owner,
+                  '#NAME#', obj.object_name,
+                  '#ERROR#', sqlerrm)));
+          end;
+        else
+          dbms_output.put_line(
+            pit_util.bulk_replace(c_invalid_object, char_table(
+              '#TYPE#', obj.object_type,
+              '#OWNER#', obj.owner,
+              '#NAME#', obj.object_name)));
+        end if;
+      end loop;
+    end loop;
+  end recompile_invalid_objects;
+  
+  
   /* Initialization procedure
    * %usage Called internally. It has the following functionality:
    *        <ul><li>Read all predefined oracle errors from the oracle packages</li>
@@ -81,11 +173,19 @@ as
     l_error_number pit_message.pms_custom_error%type;
   begin
     case
-    when p_pms_pse_id in (20,30) and p_error_number != -20000 then
+    when length(p_pms_name) > 26 and p_pms_pse_id <= 30 then
+      raise_application_error(c_max_error, c_error_msg_name_too_long);
+    when length(p_pms_name) > 30 then
+      raise_application_error(c_max_error, c_msg_name_too_long);
+    else
+      null;
+    end case;
+    case
+    when p_pms_pse_id in (20,30) and p_error_number not between c_min_error and c_max_error then
       pit_util.check_error(p_pms_name, p_error_number);
       l_error_number := p_error_number;
     when p_pms_pse_id in (20,30) then
-      l_error_number := -20000;
+      l_error_number := c_max_error;
     else
       null;
     end case;
@@ -117,10 +217,10 @@ as
        where pms_custom_error = p_error_number
          and rownum = 1;
       rollback;
-      raise_application_error(-20000, replace(c_error_already_assigned, '#ERRNO#', l_pms_name));
+      raise_application_error(c_max_error, replace(c_error_already_assigned, '#ERRNO#', l_pms_name));
     when others then
       rollback;
-      raise;
+        raise;
   end merge_message;
 
 
@@ -146,7 +246,7 @@ as
       p_error_number => l_error_number);
   exception
     when no_data_found then
-      raise_application_error(-20000, replace(c_message_does_not_exist, '#MESSAGE#', p_pms_name));
+      raise_application_error(c_max_error, replace(c_message_does_not_exist, '#MESSAGE#', p_pms_name));
   end translate_message;
 
 
@@ -292,8 +392,6 @@ as
     c_package_name  constant varchar2(30) := 'msg';
     c_exception_postfix constant varchar2(4) := '_ERR';
     c_r constant varchar2(2) := chr(10);
-    c_package constant varchar2(30 byte) := 'PACKAGE';
-    c_package_body constant varchar2(30 byte) := 'PACKAGE BODY';
 
     l_sql_text clob := 'create or replace package ' || c_package_name || ' as' || c_r;
     l_constant_template varchar2(200) :=
@@ -307,8 +405,6 @@ as
     l_constants clob := c_r || '  -- CONSTANTS:' || c_r;
     l_exceptions clob := c_r || '  -- EXCEPTIONS:' || c_r;
     l_pragmas clob := c_r || '  -- EXCEPTION INIT:' || c_r;
-    c_recompile_stmt varchar2(1000) := q'^alter package #OWNER#.#NAME# compile ^';
-    l_stmt varchar2(1000);
 
     cursor message_cur is
         with messages as(
@@ -326,23 +422,13 @@ as
         from messages
        order by pms_name;
        
-    cursor invalid_objects_cur is
-      select owner, object_name, object_type,
-             case object_type
-             when c_package then 1
-             when c_package_body then 2
-             else 2 end recompile_order
-        from all_objects
-       where object_type in (c_package, c_package_body)
-         and status != 'VALID'
-       order by recompile_order;
   begin
     -- persist active error numbers for -20000 errors in message table
     merge into pit_message m
-    using (select pms_name, pms_pml_name, -21000 + dense_rank() over (order by pms_name) pms_active_error
+    using (select pms_name, pms_pml_name, c_min_error - 1 + dense_rank() over (order by pms_name) pms_active_error
              from pit_message
             where pms_pse_id <= 30
-              and pms_custom_error = -20000) v
+              and pms_custom_error = c_max_error) v
        on (m.pms_name = v.pms_name
        and m.pms_pml_name = v.pms_pml_name)
      when matched then update set
@@ -366,21 +452,8 @@ as
       execute immediate l_sql_text;
     end if;
     
-    for obj in invalid_objects_cur loop
-      l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
-                  '#OWNER#', obj.owner, '#NAME#', obj.object_name));
-      begin
-        if obj.object_type = c_package then
-          execute immediate l_stmt;
-        else
-          execute immediate l_stmt || 'body';
-        end if;
-      exception
-        when others then
-          dbms_output.put_line(
-            'Error when compiling ' || obj.object_type || ' ' || obj.owner || '.' || obj.object_name || ': ' || sqlerrm);
-      end;
-    end loop;
+    recompile_invalid_objects;
+    
   end create_message_package;
 
 
@@ -408,7 +481,7 @@ end;
     c_merge_template constant varchar2(200) := q'~
   pit_admin.merge_message(
     p_pms_name => '#NAME#',
-    p_pms_text => q'ø#TEXT#ø',
+    p_pms_text => q'^#TEXT#^',
     p_pms_pse_id => #pms_pse_id#,
     p_pms_pml_name => '#LANGUAGE#',
     p_error_number => #ERRNO#
@@ -417,7 +490,7 @@ end;
     c_translate_template constant varchar2(200) := q'~
   pit_admin.translate_message(
     p_pms_name => '#NAME#',
-    p_pms_text => q'ø#TEXT#ø',
+    p_pms_text => q'^#TEXT#^',
     p_pms_pml_name => '#LANGUAGE#'
   );
 ~';

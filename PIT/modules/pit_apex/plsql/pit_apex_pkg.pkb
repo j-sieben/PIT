@@ -17,57 +17,23 @@ as
   c_trg_trace_threshold constant varchar2(30 char) := 'PIT_APEX_TRG_TRACE_THRESHOLD';
   c_trg_trace_timing constant varchar2(30 char) := 'PIT_APEX_TRG_TRACE_TIMING';
   c_trg_log_modules constant varchar2(30 char) := 'PIT_APEX_TRG_LOG_MODULES';
+  c_yes constant varchar2(3 byte) := 'YES';
   
   g_apex_triggered_context pit_pkg.context_type;
-  c_chunk constant integer := 4000;
-  g_session_language varchar2(64);
+  c_chunk_size constant integer := 8192;
   g_fire_threshold number;
 
-   /* HELPER */
-   procedure initialize
-   as
-   begin
-      select value
-        into g_session_language
-        from nls_session_parameters
-       where parameter = 'NLS_LANGUAGE';
-      
-      g_fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
-      g_apex_triggered_context.log_level := param.get_integer(c_trg_fire_threshold, c_param_group);
-      g_apex_triggered_context.trace_level := param.get_integer(c_trg_trace_threshold, c_param_group);
-      g_apex_triggered_context.trace_timing := param.get_boolean(c_trg_trace_timing, c_param_group);
-      g_apex_triggered_context.log_modules := param.get_string(c_trg_log_modules, c_param_group);
-   end initialize;
-
-   function get_message(
-     p_message_name in varchar2,
-     p_call_stack in call_stack_type)
-     return message_type
-   as
-    l_method_name clob;
-    l_msg_params clob;
-    l_param msg_param;
-    l_prefix varchar2(10);
-   begin
-    l_method_name := to_clob(p_call_stack.method_name);
-    case when p_call_stack.params is not null then
-      dbms_lob.createtemporary(l_msg_params, false, dbms_lob.call);
-      for i in p_call_stack.params.first .. p_call_stack.params.last loop
-        l_param := p_call_stack.params(i);
-        dbms_lob.append(l_msg_params, l_param.p_param || ': ' || l_param.p_value || '; ');
-      end loop;
-    else
-      l_msg_params := 'Ø';
-    end case;
-    return
-      message_type(
-        p_message_name => p_message_name,
-        p_message_language => g_session_language,
-        p_affected_id => null,
-        p_session_id => p_call_stack.session_id,
-        p_user_name => null,
-        p_arg_list => msg_args(l_method_name, l_msg_params));
-   end get_message;
+  /* HELPER */
+  procedure initialize
+  as
+  begin
+    g_fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
+    g_apex_triggered_context.log_level := param.get_integer(c_trg_fire_threshold, c_param_group);
+    g_apex_triggered_context.trace_level := param.get_integer(c_trg_trace_threshold, c_param_group);
+    g_apex_triggered_context.trace_timing := param.get_boolean(c_trg_trace_timing, c_param_group);
+    g_apex_triggered_context.log_modules := param.get_string(c_trg_log_modules, c_param_group);
+  end initialize;
+  
 
   /* valid_environment checks whether module is called within a valid APEX
    * session environment
@@ -78,6 +44,30 @@ as
   begin
     return apex_application.get_session_id is not null;
   end valid_environment;
+  
+  
+  /* helper function to convert MSG_PARAMS into NAME-VALUE-Pairs
+   * odd position number returns name of the parameter
+   * even position number returns value of the parameter
+   */
+  function get_msg_param(
+    p_call_stack in call_stack_type,
+    p_position in number)
+    return varchar2
+  as
+    l_position number;
+  begin
+    l_position := round((p_position - 0.25)/2);
+    if p_call_stack.params.exists(l_position) then
+      if mod(p_position, 2) = 1 then
+        return p_call_stack.params(l_position).p_param;
+      else
+        return p_call_stack.params(l_position).p_value;
+      end if;
+    else
+      return null;
+    end if;
+  end get_msg_param;
 
 
   /* debug_message forwards messages to the APEX debug stack, if
@@ -101,26 +91,46 @@ as
       else
         l_message := dbms_lob.substr(p_message.message_text, 32760, 1);
       end if;
-    case p_message.message_name
-    when msg.PIT_CODE_ENTER then l_message := '=> ' || l_message;
-    when msg.PIT_CODE_LEAVE then l_message := '<= ' || l_message;
-    else null;
-    end case;
+      
       apex_debug.log_long_message(
         p_message => l_message,
         p_level => l_severity);
     end if;
   end debug_message;
+  
+  
+  /* helper to add error messages to the apex error stack
+   */
+  procedure log_error(
+    p_message in message_type)
+  as
+  begin
+    if valid_environment then
+      if p_message.affected_id is not null then
+        apex_error.add_error(
+          p_message => p_message.message_text,
+          p_additional_info => null,
+          p_page_item_name => p_message.affected_id,
+          p_display_location => apex_error.c_inline_with_field_and_notif);
+      else
+        apex_error.add_error(
+          p_message => p_message.message_text,
+          p_additional_info => null,
+          p_display_location => apex_error.c_inline_with_field_and_notif);
+      end if;
+    end if;
+  end log_error;
+  
 
-  /* helper procedure to pass clob to APEX, using htp.print
-   * clob is splitted into chunks of C_CHUNK bytes to circumvent the limitation
+  /* helper procedure to pass clob to APEX, using htp.p
+   * clob is splitted into chunks of c_chunk_size bytes to circumvent the limitation
    * of http-streams of 32 KByte
    */
   procedure print_clob(
     p_text in clob)
   as
-    l_idx integer := 1;
-    l_amount integer := c_chunk;
+    l_offset integer := 1;
+    l_amount integer := c_chunk_size;
     l_chunk varchar2(32767);
     l_length integer := dbms_lob.getlength(p_text);
   begin
@@ -129,14 +139,14 @@ as
         dbms_lob.read(
           lob_loc => p_text,
           amount => l_amount,
-          offset => l_idx,
+          offset => l_offset,
           buffer => l_chunk);
-        l_idx := l_idx + l_amount;
+        l_offset := l_offset + l_amount;
         l_length := l_length - l_amount;
-        htp.prn(l_chunk);
+        sys.htp.p(l_chunk);
       end loop;      
     end if;
-  end;
+  end print_clob;
 
 
   /* INTERFACE */
@@ -159,11 +169,10 @@ as
         apex_application.g_notification := p_message.message_text;
         apex_application.g_print_success_message := null;
       when pit.level_error then
-        debug_message(p_message);
-        wwv_flow.show_error_message(dbms_lob.substr(p_message.message_text, 1, c_chunk));
+        log_error(p_message);
       when pit.level_fatal then
         debug_message(p_message);
-        wwv_flow.show_error_message(dbms_lob.substr(p_message.message_text, 1, c_chunk));
+        log_error(p_message);
         wwv_flow.g_unrecoverable_error := true;
       else
         -- Level off
@@ -190,7 +199,28 @@ as
     l_next_param varchar2(32767);
   begin
     if valid_environment then
-      l_message := get_message(msg.PIT_CODE_ENTER, p_call_stack);
+      apex_debug.enter( 
+        p_routine_name => p_call_stack.module_name || '.' || p_call_stack.method_name, 
+        p_name01 => get_msg_param(p_call_stack, 1), 
+        p_value01 => get_msg_param(p_call_stack, 2), 
+        p_name02 => get_msg_param(p_call_stack, 3), 
+        p_value02 => get_msg_param(p_call_stack, 4), 
+        p_name03 => get_msg_param(p_call_stack, 5), 
+        p_value03 => get_msg_param(p_call_stack, 6), 
+        p_name04 => get_msg_param(p_call_stack, 7), 
+        p_value04 => get_msg_param(p_call_stack, 8), 
+        p_name05 => get_msg_param(p_call_stack, 9), 
+        p_value05 => get_msg_param(p_call_stack, 10), 
+        p_name06 => get_msg_param(p_call_stack, 11), 
+        p_value06 => get_msg_param(p_call_stack, 12),  
+        p_name07 => get_msg_param(p_call_stack, 13), 
+        p_value07 => get_msg_param(p_call_stack, 14), 
+        p_name08 => get_msg_param(p_call_stack, 15), 
+        p_value08 => get_msg_param(p_call_stack, 16), 
+        p_name09 => get_msg_param(p_call_stack, 17), 
+        p_value09 => get_msg_param(p_call_stack, 18), 
+        p_name10 => get_msg_param(p_call_stack, 19),  
+        p_value10 => get_msg_param(p_call_stack, 20));
       debug_message(l_message);
     end if;
   end enter;
@@ -201,10 +231,7 @@ as
   as
     l_message message_type;
   begin
-    if valid_environment then
-      l_message := get_message(msg.PIT_CODE_LEAVE, p_call_stack);
-      debug_message(l_message);
-    end if;
+    null;
   end leave;
   
   
@@ -212,7 +239,7 @@ as
   as
   begin
     if valid_environment then
-      if v('DEBUG') = 'YES' then
+      if v('DEBUG') = c_yes then
         pit_pkg.set_context(g_apex_triggered_context);
       else
         pit.reset_context;
@@ -227,15 +254,19 @@ as
   begin
     if valid_environment then
       self.fire_threshold := g_fire_threshold;
-      self.status := msg.PIT_MODULE_INSTANTIATED;
+      self.status := msg.pit_module_instantiated;
     else
-      self.status := msg.PIT_FAIL_MODULE_INIT;
+      self.status := msg.pit_fail_module_init;
       self.stack  := 'Invalid APEX environment';
     end if;
   exception
     when others then
-      self.status := msg.PIT_FAIL_MODULE_INIT;
-      self.stack  := dbms_utility.format_error_stack;
+      self.status := msg.pit_fail_module_init;
+      $if dbms_db_version.ver_le_11 $then
+      self.stack := dbms_utility.format_error_backtrace;
+      $else
+      self.stack := dbms_utility.format_error_stack;
+      $end
   end initialize_module;
 
 begin
