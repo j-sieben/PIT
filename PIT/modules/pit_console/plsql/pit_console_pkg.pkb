@@ -97,7 +97,7 @@ as
                   '; t_cpu=' || to_char(p_call_stack.total_cpu) || ']';
     end if;
     l_message :=
-      replace(replace(replace(p_template, '#MESSAGE#', l_unit_name), '#TIMING#', l_timing), '#LEVEL#', l_indent);
+      replace(replace(replace(replace(p_template, '#MESSAGE#', l_unit_name), '#POSTFIX#', l_postfix), '#TIMING#', l_timing), '#LEVEL#', l_indent);
     print(l_message);
   end print_call_stack;
 
