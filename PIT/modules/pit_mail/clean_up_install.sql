@@ -4,7 +4,7 @@ declare
             from all_objects
            where object_name in (
                  'PIT_FILE', 'FILE_ADAPTER', -- Typen
-                 'PIT_FILE_PKG', -- Packages
+                 'PIT_FILE_PKG', 'MAIL', -- Packages
                  '', -- Tabellen
                  '' -- Sequenzen
                  )

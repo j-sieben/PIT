@@ -2,6 +2,7 @@ create table parameter_local(
    pal_id varchar2(30 char),
    pal_pgr_id varchar2(30 char),
    pal_string_value clob,
+   pal_raw_value blob,
    pal_xml_value xmltype,
    pal_integer_value number(38,0),
    pal_float_value number,
@@ -17,6 +18,7 @@ comment on table parameter_local is 'Local table to store overwritten parameters
 comment on column parameter_local.pal_id is 'Primary key';
 comment on column parameter_local.pal_pgr_id is 'Primary key, reference to &INSTALL_USER..parameter_group(pal_pgr_id)';
 comment on column parameter_local.pal_string_value is 'CLOB parameter value';
+comment on column parameter_local.pal_raw_value is 'BLOB parameter value';
 comment on column parameter_local.pal_xml_value is 'XML parameter value';
 comment on column parameter_local.pal_integer_value is 'Integer parameter value';
 comment on column parameter_local.pal_float_value is 'Float parameter value';

@@ -3,8 +3,10 @@ as
 
   c_true constant parameter_group.pgr_is_modifiable%type := 'Y';
   c_false constant parameter_group.pgr_is_modifiable%type := 'N';
+  c_max_char_length constant number := 32767;
+  c_max_raw_length constant number := 2000;
   
-  g_parameter_rec parameter%rowtype;
+  g_parameter_rec parameter_tab%rowtype;
   
   type param_rec is record(
     is_modifiable boolean,
@@ -47,7 +49,7 @@ as
       from &INSTALL_USER..parameter_group pg
       left join
            (select *
-              from parameter p
+              from &INSTALL_USER..parameter_tab p
              where par_id = p_par_id
                and par_pgr_id = p_pgr_id) p
         on pg.pgr_id = p.par_pgr_id
@@ -100,7 +102,8 @@ as
   procedure set_parameter(
     p_par_id in varchar2,
     p_pgr_id in varchar2,
-    p_string_value in clob default null,
+    p_string_value in parameter_tab.par_string_value%type default null,
+    p_raw_value in parameter_tab.par_raw_value%type default null,
     p_xml_value in xmltype default null,
     p_integer_value in number default null,
     p_float_value in number default null,
@@ -133,33 +136,35 @@ as
       end if;
     end if;
     if g_param.is_existing and g_param.is_modifiable then
-      merge into parameter_tab p
-      using (select p_par_id par_id,
-                    p_pgr_id par_pgr_id,
-                    p_string_value par_string_value,
-                    p_xml_value par_xml_value,
-                    p_integer_value par_integer_value,
-                    p_float_value par_float_value,
-                    p_date_value par_date_value,
-                    p_timestamp_value par_timestamp_value,
-                    l_boolean par_boolean_value
+      merge into parameter_local p
+      using (select p_par_id pal_id,
+                    p_pgr_id pal_pgr_id,
+                    p_string_value pal_string_value,
+                    p_raw_value pal_raw_value,
+                    p_xml_value pal_xml_value,
+                    p_integer_value pal_integer_value,
+                    p_float_value pal_float_value,
+                    p_date_value pal_date_value,
+                    p_timestamp_value pal_timestamp_value,
+                    l_boolean pal_boolean_value
                from dual) v
-         on (p.par_id = v.par_id
-         and p.par_pgr_id = v.par_pgr_id)
+         on (p.pal_id = v.pal_id
+         and p.pal_pgr_id = v.pal_pgr_id)
        when matched then update set
-            p.par_string_value = v.par_string_value,
-            p.par_xml_value = v.par_xml_value,
-            p.par_integer_value = v.par_integer_value,
-            p.par_float_value = v.par_float_value,
-            p.par_date_value = v.par_date_value,
-            p.par_timestamp_value = v.par_timestamp_value,
-            p.par_boolean_value = v.par_boolean_value
+            p.pal_string_value = v.pal_string_value,
+            p.pal_raw_value = v.pal_raw_value,
+            p.pal_xml_value = v.pal_xml_value,
+            p.pal_integer_value = v.pal_integer_value,
+            p.pal_float_value = v.pal_float_value,
+            p.pal_date_value = v.pal_date_value,
+            p.pal_timestamp_value = v.pal_timestamp_value,
+            p.pal_boolean_value = v.pal_boolean_value
        when not matched then insert
-            (par_id, par_pgr_id, par_string_value, par_xml_value, par_integer_value, 
-             par_float_value, par_date_value, par_timestamp_value, par_boolean_value)
+            (pal_id, pal_pgr_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
+             pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
             values
-            (v.par_id, v.par_pgr_id, v.par_string_value, v.par_xml_value, v.par_integer_value, 
-             v.par_float_value, v.par_date_value, v.par_timestamp_value, v.par_boolean_value);
+            (v.pal_id, v.pal_pgr_id, v.pal_string_value, v.pal_raw_value, v.pal_xml_value, v.pal_integer_value, 
+             v.pal_float_value, v.pal_date_value, v.pal_timestamp_value, v.pal_boolean_value);
     end if;
   end set_parameter;
 
@@ -177,7 +182,7 @@ as
   begin
     select *
       into g_parameter_rec
-      from parameter
+      from parameter_vw
      where par_id = p_par_id
        and par_pgr_id = p_pgr_id;
   exception
@@ -190,6 +195,20 @@ as
   procedure set_string(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in varchar2,
+    p_is_modifiable in boolean default false)
+  as
+  begin
+    set_parameter(
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_string_value => to_clob(p_par_value),
+      p_is_modifiable => p_is_modifiable);
+  end set_string;
+  
+  procedure set_clob(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_string_value%type,
     p_is_modifiable in boolean default false)
   as
@@ -199,7 +218,35 @@ as
       p_pgr_id => p_pgr_id,
       p_string_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
-  end set_string;
+  end set_clob;
+  
+  procedure set_raw(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in raw,
+    p_is_modifiable in boolean default false)
+  as
+  begin
+    set_parameter(
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_raw_value => to_blob(p_par_value),
+      p_is_modifiable => p_is_modifiable);
+  end set_raw;
+  
+  procedure set_blob(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_raw_value%type,
+    p_is_modifiable in boolean default false)
+  as
+  begin
+    set_parameter(
+      p_par_id => p_par_id,
+      p_pgr_id => p_pgr_id,
+      p_raw_value => p_par_value,
+      p_is_modifiable => p_is_modifiable);
+  end set_blob;
 
   procedure set_xml(
     p_par_id in parameter_tab.par_id%type,
@@ -290,12 +337,42 @@ as
   function get_string(
    p_par_id in parameter_tab.par_id%type,
    p_pgr_id in parameter_group.pgr_id%type)
+   return varchar2
+  as
+  begin
+    get_parameter(p_par_id, p_pgr_id);
+    return dbms_lob.substr(g_parameter_rec.par_string_value, c_max_char_length, 1);
+  end get_string;
+  
+  function get_clob(
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
    return parameter_tab.par_string_value%type
   as
   begin
     get_parameter(p_par_id, p_pgr_id);
     return g_parameter_rec.par_string_value;
-  end get_string;
+  end get_clob;
+  
+  function get_raw(
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
+   return raw
+  as
+  begin
+    get_parameter(p_par_id, p_pgr_id);
+    return dbms_lob.substr(g_parameter_rec.par_raw_value, c_max_raw_length, 1);
+  end get_raw;
+  
+  function get_blob(
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
+   return parameter_tab.par_raw_value%type
+  as
+  begin
+    get_parameter(p_par_id, p_pgr_id);
+    return g_parameter_rec.par_raw_value;
+  end get_blob;
 
   function get_xml(
     p_par_id in parameter_tab.par_id%type,

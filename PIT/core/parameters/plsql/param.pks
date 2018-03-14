@@ -1,4 +1,5 @@
 create or replace  package param
+  authid current_user
 as
   /** Package to read and write parameter values
    */
@@ -13,10 +14,49 @@ as
   procedure set_string(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in varchar2,
+    p_is_modifiable in boolean default false);
+   
+  /* Sets a CLOB parameter value
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
+   * %param p_par_value Value of the parameter
+   * %param p_is_modifiable Flag indicating whether this parameter is modifiable by the end user
+   * %usage Is called by the end user to set a new parameter value
+   */
+  procedure set_clob(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_string_value%type,
     p_is_modifiable in boolean default false);
+   
+  /* Sets a Raw parameter value (cast to varchar2)
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
+   * %param p_par_value Value of the parameter
+   * %param p_is_modifiable Flag indicating whether this parameter is modifiable by the end user
+   * %usage Is called by the end user to set a new parameter value
+   */
+  procedure set_raw(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in raw,
+    p_is_modifiable in boolean default false);
+   
+  /* Sets a BLOB parameter value
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
+   * %param p_par_value Value of the parameter
+   * %param p_is_modifiable Flag indicating whether this parameter is modifiable by the end user
+   * %usage Is called by the end user to set a new parameter value
+   */
+  procedure set_blob(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in parameter_tab.par_raw_value%type,
+    p_is_modifiable in boolean default false);
 
-  /* Sets a String parameter value
+  /* Sets an XML parameter value
    * %param p_par_id Name of the parameter
    * %param p_pgr_id Name of the parameter group
    * %param p_par_value Value of the parameter
@@ -97,13 +137,46 @@ as
   /* Reads a parameter value
    * %param p_par_id Name of the parameter
    * %param p_pgr_id Name of the parameter group
-   * %return CLOB value
+   * %return VARCHAR2 value, size limite 32KByte
    * %usage Is called by the end user to get a parameter value
    */
   function get_string(
    p_par_id in parameter_tab.par_id%type,
    p_pgr_id in parameter_group.pgr_id%type)
+   return varchar2;
+
+  /* Reads a parameter value
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
+   * %return CLOB value
+   * %usage Is called by the end user to get a parameter value
+   */
+  function get_clob(
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
    return parameter_tab.par_string_value%type;
+
+  /* Reads a parameter value
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
+   * %return RAW value
+   * %usage Is called by the end user to get a parameter value
+   */
+  function get_raw(
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
+   return raw;
+
+  /* Reads a parameter value
+   * %param p_par_id Name of the parameter
+   * %param p_pgr_id Name of the parameter group
+   * %return RAW value
+   * %usage Is called by the end user to get a parameter value
+   */
+  function get_blob(
+   p_par_id in parameter_tab.par_id%type,
+   p_pgr_id in parameter_group.pgr_id%type)
+   return parameter_tab.par_raw_value%type;
 
   /* Reads a parameter value
    * %param p_par_id Name of the parameter

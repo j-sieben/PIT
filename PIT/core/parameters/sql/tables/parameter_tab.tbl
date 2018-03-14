@@ -3,6 +3,7 @@ create table parameter_tab(
    par_pgr_id varchar2(30 char),
    par_description varchar2(200 char),
    par_string_value clob,
+   par_raw_value blob,
    par_xml_value xmltype,
    par_integer_value number(38,0),
    par_float_value number,
@@ -25,6 +26,7 @@ comment on column parameter_tab.par_id is 'Primary key, alphnumeric';
 comment on column parameter_tab.par_pgr_id is 'Primary key, alphanumeric, references PARAMETER_GROUP';
 comment on column parameter_tab.par_description is 'Longtext of the parameter';
 comment on column parameter_tab.par_string_value is 'CLOB parameter';
+comment on column parameter_tab.par_raw_value is 'BLOB parameter';
 comment on column parameter_tab.par_xml_value is 'XML parameter';
 comment on column parameter_tab.par_integer_value is 'Integer parameter';
 comment on column parameter_tab.par_float_value is 'Float parameter';

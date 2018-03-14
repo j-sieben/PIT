@@ -2,6 +2,9 @@ define apex_dir=apex/
 define sql_dir=&apex_dir.sql/
 define plsql_dir=&apex_dir.plsql/
 
+prompt &h2.Installation in Schema &REMOTE_USER.
+alter session set current_schema &REMOTE_USER.;
+
 prompt &h2.Create UI-VIEWS
 prompt &s1.View PIT_UI_ADMIN_MESSAGE_MAIN
 @&sql_dir.views/pit_ui_admin_message_main.vw

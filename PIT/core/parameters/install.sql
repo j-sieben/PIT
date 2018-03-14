@@ -1,3 +1,7 @@
+prompt
+prompt &h1. Check whether UTL_TEXT exists
+@core/check_has_utl_text.sql core/utl_text/install.sql
+
 define param_dir=core/parameters/
 define sql_dir=&param_dir.sql/
 define plsql_dir=&param_dir.plsql/
@@ -18,8 +22,12 @@ prompt &s1.Create table PARAMETER_TYPE
 prompt &s1.Create table PARAMETER_TAB
 @&sql_dir.tables/parameter_tab.tbl
 
-prompt &s1.Creating local synonym PARAMETER for PARAMETER_TAB
-@&sql_dir.synonyms/parameter_tab.syn
+prompt &s1.Create table PARAMETER_LOCAL
+@&sql_dir.tables/parameter_local.tbl
+
+prompt &h2.Create parameter view
+prompt &s1.Create view PARAMETER_VW
+@&sql_dir.views/parameter_vw.owner.vw
 
 prompt &h2.Create parameter packages
 prompt &s1.Create package PARAM

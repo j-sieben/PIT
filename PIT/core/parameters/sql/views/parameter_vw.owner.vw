@@ -46,8 +46,8 @@ select par_id,
                       z.par_pat_id,
                       z.par_validation_string,
                       z.par_validation_message
-                 from &REMOTE_USER..parameter_local l
-                 join &INSTALL_USER..parameter_tab z
+                 from parameter_local l
+                 join parameter_tab z
                    on l.pal_id = z.par_id
                   and l.pal_pgr_id = z.par_pgr_id
                 union all
@@ -67,6 +67,6 @@ select par_id,
                       par_pat_id,
                       par_validation_string,
                       par_validation_message
-                 from &INSTALL_USER..parameter_tab))
+                 from parameter_tab))
  where par_rank = 1;
  

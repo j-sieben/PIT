@@ -29,6 +29,15 @@ as
     return varchar2;
     
 
+  /* Procedure to maintain message groups
+   * %param  p_pmg_name         Name of the message_group
+   * %param  p_pmg_description  Optional description to describe the message group.
+   */
+  procedure merge_message_group(
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_pmg_description in pit_message_group.pmg_description%type default null);
+    
+
   /* Procedure to maintain messages
    * %param p_pms_name Name of the respective pit_message. Must be unique for the default language
    * %param p_pms_text Message text with replacement anchors in the format #n#, 
@@ -46,6 +55,7 @@ as
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
     p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_pmg_name in pit_message_group.pmg_name%type default null,
     p_pms_pml_name in pit_message.pms_pml_name%type default null,
     p_error_number in pit_message.pms_custom_error%type default null);
     
@@ -130,14 +140,16 @@ as
     
   
   /* Function to get messages as a CLOB instance
-   * %param p_message_pattern Optional pattern that restricts number of messages
-   *        by filtering messages that start with P_MESSAGE_PATTERN
+   * %param  p_message_pattern  Optional pattern that restricts number of messages
+   *                            by filtering messages that start with P_MESSAGE_PATTERN
+   * %param  p_pmg_id           Optional message group to filter message output
    * %return XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor
    * %usage Call this function to create an XLIFF-File that can be used to translate all
    *        error messages into a target language at once.
    */
   function get_messages(
-    p_message_pattern in varchar2 default null)
+    p_message_pattern in varchar2 default null,
+    p_pmg_name in pit_message_group.pmg_name%type default null)
     return clob;
     
   
