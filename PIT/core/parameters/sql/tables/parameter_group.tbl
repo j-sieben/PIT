@@ -2,9 +2,10 @@ create table parameter_group(
    pgr_id varchar2(30 char),
    pgr_description varchar2(255),
    pgr_is_modifiable char(1) default 'Y',
-   constraint parameter_group_pk primary key (pgr_id),
-   constraint pgr_is_modifiable_chk check (pgr_is_modifiable in ('Y', 'N'))
-) organization index;
+   constraint p_parameter_group primary key (pgr_id),
+   constraint c_pgr_is_modifiable check (pgr_is_modifiable in ('Y', 'N'))
+) organization index
+tablespace ekasse_k_dat;
 
 comment on table parameter_group is 'Lookup for parameter groups';
 comment on column parameter_group.pgr_id is 'Primary key, alphanumeric';

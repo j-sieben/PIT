@@ -11,10 +11,10 @@ declare
     select object_name name, object_type type
       from all_objects
      where object_name in (
-           '', -- Typen
-           'PARAM', 'PARAM_ADMIN', -- Packages
-           '', '', -- Views
-           'PARAMETER_TAB', 'PARAMETER_LOCAL', 'PARAMETER_GROUP', 'PARAMETER_TYPE',   -- Tabellen
+           'CHAR_TABLE', -- Typen
+           'PARAM', 'PARAM_ADMIN', 'UTL_TEXT', -- Packages
+           'PARAMETER_VW', '', -- Views
+           'PARAMETER_TAB', 'PARAMETER_LOCAL', 'PARAMETER_GROUP', 'PARAMETER_TYPE', 'PARAMETER_REALM',   -- Tabellen
            'PARAMETER',  -- Synonyme
            '' -- Sequenzen
            )

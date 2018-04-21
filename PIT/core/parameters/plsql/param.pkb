@@ -3,9 +3,9 @@ as
 
   c_true constant parameter_group.pgr_is_modifiable%type := 'Y';
   c_false constant parameter_group.pgr_is_modifiable%type := 'N';
-  
+
   g_parameter_rec parameter%rowtype;
-  
+
   type param_rec is record(
     is_modifiable boolean,
     is_existing boolean,
@@ -13,7 +13,7 @@ as
     validation_message parameter_tab.par_validation_message%type);
   g_param param_rec;
 
-  /* Helper */  
+  /* Helper */
   /* Procedure reads metadata for parameters
    * %param p_par_id Name of the parameter
    * %param p_pgr_id Name of the parameter group
@@ -44,7 +44,7 @@ as
            l_is_existing,
            g_param.validation_string,
            g_param.validation_message
-      from &INSTALL_USER..parameter_group pg
+      from parameter_group pg
       left join
            (select *
               from parameter p
@@ -98,14 +98,16 @@ as
    * %usage Is called from the Setter Methods to adjust a parameter value.
    */
   procedure set_parameter(
-    p_par_id in varchar2,
-    p_pgr_id in varchar2,
-    p_string_value in clob default null,
-    p_xml_value in xmltype default null,
-    p_integer_value in number default null,
-    p_float_value in number default null,
-    p_date_value in date default null,
-    p_timestamp_value in timestamp with time zone default null,
+    p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_string_value in parameter_tab.par_string_value%type default null,
+    p_raw_value in raw default null,
+    p_xml_value in parameter_tab.par_xml_value%type default null,
+    p_integer_value in parameter_tab.par_integer_value%type default null,
+    p_float_value in parameter_tab.par_float_value%type default null,
+    p_date_value in parameter_tab.par_date_value%type default null,
+    p_timestamp_value in parameter_tab.par_timestamp_value%type default null,
     p_boolean_value in boolean default null,
     p_is_modifiable in boolean)
   as
@@ -132,34 +134,36 @@ as
         raise_application_error(-20000, g_param.validation_message);
       end if;
     end if;
-    if g_param.is_existing and g_param.is_modifiable then
-      merge into parameter_tab p
-      using (select p_par_id par_id,
-                    p_pgr_id par_pgr_id,
-                    p_string_value par_string_value,
-                    p_xml_value par_xml_value,
-                    p_integer_value par_integer_value,
-                    p_float_value par_float_value,
-                    p_date_value par_date_value,
-                    p_timestamp_value par_timestamp_value,
-                    l_boolean par_boolean_value
+    if g_param.is_existing /*and g_param.is_modifiable*/ then
+      merge into parameter_local pal
+      using (select p_par_id pal_id,
+                    p_pre_id pal_pre_id,
+                    p_pgr_id pal_pgr_id,
+                    coalesce(p_string_value, rawtohex(p_raw_value)) pal_string_value,
+                    p_xml_value pal_xml_value,
+                    p_integer_value pal_integer_value,
+                    p_float_value pal_float_value,
+                    p_date_value pal_date_value,
+                    p_timestamp_value pal_timestamp_value,
+                    l_boolean pal_boolean_value
                from dual) v
-         on (p.par_id = v.par_id
-         and p.par_pgr_id = v.par_pgr_id)
+         on (pal.pal_id = v.pal_id
+         and pal.pal_pre_id = v.pal_pre_id
+         and pal.pal_pgr_id = v.pal_pgr_id)
        when matched then update set
-            p.par_string_value = v.par_string_value,
-            p.par_xml_value = v.par_xml_value,
-            p.par_integer_value = v.par_integer_value,
-            p.par_float_value = v.par_float_value,
-            p.par_date_value = v.par_date_value,
-            p.par_timestamp_value = v.par_timestamp_value,
-            p.par_boolean_value = v.par_boolean_value
+            pal.pal_string_value = v.pal_string_value,
+            pal.pal_xml_value = v.pal_xml_value,
+            pal.pal_integer_value = v.pal_integer_value,
+            pal.pal_float_value = v.pal_float_value,
+            pal.pal_date_value = v.pal_date_value,
+            pal.pal_timestamp_value = v.pal_timestamp_value,
+            pal.pal_boolean_value = v.pal_boolean_value
        when not matched then insert
-            (par_id, par_pgr_id, par_string_value, par_xml_value, par_integer_value, 
-             par_float_value, par_date_value, par_timestamp_value, par_boolean_value)
+            (pal_id, pal_pre_id, pal_pgr_id, pal_string_value, pal_xml_value, pal_integer_value,
+             pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
             values
-            (v.par_id, v.par_pgr_id, v.par_string_value, v.par_xml_value, v.par_integer_value, 
-             v.par_float_value, v.par_date_value, v.par_timestamp_value, v.par_boolean_value);
+            (v.pal_id, v.pal_pre_id, v.pal_pgr_id, v.pal_string_value, v.pal_xml_value, v.pal_integer_value,
+             v.pal_float_value, v.pal_date_value, v.pal_timestamp_value, v.pal_boolean_value);
     end if;
   end set_parameter;
 
@@ -189,6 +193,7 @@ as
   /* SETTER */
   procedure set_string(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_string_value%type,
     p_is_modifiable in boolean default false)
@@ -196,13 +201,31 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_string_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
   end set_string;
 
+  procedure set_raw(
+    p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_par_value in raw,
+    p_is_modifiable in boolean default false)
+  as
+  begin
+    set_parameter(
+      p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
+      p_pgr_id => p_pgr_id,
+      p_raw_value => p_par_value,
+      p_is_modifiable => p_is_modifiable);
+  end set_raw;
+    
   procedure set_xml(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_xml_value%type,
     p_is_modifiable in boolean default false)
@@ -210,6 +233,7 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_xml_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
@@ -217,6 +241,7 @@ as
 
   procedure set_float(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_float_value%type,
     p_is_modifiable in boolean default false)
@@ -224,6 +249,7 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_float_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
@@ -231,6 +257,7 @@ as
 
   procedure set_integer(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_integer_value%type,
     p_is_modifiable in boolean default false)
@@ -238,6 +265,7 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_integer_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
@@ -245,6 +273,7 @@ as
 
   procedure set_date(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_date_value%type,
     p_is_modifiable in boolean default false)
@@ -252,6 +281,7 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_date_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
@@ -259,6 +289,7 @@ as
 
   procedure set_timestamp(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in parameter_tab.par_timestamp_value%type,
     p_is_modifiable in boolean default false)
@@ -266,6 +297,7 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_timestamp_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
@@ -273,6 +305,7 @@ as
 
   procedure set_boolean(
     p_par_id in parameter_tab.par_id%type,
+    p_pre_id in parameter_realm.pre_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
     p_par_value in boolean,
     p_is_modifiable in boolean default false)
@@ -280,6 +313,7 @@ as
   begin
     set_parameter(
       p_par_id => p_par_id,
+      p_pre_id => p_pre_id,
       p_pgr_id => p_pgr_id,
       p_boolean_value => p_par_value,
       p_is_modifiable => p_is_modifiable);
@@ -356,6 +390,6 @@ as
     get_parameter(p_par_id, p_pgr_id);
     return g_parameter_rec.par_boolean_value = c_true;
   end get_boolean;
-  
+
 end param;
 /

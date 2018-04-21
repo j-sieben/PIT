@@ -1,0 +1,13 @@
+create table parameter_realm(
+  pre_id varchar2(30 char), 
+	pre_description varchar2(255 byte), 
+	pre_is_active char(1 byte) default 'Y', 
+  constraint p_parameter_realm primary key (pre_id) enable,
+  constraint c_pre_is_active check (pre_is_active in ('Y', 'N'))
+) organization index
+tablespace ekasse_k_dat;
+
+comment on table parameter_realm  is 'Lookup for parameter groups';
+comment on column parameter_realm.pre_id is 'Primary key, alphanumeric';
+comment on column parameter_realm.pre_description is 'Longtext for the parameter realm';
+comment on column parameter_realm.pre_is_active is 'Flag to indicate whether this realm is actually used';

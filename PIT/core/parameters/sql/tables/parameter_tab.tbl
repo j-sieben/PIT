@@ -13,12 +13,13 @@ create table parameter_tab(
    par_pat_id varchar2(30 char),
    par_validation_string varchar2(4000 char),
    par_validation_message varchar2(4000 char),
-   constraint parameter_tab_pk primary key (par_id, par_pgr_id),
-   constraint par_pgr_id_fk foreign key (par_pgr_id) references parameter_group(pgr_id),
-   constraint par_pat_id_fk foreign key(par_pat_id) references parameter_type(pat_id),
-   constraint par_boolean_value_chk check (par_boolean_value in ('Y', 'N')),
-   constraint par_is_modifiable_chk check (par_is_modifiable in ('N'))
-);
+   constraint p_parameter_tab primary key (par_id, par_pgr_id),
+   constraint r_par_pgr_id foreign key (par_pgr_id) references parameter_group(pgr_id),
+   constraint r_par_pat_id foreign key(par_pat_id) references parameter_type(pat_id),
+   constraint c_par_boolean_value check (par_boolean_value in ('Y', 'N')),
+   constraint c_par_is_modifiable check (par_is_modifiable in ('N'))
+)
+tablespace ekasse_k_dat;
 
 comment on table parameter_tab is 'Central parameter table';
 comment on column parameter_tab.par_id is 'Primary key, alphnumeric';
