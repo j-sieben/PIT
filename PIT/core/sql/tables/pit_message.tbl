@@ -1,5 +1,6 @@
 create table pit_message(
    pms_name varchar2(30 char), 
+   pms_pmg_name varchar2(30 char),
    pms_pml_name varchar2(30 char),
    pms_text clob, 
    pms_pse_id number(3,0),
@@ -8,6 +9,8 @@ create table pit_message(
    pms_id varchar2(50 char) generated always as (case pms_pml_name when '&DEFAULT_LANGUAGE.' then pms_name else null end) virtual,
    constraint pit_message_pk primary key (pms_name, pms_pml_name),
    constraint pms_id_u unique (pms_id),
+   constraint pms_pmg_name_fk foreign key (pms_pmg_name)
+      references pit_message_group(pmg_name),
    constraint pms_pml_name_fk foreign key (pms_pml_name)
       references pit_message_language(pml_name),
    constraint pms_pse_id_fk foreign key (pms_pse_id)
@@ -17,6 +20,7 @@ create table pit_message(
 
 comment on table pit_message is 'central log message repository in various languages.';
 comment on column pit_message.pms_name is 'Unique message name. Used to reference the message as a constant in package MSG.';
+comment on column pit_message.pms_pmg_name is 'Unique message grup name. Reference to PIT_MESSAGE_GROUP.';
 comment on column pit_message.pms_pml_name is 'Languae reference of the message. Taken from Oracle v$nls_valid_values';
 comment on column pit_message.pms_text is 'message text. Positional replacement with pattern #n#';
 comment on column pit_message.pms_pse_id is 'severity of the message. Reference to PIT_MESSAGE_SEVERITY';

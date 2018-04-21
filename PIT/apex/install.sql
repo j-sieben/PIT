@@ -2,6 +2,33 @@ define apex_dir=apex/
 define sql_dir=&apex_dir.sql/
 define plsql_dir=&apex_dir.plsql/
 
+prompt &h2.Installation in Schema &APP_USER.
+alter session set current_schema = &APP_USER.;
+
+
+prompt &h2.Create DL-VIEWS
+prompt &s1.View DL_PARAMETER_GROUP
+@&sql_dir.views/dl_parameter_group.vw
+
+prompt &s1.View DL_PARAMETER_TAB
+@&sql_dir.views/dl_parameter_tab.vw
+
+prompt &s1.View DL_PIT_PARAMETER_TYPE
+@&sql_dir.views/dl_parameter_type.vw
+
+prompt &s1.View DL_PIT_MESSAGE
+@&sql_dir.views/dl_pit_message.vw
+
+prompt &s1.View DL_PIT_MESSAGE_LANGUAGE
+@&sql_dir.views/dl_pit_message_language.vw
+
+prompt &s1.View DL_PIT_MESSAGE_SEVERITY
+@&sql_dir.views/dl_pit_message_severity.vw
+
+prompt &s1.View DL_PIT_TRACE_LEVEL
+@&sql_dir.views/dl_pit_trace_level.vw
+
+
 prompt &h2.Create UI-VIEWS
 prompt &s1.View PIT_UI_ADMIN_MESSAGE_MAIN
 @&sql_dir.views/pit_ui_admin_message_main.vw

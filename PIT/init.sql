@@ -8,22 +8,15 @@ whenever sqlerror exit
 clear screen
 
 col install_user new_val INSTALL_USER format a30
-col remote_user new_val REMOTE_USER format a30
 col default_language new_val DEFAULT_LANGUAGE format a30
-col apex_ws new_val APEX_WS format a30
 
 
 select upper('&1.') install_user,
-       upper('&2.') remote_user,
-       upper('&3.') default_language
+       upper('&2.') default_language
   from V$NLS_VALID_VALUES
  where parameter = 'LANGUAGE'
-   and value = upper('&3.');
+   and value = upper('&2.');
    
-select upper('&4.') apex_ws
-  from apex_workspaces
- where workspace = upper('&4.');
- 
 define INSTALL_ON_DEV = false
 
 define section="********************************************************************************"

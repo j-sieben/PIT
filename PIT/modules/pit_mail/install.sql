@@ -26,12 +26,20 @@ prompt &s1.Create type PIT_mail
 @&sql_dir.types/pit_mail.tps
 show errors
 
+prompt &s1.Create package MAIL
+@&plsql_dir.mail.pks
+show errors
+
 prompt &s1.Create package PIT_MAIL_PKG
 @&plsql_dir.pit_mail_pkg.pks
 show errors
 
 prompt &s1.Create type body PIT_MAIL
 @&sql_dir.types/pit_mail.tpb
+show errors
+
+prompt &s1.Create package body MAIL
+@&plsql_dir.mail.pkb
 show errors
 
 prompt &s1.Create package body PIT_MAIL_PKG

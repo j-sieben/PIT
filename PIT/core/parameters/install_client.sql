@@ -19,9 +19,6 @@ prompt &s1.Create table PARAMETER_LOCAL
 prompt &s1.Create view PARAMETER_VW
 @&sql_dir.views/parameter_vw.vw
 
-prompt &s1.Create synonym PARAMETER for PARAMETER_VW
-@&sql_dir.synonyms/parameter_vw.syn
-
 prompt &s1.Create synonym PARAM_ADMIN for PARAM_ADMIN_package
 @&sql_dir.synonyms/param_admin.syn
 

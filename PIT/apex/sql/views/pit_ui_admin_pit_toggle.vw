@@ -5,6 +5,6 @@ select rowid row_id,
        par_description, 
        substr(par_string_value, 1, instr(par_string_value, '|') - 1) toggle_module_list,
        substr(par_string_value, instr(par_string_value, '|') + 1) toggle_context_name
-  from parameter_tab
+  from dl_parameter_tab
  where par_pgr_id = 'PIT'
    and par_id like 'TOGGLE%';

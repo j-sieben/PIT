@@ -5,22 +5,19 @@
   
   Parameters:
   - INSTALL_USER: database user who owns PIT
-  - REMOTE_USER: database user who works with PIT. May be the same as INSTALL_USER
   - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
-  - APEX_WORKSPACE: Name of the APEX workspace INSTALL_USER has granted all rights to admin PIT to
 */
 
-@init.sql &1. &2. &3. &4.
+@init.sql &1. &2.
 
 alter session set current_schema=sys;
 prompt
 prompt &section.
 prompt &h1.Checking whether required users exist
-@check_users_exist.sql
+@check_users_exist.sql &INSTALL_USER.
 
 prompt &h2.grant user rights
 @set_grants.sql
-@set_client_grants.sql
 
 alter session set current_schema=&INSTALL_USER.;
 prompt &s1.Set Compiler-Flags
@@ -48,24 +45,6 @@ prompt &h1.Installing PIT output modules
 @modules/pit_file/install.sql
 @modules/pit_mail/install.sql
 
-prompt
-prompt &section.
-prompt &h1.Installing APEX application
-@apex/install.sql
-
-set verify off
-set serveroutput on
-set echo off
-set feedback off
-set lines 120
-set pages 9999
-whenever sqlerror exit
-
-prompt
-prompt &section.
-prompt &h1.Finalize installation
-
-@check_has_client install_client.sql
 
 prompt &h2.Revoke user rights
 @revoke_grants.sql

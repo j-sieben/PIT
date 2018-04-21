@@ -1,27 +1,13 @@
-prompt &h2.Checking owner user &INSTALL_USER.
+prompt &h2.Checking owner user &1.
 declare
   user_exists exception;
   pragma exception_init(user_exists, -1920);
 begin
-  execute immediate 'create user &INSTALL_USER. identified by &INSTALL_USER. default tablespace users quota unlimited on users';
-  dbms_output.put_line('&s1.User &INSTALL_USER. created.');
+  execute immediate 'create user &1. identified by &1. default tablespace users quota unlimited on users';
+  dbms_output.put_line('&s1.User &1. created.');
 exception
   when user_exists then 
-    execute immediate 'alter user &INSTALL_USER. quota unlimited on users';
-    dbms_output.put_line('&s1.User &INSTALL_USER. exists.');
-end;
-/
-
-prompt &h2.Checking client user &REMOTE_USER.
-declare
-  user_exists exception;
-  pragma exception_init(user_exists, -1920);
-begin
-  execute immediate 'create user &REMOTE_USER. identified by &INSTALL_USER. default tablespace users quota unlimited on users';
-  dbms_output.put_line('&s1.User &REMOTE_USER. created.');
-exception
-  when user_exists then 
-    execute immediate 'alter user &REMOTE_USER. quota unlimited on users';
-    dbms_output.put_line('&s1.User &REMOTE_USER. exists.');
+    execute immediate 'alter user &1. quota unlimited on users';
+    dbms_output.put_line('&s1.User &1. exists.');
 end;
 /

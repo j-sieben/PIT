@@ -13,9 +13,9 @@ declare
            where object_name in (
                  '', -- Typen
                  '', -- Packages
-                 '', '', -- Views
+                 '', -- Views
                  '',   -- Tabellen
-                 'PIT', 'MSG', 'MSG_ARGS', 'MSG_PARAM', 'MSG_PARAMS',  -- Synonyme
+                 'PIT', 'PIT_LOG', 'MSG', 'MSG_ARGS', 'MSG_PARAM', 'MSG_PARAMS', -- Synonyme
                  '' -- Sequenzen
                  )
              and object_type not like '%BODY'

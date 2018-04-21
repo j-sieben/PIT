@@ -16,6 +16,7 @@ as
   c_del char(1 byte) := '|';
   c_min_error constant number := -20999;
   c_max_error constant number := -20000;
+  c_default_language constant number := 10;
 
 
   -- ERROR messages
@@ -23,7 +24,7 @@ as
   c_message_does_not_exist constant varchar2(200) := 'Message #MESSAGE# does not exist.';
   c_error_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 26 chars for error messages';
   c_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 30 chars';
-  
+
 
   /********************** GENERIC HELPER FUNCTIONS ****************************/
   /* Procedure to recompile invalid objects
@@ -40,16 +41,16 @@ as
     c_package_body constant varchar2(30 byte) := 'PACKAGE BODY';
     c_recompile_stmt constant varchar2(1000) := q'^alter #TYPE# #OWNER#.#NAME# compile ^';
     c_max_compile_runs constant number := 3;
-    
+
     -- Variables
     l_stmt varchar2(1000);
     l_index binary_integer;
     l_no binary_integer;
-    
+
     -- Exceptions
     compilation_error exception;
     pragma exception_init(compilation_error, -24344);
-    
+
     -- Cursors
     cursor invalid_objects_cur is
       select distinct obj.owner, obj.object_name, obj.object_type, count(*) over () cnt,
@@ -71,14 +72,14 @@ as
       dbms_output.put_line('compile Run ' || i);
       for obj in invalid_objects_cur loop
         l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
-                    '#OWNER#', obj.owner, 
+                    '#OWNER#', obj.owner,
                     '#TYPE#', replace(obj.object_type, ' BODY'),
                     '#NAME#', obj.object_name));
         dbms_application_info.set_session_longops(
           l_index, l_no, 'Compiling ' || obj.object_type || obj.object_name, 0, 0, i, obj.cnt);
         if i < c_max_compile_runs then
           begin
-            case obj.object_type 
+            case obj.object_type
             when c_package_body then
               execute immediate l_stmt || 'body';
             else
@@ -110,8 +111,8 @@ as
       end loop;
     end loop;
   end recompile_invalid_objects;
-  
-  
+
+
   /* Initialization procedure
    * %usage Called internally. It has the following functionality:
    *        <ul><li>Read all predefined oracle errors from the oracle packages</li>
@@ -140,6 +141,32 @@ as
 
 
   /****************************** INTERFACE ***********************************/
+  procedure set_default_language(
+    p_pml_list in varchar2,
+    p_delimiter in varchar2 default ':')
+  as
+    l_pml_list args;
+    l_pml_default_order pit_message_language.pml_default_order%type;
+  begin
+    
+    update pit_message_language
+       set pml_default_order = 0
+     where pml_default_order != c_default_language;
+
+    if p_pml_list is not null then
+      l_pml_list := pit_util.string_to_table(p_pml_list, p_delimiter);
+      l_pml_default_order := (l_pml_list.count + 1) * 10;
+      for i in l_pml_list.first .. l_pml_list.last loop
+        update pit_message_language
+           set pml_default_order = l_pml_default_order
+         where pml_name = l_pml_list(i);
+        l_pml_default_order := l_pml_default_order - 10;
+      end loop;
+    end if;
+    
+  end set_default_language;
+  
+  
   function get_message_text(
     p_pms_name in pit_message.pms_name%type,
     p_pms_pml_name in pit_message.pms_pml_name%type := null)
@@ -162,10 +189,28 @@ as
   end get_message_text;
 
 
+  procedure merge_message_group(
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_pmg_description in pit_message_group.pmg_description%type default null)
+  as
+  begin
+    merge into pit_message_group t
+    using (select upper(p_pmg_name) pmg_name,
+                  p_pmg_description pmg_description
+             from dual) s
+       on (t.pmg_name = s.pmg_name)
+     when matched then update set
+          pmg_description = s.pmg_description
+     when not matched then insert(pmg_name, pmg_description)
+          values(s.pmg_name, s.pmg_description);
+  end merge_message_group;
+
+
   procedure merge_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
     p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_pmg_name in pit_message_group.pmg_name%type default null,
     p_pms_pml_name in pit_message.pms_pml_name%type default null,
     p_error_number in pit_message.pms_custom_error%type default null)
   as
@@ -190,22 +235,24 @@ as
       null;
     end case;
 
-    merge into pit_message m
+    merge into pit_message t
     using (select upper(p_pms_name) pms_name,
                   upper(coalesce(p_pms_pml_name, g_default_language)) pms_pml_name,
+                  upper(p_pms_pmg_name) pms_pmg_name,
                   p_pms_text pms_text,
                   p_pms_pse_id pms_pse_id,
                   l_error_number pms_custom_error
-             from dual) v
-       on (m.pms_name = v.pms_name and m.pms_pml_name = v.pms_pml_name)
+             from dual) s
+       on (t.pms_name = s.pms_name and t.pms_pml_name = s.pms_pml_name)
      when matched then update set
-          m.pms_text = v.pms_text,
-          m.pms_pse_id = v.pms_pse_id,
-          m.pms_custom_error = v.pms_custom_error
+          t.pms_pmg_name = s.pms_pmg_name,
+          t.pms_text = s.pms_text,
+          t.pms_pse_id = s.pms_pse_id,
+          t.pms_custom_error = s.pms_custom_error
      when not matched then insert
-            (pms_name, pms_pml_name, pms_text, pms_pse_id, pms_custom_error)
+            (pms_name, pms_pmg_name, pms_pml_name, pms_text, pms_pse_id, pms_custom_error)
           values
-            (v.pms_name, v.pms_pml_name, v.pms_text, v.pms_pse_id, v.pms_custom_error);
+            (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_pse_id, s.pms_custom_error);
     commit;
 
   exception
@@ -330,7 +377,7 @@ as
              'xmlns="' || c_xliff_ns || '"'
              )
       into l_xliff
-      from parameter
+      from parameter_vw
      where par_id = 'XLIFF_SKELETON'
        and par_pgr_id = c_parameter_group;
 
@@ -421,7 +468,7 @@ as
              else null end pragma_chunk
         from messages
        order by pms_name;
-       
+
   begin
     -- persist active error numbers for -20000 errors in message table
     merge into pit_message m
@@ -451,23 +498,41 @@ as
     else
       execute immediate l_sql_text;
     end if;
-    
+
     recompile_invalid_objects;
-    
+
   end create_message_package;
 
 
   function get_messages(
-    p_message_pattern in varchar2 default null)
+    p_message_pattern in varchar2 default null,
+    p_pmg_name in pit_message_group.pmg_name%type default null)
     return clob
   as
-    cursor message_cur(p_message_pattern in varchar2) is
+    cursor message_group_cur(
+      p_message_pattern in varchar2,
+      p_pmg_name in varchar2) is
+      select pmg_name, pmg_description
+        from pit_message_group
+        join (select pms_pmg_name
+                from pit_message
+               where pms_pmg_name is not null
+                 and pms_name like p_message_pattern || '%'
+                 and (pms_pmg_name = p_pmg_name or p_pmg_name is null))
+          on pmg_name = pms_pmg_name
+       order by pmg_name;
+
+    cursor message_cur(
+      p_message_pattern in varchar2,
+      p_pmg_name in varchar2) is
       select m.*, rank() over (partition by pms_name order by pml_default_order) rang
         from pit_message m
         join pit_message_language ml
           on m.pms_pml_name = ml.pml_name
        where ml.pml_default_order > 0
          and m.pms_name like p_message_pattern || '%'
+         and (m.pms_pmg_name = p_pmg_name
+          or p_pmg_name is null)
        order by m.pms_name, ml.pml_default_order;
     l_script clob;
     l_chunk varchar2(32767);
@@ -478,9 +543,16 @@ as
   pit_admin.create_message_package;
 end;
 /~';
+    c_merge_group_template constant varchar2(200) := q'~
+  pit_admin.merge_message_group(
+    p_pmg_name => '#NAME#',
+    p_pmg_description => q'^#DESCRIPTION#^'
+  );
+~';
     c_merge_template constant varchar2(200) := q'~
   pit_admin.merge_message(
     p_pms_name => '#NAME#',
+    p_pms_pmg_name => '#GROUP#',
     p_pms_text => q'^#TEXT#^',
     p_pms_pse_id => #pms_pse_id#,
     p_pms_pml_name => '#LANGUAGE#',
@@ -496,8 +568,17 @@ end;
 ~';
   begin
     dbms_lob.createtemporary(l_script, false, dbms_lob.call);
+    dbms_lob.append(l_script, c_start);
 
-    for msg in message_cur(p_message_pattern) loop
+    for pmg in message_group_cur(p_message_pattern, p_pmg_name) loop
+      l_chunk := l_chunk
+              || pit_util.bulk_replace(c_merge_group_template, char_table(
+                   '#NAME#', pmg.pmg_name,
+                   '#DESCRIPTION#', pmg.pmg_description));
+    end loop;
+    dbms_lob.append(l_script, l_chunk);
+
+    for msg in message_cur(p_message_pattern, p_pmg_name) loop
       case msg.rang
       when 1 then
         if l_chunk is not null then
@@ -505,8 +586,9 @@ end;
         end if;
         l_chunk := pit_util.bulk_replace(c_merge_template, char_table(
                      '#NAME#', msg.pms_name,
+                     '#GROUP#', msg.pms_pmg_name,
                      '#TEXT#', msg.pms_text,
-                     '#pms_pse_id#', to_char(msg.pms_pse_id),
+                     '#PMS_PSE_ID#', to_char(msg.pms_pse_id),
                      '#LANGUAGE#', msg.pms_pml_name,
                      '#ERRNO#', coalesce(to_char(msg.pms_custom_error), 'null')));
       else
@@ -518,7 +600,6 @@ end;
       end case;
     end loop;
 
-    dbms_lob.append(l_script, c_start);
     dbms_lob.append(l_script, l_chunk);
     dbms_lob.append(l_script, c_end);
 

@@ -1,4 +1,4 @@
-@init.sql &1. &2.
+@init_uninstall.sql &1. &2.
 
 alter session set current_schema=&INSTALL_USER.;
 
@@ -21,18 +21,11 @@ prompt &h2.Module PIT_TEST
 prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Deinstallation
 prompt &h1.Deinstall CORE Functionality
 @core/clean_up_install.sql
-alter session set current_schema=&REMOTE_USER.;
-@core/clean_up_remote.sql
-alter session set current_schema=&INSTALL_USER.;
-@core/clean_up_remote.sql
 
 prompt &h1.Deinstall CONTEXT Framework
 @core/context/clean_up.sql
 
 prompt &h1.Deinstall PARAMETER Framework
 @core/parameters/clean_up_install.sql
-alter session set current_schema=&REMOTE_USER.;
-@core/parameters/clean_up_remote.sql
-alter session set current_schema=&INSTALL_USER.;
 
 exit;

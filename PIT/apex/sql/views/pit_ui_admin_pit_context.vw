@@ -8,7 +8,7 @@ create or replace view pit_ui_admin_pit_context as
               to_number(regexp_substr(par_string_value, '[^|]+', 1, 2)) ptl_id,
               case regexp_substr(to_char(par_string_value), '[^|]+', 1, 3) when 'Y' then 'Ja' else 'Nein' end timing_on,
               replace(regexp_substr(par_string_value, '[^|]+', 1, 4), ':', ', ') output_modules
-         from parameter_tab
+         from dl_parameter_tab
         where par_pgr_id = 'PIT'
           and par_id like 'CONTEXT%')
 select p.row_id, p.par_id, p.context_name, p.context_description, 
@@ -17,5 +17,5 @@ select p.row_id, p.par_id, p.context_name, p.context_description,
        'Timing: ' || p.timing_on || '<br>' ||
        'Module: ' || p.output_modules || '<br>' context_setting
   from params p
-  join pit_message_severity pse on p.pse_id = pse.pse_id
-  join pit_trace_level ptl on p.ptl_id = ptl.ptl_id;
+  join dl_pit_message_severity pse on p.pse_id = pse.pse_id
+  join dl_pit_trace_level ptl on p.ptl_id = ptl.ptl_id;

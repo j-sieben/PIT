@@ -1,6 +1,3 @@
-prompt
-prompt &h1. Check whether UTL_TEXT exists
-@core/check_has_utl_text.sql core/utl_text/install.sql
 
 prompt
 prompt &h1.Installing parameter package
@@ -37,6 +34,9 @@ prompt &s1.Create table PIT_TRACE_LEVEL
 
 prompt &s1.Create table PIT_MESSAGE_LANGUAGE
 @&sql_dir.tables/pit_message_language.tbl
+
+prompt &s1.Create table PIT_MESSAGE_GROUP
+@&sql_dir.tables/pit_message_group.tbl
 
 prompt &s1.Create view PIT_MESSAGE_LANGUAGE_V
 @&sql_dir.views/pit_message_language_v.vw
