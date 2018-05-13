@@ -2,7 +2,7 @@ create or replace package pit_pkg
   authid definer
 as
   /* Package to implement the core PIT logic. This package is called by PIT
-  * as the API for PIT_PKG only.
+   * as the API for PIT_PKG only.
    */
   /* PUBLIC PACKAGE TYPES */
   type context_type is record(
@@ -21,12 +21,32 @@ as
   
    
   /* CORE */
+  /* Method to log a message regardless of the actual log settings.
+   * @param  p_message_name  Name of the message. Reference to package MSG
+   * @param [p_arg_list]     Optional list of replacement information
+   * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_module_list]  Optional list of module names, separated by seicolon
+   *                         that is used to log the message. If NULL, the list of
+   *                         actually set modules is used.
+   * @usage  Call this procedure to emit debug messages regardless of log settings.
+   *         Use this method if you want to emit a message anyway or if you decide
+   *         to emit a log message or not in code outside PIT.
+   *         Optionally, set a list of modules that will become active for this
+   *         method only. Modules set her will not remain active after this method.
+   *         The context remains unchanged.
+   */
+  procedure log_anyway(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_module_list in varchar2 default null);
+    
   /* Logs messages
-   * %param p_severity Log-level. Allows to decide whether PIT should log or not.
-   * %param p_message_name Name of the message to log
-   * %param p_affected_id Optional ID of an item a log entry relates to
-   * %param p_arg_list List of replacement values for the message
-   * %usage This procedure is called from PIT. It takes the message_name and
+   * @param p_severity Log-level. Allows to decide whether PIT should log or not.
+   * @param p_message_name Name of the message to log
+   * @param p_affected_id Optional ID of an item a log entry relates to
+   * @param p_arg_list List of replacement values for the message
+   * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls any
    *        log procedure of all active output modules and passes the message.
    */
@@ -38,15 +58,15 @@ as
     
     
   /* Logs messages generically
-   * %param p_message_name Name of the message to log
-   * %param p_affected_id Optional ID of an item a log entry relates to
-   * %param p_arg_list List of replacement values for the message
-   * %param p_log_threshold Threshold that is taken as a comparison to the message
+   * @param p_message_name Name of the message to log
+   * @param p_affected_id Optional ID of an item a log entry relates to
+   * @param p_arg_list List of replacement values for the message
+   * @param p_log_threshold Threshold that is taken as a comparison to the message
    *        severity to decide whether a message should be logged
-   * %param p_log_modules List of output modules to log to. This list is taken
+   * @param p_log_modules List of output modules to log to. This list is taken
    *        for this single call only. It does not affected the overall log module
    *        settings for the active or default context
-   * %usage This procedure is called from PIT. It takes the message_name and
+   * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls any
    *        log procedure of all active output modules and passes the message.
    *        This overloaded version is used to provide a mechanism to log different
@@ -61,16 +81,16 @@ as
   
   
   /* Traces entering a procedure
-   * %param p_action Nam of the block that is executed. Normally the procedure
+   * @param p_action Nam of the block that is executed. Normally the procedure
    *        or function name within a package.
-   * %param p_module Unit that contains the method that is executed. Either the
+   * @param p_module Unit that contains the method that is executed. Either the
    *        package name or ANONYMOUS, PROCEDURE, FUNCTION or TRIGGER
-   * %param p_params List of parameters which is passed into tracing. Only varhar2
+   * @param p_params List of parameters which is passed into tracing. Only varhar2
    *        is allowed as a parameter value with a maximum of 4000 byte.
-   * %param p_trace_level Trace level to allow for selective tracing.
-   * %param p_clinet_info Optional info to be passed to DBMS_APPLICATION_INFO,
+   * @param p_trace_level Trace level to allow for selective tracing.
+   * @param p_clinet_info Optional info to be passed to DBMS_APPLICATION_INFO,
    *        applicable for TRACE_MANDATORY only
-   * %usage This procedure is called from PIT to trace entering a procedure.
+   * @usage This procedure is called from PIT to trace entering a procedure.
    *        It will determine timing information and maintain a call stack.
    */
   procedure enter(
@@ -82,8 +102,8 @@ as
 
   
   /* Traces leaving a procedure
-   * %param p_trace_level Trace level to allow for selective tracing.
-   * %usage This procedure is called from PIT to trace leaving a procedure.
+   * @param p_trace_level Trace level to allow for selective tracing.
+   * @usage This procedure is called from PIT to trace leaving a procedure.
    *        It will determine timing information and maintain a call stack.
    */
   procedure leave(
@@ -91,11 +111,11 @@ as
   
   
   /* Purges the message stack after a given point in time
-   * %param p_date_before Date, before which the message log is purged 
-   * %param p_severity_greater_equal Optional severity level that controls which
+   * @param p_date_before Date, before which the message log is purged 
+   * @param p_severity_greater_equal Optional severity level that controls which
    *        severity of messages shall be purged. Includes an message with a 
    *        severity passed in and greater
-   * %usage This procedure is called from PIT to purge the message stack
+   * @usage This procedure is called from PIT to purge the message stack
    *        p_date_before determines which entries shall be purged.
    */
   procedure purge_log(
@@ -105,9 +125,9 @@ as
   
   /* Prints a message to the output modules. Used to pass user information
    * to the view layer
-   * %param p_message_name  Name of the message to log
-   * %param p_arg_list List of replacement values for the message
-   * %usage This procedure is called from PIT. It takes the message_name and
+   * @param p_message_name  Name of the message to log
+   * @param p_arg_list List of replacement values for the message
+   * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls any
    *        print procedure of all active output modules and passes the message.
    */
@@ -117,11 +137,11 @@ as
   
   
   /* Raises an error
-   * %param p_severity Severity of the message to raise (FATAL|ERROR)
-   * %param p_message_name  Name of the message to raise 
-   * %param p_affected_id ID of an object that is affected by this message
-   * %param p_arg_list List of replacement values for the message
-   * %usage This procedure is called from PIT. It takes the message_name and
+   * @param p_severity Severity of the message to raise (FATAL|ERROR)
+   * @param p_message_name  Name of the message to raise 
+   * @param p_affected_id ID of an object that is affected by this message
+   * @param p_arg_list List of replacement values for the message
+   * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls raises
    *        an error with the respective message that can be caught by the exception
    *        block. Messages with severity error or fatal have an associated error
@@ -135,11 +155,11 @@ as
   
   
   /* Handels an error
-   * %param p_severity Severity of the message to log (FATAL|ERROR)
-   * %param p_message_name  Name of the message to log
-   * %param p_affected_id ID of an object that is affected by this message
-   * %param p_arg_list List of replacement values for the message
-   * %usage This procedure is called from PIT. It takes the message_name and
+   * @param p_severity Severity of the message to log (FATAL|ERROR)
+   * @param p_message_name  Name of the message to log
+   * @param p_affected_id ID of an object that is affected by this message
+   * @param p_arg_list List of replacement values for the message
+   * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls raises
    *        an error with the respective message that can be caught by the exception
    *        block. Messages with severity error or fatal have an associated error
@@ -153,11 +173,11 @@ as
   
   
   /* Returns an instance of type MESSAGE_TYPE.
-   * %param p_message_name  Name of the message to log
-   * %param p_affected_id ID of an object that is affected by this message
-   * %param p_arg_list List of replacement values for the message
-   * %return Instance of the requested message.
-   * %usage This procedure is called from PIT. It takes the message_name,
+   * @param p_message_name  Name of the message to log
+   * @param p_affected_id ID of an object that is affected by this message
+   * @param p_arg_list List of replacement values for the message
+   * @return Instance of the requested message.
+   * @usage This procedure is called from PIT. It takes the message_name,
    *        constructs an instance of MESSAGE_TYPE and returns the message instance.
    */
   function get_message(
@@ -168,10 +188,10 @@ as
     
     
   /* Returns the text of a message
-   * %param p_message_name Name of the message to log
-   * %param p_arg_list List of replacement values for the message
-   * %return Messagetext of the requested message.
-   * %usage This procedure is called from PIT. It takes the message_name ,
+   * @param p_message_name Name of the message to log
+   * @param p_arg_list List of replacement values for the message
+   * @return Messagetext of the requested message.
+   * @usage This procedure is called from PIT. It takes the message_name ,
    *        constructs an instance of MESSAGE_TYPE and returns the message text.
    */
   function get_message_text(
@@ -182,14 +202,14 @@ as
     
   /* CONTEXT MAINTENANCE */
   /* Function to retrieve the actually valid context
-   * %return Instance of context_type-Record that holds the settings for the
+   * @return Instance of context_type-Record that holds the settings for the
    *         actually valid context
    */
    
   
   /* Functon to retrieve the actual context as an instance of context type
-   * %return Instance of context_type filled with the actually valid settings
-   * %usage is called if an external function wishes to persist the actual
+   * @return Instance of context_type filled with the actually valid settings
+   * @usage is called if an external function wishes to persist the actual
    *        settings and reset them later
    */
   function get_context
@@ -197,11 +217,11 @@ as
     
     
   /* Procedure to change the settings in the global PIT_CONTEXT
-   * %param p_log_level New log level.
-   * %param p_trace_level New trace level
-   * %param p_trace_timing Flag to switch timing on or off
-   * %param p_module_list Colon-separated list of output modules used
-   * %param p_focus Indicates whether changes are made for the active session 
+   * @param p_log_level New log level.
+   * @param p_trace_level New trace level
+   * @param p_trace_timing Flag to switch timing on or off
+   * @param p_module_list Colon-separated list of output modules used
+   * @param p_focus Indicates whether changes are made for the active session 
    *        only (ACTIVE) or as a new default setting (DEFAULT). Defaults to ACTIVE
    * $usage This procedure is used when log settings shall be changed dynamically
    *        Normal usage is to overwrite log settings as defined in the parameters
@@ -215,7 +235,7 @@ as
     
   
   /* Overloaded version that takes an instanvce of CONTEXT_TYPE-record as input parameter
-   * %param p_context Instance of CONTEXT_TYPE-record with the actually valid
+   * @param p_context Instance of CONTEXT_TYPE-record with the actually valid
    *        context settings
    */
   procedure set_context(
@@ -223,7 +243,7 @@ as
     
   
   /* Overloaded version that expects the name of a named context as defined in the parameters
-   * %param p_context_name Name of a context. Reuqires a matching parameter named CONTEXT_<Name>
+   * @param p_context_name Name of a context. Reuqires a matching parameter named CONTEXT_<Name>
    *        with predefined debug settings in the format [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
    *        fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
    */
@@ -232,7 +252,7 @@ as
   
   
   /* Procedure to reset log settings to the default settings
-   * %usage If settings for a session were changed, calling this procedure
+   * @usage If settings for a session were changed, calling this procedure
    *        resets these settings to the default settings as defined by the 
    *        parameters
    */
@@ -240,7 +260,7 @@ as
   
   
   /* Procedure to reset the complete context to default settings
-   * %usage Use this procedure if all session settings shall be reset to the 
+   * @usage Use this procedure if all session settings shall be reset to the 
    *        default settings. Be aware that calling this procedure will reset
    *        ALL log settings of ALL sessions to default
    */
@@ -249,8 +269,8 @@ as
   
   /* MODULE MAINTENANCE */
   /* Function to retrieve a list of all installed modules
-   * %return PIT_MODULE_LIST-type, List of modules, availabilty and active status
-   * %usage Use this function if you require a list of all installed modules.
+   * @return PIT_MODULE_LIST-type, List of modules, availabilty and active status
+   * @usage Use this function if you require a list of all installed modules.
    */
   function get_modules
     return pit_module_list
@@ -258,8 +278,8 @@ as
     
     
   /* Function to retrieve a list of active modules
-   * %return ARGS-type, List of module names
-   * %usage Use this function if you require a list of active modules.
+   * @return ARGS-type, List of module names
+   * @usage Use this function if you require a list of active modules.
    */
   function get_active_modules
    return args
@@ -267,8 +287,8 @@ as
    
    
   /* Function to retrieve a list of available modules
-   * %return ARGS-type, List of module names
-   * %usage Use this function if you require a list of available modules.
+   * @return ARGS-type, List of module names
+   * @usage Use this function if you require a list of available modules.
    *        A module is AVAILABLE if it could be initialized succesfully.
    */
   function get_available_modules
@@ -278,10 +298,10 @@ as
   /* UTILS */
   
   /* function to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR
-   * %param p_msg_args Instance of type MSG_ARGS
-   * %return Instance of MSG_ARGS_CHAR with the content of MSG_ARGS (abbreviated
+   * @param p_msg_args Instance of type MSG_ARGS
+   * @return Instance of MSG_ARGS_CHAR with the content of MSG_ARGS (abbreviated
    *         to max 4000 byte per entry)
-   * %usage is called to allow to store MSG_ARGS-instances in tables (which is
+   * @usage is called to allow to store MSG_ARGS-instances in tables (which is
    *        not supported for VARRAY(CLOB)).
    */
   function cast_to_char_list(

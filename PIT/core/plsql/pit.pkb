@@ -128,6 +128,21 @@ as
   
   
   /* DEBUGGING */
+  procedure log(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_module_list in varchar2 default null)
+  as
+  begin
+    pit_pkg.log_anyway(
+      p_message_name => p_message_name, 
+      p_affected_id => p_affected_id, 
+      p_arg_list => p_arg_list, 
+      p_module_list => p_module_list);
+  end log;
+  
+    
   procedure verbose(
     p_message_name in varchar2,
     p_arg_list in msg_args default null,

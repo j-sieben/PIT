@@ -16,7 +16,7 @@ declare
                  'PIT_MODULE_META', 'PIT_MODULE_LIST', -- Typen
                  'MSG', 'PIT', 'PIT_PKG', 'PIT_ADMIN', -- Packages
                  'PIT_MESSAGE_LANGUAGE_V', 'PIT_MESSAGE_V', -- Views
-                 'PIT_MESSAGE', 'PIT_MESSAGE_LANGUAGE', 'PIT_MESSAGE_SEVERITY', 'PIT_TRACE_LEVEL',  -- Tabellen
+                 'PIT_MESSAGE', 'PIT_MESSAGE_LANGUAGE', 'PIT_MESSAGE_SEVERITY', 'PIT_TRACE_LEVEL', 'PIT_MESSAGE_GROUP',  -- Tabellen
                  'MSG',  -- Synonyme
                  'PIT_LOG_SEQ' -- Sequenzen
                  )

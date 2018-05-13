@@ -677,6 +677,33 @@ as
   end initialize;
 
   /* CORE */
+  procedure log_anyway(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_module_list in varchar2 default null)
+  as
+    l_module_list varchar2(2000);
+    l_message message_type;
+  begin
+    get_context_values;
+    if p_module_list is not null then
+      l_module_list := g_ctx.module_list;
+      set_context(g_ctx.log_level, g_ctx.trace_level, g_ctx.trace_timing, p_module_list);
+    end if;
+    
+    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+    raise_event(
+      p_event => c_log_event,
+      p_event_focus => c_event_focus_active,
+      p_message => l_message);
+    
+    if p_module_list is not null then
+      set_context(g_ctx.log_level, g_ctx.trace_level, g_ctx.trace_timing, g_ctx.module_list);
+    end if;
+  end log_anyway;
+  
+  
   procedure log_event(
     p_severity in integer,
     p_message_name in varchar2,
