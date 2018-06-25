@@ -22,7 +22,34 @@ So finally, here's an example on how to install PIT on a windows system:
 ```
 cd C:\temp\PIT
 set nls_lang=GERMAN_GERMANY.AL32UTF8
-sqlplus <sys_credentials> as sysdba @pit_install DOAG
+sqlplus <sys_credentials> as sysdba @pit_install PIT_OWNER AMERICAN
+```
+
+This example will install PIT within user `PIT_OWNER` and set `AMERICAN` as the default language for messages.
+
+## Granting access to PIT to a client
+
+To grant a different schema access to PIT, you call script `pit_install_client.sql`. This scripts expects to parameters, the owner installed PIT and the schema you want to grant access to PIT to. Here's an example on how to call this script:
+
+```
+cd C:\temp\PIT
+sqlplus <sys_credentials> as sysdba @pit_install_client PIT_OWNER PIT_USER
+```
+
+## Installing the supporting APEX application
+
+To install the supporting APEX application, it is expected that you have an APEX workspace. Script `pit_install_apex.sql` will install an APEX application within that workspace that allows you to manage PIT messages and global application parameters, which PIT uses to store its configuration settings at. The script will make sure that the schema owner of this APEX workspace is granted all necessary object rights to maintain PIT. This script expects four parameters:
+
+  - INSTALL_USER: database schema that owns PIT
+  - APP_USER: database user who owns PIT_UI (Schema of the APEX-Workspace you install into)
+  - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
+  - APEX_WORKSPACE: Name of the APEX workspace INSTALL_USER has granted all rights to admin PIT to
+
+Here's an example on how to install the supporting APEX application:
+
+```
+cd C:\temp\PIT
+sqlplus <sys_credentials> as sysdba @pit_install_apex PIT_OWNER DEV_TOOL_OWNER AMERICAN DEV_TOOLS
 ```
 
 ## Uninstall PIT
