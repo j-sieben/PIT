@@ -2,7 +2,11 @@
 
 ## Installing PIT
 
-PIT installation is straight forward: Simply call a script file and off you go. There is one thing to keep in mind: PIT is designed such that it can be used in a mandator aware software. This means that in a normal installation one user ownes the PIT software itself, whereas a second user uses the software. It's possible to make owner and user one and the same. In this case, PIT is installed and used in the same schema. Therefore, the installation scripts expects two schemata, the first for the owner of PIT, the second for the respective user.
+PIT installation is split into three installation files to make it easy to adjust PIT to your specific needs:
+
+- Core installation file, installs the core PIT packages and data structures. The owner of PIT can work with PIT, no additional installation is required
+- Client installation file, grants all necessary rights to a adifferent user to allow for centralized deployment of PIT for many schemas
+- APEX installation file, installs the APEX application to maintain PIT. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems.
 
 As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL*Plus* to install PIT, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`. 
 
@@ -18,7 +22,7 @@ So finally, here's an example on how to install PIT on a windows system:
 ```
 cd C:\temp\PIT
 set nls_lang=GERMAN_GERMANY.AL32UTF8
-sqlplus <sys_credentials> as sysdba @pit_install DOAG DOAG
+sqlplus <sys_credentials> as sysdba @pit_install DOAG
 ```
 
 ## Uninstall PIT
