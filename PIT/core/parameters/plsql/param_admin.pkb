@@ -184,8 +184,8 @@ end;
    ,p_par_description => '#PARAM_DESCRIPTION#'#CLAUSES#
   );
 ~';
-    c_string_template constant varchar2(100) := q'~   ,p_par_string_value => q'ø#STRING#ø'~';
-    c_xml_template constant varchar2(100) := q'~   ,p_par_xml_value => xmltype(q'ø#XML#ø')~';
+    c_string_template constant varchar2(100) := q'~   ,p_par_string_value => q'^#STRING#^'~';
+    c_xml_template constant varchar2(100) := q'~   ,p_par_xml_value => xmltype(q'^#XML#^')~';
     c_integer_template constant varchar2(100) := q'~   ,p_par_integer_value => #INTEGER#~';
     c_float_template constant varchar2(100) := q'~   ,p_par_float_value => #FLOAT#~';
     c_date_template constant varchar2(100) := q'~   ,p_par_date_value => date '#DATE#'~';
@@ -193,8 +193,8 @@ end;
     c_boolean_template constant varchar2(100) := q'~   ,p_par_boolean_value => '#BOOLEAN#'~';
     c_modifiable_template constant varchar2(100) := q'~   ,p_par_is_modifiable => '#MODIFIABLE#'~';
     c_param_type_template constant varchar2(100) := q'~   ,p_par_pat_id => '#PARAM_TYPE#'~';
-    c_validataion_template constant varchar2(100) := q'~   ,p_par_validation_string => q'ø#VALIDATION#ø'~';
-    c_val_msg_template constant varchar2(100) := q'~   ,p_par_validation_message => q'ø#VAL_MSG#ø'~';
+    c_validataion_template constant varchar2(100) := q'~   ,p_par_validation_string => q'^#VALIDATION#^'~';
+    c_val_msg_template constant varchar2(100) := q'~   ,p_par_validation_message => q'^#VAL_MSG#^'~';
     
     procedure calc_clause(
       p_clause in out nocopy varchar2,

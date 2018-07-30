@@ -10,7 +10,7 @@ begin
     p_par_id => 'ADAPTER_PREFERENCE'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Order in which PIT tries to use adapter preferences (left ot right)'
-   ,p_par_string_value => q'øAPEX_ADAPTER:DEFAULT_ADAPTERø'
+   ,p_par_string_value => q'^APEX_ADAPTER:DEFAULT_ADAPTER^'
   );
 
   param_admin.edit_parameter(
@@ -24,14 +24,14 @@ begin
     p_par_id => 'PIT_CTX_TYPE'
    ,p_par_pgr_id => 'CONTEXT'
    ,p_par_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
-   ,p_par_string_value => q'øPREFER_USER_CLIENT_IDø'
+   ,p_par_string_value => q'^PREFER_USER_CLIENT_ID^'
   );
 
   param_admin.edit_parameter(
     p_par_id => 'PIT_CTX_&INSTALL_USER._TYPE'
    ,p_par_pgr_id => 'CONTEXT'
    ,p_par_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
-   ,p_par_string_value => q'øPREFER_USER_CLIENT_IDø'
+   ,p_par_string_value => q'^PREFER_USER_CLIENT_ID^'
   );
 
   param_admin.edit_parameter(
@@ -45,14 +45,14 @@ begin
     p_par_id => 'XLIFF_SKELETON'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'template for XLIFF translation files for messages.'
-   ,p_par_xml_value => xmltype(q'ø<?xml version="1.0"?>
+   ,p_par_xml_value => xmltype(q'^<?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file original="pit_message_translation.xml" source-language="en" target-language="de" datatype="html">
     <header/>
     <body/>
   </file>
 </xliff>
-ø')
+^')
   );
 
   pit_admin.create_named_context(
