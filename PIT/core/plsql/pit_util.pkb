@@ -37,7 +37,8 @@ as
                     upper(substr(text, instr(text, '(') + 1, instr(text, ')') - instr(text, '(') - 1)) init
                from all_source a
               where (owner in ('SYS') or owner like 'APEX%')
-                and upper(text) like '%PRAGMA EXCEPTION_INIT%')
+                and upper(text) like '%PRAGMA EXCEPTION_INIT%'
+                and name not in ('PIT_ADMIN', 'PIT_UTIL'))
       select source_type, owner, package_name,
              -- don't convert to numbers here as it's possible that conversion errors occur
              trim(replace(substr(init, instr(init, ',') + 1), '''', '')) error_number,

@@ -1,6 +1,6 @@
 
 prompt &s1.Grant execute on utl_context to &REMOTE_USER.
-grant execute on utl_context to &REMOTE_USER.;
+@check_has_object_privilege execute utl_context
 
 prompt &s1.Change current schema to &REMOTE_USER.
 alter session set current_schema=&REMOTE_USER.;

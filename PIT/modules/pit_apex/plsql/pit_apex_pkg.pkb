@@ -106,7 +106,7 @@ as
   as
   begin
     if valid_environment then
-      if p_message.affected_id is not null then
+      if p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
         apex_error.add_error(
           p_message => p_message.message_text,
           p_additional_info => null,

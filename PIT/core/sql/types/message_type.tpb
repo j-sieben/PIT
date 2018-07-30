@@ -10,7 +10,6 @@ as
     p_arg_list msg_args)
     return self as result
   as
-    l_errm varchar2(2000);
   begin
     select pms_text, pms_pse_id, error_number
       into self.message_text, self.severity, self.error_number
@@ -32,16 +31,16 @@ as
     if sqlcode > 0 then
       self.stack := dbms_utility.format_error_stack;
       self.backtrace := dbms_utility.format_error_backtrace;
+      self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 11));
     end if;
 
-    -- Platzhalter der Meldung durch Variablen ersetzen
+    -- replace anchors with msg params
     if p_arg_list is not null then
       for i in p_arg_list.first..p_arg_list.last loop
         self.message_text :=
           replace(self.message_text, '#' || i || '#', p_arg_list(i));
       end loop;
     end if;
-    self.message_text := replace(self.message_text, '#SQLERRM#', l_errm);
     return;
   end;
 end;

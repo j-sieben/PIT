@@ -20,32 +20,16 @@ as
   procedure initialize;
   
    
-  /* CORE */
-  /* Method to log a message regardless of the actual log settings.
-   * @param  p_message_name  Name of the message. Reference to package MSG
-   * @param [p_arg_list]     Optional list of replacement information
-   * @param [p_affected_id]  Optional id of an item a message relates to
-   * @param [p_module_list]  Optional list of module names, separated by seicolon
+  /* CORE */    
+  /* Logs messages
+   * @param  p_severity      Log-level. Allows to decide whether PIT should log or not.
+   *                         If 0, the message gets logged anyway, regardless of log settings
+   * @param  p_message_name  Name of the message to log
+   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_affected_id   Optional ID of an item a log entry relates to
+   * @param  p_module_list   List of module names, separated by semicolon
    *                         that is used to log the message. If NULL, the list of
    *                         actually set modules is used.
-   * @usage  Call this procedure to emit debug messages regardless of log settings.
-   *         Use this method if you want to emit a message anyway or if you decide
-   *         to emit a log message or not in code outside PIT.
-   *         Optionally, set a list of modules that will become active for this
-   *         method only. Modules set her will not remain active after this method.
-   *         The context remains unchanged.
-   */
-  procedure log_anyway(
-    p_message_name in varchar2,
-    p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null,
-    p_module_list in varchar2 default null);
-    
-  /* Logs messages
-   * @param p_severity Log-level. Allows to decide whether PIT should log or not.
-   * @param p_message_name Name of the message to log
-   * @param p_affected_id Optional ID of an item a log entry relates to
-   * @param p_arg_list List of replacement values for the message
    * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls any
    *        log procedure of all active output modules and passes the message.
@@ -53,31 +37,9 @@ as
   procedure log_event(
     p_severity in integer,
     p_message_name in varchar2,
-    p_affected_id in varchar2,
-    p_arg_list in msg_args);
-    
-    
-  /* Logs messages generically
-   * @param p_message_name Name of the message to log
-   * @param p_affected_id Optional ID of an item a log entry relates to
-   * @param p_arg_list List of replacement values for the message
-   * @param p_log_threshold Threshold that is taken as a comparison to the message
-   *        severity to decide whether a message should be logged
-   * @param p_log_modules List of output modules to log to. This list is taken
-   *        for this single call only. It does not affected the overall log module
-   *        settings for the active or default context
-   * @usage This procedure is called from PIT. It takes the message_name and
-   *        constructs an instance of MESSAGE_TYPE for it. It then calls any
-   *        log procedure of all active output modules and passes the message.
-   *        This overloaded version is used to provide a mechanism to log different
-   *        messages to a certain set of log modules only
-   */
-  procedure log_specific(
-    p_message_name in varchar2,
-    p_affected_id in varchar2,
     p_arg_list in msg_args,
-    p_log_threshold in number,
-    p_log_modules in varchar2);
+    p_affected_id in varchar2,
+    p_module_list in varchar2);
   
   
   /* Traces entering a procedure
@@ -150,7 +112,7 @@ as
   procedure raise_error(
     p_severity in number,
     p_message_name varchar2,
-    p_affected_id in number,
+    p_affected_id in varchar2,
     p_arg_list in msg_args);
   
   
@@ -168,7 +130,7 @@ as
   procedure handle_error(
     p_severity in number,
     p_message_name varchar2,
-    p_affected_id in number,
+    p_affected_id in varchar2,
     p_arg_list in msg_args);
   
   
