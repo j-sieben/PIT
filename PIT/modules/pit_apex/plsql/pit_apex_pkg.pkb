@@ -104,11 +104,23 @@ as
   procedure log_error(
     p_message in message_type)
   as
+    l_label varchar2(100);
   begin
     if valid_environment then
       if p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
+        -- Get item label to include it into the message
+          with params as(
+               select v('APP_ID') application_id,
+                      v('PAGE_ID') page_id,
+                      p_message.affected_id item_name
+                 from dual)
+        select /*+ no_merge (params) */ label
+          into l_label
+          from apex_application_page_items
+        natural join params;
+        
         apex_error.add_error(
-          p_message => p_message.message_text,
+          p_message => replace(p_message.message_text, '#ITEM_LABEL#', l_label),
           p_additional_info => p_message.message_description,
           p_page_item_name => p_message.affected_id,
           p_display_location => apex_error.c_inline_with_field_and_notif);
