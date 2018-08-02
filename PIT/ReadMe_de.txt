@@ -13,11 +13,9 @@ sqlplus / as sysdba
 
 - Fuehren Sie das Skript pit_install.sql aus, uebergeben Sie …
   - das Schema, in dem das Package installiert werden soll, 
-  - das Schema, das als Client Zugriff auf PIT erhalten soll (kann auch identisch mit dem Eigentuemer sein)
   - die Default-Sprache als Oracle-Sprachname
-  - den Namen des APEX-Workspaces zur Installation der PIT-Administrationsumgebung
 
-@pit_install.sql DOAG DOAG GERMAN
+@pit_install.sql DOAG GERMAN
 
 - Vor der Verwendung des Ausgabemoduls PIT_FILE muss ein Directory
   mit dem Namen PIT_FILE_DIR angelegt werden und auf einen Pfad zeigen,

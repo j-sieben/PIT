@@ -16,6 +16,7 @@ as
   c_del char(1 byte) := '|';
   c_min_error constant number := -20999;
   c_max_error constant number := -20000;
+  c_default_language constant number := 10;
 
 
   -- ERROR messages
@@ -23,7 +24,7 @@ as
   c_message_does_not_exist constant varchar2(200) := 'Message #MESSAGE# does not exist.';
   c_error_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 26 chars for error messages';
   c_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 30 chars';
-  
+
 
   /********************** GENERIC HELPER FUNCTIONS ****************************/
   /* Procedure to recompile invalid objects
@@ -40,16 +41,16 @@ as
     c_package_body constant varchar2(30 byte) := 'PACKAGE BODY';
     c_recompile_stmt constant varchar2(1000) := q'^alter #TYPE# #OWNER#.#NAME# compile ^';
     c_max_compile_runs constant number := 3;
-    
+
     -- Variables
     l_stmt varchar2(1000);
     l_index binary_integer;
     l_no binary_integer;
-    
+
     -- Exceptions
     compilation_error exception;
     pragma exception_init(compilation_error, -24344);
-    
+
     -- Cursors
     cursor invalid_objects_cur is
       select distinct obj.owner, obj.object_name, obj.object_type, count(*) over () cnt,
@@ -71,14 +72,14 @@ as
       dbms_output.put_line('compile Run ' || i);
       for obj in invalid_objects_cur loop
         l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
-                    '#OWNER#', obj.owner, 
+                    '#OWNER#', obj.owner,
                     '#TYPE#', replace(obj.object_type, ' BODY'),
                     '#NAME#', obj.object_name));
         dbms_application_info.set_session_longops(
           l_index, l_no, 'Compiling ' || obj.object_type || obj.object_name, 0, 0, i, obj.cnt);
         if i < c_max_compile_runs then
           begin
-            case obj.object_type 
+            case obj.object_type
             when c_package_body then
               execute immediate l_stmt || 'body';
             else
@@ -110,8 +111,8 @@ as
       end loop;
     end loop;
   end recompile_invalid_objects;
-  
-  
+
+
   /* Initialization procedure
    * %usage Called internally. It has the following functionality:
    *        <ul><li>Read all predefined oracle errors from the oracle packages</li>
@@ -140,6 +141,32 @@ as
 
 
   /****************************** INTERFACE ***********************************/
+  procedure set_default_language(
+    p_pml_list in varchar2,
+    p_delimiter in varchar2 default ':')
+  as
+    l_pml_list args;
+    l_pml_default_order pit_message_language.pml_default_order%type;
+  begin
+    
+    update pit_message_language
+       set pml_default_order = 0
+     where pml_default_order != c_default_language;
+
+    if p_pml_list is not null then
+      l_pml_list := pit_util.string_to_table(p_pml_list, p_delimiter);
+      l_pml_default_order := (l_pml_list.count + 1) * 10;
+      for i in l_pml_list.first .. l_pml_list.last loop
+        update pit_message_language
+           set pml_default_order = l_pml_default_order
+         where pml_name = l_pml_list(i);
+        l_pml_default_order := l_pml_default_order - 10;
+      end loop;
+    end if;
+    
+  end set_default_language;
+  
+  
   function get_message_text(
     p_pms_name in pit_message.pms_name%type,
     p_pms_pml_name in pit_message.pms_pml_name%type := null)
@@ -177,12 +204,13 @@ as
      when not matched then insert(pmg_name, pmg_description)
           values(s.pmg_name, s.pmg_description);
   end merge_message_group;
-  
+
 
   procedure merge_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
     p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_description in pit_message.pms_description%type default null,
     p_pms_pmg_name in pit_message_group.pmg_name%type default null,
     p_pms_pml_name in pit_message.pms_pml_name%type default null,
     p_error_number in pit_message.pms_custom_error%type default null)
@@ -190,14 +218,6 @@ as
     l_pms_name pit_message.pms_name%type;
     l_error_number pit_message.pms_custom_error%type;
   begin
-    case
-    when length(p_pms_name) > 26 and p_pms_pse_id <= 30 then
-      raise_application_error(c_max_error, c_error_msg_name_too_long);
-    when length(p_pms_name) > 30 then
-      raise_application_error(c_max_error, c_msg_name_too_long);
-    else
-      null;
-    end case;
     case
     when p_pms_pse_id in (20,30) and p_error_number not between c_min_error and c_max_error then
       pit_util.check_error(p_pms_name, p_error_number);
@@ -213,6 +233,7 @@ as
                   upper(coalesce(p_pms_pml_name, g_default_language)) pms_pml_name,
                   upper(p_pms_pmg_name) pms_pmg_name,
                   p_pms_text pms_text,
+                  p_pms_description pms_description,
                   p_pms_pse_id pms_pse_id,
                   l_error_number pms_custom_error
              from dual) s
@@ -220,12 +241,13 @@ as
      when matched then update set
           t.pms_pmg_name = s.pms_pmg_name,
           t.pms_text = s.pms_text,
+          t.pms_description = s.pms_description,
           t.pms_pse_id = s.pms_pse_id,
           t.pms_custom_error = s.pms_custom_error
      when not matched then insert
-            (pms_name, pms_pmg_name, pms_pml_name, pms_text, pms_pse_id, pms_custom_error)
+            (pms_name, pms_pmg_name, pms_pml_name, pms_text, pms_description, pms_pse_id, pms_custom_error)
           values
-            (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_pse_id, s.pms_custom_error);
+            (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_description, s.pms_pse_id, s.pms_custom_error);
     commit;
 
   exception
@@ -247,7 +269,8 @@ as
   procedure translate_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type)
+    p_pms_pml_name in pit_message.pms_pml_name%type,
+    p_pms_description in pit_message.pms_description%type default null)
   as
     l_pms_pse_id pit_message.pms_pse_id%type;
     l_error_number pit_message.pms_custom_error%type;
@@ -261,6 +284,7 @@ as
     merge_message(
       p_pms_name => p_pms_name,
       p_pms_text => p_pms_text,
+      p_pms_description => p_pms_description,
       p_pms_pse_id => l_pms_pse_id,
       p_pms_pml_name => p_pms_pml_name,
       p_error_number => l_error_number);
@@ -278,7 +302,6 @@ as
     if upper(p_pms_pml_name) = g_default_language then
       delete from pit_message
        where pms_name = upper(p_pms_name);
-      create_message_package;
     else
       delete from pit_message
        where pms_name = upper(p_pms_name)
@@ -410,16 +433,15 @@ as
     p_directory varchar2 default null)
   as
     c_package_name  constant varchar2(30) := 'msg';
-    c_exception_postfix constant varchar2(4) := '_ERR';
     c_r constant varchar2(2) := chr(10);
 
     l_sql_text clob := 'create or replace package ' || c_package_name || ' as' || c_r;
     l_constant_template varchar2(200) :=
       q'~  #CONSTANT# constant varchar2(30) := '#CONSTANT#';~' || c_r;
     l_exception_template varchar2(200) :=
-      '  #CONSTANT#' || c_exception_postfix || ' exception;' || c_r;
+      '  #ERROR_NAME# exception;' || c_r;
     l_pragma_template varchar2(200) :=
-      '  pragma exception_init(#CONSTANT#' || c_exception_postfix || ', #ERROR#);' || c_r;
+      '  pragma exception_init(#ERROR_NAME#, #ERROR#);' || c_r;
     l_end_clause varchar2(20) := 'end ' || c_package_name || ';';
 
     l_constants clob := c_r || '  -- CONSTANTS:' || c_r;
@@ -434,14 +456,14 @@ as
               where pms_pml_name = g_default_language)
       select replace(l_constant_template, '#CONSTANT#', pms_name) constant_chunk,
              case when pms_custom_error is not null then
-               replace (l_exception_template, '#CONSTANT#', pms_name)
+               replace (l_exception_template, '#ERROR_NAME#', pit_util.get_error_name(pms_name))
              else null end exception_chunk,
              case when pms_custom_error is not null then
-               replace(replace(l_pragma_template, '#CONSTANT#', pms_name), '#ERROR#', pms_custom_error)
+               replace(replace(l_pragma_template, '#ERROR_NAME#', pit_util.get_error_name(pms_name)), '#ERROR#', pms_custom_error)
              else null end pragma_chunk
         from messages
        order by pms_name;
-       
+
   begin
     -- persist active error numbers for -20000 errors in message table
     merge into pit_message m
@@ -471,9 +493,9 @@ as
     else
       execute immediate l_sql_text;
     end if;
-    
+
     recompile_invalid_objects;
-    
+
   end create_message_package;
 
 
@@ -494,7 +516,7 @@ as
                  and (pms_pmg_name = p_pmg_name or p_pmg_name is null))
           on pmg_name = pms_pmg_name
        order by pmg_name;
-       
+
     cursor message_cur(
       p_message_pattern in varchar2,
       p_pmg_name in varchar2) is
@@ -527,6 +549,7 @@ end;
     p_pms_name => '#NAME#',
     p_pms_pmg_name => '#GROUP#',
     p_pms_text => q'^#TEXT#^',
+    p_pms_description => q'^#DESCRIPTION#^',
     p_pms_pse_id => #pms_pse_id#,
     p_pms_pml_name => '#LANGUAGE#',
     p_error_number => #ERRNO#
@@ -536,13 +559,14 @@ end;
   pit_admin.translate_message(
     p_pms_name => '#NAME#',
     p_pms_text => q'^#TEXT#^',
+    p_pms_description => q'^#DESCRIPTION#^',
     p_pms_pml_name => '#LANGUAGE#'
   );
 ~';
   begin
     dbms_lob.createtemporary(l_script, false, dbms_lob.call);
     dbms_lob.append(l_script, c_start);
-    
+
     for pmg in message_group_cur(p_message_pattern, p_pmg_name) loop
       l_chunk := l_chunk
               || pit_util.bulk_replace(c_merge_group_template, char_table(
@@ -561,6 +585,7 @@ end;
                      '#NAME#', msg.pms_name,
                      '#GROUP#', msg.pms_pmg_name,
                      '#TEXT#', msg.pms_text,
+                     '#DESCRIPTION#', msg.pms_description,
                      '#PMS_PSE_ID#', to_char(msg.pms_pse_id),
                      '#LANGUAGE#', msg.pms_pml_name,
                      '#ERRNO#', coalesce(to_char(msg.pms_custom_error), 'null')));
@@ -569,6 +594,7 @@ end;
                 || pit_util.bulk_replace(c_translate_template, char_table(
                      '#NAME#', msg.pms_name,
                      '#TEXT#', msg.pms_text,
+                     '#DESCRIPTION#', msg.pms_description,
                      '#LANGUAGE#', msg.pms_pml_name));
       end case;
     end loop;

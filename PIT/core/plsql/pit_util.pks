@@ -84,6 +84,16 @@ as
     p_pms_custom_error in pit_message.pms_custom_error%type);
     
     
+  /* Helper to create the name for an exception constant in package MSG.
+   * Name is formed on the basis of params ERROR_PREFIX and ERROR_POSTFIX
+   * %param  p_pms_name Name of the message to create the exception name for
+   * %return Exception name
+   */
+  function get_error_name(
+    p_pms_name in pit_message.pms_name%type)
+    return varchar2;
+    
+    
   /* Helper to validate named context settings
    * %param p_context_name Name of the context to check
    * %param p_settings Settings for the named context

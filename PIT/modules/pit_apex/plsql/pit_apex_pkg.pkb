@@ -109,13 +109,13 @@ as
       if p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
         apex_error.add_error(
           p_message => p_message.message_text,
-          p_additional_info => null,
+          p_additional_info => p_message.message_description,
           p_page_item_name => p_message.affected_id,
           p_display_location => apex_error.c_inline_with_field_and_notif);
       else
         apex_error.add_error(
           p_message => p_message.message_text,
-          p_additional_info => null,
+          p_additional_info => p_message.message_description,
           p_display_location => apex_error.c_inline_with_field_and_notif);
       end if;
     end if;

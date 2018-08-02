@@ -11,8 +11,8 @@ as
     return self as result
   as
   begin
-    select pms_text, pms_pse_id, error_number
-      into self.message_text, self.severity, self.error_number
+    select pms_text, pms_description, pms_pse_id, error_number
+      into self.message_text, self.message_description, self.severity, self.error_number
       from (select pms_pml_name,
                    pms_text,
                    pms_pse_id,

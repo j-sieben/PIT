@@ -5,6 +5,7 @@ create or replace type message_type force is object(
   session_id varchar2(30 char),
   user_name varchar2(30 char),
   message_text clob,
+  message_description clob,
   severity number(2,0),
   stack varchar2(2000),
   backtrace varchar2(2000),

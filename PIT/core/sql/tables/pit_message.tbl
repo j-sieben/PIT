@@ -3,6 +3,7 @@ create table pit_message(
    pms_pmg_name varchar2(30 char),
    pms_pml_name varchar2(30 char),
    pms_text clob, 
+   pms_description clob,
    pms_pse_id number(3,0),
    pms_custom_error number,
    pms_active_error number,
@@ -23,6 +24,7 @@ comment on column pit_message.pms_name is 'Unique message name. Used to referenc
 comment on column pit_message.pms_pmg_name is 'Unique message grup name. Reference to PIT_MESSAGE_GROUP.';
 comment on column pit_message.pms_pml_name is 'Languae reference of the message. Taken from Oracle v$nls_valid_values';
 comment on column pit_message.pms_text is 'message text. Positional replacement with pattern #n#';
+comment on column pit_message.pms_text is 'Optional description to further describe the error or provide help on how to solve the issue';
 comment on column pit_message.pms_pse_id is 'severity of the message. Reference to PIT_MESSAGE_SEVERITY';
 comment on column pit_message.pms_custom_error is 'Optional pointer to an oracle error number. If null, an exception will be generated. To define custom errors, use null.';
 comment on column pit_message.pms_active_error is 'If a custom error number of -20000 is used, this field contains the actual error number as processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE.';

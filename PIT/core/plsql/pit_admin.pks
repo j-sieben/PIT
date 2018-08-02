@@ -55,6 +55,7 @@ as
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
     p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_description in pit_message.pms_description%type default null,
     p_pms_pmg_name in pit_message_group.pmg_name%type default null,
     p_pms_pml_name in pit_message.pms_pml_name%type default null,
     p_error_number in pit_message.pms_custom_error%type default null);
@@ -71,7 +72,8 @@ as
   procedure translate_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type);
+    p_pms_pml_name in pit_message.pms_pml_name%type,
+    p_pms_description in pit_message.pms_description%type default null);
     
     
   /* Procedure to remoce a single pit_message. Will delete all translations as well

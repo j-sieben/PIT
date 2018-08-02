@@ -123,13 +123,12 @@ show errors
 prompt &s1.Create internal messages
 @core/messages/&DEFAULT_LANGUAGE./create_messages.sql
 
+prompt &s1.Create default parameters
+@core/create_parameters.sql
+
 prompt &s1.Create package MSG
 @&plsql_dir.msg.pks
 show errors
-
-
-prompt &s1.Create default parameters
-@core/create_parameters.sql
 
 prompt &s1.Create package PIT
 @&plsql_dir.pit.pks

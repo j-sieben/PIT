@@ -26,6 +26,8 @@ as
   /**** GLOBAL VARS ****/
   g_user varchar2(30);
   g_predefined_errors predefined_error_t;
+  g_error_prefix varchar2(5 byte);
+  g_error_postfix varchar2(5 byte);
   
   
   /**** HELPER ****/
@@ -43,9 +45,11 @@ as
              -- don't convert to numbers here as it's possible that conversion errors occur
              trim(replace(substr(init, instr(init, ',') + 1), '''', '')) error_number,
              trim(substr(init, 1, instr(init, ',') - 1)) error_name
-        from errors;
+        from errors
+       where trim(substr(init, 1, instr(init, ',') - 1)) is not null;
     l_predefined_error predefined_error_rec;
-    l_error_number number;
+    l_error_number pls_integer;
+    l_prefix_length pls_integer;
   begin
     -- scan all_source view for predefined Oracle errors
     for err in predefined_errors_cur loop
@@ -63,6 +67,23 @@ as
     end loop;
     -- set package vars
     g_user := user;
+    g_error_prefix := param.get_string('ERROR_PREFIX', c_parameter_group);
+    if g_error_prefix is not null then
+      g_error_prefix := g_error_prefix || '_';
+    end if;
+    g_error_postfix := param.get_string('ERROR_POSTFIX', c_parameter_group);
+    if g_error_postfix is not null then
+      g_error_postfix := '_' || g_error_postfix;
+    end if;
+    
+    l_prefix_length := coalesce(length(g_error_prefix), 0) + coalesce(length(g_error_postfix), 0);
+    case when l_prefix_length > 4 then
+      raise_application_error(-20000, 'Length of Prefix and Postfix together may not exceed 2 characters or each may not exceed 3 characters when used alone.');
+    when l_prefix_length = 0 then
+      raise_application_error(-20000, 'At least one of Error and Postfix-Prefix has to be defined.');
+    else 
+      null;
+    end case;
   end initialize;
   
   
@@ -73,7 +94,6 @@ as
   begin
     return g_user;
   end get_user;
-  
   
   
   /**** TEXT FUNCTIONS ****/
@@ -154,6 +174,15 @@ as
   end harmonize_name;
   
   
+  function get_error_name(
+    p_pms_name in pit_message.pms_name%type)
+    return varchar2
+  as
+  begin
+    return g_error_prefix || p_pms_name || g_error_postfix;
+  end get_error_name;
+  
+  
   /**** VALIDATION ****/
   procedure check_error(
     p_pms_name in pit_message.pms_name%type,
@@ -162,6 +191,8 @@ as
     l_predefined_error predefined_error_rec;
     l_message varchar2(2000);
     l_message_length binary_integer;
+    l_error_regexp varchar2(1000);
+    c_error_regexp constant varchar2(100) := q'~^(#NAME#|#NAME#_ERR)$~';
     c_msg_too_long constant varchar2(200) := 
       q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
     c_predefined_error constant varchar2(200) :=
@@ -175,13 +206,16 @@ as
        raise_application_error(-20000, l_message);
     end if;
     if g_predefined_errors.exists(p_pms_custom_error) then
-      l_predefined_error := g_predefined_errors(p_pms_custom_error);
-      l_message := pit_util.bulk_replace(c_predefined_error, char_table(
-                     '#ERROR#', p_pms_custom_error,
-                     '#NAME#', l_predefined_error.error_name,
-                     '#OWNER#', l_predefined_error.owner,
-                     '#PKG#', l_predefined_error.package_name));
-      raise_application_error(-20000, l_message);
+      l_error_regexp := replace(c_error_regexp, '#NAME#', p_pms_name);
+      if not regexp_like(g_predefined_errors(p_pms_custom_error).error_name, l_error_regexp) then
+        l_predefined_error := g_predefined_errors(p_pms_custom_error);
+        l_message := pit_util.bulk_replace(c_predefined_error, char_table(
+                       '#ERROR#', p_pms_custom_error,
+                       '#NAME#', l_predefined_error.error_name,
+                       '#OWNER#', l_predefined_error.owner,
+                       '#PKG#', l_predefined_error.package_name));
+        raise_application_error(-20000, l_message);
+      end if;
     end if;
   end check_error;
   

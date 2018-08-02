@@ -4,6 +4,8 @@ alter session set current_schema=&INSTALL_USER.;
 
 prompt &section.
 
+prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Deinstallation
+
 prompt &h1.Deinstall OUTPUT-MODULES
 prompt &h2.Module PIT_CONSOLE
 @modules/pit_console/sql/clean_up.sql
@@ -18,7 +20,6 @@ prompt &h2.Module PIT_MAIL
 prompt &h2.Module PIT_TEST
 @modules/pit_test/sql/clean_up.sql
 
-prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Deinstallation
 prompt &h1.Deinstall CORE Functionality
 @core/clean_up_install.sql
 alter session set current_schema=&REMOTE_USER.;

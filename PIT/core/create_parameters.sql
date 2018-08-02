@@ -55,6 +55,24 @@ begin
 ^')
   );
 
+  param_admin.edit_parameter(
+    p_par_id => 'ERROR_PREFIX'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Optional prefix for exception constant names'
+   ,p_par_string_value => q'^^'
+   ,p_par_validation_string => 'length(#STRING_VALUE#) < 4'
+   ,p_par_validation_message => 'Prefix length must not exceed 3 characters'
+  );
+  
+  param_admin.edit_parameter(
+    p_par_id => 'ERROR_POSTFIX'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Optional postfix for exception constant names'
+   ,p_par_string_value => q'^ERR^'
+   ,p_par_validation_string => 'length(#STRING_VALUE#) < 4'
+   ,p_par_validation_message => 'Postfix length must not exceed 3 characters'
+  );
+  
   pit_admin.create_named_context(
     p_context_name => 'CONTEXT_DEBUG',
     p_settings => '70|50|Y|PIT_CONSOLE',
