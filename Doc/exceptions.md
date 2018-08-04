@@ -1,6 +1,8 @@
 # Throwing and catching exceptions with PIT
 
-After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Let's have a look at how we can work with these errors in PIT.
+After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Exception follow a namig guideline that is parameterizable. As per default, any exception is derived from `<MESSAGE_NAME>_ERR`, but you're free to set your own pre- and postfix parameters (`PIT.ERROR_PREFIX`and `PIT.ERROR_POSTFIX`). The overall length of the name extension (including underscores) is limited to 4, though.
+
+Let's have a look at how we can work with these errors in PIT.
 
 ## Throwing errors
 
@@ -8,7 +10,7 @@ To throw an error, there are two different ways with specific advantages.
 
 ### Throwing errors using `raise`
 
-When using the `raise` command, it's very easy to throw an error: 
+With the `raise` command, it's very easy to throw an error: 
 
 ```
 begin
@@ -93,6 +95,7 @@ end;
 ## Throwing errors with `pit.log_special`
 
 Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. They were included in PIT after the demand came up to reuse the message capabilites beyond the boundaries of normal error logging. One example is a Finite State Machine I needed. This pattern had to log all status changes into a log table, including errors, reagrdless of any log settings. So the log entries for this machine were created using PIT, but aside the normal logging flow.
+
 
 Do not use it for normal logging. 
 
