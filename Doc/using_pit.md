@@ -206,7 +206,7 @@ What makes `pit.log_specific` exceptionally useful is its possibility to define 
 
 An optional parameter called `p_log_threshold` may be used to control a certain level of logging even within `pit.log_specific`. This allows you to reduce the amount of status messages on production systems if you like.
 
-Another interesting use case of `p_affected_id` came up when creating `utl_apex`, available here on GitHub as well. In the environment of validating user input, I decided to utilize this parameter to hold the ID of the input field the user edited content at. In the `pit_apex` output module I decided to look up the label of the passed in element id and try an replace an anchor called `#ITEM_LABEL#` with this label. This way, I could generically log element related exceptions with the element and at the same time include the element label in the error message. So my advice here is: Be creative!
+Another interesting use case of `p_affected_id` came up when creating [`utl_apex`](https://github.com/j-sieben/UTL_APEX), available here on GitHub as well. In the environment of validating user input, I decided to utilize this parameter to hold the ID of the input field the user edited content at. In the `pit_apex` output module I decided to look up the label of the passed in element id and try an replace an anchor called `#ITEM_LABEL#` with this label. This way, I could generically log element related exceptions with the element and at the same time include the element label in the error message. So my advice here is: Be creative!
 
 ## Using PIT to assert conditions
 
