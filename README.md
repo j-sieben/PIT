@@ -57,7 +57,7 @@ As you can see, the code amount for instrumentation is minimal, no need to hardc
 ### Messages
 PIT is centered around messages. A message basically consists of a message text, a language and a severity, optionally along with an Oracle exception number.
 
-Severities range from 20 (`LEVEL_FATAL`) to 70 (`LEVEL_VERBOSE`). Along with the severity there is a custom error number that you can assign to a message. These error numbers may reference Oracle error numbers with the exception of all those that have a predefined exception already, such as `NO_DATA_FOUND` or similar. By assigning an Oracle error number to a message, the Oracle error is automatically mapped to this message. If you provide no Oracle error number, PIT automatically creates a custom error for you, so you don't have to deal with -20.000 numbers anymore!
+Severities range from 20 (`LEVEL_FATAL`) to 70 (`LEVEL_VERBOSE`)or from `20` (`TRACEL_MANDATORY`) to `50` (`TRACE_ALL`) for tracing messages . Along with the severity there is a custom error number that you can assign to a message. These error numbers may reference Oracle error numbers with the exception of all those that have a predefined exception already, such as `NO_DATA_FOUND` or similar. By assigning an Oracle error number to a message, the Oracle error is automatically mapped to this message. If you provide no Oracle error number, PIT automatically creates a custom error for you, so you don't have to deal with -20.000 numbers anymore!
 
 Messages are ready for translation in any target language Oracle supports. To make it convenient to translate messages, all messages can be translated by calling method `pit_admin.translate_message` or they can be exported as XLIFF files ready to be translated using any XLIFF editor. After translation, the resulting XLIFF file is simply re-imported into PIT and you're done.
 
@@ -81,7 +81,7 @@ Messages are required in many places of a program. They may be used to
 - provide debug information
 - ...
  
-Being creative will lead to further use cases for PIT. Fi I use messages that simply contain a JSON-Template. Those messages obviously need no translation but as they are able to replace anchors within the message with CLOB parameters. They can be simply passed to the view layer (by calling `pit.print(msg.JSON_MSG, msg_args(clob_param));`) and replaced some of my other helper packages for the same purpose. Output modules which implement the print method take care of properly delivering content to the application of what size ever.
+ Being creative will lead to further use cases for PIT. Fi I use messages that simply contain a JSON-Template like `{"status":"#1#","message":"#2#"}`. Those messages obviously need no translation. But as they are able to replace anchors within the message with CLOB parameters, they can be used to write the outcome of even complex calculations to the view layer (by calling `pit.print(msg.JSON_MSG, msg_args(clob_param));`), replacing helper packages for the same purpose. Output modules which implement the print method take care of properly delivering content to the application of what size ever.
 Let's look at the requirements that derive from these use cases a bit closer.
 
 ### Output channels
@@ -109,9 +109,9 @@ More information on contexts can be found [here](https://github.com/j-sieben/PIT
 
 ### Toggle logging on and off based on package or method names
 
-With PIT, it's possible to create a white or black list of code units which toggle logging on or off. Imagine a predefined context `CONTEXT_ALL` which defines complete logging (`70|70|Y|PIT_CONSOLE:PIT_FILE`). Default logging is switched off. Then you can create a parameter called `TOGGLE_<Name>` with a value of `MY_PACKAGE|MY_OTHER_PACKAGE:CONTEXT_ALL`. If you enter one of these packages, PIT will set the context to `CONTEXT_ALL`, tracing anything from now on. Once you leave these packages, context will be switched back to defaut settings.
+With PIT, it's possible to create a white or black list of code units which toggle logging on or off. Imagine a predefined context `CONTEXT_ALL` which defines complete logging (`70|50|Y|PIT_CONSOLE:PIT_FILE`). As per default, logging is set to no logging at all, as you are in production environment. Then you can create a parameter called `TOGGLE_<Name>` with a value of `MY_PACKAGE|MY_OTHER_PACKAGE:CONTEXT_ALL`. If you enter one of these packages, PIT will set the context to `CONTEXT_ALL`, tracing anything from now on. Once you leave these packages, context will be switched back to defaut settings.
 
-You may have as many toggle parameters as you like. Plus, PIT offers a set of methods in the `pit_admin` package to create toggle for your code to avoid having to manually format the parameters accordingly.
+You may have as many toggle parameters as you like. Plus, PIT offers a set of methods in the `pit_admin` package to create toggles for your code to avoid having to manually format the parameters accordingly.
 
 ### Output modules
 Another aspect of flexibility is the possibility to easily extend or change output modules. This is accomplished by object oriented programming. PIT uses an object called `PIT_MODULE` as an abstract class for all output modules. If you install a new output module by inheriting from `PIT_MODULE` (`create type PIT_CONSOLE under PIT_MODULE ...`) this new module gets known to PIT and may be used immediately without having to change PIT itself.
@@ -130,13 +130,17 @@ To administer PIT, a dedicated administration package is provided. It provides m
  
 With these methods it's easy to maintain and extend an installation file during development to create new messages on the fly. If you do so, the deplyoment file is created just along with your activities. Alternatively, you may want to have `PIT_ADMIN` create an installation file containing all messages in the database for you.
 
+To make it even more convenient for you, I also added an APEX application that allows to maintain (create, edit, translate) messages and parameters, export their values by creating a downloadable script file withs calls to the `PIT_ADMIN`-API and see where any given message is referenced in the code.
+
 ## Extensibility
-PIT comes ready for usage with a bunch of output modules readily created. You may want to start your changes by reviewing the output modules and adjust their behaviour. Should an output module be missing, it's easy to create a new one based on the other modules that ship with PIT. I decided to create the necessary object types but only implement the bare minimum of functionality within these types, just enough to call helper packages that carry out the heavy lifting. This way you're not exposed to object oriented programming in PL/SQL more than absolutely necessary ... ;-)
-Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on `CLIENT_IDENTIFIER`, as this is the case in APEX environments, or to stick to the `USER` function to detect a specific user. Should this turn out to not be working for you, you may provide a new `SESSION_ADAPTER` that implements your method of detecting the session identity. Which `SESSION_ADAPTER` is used is based on parameters once again.
+PIT comes ready for usage with a bunch of output modules. You may want to start your changes by reviewing the output modules and adjust their behaviour. Should an output module be missing, it's easy to create a new one based on the other modules that ship with PIT. I decided to create the necessary object types but only implement the bare minimum of functionality within these types, just enough to call helper packages that carry out the heavy lifting. This way you're not exposed to object oriented programming in PL/SQL more than absolutely necessary ... ;-)
+
+Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on `CLIENT_IDENTIFIER`, as this is the case in APEX environments, or to stick to the `USER` function to detect a specific user. Should this turn out to not be working for you (e.g. in a proxy user environment), you may provide a new `SESSION_ADAPTER` that implements your method of detecting the session identity. Which `SESSION_ADAPTER` is used is parameterizable.
 
 ## What's more?
 ### Reusable Components
-PIT makes havy use of parameters. Parameters are organized in parameter groups of which PIT uses the parameter group `PIT`. These parameters are maintained by separate packages `PARAMS` and `PARAM_ADMIN` to retrieve and maintain parameter values in a mandator aware way. As this package, along with a generic parameter table, is accessible outside PIT, the parameter package may be used to organize all of your application parameters as well. The administrative package once again allows you to create and maintain parameters and to create a group of parameter files with all parameters including values in a single file per parameter group.
+PIT makes havy use of parameters. Parameters are organized in parameter groups of which PIT uses the parameter group `PIT`. These parameters are maintained by separate packages `PARAM` and `PARAM_ADMIN` to retrieve and maintain parameter values in a mandator aware way. As this package, along with a generic parameter table, is accessible outside PIT, the parameter package may be used to organize all of your application parameters as well. The administrative package once again allows you to create and maintain parameters and to export parameters by reating a group of parameter files with all parameters and their values in a file per parameter group.
+
 A second component that might be reused is a component to maintain globally managed contexts. In order to store parameters in a way that they are accessible cross-session, you need a globally accessed context. Whereas this type of context is very nice in that access to its information does not incur context switches from neither PL/SQL nor SQL, it's not all intuitive to use. A separate package `UTL_CONTEXT` allows for a smoother utilization of globally accessible contexts. Being a separate package it's easy to reuse this package for your own context requirements.
 
 ## Further reading
@@ -149,4 +153,4 @@ Details to throwing and catching Exceptions can be found [here](https://github.c
 
 To learn more about the concept of *Context* and *Toggles* read [Context and Toggles](https://github.com/j-sieben/PIT/blob/master/Doc/handling_contexts.md)
 
-Some advice on how to kep pace high with PIT can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/performance.md)
+Some advice on how to keep execution speed high with PIT can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/performance.md)

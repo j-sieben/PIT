@@ -1,6 +1,10 @@
 # Throwing and catching exceptions with PIT
 
-After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Let's have a look at how we can work with these errors in PIT.
+After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Exception follow a namig guideline that is parameterizable. As per default, any exception is derived from `<MESSAGE_NAME>_ERR`, but you're free to set your own pre- and postfix parameters (`PIT.ERROR_PREFIX`and `PIT.ERROR_POSTFIX`). The overall length of the name extension (including underscores) is limited to 4, though.
+
+Be aware that messages of severity `LEVEL_FATAL` and `LEVEL_ERROR` always get logged, regardless of any settings in the context. The only possibility from surpessing the output of these messages is to reduce the log threshold of an output module. After all, this is not a recommended practice, as you require to be informed about errors in your code anyway.
+
+Let's have a look at how we can work with these errors in PIT.
 
 ## Throwing errors
 
@@ -8,7 +12,7 @@ To throw an error, there are two different ways with specific advantages.
 
 ### Throwing errors using `raise`
 
-When using the `raise` command, it's very easy to throw an error: 
+With the `raise` command, it's very easy to throw an error: 
 
 ```
 begin
@@ -90,11 +94,9 @@ exception
 end;
 ```
 
-## Throwing errors with `pit.log_special`
+## Throwing errors with `pit.log_specific`
 
-Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. They were included in PIT after the demand came up to reuse the message capabilites beyond the boundaries of normal error logging. One example is a Finite State Machine I needed. This pattern had to log all status changes into a log table, including errors, reagrdless of any log settings. So the log entries for this machine were created using PIT, but aside the normal logging flow.
-
-Do not use it for normal logging. 
+Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. Do not use it for normal logging. 
 
 ## Overview of possibilities to throw and catch exceptions in PIT
 Here is a brief overview of the different possibilities of throwing and catching exceptions with PIT. It is assumed that the respective messages were created upfront with a severity of 20 or 30 and a matching Oracle error number, if applicable. Catching exceptions with `pit.sql_exception` or `pit.stop` is identical syntaxwise. The only difference is that `pit.stop` will throw the error after logging it, whereas `pit.sql_exception` will not.
@@ -189,18 +191,3 @@ exception
 end;
 ```
 Difference in the second option is that upon asserting you simply refer to a given message of severity `pit.level_error` or stronger. This is to be able to catch it's exception in the exception handler to divide between three `assert` methods which may be called in the called. In the exception block, the message is enriched with parameters, something that has been done in option 1 already. Option 1 therefore is slightly mor elegant in the exception block but more clumsy in the assertion block.
-
-### Throwing exceptions with `pit.log_specific`
-
-This method is used if certain messages require a defined set of output modules and a given severity. This method logs the message in any case, context control is overriden if parameter `p_log_threshold` is set. If the severity of the message is `level_error` or `level_fatal`, it won't throw an error that is catchable in the exception block. It will simply log the exception and continue. Use it in special cases only. The example shows its usage in an implementation of the *Finite State Machine* pattern. No matter what the settings are when this method is called, it will log this message anyway, using the `PIT_FSM` output module only. After it has been called, the context comes into play again, so normal logging continues.
-
-```
-begin
-  pit.log_specific(
-    p_message_name => msg.FSM_STATUS_CHANGED, 
-    p_arg_list => msg_args(p_status),
-    p_affected_id => p_fsm_id,
-    p_log_threshold => pit.level_verbose,
-    p_log_modules => 'PIT_FSM');
-end;
-```
