@@ -105,22 +105,29 @@ as
     p_message in message_type)
   as
     l_label varchar2(100);
+    l_message varchar2(1000);
   begin
     if valid_environment then
       if p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
         -- Get item label to include it into the message
-          with params as(
-               select v('APP_ID') application_id,
-                      v('PAGE_ID') page_id,
-                      p_message.affected_id item_name
-                 from dual)
-        select /*+ no_merge (params) */ label
-          into l_label
-          from apex_application_page_items
-        natural join params;
+        begin 
+             with params as(
+                  select v('APP_ID') application_id,
+                         v('APP_PAGE_ID') page_id,
+                         p_message.affected_id item_name
+                    from dual)
+           select /*+ no_merge (params) */ label
+             into l_label
+             from apex_application_page_items
+          natural join params;
+          l_message := replace(p_message.message_text, '#ITEM_LABEL#', l_label);
+        exception
+          when NO_DATA_FOUND then
+            l_message := replace(p_message.message_text, '#ITEM_LABEL#', p_message.affected_id);
+        end;
         
         apex_error.add_error(
-          p_message => replace(p_message.message_text, '#ITEM_LABEL#', l_label),
+          p_message => l_message,
           p_additional_info => p_message.message_description,
           p_page_item_name => p_message.affected_id,
           p_display_location => apex_error.c_inline_with_field_and_notif);

@@ -160,6 +160,7 @@ as
         join parameter_group g
           on p.par_pgr_id = g.pgr_id
        where g.pgr_id = p_pgr_id
+          or p_pgr_id is null
        order by p.par_id;
     l_script clob;
     l_chunk clob;

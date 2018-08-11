@@ -164,6 +164,7 @@ as
     p_message_pattern in varchar2)
   as
     l_messages clob;
+    l_file_name varchar2(100);
   begin
     pit.enter_mandatory(
       p_action => 'export_messages',
@@ -172,10 +173,16 @@ as
       
     l_messages := pit_admin.get_messages(
                     p_message_pattern => upper(p_message_pattern));
-                 
+    
+    case when p_message_pattern is not null then
+      l_file_name := 'Messages_' || replace(upper(p_message_pattern), '%') || '.sql';
+    else
+      l_file_name := 'Messages.sql';
+    end case;
+    
     download_clob(
       p_clob => l_messages,
-      p_file_name => 'Messages_' || upper(p_message_pattern) || '.sql');
+      p_file_name => l_file_name);
     
     pit.leave_mandatory;
   end export_messages;
@@ -322,7 +329,7 @@ as
   
   
   procedure export_parameter_group(
-    p_parameter_groups in varchar2)
+    p_parameter_groups in varchar2 default null)
   as
     l_pgr_list wwv_flow_global.vc_arr2;
     l_zip_file blob;
@@ -337,14 +344,23 @@ as
       
     l_pgr_list := apex_util.string_to_table(p_parameter_groups);
     
-    for i in l_pgr_list.first .. l_pgr_list.last loop
-      l_param_group_file := clob_to_blob(param_admin.export_parameter_group(l_pgr_list(i)));
+    if l_pgr_list.count > 0 then
+      for i in l_pgr_list.first .. l_pgr_list.last loop
+        l_param_group_file := clob_to_blob(param_admin.export_parameter_group(l_pgr_list(i)));
+        apex_zip.add_file(
+          p_zipped_blob => l_zip_file,
+          p_file_name => 'ParameterGroup_' || l_pgr_list(i) || '.sql',
+          p_content => l_param_group_file);
+        pit.verbose(msg.PAR_PGR_EXPORTED, msg_args(l_pgr_list(i)));
+      end loop;
+    else
+      l_param_group_file := clob_to_blob(param_admin.export_parameter_group(null));
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,
-        p_file_name => 'ParameterGroup_' || l_pgr_list(i) || '.sql',
+        p_file_name => 'ParameterGroup_ALL.sql',
         p_content => l_param_group_file);
-      pit.verbose(msg.PAR_PGR_EXPORTED, msg_args(l_pgr_list(i)));
-    end loop;
+      pit.verbose(msg.PAR_PGR_EXPORTED, msg_args('ALL'));
+    end if;
     apex_zip.finish(l_zip_file);
     
     download_blob(l_zip_file, c_zip_file_name);

@@ -12,6 +12,9 @@
 
 @init_apex.sql &1. &2. &3. &4.
 
+prompt &h1.Set installation grants
+@set_apex_grants.sql
+
 prompt
 prompt &section.
 prompt &h1.Installing APEX application

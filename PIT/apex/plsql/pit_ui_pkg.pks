@@ -127,13 +127,14 @@ as
     return varchar2;
 
   /* Prozedur export eine Liste von Parametergruppen
-   * %param p_parameter_groups ':'-separierte Liste der Parametergruppen, die 
-   *        exportiert werden sollen
+   * %param [p_parameter_groups] ':'-separierte Liste der Parametergruppen, die 
+   *                             exportiert werden sollen.Falls NULL, werden
+   *                             alle Parameter in eine einzelne Datei exportiert
    * %usage Wird aufgerufen, um eine gezippte Datei zu erhalten, die alle 
    *        angeforderten Parametergruppen als separate Dateien enthaelt.
    */
   procedure export_parameter_group(
-    p_parameter_groups in varchar2);
+    p_parameter_groups in varchar2 default null);
    
 end pit_ui_pkg;
 /

@@ -507,7 +507,7 @@ as
     cursor message_group_cur(
       p_message_pattern in varchar2,
       p_pmg_name in varchar2) is
-      select pmg_name, pmg_description
+      select distinct pmg_name, pmg_description
         from pit_message_group
         join (select pms_pmg_name
                 from pit_message
@@ -544,7 +544,7 @@ end;
     p_pmg_description => q'^#DESCRIPTION#^'
   );
 ~';
-    c_merge_template constant varchar2(200) := q'~
+    c_merge_template constant varchar2(1000) := q'~
   pit_admin.merge_message(
     p_pms_name => '#NAME#',
     p_pms_pmg_name => '#GROUP#',
