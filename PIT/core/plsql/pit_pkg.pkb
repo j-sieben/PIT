@@ -1,31 +1,31 @@
 create or replace package body pit_pkg
 as
   /************************* TYPE DECLARATIONS ********************************/
+  
   -- list of modules
-  type module_list_type is table of pit_module index by varchar2(30 char);
+  type module_list_type is table of pit_module index by pit_util.ora_name_type;
 
   -- all modules that could be instantiated
   g_all_modules module_list_type;
 
-  -- all modules which are available for logging
-  -- (meaning: status = msg.MODULE_INSTANTIATED)
+  -- all modules which are available for logging (meaning: status = msg.MODULE_INSTANTIATED)
   g_available_modules module_list_type;
 
   -- debug and trace settings, stored within a context
   type context_rec is record (
-    context_name varchar2(30),
-    settings varchar2(4000),
-    log_level pls_integer,
-    trace_level pls_integer,
+    context_name pit_util.ora_name_type,
+    settings pit_util.max_sql_char,
+    log_level binary_integer,
+    trace_level binary_integer,
     trace_timing boolean,
     active_log_modules module_list_type,
-    module_list varchar2(4000),
-    context_type varchar2(30),
+    module_list pit_util.max_sql_char,
+    context_type pit_util.ora_name_type,
     allow_toggle boolean,
     broadcast_context_switch boolean);
   g_ctx context_rec;
 
-  type named_ctx_list_tab is table of context_type index by varchar2(30);
+  type named_ctx_list_tab is table of context_type index by pit_util.ora_name_type;
   g_named_ctx_list named_ctx_list_tab;
 
   /* call stack */
@@ -34,63 +34,65 @@ as
 
   /************************* PACKAGE VARIABLES ********************************/
   /* parameter constants */
-  c_param_group constant varchar2(30 byte) := 'PIT';
-  c_base_module constant varchar2(30 byte) := 'PIT_MODULE';
+  c_package_owner constant pit_util.ora_name_type := '&INSTALL_USER.';
+  c_param_group constant pit_util.ora_name_type := 'PIT';
+  c_base_module constant pit_util.ora_name_type := 'PIT_MODULE';
 
   /* log level constants */
-  c_adapter_preference constant varchar2(30 byte) := 'ADAPTER_PREFERENCE';
+  c_adapter_preference constant pit_util.ora_name_type := 'ADAPTER_PREFERENCE';
 
   /* context constants */
-  c_global_context constant varchar2(30 byte) := substr('PIT_CTX_&INSTALL_USER.', 1, 30);
-  c_context_type constant varchar2(30 byte) := c_global_context || '_TYPE';
-  c_context_group constant varchar2(30 byte) := 'CONTEXT';
-  c_context_prefix constant varchar2(30 byte) := c_context_group || '_';
-  c_context_default constant varchar2(30 byte) := c_context_group || '_DEFAULT';
-  c_context_active constant varchar2(30 byte) := c_context_group || '_ACTIVE';
-  c_toggle_group constant varchar2(30 byte) := 'TOGGLE';
-  c_toggle_prefix constant varchar2(20) := c_toggle_group || '_';
-  c_allow_toggle constant varchar2(30 byte) := 'ALLOW_TOGGLE';
-  c_broadcast_context_switch constant varchar2(30 byte) := 'BROADCAST_CONTEXT_SWITCH';
-  c_pass_message constant varchar2(30 byte) := 'PIT_PASS_MESSAGE';
-  c_ctx_del char(1) := '|';
-  c_ctx_name_del char(1) := '@';
+  C_GLOBAL_CONTEXT constant pit_util.ora_name_type := substr('PIT_CTX_&INSTALL_USER.', 1, 30);
+  C_CONTEXT_TYPE constant pit_util.ora_name_type := C_GLOBAL_CONTEXT || '_TYPE';
+  C_CONTEXT_GROUP constant pit_util.ora_name_type := 'CONTEXT';
+  C_CONTEXT_PREFIX constant pit_util.ora_name_type := C_CONTEXT_GROUP || '_';
+  C_CONTEXT_DEFAULT constant pit_util.ora_name_type := C_CONTEXT_GROUP || '_DEFAULT';
+  C_CONTEXT_ACTIVE constant pit_util.ora_name_type := C_CONTEXT_GROUP || '_ACTIVE';
+  C_TOGGLE_GROUP constant pit_util.ora_name_type := 'TOGGLE';
+  C_TOGGLE_PREFIX constant varchar2(20) := C_TOGGLE_GROUP || '_';
+  C_ALLOW_TOGGLE constant pit_util.ora_name_type := 'ALLOW_TOGGLE';
+  C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
+  C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
+  C_CTX_DEL constant pit_util.flag_type := '|';
+  C_LIST_DEL constant pit_util.flag_type := ':';
+  C_CTX_NAME_DEL constant pit_util.flag_type := '@';
 
   /* adapter constants */
-  c_adapter_ok constant pls_integer := 1;
+  C_ADAPTER_OK constant binary_integer := 1;
 
   /* generic constants */
-  c_true constant char(1) := 'Y';
-  c_false constant char(1) := 'N';
-  c_split_regex constant varchar2(10) := '[^\|]+';
+  C_TRUE constant pit_util.flag_type := 'Y';
+  C_FALSE constant pit_util.flag_type := 'N';
+  C_SPLIT_REGEX constant varchar2(10) := '[^\|]+';
 
   /* "events" */
-  c_event_focus_all constant varchar2(10) := 'ALL';
-  c_event_focus_active constant varchar2(10) := 'ACTIVE';
+  C_EVENT_FOCUS_ALL constant varchar2(10) := 'ALL';
+  C_EVENT_FOCUS_ACTIVE constant varchar2(10) := 'ACTIVE';
 
-  c_context_event constant integer := 1;
-  c_log_event constant integer := 2;
-  c_purge_event constant integer := 3;
-  c_print_event constant integer := 4;
-  c_enter_event constant integer := 5;
-  c_leave_event constant integer := 6;
+  C_CONTEXT_EVENT constant integer := 1;
+  C_LOG_EVENT constant integer := 2;
+  C_PURGE_EVENT constant integer := 3;
+  C_PRINT_EVENT constant integer := 4;
+  C_ENTER_EVENT constant integer := 5;
+  C_LEAVE_EVENT constant integer := 6;
 
   -- defined here to avoid dependency from PIT
-  c_trace_mandatory constant integer := 20;
+  C_TRACE_MANDATORY constant integer := 20;
 
   /* package vars */
   g_active_adapter default_adapter;
-  g_language varchar2(30);
-  g_user_name varchar2(30);
+  g_language pit_util.ora_name_type;
+  g_user_name pit_util.ora_name_type;
   g_client_id varchar2(64);
 
 
   /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
-    p_event in integer,
+    p_event in binary_integer,
     p_event_focus in varchar2,
     p_call_stack in call_stack_type default null,
     p_date_before in date default null,
-    p_severity_greater_equal in number default null,
+    p_severity_greater_equal in binary_integer default null,
     p_message message_type default null);
     
 
@@ -107,7 +109,7 @@ as
       select to_char(type_name) type_name
         from all_types
        where supertype_name = c_base_module
-         and owner = '&INSTALL_USER.';
+         and owner = c_package_owner;
     c_stmt_template constant varchar2(100) := 'begin :i := new #MODULE#(); end;';
     l_stmt varchar2(200);
     l_module_instance pit_module;
@@ -133,18 +135,18 @@ as
       end if;
     end loop;
     if g_all_modules.count = 0 then
-       raise_application_error(-20000, 'No output modules instantiated.');
+      raise_application_error(-20000, 'No output modules instantiated.');
     end if;
   end load_modules;
 
 
-  /* Procedure to report all modules that have not succesfully loaded
+  /* Procedure to report all modules that have not been loaded succesfully
    * %usage This procedure is called after initialization of the output modules.
-   *        It will emit warnings for any module that has not loaded succesfully.
+   *        It will emit warnings for any module that has not been loaded succesfully.
    */
   procedure report_module_status
   as
-    l_idx varchar2(30);
+    l_idx pit_util.ora_name_type;
   begin
     l_idx := g_all_modules.first;
     while l_idx is not null loop
@@ -167,7 +169,7 @@ as
     return module_list_type
   as
     l_module_names args;
-    l_module varchar2(50);
+    l_module pit_util.ora_name_type;
     l_modules module_list_type;
   begin
     l_module_names := pit_util.string_to_table(p_requested_modules);
@@ -190,12 +192,12 @@ as
     p_settings in varchar2)
   as
   begin
-    g_ctx.settings := substr(p_settings, 1, instr(p_settings, c_ctx_name_del) - 1);
-    g_ctx.context_name := substr(g_ctx.settings, instr(p_settings, c_ctx_name_del) + 1);
-    g_ctx.log_level := to_number(regexp_substr(g_ctx.settings, c_split_regex, 1, 1));
-    g_ctx.trace_level := to_number(regexp_substr(g_ctx.settings, c_split_regex, 1, 2));
-    g_ctx.trace_timing := regexp_substr(g_ctx.settings, c_split_regex, 1, 3) = c_true;
-    g_ctx.module_list := regexp_substr(g_ctx.settings, c_split_regex, 1, 4);
+    g_ctx.settings := substr(p_settings, 1, instr(p_settings, C_CTX_NAME_DEL) - 1);
+    g_ctx.context_name := substr(g_ctx.settings, instr(p_settings, C_CTX_NAME_DEL) + 1);
+    g_ctx.log_level := to_number(regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 1));
+    g_ctx.trace_level := to_number(regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 2));
+    g_ctx.trace_timing := regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 3) = C_TRUE;
+    g_ctx.module_list := regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 4);
     g_ctx.active_log_modules := get_modules_by_name(g_ctx.module_list);
   end store_settings_locally;
 
@@ -209,17 +211,17 @@ as
   procedure set_active_context(
     p_settings in varchar2)
   as
-    l_raise_focus varchar2(30);
+    l_raise_focus pit_util.ora_name_type;
   begin
     if instr(p_settings, g_ctx.settings) = 0 then
       g_active_adapter.get_session_details(g_user_name, g_client_id);
       store_settings_locally(p_settings);
-      utl_context.set_value(c_global_context, c_context_active, g_ctx.settings, g_client_id);
+      utl_context.set_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, g_ctx.settings, g_client_id);
       case when g_ctx.broadcast_context_switch 
-        then l_raise_focus := c_event_focus_all;
-        else l_raise_focus := c_event_focus_active;
+        then l_raise_focus := C_EVENT_FOCUS_ALL;
+        else l_raise_focus := C_EVENT_FOCUS_ACTIVE;
       end case;
-      raise_event(c_context_event, l_raise_focus);
+      raise_event(C_CONTEXT_EVENT, l_raise_focus);
     end if;
   end set_active_context;
 
@@ -228,19 +230,19 @@ as
    * %return Settings for the package/method
    */
   function get_toggle_context(
-    p_module in varchar2,
-    p_method in varchar2)
+    p_module in pit_util.ora_name_type,
+    p_method in pit_util.ora_name_type)
     return varchar2
   as
     l_args args;
-    l_settings varchar2(4100);
+    l_settings pit_util.max_char;
   begin
     -- Check whether toggle for package/method exists.
     l_args := args(
-                substr(upper(c_toggle_prefix || p_module || '.' ||  p_method), 1, 30),
-                upper(c_toggle_prefix || p_module),
-                c_context_active, c_context_default);
-    l_settings := utl_context.get_first_match(c_global_context, l_args, true, g_client_id);
+                substr(upper(C_TOGGLE_PREFIX || p_module || '.' ||  p_method), 1, 30),
+                upper(C_TOGGLE_PREFIX || p_module),
+                C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
+    l_settings := utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id);
     return l_settings;
   end get_toggle_context;
 
@@ -252,7 +254,7 @@ as
     if g_ctx.allow_toggle then
       -- after raised event, check whether toggle context requires context switch
       case
-      when instr(p_settings, c_context_default) > 0 then
+      when instr(p_settings, C_CONTEXT_DEFAULT) > 0 then
         reset_active_context;
       when p_settings is not null then
         set_active_context(p_settings);
@@ -271,11 +273,11 @@ as
   procedure get_context_values
   as
     l_args args;
-    l_settings varchar2(4000);
+    l_settings pit_util.max_sql_char;
   begin
     g_active_adapter.get_session_details(g_user_name, g_client_id);
-    l_args := args(c_context_active, c_context_default);
-    l_settings := utl_context.get_first_match(c_global_context, l_args, true, g_client_id);
+    l_args := args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
+    l_settings := utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id);
     store_settings_locally(l_settings);
   end get_context_values;
 
@@ -287,22 +289,20 @@ as
    */
   procedure get_context_list
   as
-    c_list_del constant char(1 byte) := ':';
-    c_ctx_del constant char(1 byte) := '|';
     cursor context_cur is
         with toggles as (
-             select c_toggle_prefix ||
+             select C_TOGGLE_PREFIX ||
                     replace(to_char(substr(par_string_value, 1,
-                            instr(par_string_value, c_ctx_del) - 1)), c_list_del, c_list_del || c_toggle_prefix) tgl_name,
-                    c_context_prefix || to_char(substr(par_string_value, instr(par_string_value, c_ctx_del) + 1)) ctx_name
+                            instr(par_string_value, C_CTX_DEL) - 1)), C_LIST_DEL, C_LIST_DEL || C_TOGGLE_PREFIX) tgl_name,
+                    C_CONTEXT_PREFIX || to_char(substr(par_string_value, instr(par_string_value, C_CTX_DEL) + 1)) ctx_name
                from parameter_tab
-              where par_id like c_toggle_prefix || '%'
+              where par_id like C_TOGGLE_PREFIX || '%'
                 and par_pgr_id = c_param_group),
              contexts as (
              select par_id ctx_name,
                     to_char(par_string_value) string_value
                from parameter_tab
-              where par_id like c_context_prefix || '%'
+              where par_id like C_CONTEXT_PREFIX || '%'
                 and par_pgr_id = c_param_group
              )
       select to_char(tgl_name) name, c.string_value setting
@@ -312,9 +312,9 @@ as
       union all
       select ctx_name, string_value
         from contexts
-       where ctx_name != c_context_active;
+       where ctx_name != C_CONTEXT_ACTIVE;
     l_ctx context_type;
-    l_ctx_name varchar2(30);
+    l_ctx_name pit_util.ora_name_type;
   begin
     g_named_ctx_list.delete;
 
@@ -323,7 +323,7 @@ as
     -- Available Types: utl_contxt.c_...
     --   GLOBAL | FORCE_USER | ORCE_CLIENT_ID | FORCE_USER_CLIENT_ID |
     --   PREFER_CLIENT_ID | PREFER_USER_CLIENT_ID | SESSION
-    g_ctx.context_type := param.get_string(c_context_type, c_context_group);
+    g_ctx.context_type := param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP);
     if g_ctx.context_type not in (
                 utl_context.c_session,
                 utl_context.c_force_client_id,
@@ -333,13 +333,13 @@ as
 
     for ctx in context_cur loop
       -- Switch between Toggles and Contextes
-      if ctx.name like c_toggle_prefix || '%' then
-        for i in 1 .. regexp_count(ctx.name, ':') + 1 loop
-          l_ctx_name := regexp_substr(ctx.name, '[^:]+', 1, i);
-          utl_context.set_value(c_global_context, l_ctx_name, ctx.setting, g_client_id);
+      if ctx.name like C_TOGGLE_PREFIX || '%' then
+        for i in 1 .. regexp_count(ctx.name, C_LIST_DEL) + 1 loop
+          l_ctx_name := regexp_substr(ctx.name, '[^' || C_LIST_DEL || ']+', 1, i);
+          utl_context.set_value(C_GLOBAL_CONTEXT, l_ctx_name, ctx.setting, g_client_id);
         end loop;
       else
-        utl_context.set_value(c_global_context, ctx.name, ctx.setting, g_client_id);
+        utl_context.set_value(C_GLOBAL_CONTEXT, ctx.name, ctx.setting, g_client_id);
       end if;
     end loop;
   end get_context_list;
@@ -358,22 +358,23 @@ as
   as
     l_adapter_list args;
     l_adapter default_adapter;
-    l_idx varchar2(30);
+    l_idx pit_util.ora_name_type;
     c_stmt_template constant varchar2(200) := 'begin :a := new #ADAPTER#(); end;';
     l_stmt varchar2(200);
   begin
     l_adapter_list := pit_util.string_to_table(param.get_string(c_adapter_preference, c_param_group));
     l_idx := l_adapter_list.first;
+    
     while l_idx is not null loop
       begin
         l_stmt := replace(c_stmt_template, '#ADAPTER#', l_adapter_list(l_idx));
-        execute immediate  l_stmt using out l_adapter;
+        execute immediate l_stmt using out l_adapter;
       exception
         when others then
           -- ignore instantiation error
           dbms_output.put_line('Error instantiating adapter "' || l_adapter_list(l_idx) || '": ' || sqlerrm);
       end;
-      if l_adapter is not null and l_adapter.status = c_adapter_ok then
+      if l_adapter is not null and l_adapter.status = C_ADAPTER_OK then
         g_active_adapter := l_adapter;
         exit;
       end if;
@@ -389,10 +390,10 @@ as
   /************************** CALL STACK MAINTENANCE **************************/
   function check_context_toggle(
     p_trace_settings in varchar2,
-    p_last_entry in number)
+    p_last_entry in binary_integer)
     return varchar2
   as
-    l_trace_settings varchar2(4000);
+    l_trace_settings pit_util.max_sql_char;
   begin
     if g_ctx.allow_toggle then
       if p_last_entry = 0 then
@@ -445,7 +446,7 @@ as
           p_method_name => p_action,
           p_params => p_params,
           p_call_level => l_last_entry + 1,
-          p_trace_timing => case when g_ctx.trace_timing then c_true else c_false end,
+          p_trace_timing => case when g_ctx.trace_timing then C_TRUE else C_FALSE end,
           p_trace_settings => check_context_toggle(p_trace_settings, l_last_entry));
   end push_stack;
 
@@ -478,7 +479,7 @@ as
         case
         when p_call_stack.trace_settings is not null
          and l_predecessor.trace_settings is null then
-          p_new_trace_settings := c_context_default;
+          p_new_trace_settings := C_CONTEXT_DEFAULT;
         when p_call_stack.trace_settings != l_predecessor.trace_settings then
           p_new_trace_settings := l_predecessor.trace_settings;
         else
@@ -498,10 +499,10 @@ as
   procedure clean_stack
   as
     l_call_stack call_stack_type;
-    l_trace_settings varchar2(4000);
+    l_trace_settings pit_util.max_sql_char;
   begin
     for i in 1 .. g_call_stack.count loop
-      leave(c_trace_mandatory);
+      leave(C_TRACE_MANDATORY);
     end loop;
   end clean_stack;
 
@@ -517,24 +518,24 @@ as
    * %usage Called internally as a generic helper to throw messages to output modules
    */
   procedure raise_event(
-    p_event in integer,
+    p_event in binary_integer,
     p_event_focus in varchar2,
     p_call_stack in call_stack_type default null,
     p_date_before in date default null,
-    p_severity_greater_equal in number default null,
+    p_severity_greater_equal in binary_integer default null,
     p_message message_type default null)
   as
     pragma autonomous_transaction;
-    l_idx varchar2(50);
+    l_idx pit_util.ora_name_type;
     l_ctx pit_context;
     l_modules module_list_type;
-    l_trace_timing char(1 byte);
+    l_trace_timing pit_util.flag_type;
   begin
 
     case p_event_focus
-      when c_event_focus_all then
+      when C_EVENT_FOCUS_ALL then
         l_modules := g_available_modules;
-      when c_event_focus_active then
+      when C_EVENT_FOCUS_ACTIVE then
         l_modules := g_ctx.active_log_modules;
       else
       null;
@@ -545,19 +546,19 @@ as
     l_idx := l_modules.first;
     while l_idx is not null loop
       case p_event
-        when c_context_event then
-          l_trace_timing := case when g_ctx.trace_timing then c_true else c_false end;
+        when C_CONTEXT_EVENT then
+          l_trace_timing := case when g_ctx.trace_timing then C_TRUE else C_FALSE end;
           l_ctx := pit_context(g_ctx.log_level, g_ctx.trace_level, l_trace_timing, g_ctx.module_list);
           l_modules(l_idx).context_changed(l_ctx);
-        when c_log_event then
+        when C_LOG_EVENT then
           l_modules(l_idx).log(p_message);
-        when c_purge_event then
+        when C_PURGE_EVENT then
           l_modules(l_idx).purge(p_date_before, p_severity_greater_equal);
-        when c_print_event then
+        when C_PRINT_EVENT then
           l_modules(l_idx).print(p_message);
-        when c_enter_event then
+        when C_ENTER_EVENT then
           l_modules(l_idx).enter(p_call_stack);
-        when c_leave_event then
+        when C_LEAVE_EVENT then
           l_modules(l_idx).leave(p_call_stack);
         else
           null;
@@ -655,9 +656,9 @@ as
     g_language := sys_context('USERENV', 'LANGUAGE');
     g_language := substr(g_language, 1, instr(g_language, '_') - 1);
     g_call_stack.delete;
-    g_ctx.context_type := param.get_string(c_context_type, c_context_group);
-    g_ctx.allow_toggle := param.get_boolean(c_allow_toggle, c_param_group);
-    g_ctx.broadcast_context_switch := param.get_boolean(c_broadcast_context_switch, c_param_group);
+    g_ctx.context_type := param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP);
+    g_ctx.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, c_param_group);
+    g_ctx.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, c_param_group);
     load_modules;
     load_adapter;
     get_context_list;
@@ -668,11 +669,11 @@ as
 
   /* CORE */
   procedure log_event(
-    p_severity in integer,
-    p_message_name in varchar2,
+    p_severity in binary_integer,
+    p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
-    p_affected_id in varchar2,
-    p_module_list in varchar2)
+    p_affected_id in pit_util.max_sql_char,
+    p_module_list in pit_util.max_sql_char)
   as
     l_message message_type;
     l_module_list varchar2(2000);
@@ -689,8 +690,8 @@ as
       l_message.severity := p_severity;
 
       raise_event(
-        p_event => c_log_event,
-        p_event_focus => c_event_focus_active,
+        p_event => C_LOG_EVENT,
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
         p_message => l_message);
     
       if p_module_list is not null then
@@ -701,14 +702,14 @@ as
 
 
   procedure enter(
-    p_action in varchar2,
-    p_module in varchar2,
+    p_action in pit_util.ora_name_type,
+    p_module in pit_util.ora_name_type,
     p_params in msg_params,
-    p_trace_level in number,
+    p_trace_level in binary_integer,
     p_client_info in varchar2 default null)
   as
-    l_action varchar2(30) := p_action;
-    l_module varchar2(30) := p_module;
+    l_action pit_util.ora_name_type := p_action;
+    l_module pit_util.ora_name_type := p_module;
     l_trace_me boolean;
   begin
     l_trace_me := trace_me(p_trace_level);
@@ -732,8 +733,8 @@ as
 
     if l_trace_me then
       raise_event(
-        p_event => c_enter_event,
-        p_event_focus => c_event_focus_active,
+        p_event => C_ENTER_EVENT,
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
         p_call_stack => g_call_stack(g_call_stack.last));
     end if;
 
@@ -749,11 +750,11 @@ as
 
 
   procedure leave(
-    p_trace_level in number)
+    p_trace_level in binary_integer)
   is
     l_call_stack call_stack_type;
     l_trace_me boolean;
-    l_new_trace_settings varchar2(4000);
+    l_new_trace_settings pit_util.max_sql_char;
   begin
     l_trace_me := trace_me(p_trace_level);
 
@@ -767,8 +768,8 @@ as
       -- replace existing ID with new ID to allow for persitance
       l_call_stack.id := pit_log_seq.nextval;
       raise_event(
-        p_event => c_leave_event,
-        p_event_focus => c_event_focus_active,
+        p_event => C_LEAVE_EVENT,
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
         p_call_stack => l_call_stack);
     end if;
 
@@ -780,13 +781,13 @@ as
 
 
   procedure print(
-    p_message_name in varchar2,
+    p_message_name in pit_util.ora_name_type,
     p_arg_list msg_args default null)
   as
   begin
     raise_event(
-       p_event => c_print_event,
-       p_event_focus => c_event_focus_active,
+       p_event => C_PRINT_EVENT,
+       p_event_focus => C_EVENT_FOCUS_ACTIVE,
        p_message => get_message(p_message_name, null, p_arg_list));
   exception
     when others then
@@ -795,9 +796,9 @@ as
 
 
   procedure raise_error(
-    p_severity in number,
-    p_message_name varchar2,
-    p_affected_id in varchar2,
+    p_severity in binary_integer,
+    p_message_name pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args)
   as
     l_arg_list msg_args;
@@ -808,7 +809,7 @@ as
 
     -- If message is C_PASS_MESSAGE, it does not contain the original
     -- error number. Replace with active SQLCODE and get message from SQLERRM
-    if p_message_name = c_pass_message then
+    if p_message_name = C_PASS_MESSAGE then
       l_message.error_number := sqlcode;
       $IF dbms_db_version.ver_le_11 $THEN
       l_message.message_text := substr(sqlerrm, instr(sqlerrm, ' ') + 1);
@@ -823,9 +824,9 @@ as
 
 
   procedure handle_error(
-    p_severity in number,
-    p_message_name varchar2,
-    p_affected_id in varchar2,
+    p_severity in binary_integer,
+    p_message_name pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args)
   as
   begin
@@ -839,12 +840,12 @@ as
 
   procedure purge_log(
     p_date_before in date,
-    p_severity_greater_equal in number default null)
+    p_severity_greater_equal in binary_integer default null)
   as
   begin
     raise_event(
-          p_event => c_purge_event,
-          p_event_focus => c_event_focus_active,
+          p_event => C_PURGE_EVENT,
+          p_event_focus => C_EVENT_FOCUS_ACTIVE,
           p_date_before => p_date_before,
           p_severity_greater_equal => p_severity_greater_equal);
     exception
@@ -854,8 +855,8 @@ as
 
 
   function get_message(
-    p_message_name in varchar2,
-    p_affected_id in varchar2,
+    p_message_name in pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
     p_arg_list msg_args)
    return message_type
   as
@@ -874,7 +875,7 @@ as
 
 
   function get_message_text(
-    p_message_name in varchar2,
+    p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args default null)
     return clob
   as
@@ -899,19 +900,19 @@ as
 
 
   procedure set_context(
-    p_log_level in integer,
-    p_trace_level in integer,
+    p_log_level in binary_integer,
+    p_trace_level in binary_integer,
     p_trace_timing in boolean,
-    p_module_list in varchar2)
+    p_module_list in pit_util.max_sql_char)
   as
-    l_trace_timing char(1 byte);
-    l_trace_settings varchar2(2000);
+    l_trace_timing pit_util.flag_type;
+    l_trace_settings pit_util.max_sql_char;
   begin
-    l_trace_timing := case when p_trace_timing then c_true else c_false end;
-    l_trace_settings := pit_util.concatenate(char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), c_ctx_del);
-    pit_util.check_context_settings(c_context_active, l_trace_settings);
+    l_trace_timing := case when p_trace_timing then C_TRUE else C_FALSE end;
+    l_trace_settings := pit_util.concatenate(char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), C_CTX_DEL);
+    pit_util.check_context_settings(C_CONTEXT_ACTIVE, l_trace_settings);
     
-    set_active_context(l_trace_settings || c_ctx_name_del || c_context_active);
+    set_active_context(l_trace_settings || C_CTX_NAME_DEL || C_CONTEXT_ACTIVE);
   end set_context;
 
 
@@ -928,18 +929,18 @@ as
 
 
   procedure set_context(
-    p_context_name in varchar2)
+    p_context_name in pit_util.ora_name_type)
   as
-    l_context_name varchar2(30);
-    l_settings varchar2(4000);
+    l_context_name pit_util.ora_name_type;
+    l_settings pit_util.max_sql_char;
   begin
-    l_context_name := pit_util.harmonize_name(c_context_prefix, p_context_name);
-    if l_context_name = c_context_default then
+    l_context_name := pit_util.harmonize_name(C_CONTEXT_PREFIX, p_context_name);
+    if l_context_name = C_CONTEXT_DEFAULT then
       reset_active_context;
     else
-      l_settings := utl_context.get_value(c_global_context, l_context_name);
+      l_settings := utl_context.get_value(C_GLOBAL_CONTEXT, l_context_name);
       if l_settings is not null then
-        set_active_context(l_settings || c_ctx_name_del || l_context_name);
+        set_active_context(l_settings || C_CTX_NAME_DEL || l_context_name);
       else
         pit.fatal(msg.PIT_UNKNOWN_NAMED_CONTEXT, msg_args(p_context_name));
       end if;
@@ -952,21 +953,21 @@ as
 
   procedure reset_active_context
   as
-    l_raise_focus varchar2(30);
+    l_raise_focus pit_util.ora_name_type;
   begin
     g_active_adapter.get_session_details(g_user_name, g_client_id);
 
-    utl_context.clear_value(c_global_context, c_context_active, g_client_id);
+    utl_context.clear_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, g_client_id);
     get_context_values;
-    l_raise_focus := case when g_ctx.broadcast_context_switch then c_event_focus_all else c_event_focus_active end;
-    raise_event(c_context_event, l_raise_focus);
+    l_raise_focus := case when g_ctx.broadcast_context_switch then C_EVENT_FOCUS_ALL else C_EVENT_FOCUS_ACTIVE end;
+    raise_event(C_CONTEXT_EVENT, l_raise_focus);
   end reset_active_context;
 
 
   procedure reset_context
   as
   begin
-    utl_context.reset_context(c_global_context);
+    utl_context.reset_context(C_GLOBAL_CONTEXT);
     initialize;
   end reset_context;
 
@@ -976,17 +977,17 @@ as
     return pit_module_list
     pipelined
   as
-    l_idx varchar2(30 byte);
-    l_available char(1 byte);
-    l_active char(1 byte);
+    l_idx pit_util.ora_name_type;
+    l_available pit_util.flag_type;
+    l_active pit_util.flag_type;
   begin
     if g_all_modules.count > 0 then
       get_context_values;
       -- g_ctx.active_log_modules indexed by varchar2, therefore while loop is required
       l_idx := g_all_modules.first;
       while l_idx is not null loop
-        l_available := case when g_available_modules.exists(l_idx) then c_true else c_false end;
-        l_active := case when g_ctx.active_log_modules.exists(l_idx) then c_true else c_false end;
+        l_available := case when g_available_modules.exists(l_idx) then C_TRUE else C_FALSE end;
+        l_active := case when g_ctx.active_log_modules.exists(l_idx) then C_TRUE else C_FALSE end;
         pipe row(pit_module_meta(l_idx, l_available, l_active));
         l_idx := g_all_modules.next(l_idx);
       end loop;
@@ -999,7 +1000,7 @@ as
     return args
     pipelined
   as
-    l_idx varchar2(50);
+    l_idx pit_util.ora_name_type;
   begin
     get_context_values;
     -- g_ctx.active_log_modules indexed by varchar2, therefore while loop is required
@@ -1010,7 +1011,7 @@ as
     end loop;
     return;
   exception
-    when no_data_needed then
+    when NO_DATA_NEEDED then
        null;
     when others then
       pit.error(msg.PIT_FAIL_READ_MODULE_LIST);
@@ -1022,7 +1023,7 @@ as
     return args
     pipelined
   as
-    l_idx varchar2(50);
+    l_idx pit_util.ora_name_type;
   begin
     get_context_values;
     -- g_available_modules indexed by varchar2, therefore while loop is required
@@ -1033,7 +1034,7 @@ as
     end loop;
     return;
   exception
-    when no_data_needed then
+    when NO_DATA_NEEDED then
        null;
     when others then
       pit.error(msg.PIT_FAIL_READ_MODULE_LIST);

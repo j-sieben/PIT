@@ -1,5 +1,5 @@
 create table pit_message_group(
-  pmg_name varchar2(30 char),
+  pmg_name &ORA_NAME_TYPE.,
   pmg_description varchar2(200 char),
   constraint pk_pmg_id primary key(pmg_name)
 ) organization index;

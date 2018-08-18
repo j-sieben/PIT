@@ -1,13 +1,13 @@
 create or replace package body pit_console_pkg
 as
   /* Konstanten und Variablen */
-  c_param_group constant varchar2(20 char) := 'PIT';
-  c_pit_console constant varchar2(20) := 'PIT_CONSOLE';
-  c_fire_threshold constant varchar2(30 char) := c_pit_console || '_FIRE_THRESHOLD';
-  c_enter_template constant varchar2(30 char) := c_pit_console || '_ENTER_TEMPLATE';
-  c_leave_template constant varchar2(30 char) := c_pit_console || '_LEAVE_TEMPLATE';
-  c_message_template constant varchar2(30 char) := c_pit_console || '_MSG_TEMPLATE';
-  c_level_indicator  constant varchar2(30 char) := c_pit_console || '_LEVEL_INDICATOR';
+  C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
+  C_PIT_CONSOLE constant varchar2(20) := 'PIT_CONSOLE';
+  C_FIRE_THRESHOLD constant varchar2(30 char) := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
+  C_ENTER_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_ENTER_TEMPLATE';
+  C_LEAVE_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_LEAVE_TEMPLATE';
+  C_MESSAGE_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_MSG_TEMPLATE';
+  C_LEVEL_INDICATOR  constant varchar2(30 char) := C_PIT_CONSOLE || '_LEVEL_INDICATOR';
 
   g_message_template varchar2(2000);
   g_enter_template varchar2(2000);
@@ -20,10 +20,10 @@ as
   procedure initialize
   as
   begin
-    g_message_template := param.get_string(c_message_template, c_param_group);
-    g_enter_template := param.get_string(c_enter_template, c_param_group);
-    g_leave_template := param.get_string(c_leave_template, c_param_group);
-    g_level_indicator := param.get_string(c_level_indicator, c_param_group);
+    g_message_template := param.get_string(C_MESSAGE_TEMPLATE, C_PARAM_GROUP);
+    g_enter_template := param.get_string(C_ENTER_TEMPLATE, C_PARAM_GROUP);
+    g_leave_template := param.get_string(C_LEAVE_TEMPLATE, C_PARAM_GROUP);
+    g_level_indicator := param.get_string(C_LEVEL_INDICATOR, C_PARAM_GROUP);
   end initialize;
 
   /* Helper to print a message to the console
@@ -54,10 +54,10 @@ as
   as
     l_unit_name varchar2(61);
     l_indent varchar2(2000);
-    l_indent_length number;
+    l_indent_length binary_integer;
     l_timing varchar2(100);
-    l_message varchar2(32767);
-    l_postfix varchar2(32767);
+    l_message pit_util.max_char;
+    l_postfix pit_util.max_char;
     l_param varchar2(1000);
     c_etc constant char(1 char) := '…';
   begin
@@ -142,7 +142,7 @@ as
     self in out pit_console)
   as
   begin
-    self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
+    self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
     self.status := msg.PIT_MODULE_INSTANTIATED;
   exception
     when others then

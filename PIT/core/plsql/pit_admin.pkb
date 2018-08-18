@@ -1,29 +1,29 @@
 create or replace package body pit_admin
 as
 
-  /************************* TYPE DEFINITIONS *********************************/
+  /************************* TYPE DEFINITIONS *********************************/    
   type predefined_error_rec is record(
-    source_type varchar2(30),
-    owner varchar2(30),
-    package_name varchar2(30),
-    error_name varchar2(30));
+    source_type pit_util.ora_name_type,
+    owner pit_util.ora_name_type,
+    package_name pit_util.ora_name_type,
+    error_name pit_util.ora_name_type);
   type predefined_error_t is table of predefined_error_rec index by binary_integer;
   
   
   /************************* PACKAGE VARIABLES ********************************/
   g_predefined_errors predefined_error_t;
-  g_default_language varchar2(30);
+  g_default_language pit_util.ora_name_type;
 
-  c_pkg constant varchar2(30 byte) := $$PLSQL_UNIT;
+  c_pkg constant pit_util.ora_name_type := $$PLSQL_UNIT;
   c_parameter_group constant varchar2(5) := 'PIT';
   c_context_group constant varchar2(30) := 'CONTEXT';
   c_context_prefix constant varchar2(30) := c_context_group || '_';
   c_toggle_group constant varchar2(30) := 'TOGGLE';
   c_toggle_prefix constant varchar2(30) := c_toggle_group || '_';
-  c_true constant char(1 byte) := 'Y';
-  c_false constant char(1 byte) := 'N';
+  c_true constant pit_util.flag_type := 'Y';
+  c_false constant pit_util.flag_type := 'N';
   c_xliff_ns constant varchar2(100) := 'urn:oasis:names:tc:xliff:document:1.2';
-  c_del char(1 byte) := '|';
+  c_del pit_util.flag_type := '|';
   c_min_error constant number := -20999;
   c_max_error constant number := -20000;
   c_default_language constant number := 10;
@@ -32,97 +32,12 @@ as
   -- ERROR messages
   c_error_already_assigned constant varchar2(200) := 'This Oracle error number is already assigned to message #ERRNO#';
   c_message_does_not_exist constant varchar2(200) := 'Message #MESSAGE# does not exist.';
-  c_error_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 26 chars for error messages';
-  c_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of 30 chars';
+  c_error_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of ' || to_char(pit_util.c_max_length - 4) || ' chars for error messages';
+  c_msg_name_too_long constant varchar2(200) := 'Message name exceeds maximum length of ' || to_char(pit_util.c_max_length) || ' chars';
 
 
   /********************** GENERIC HELPER FUNCTIONS ****************************/
-  /* Procedure to recompile invalid objects
-   * %usage Called internally when recreating MSG package to recompile packages
-   *        with dependencies on MSG
-   */
-  procedure recompile_invalid_objects
-  as
-    -- Constants
-    c_compile_error constant varchar2(200) := 'Error when compiling #TYPE# #OWNER#.#NAME#: #ERROR#';
-    c_invalid_object constant varchar2(200) := 'Invalid: #TYPE# #OWNER#.#NAME#';
-    c_compiled constant varchar2(200) := '#TYPE# #OWNER#.#NAME# compiled';
-    c_package constant varchar2(30 byte) := 'PACKAGE';
-    c_package_body constant varchar2(30 byte) := 'PACKAGE BODY';
-    c_recompile_stmt constant varchar2(1000) := q'^alter #TYPE# #OWNER#.#NAME# compile ^';
-    c_max_compile_runs constant number := 3;
 
-    -- Variables
-    l_stmt varchar2(1000);
-    l_index binary_integer;
-    l_no binary_integer;
-
-    -- Exceptions
-    compilation_error exception;
-    pragma exception_init(compilation_error, -24344);
-
-    -- Cursors
-    cursor invalid_objects_cur is
-      select distinct obj.owner, obj.object_name, obj.object_type, count(*) over () cnt,
-             case obj.object_type
-             when c_package then 1
-             when c_package_body then 2
-             else 2 end recompile_order
-        from all_dependencies dep
-        join all_objects obj
-          on dep.type = obj.object_type
-         and dep.name = obj.object_name
-       where obj.status != 'VALID'
-         and obj.owner = sys_context('USERENV', 'CURRENT_SCHEMA')
-         and obj.object_name != c_pkg
-       order by obj.object_name, recompile_order;
-  begin
-    l_index := dbms_application_info.set_session_longops_nohint;
-    for i in 1 .. c_max_compile_runs loop
-      dbms_output.put_line('compile Run ' || i);
-      for obj in invalid_objects_cur loop
-        l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
-                    '#OWNER#', obj.owner,
-                    '#TYPE#', replace(obj.object_type, ' BODY'),
-                    '#NAME#', obj.object_name));
-        dbms_application_info.set_session_longops(
-          l_index, l_no, 'Compiling ' || obj.object_type || obj.object_name, 0, 0, i, obj.cnt);
-        if i < c_max_compile_runs then
-          begin
-            case obj.object_type
-            when c_package_body then
-              execute immediate l_stmt || 'body';
-            else
-              execute immediate l_stmt;
-            end case;
-            dbms_output.put_line(
-              pit_util.bulk_replace(c_compiled, char_table(
-                '#TYPE#', obj.object_type,
-                '#OWNER#', obj.owner,
-                '#NAME#', obj.object_name)));
-          exception
-            when compilation_error then
-              null;
-            when others then
-              dbms_output.put_line(
-                pit_util.bulk_replace(c_compile_error, char_table(
-                  '#TYPE#', obj.object_type,
-                  '#OWNER#', obj.owner,
-                  '#NAME#', obj.object_name,
-                  '#ERROR#', sqlerrm)));
-          end;
-        else
-          dbms_output.put_line(
-            pit_util.bulk_replace(c_invalid_object, char_table(
-              '#TYPE#', obj.object_type,
-              '#OWNER#', obj.owner,
-              '#NAME#', obj.object_name)));
-        end if;
-      end loop;
-    end loop;
-  end recompile_invalid_objects;
-  
-  
   procedure initialize_error_list
   as
     cursor predefined_errors_cur is
@@ -135,17 +50,15 @@ as
                 and name not in ('PIT_ADMIN', 'PIT_UTIL'))
       select source_type, owner, package_name,
              -- don't convert to numbers here as it's possible that conversion errors occur
-             trim(replace(substr(init, instr(init, ',') + 1), '''', '')) error_number,
+             to_number(trim(replace(substr(init, instr(init, ',') + 1), '''', '')), '99999') error_number,
              trim(substr(init, 1, instr(init, ',') - 1)) error_name
         from errors
        where trim(substr(init, 1, instr(init, ',') - 1)) is not null;
     l_predefined_error predefined_error_rec;
-    l_error_number pls_integer;
   begin
     -- scan all_source view for predefined Oracle errors
     for err in predefined_errors_cur loop
       begin
-        l_error_number := to_number(err.error_number, '99999');
         l_predefined_error.source_type := err.source_type;
         l_predefined_error.owner := err.owner;
         l_predefined_error.package_name := err.package_name;
@@ -188,7 +101,7 @@ as
     end if;
     
     l_message_length := length(p_pms_name);
-    if l_message_length > 26 then
+    if l_message_length > pit_util.c_max_length - 4 then
       l_message := pit_util.bulk_replace(c_msg_too_long, char_table(
                      '#MESSAGE#', p_pms_name,
                      '#LENGTH#', l_message_length));
@@ -313,12 +226,14 @@ as
   as
     l_pms_name pit_message.pms_name%type;
     l_error_number pit_message.pms_custom_error%type;
+    c_fatal constant binary_integer := 20;
+    c_error constant binary_integer := 30;
   begin
     case
-    when p_pms_pse_id in (20,30) and p_error_number not between c_min_error and c_max_error then
+    when p_pms_pse_id in (c_fatal, c_error) and p_error_number not between c_min_error and c_max_error then
       check_error(p_pms_name, p_error_number);
       l_error_number := p_error_number;
-    when p_pms_pse_id in (20,30) then
+    when p_pms_pse_id in (c_fatal, c_error) then
       l_error_number := c_max_error;
     else
       null;
@@ -420,7 +335,7 @@ as
   as
     l_xliff xmltype;
     l_source_iso_code varchar2(10);
-    l_source_language varchar2(30);
+    l_source_language pit_util.ora_name_type;
     l_target_iso_code varchar2(10);
   begin
     select replace(utl_i18n.map_locale_to_iso(g_default_language, null), '_', '-') source_iso_language,
@@ -590,7 +505,7 @@ as
       execute immediate l_sql_text;
     end if;
 
-    recompile_invalid_objects;
+    pit_util.recompile_invalid_objects;
 
   end create_message_package;
 
@@ -602,7 +517,7 @@ as
   as
     cursor message_group_cur(
       p_message_pattern in varchar2,
-      p_pmg_name in varchar2) is
+      p_pmg_name in pit_message_group.pmg_name%type) is
       select distinct pmg_name, pmg_description
         from pit_message_group
         join (select pms_pmg_name
@@ -615,7 +530,7 @@ as
 
     cursor message_cur(
       p_message_pattern in varchar2,
-      p_pmg_name in varchar2) is
+      p_pmg_name in pit_message_group.pmg_name%type) is
       select m.*, rank() over (partition by pms_name order by pml_default_order) rang
         from pit_message m
         join pit_message_language ml
@@ -626,7 +541,7 @@ as
           or p_pmg_name is null)
        order by m.pms_name, ml.pml_default_order;
     l_script clob;
-    l_chunk varchar2(32767);
+    l_chunk pit_util.max_char;
     c_start constant varchar2(200) := q'~begin
 ~';
     c_end constant varchar2(200) := q'~
@@ -705,7 +620,7 @@ end;
   procedure write_message_file(
     p_directory in varchar2 default 'DATA_DIR')
   as
-    c_file_name constant varchar2(30) := 'messages.sql';
+    c_file_name constant pit_util.ora_name_type := 'messages.sql';
   begin
     dbms_xslprocessor.clob2file(get_messages, p_directory, c_file_name);
   end write_message_file;
@@ -719,12 +634,17 @@ end;
     p_module_list in varchar2,
     p_comment in varchar2 default null)
   as
-    l_trace_timing char(1 byte);
-    l_settings varchar2(4000);
+    l_trace_timing pit_util.flag_type;
+    l_settings pit_util.max_sql_char;
   begin
     l_trace_timing := case when p_trace_timing then c_true else c_false end;
-    l_settings := pit_util.concatenate(char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), c_del);
-    create_named_context(p_context_name, l_settings, p_comment);
+    l_settings := pit_util.concatenate(
+                    p_chunk_list => char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), 
+                    p_delimiter => c_del);
+    create_named_context(
+      p_context_name => p_context_name,
+      p_settings => l_settings, 
+      p_comment => p_comment);
   end create_named_context;
 
 
@@ -736,13 +656,15 @@ end;
     c_standard_comment constant varchar2(200) := ' [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]';
   begin
 
-    pit_util.check_context_settings(p_context_name, p_settings);
+    pit_util.check_context_settings(
+      p_context_name => p_context_name,
+      p_settings => p_settings);
 
     -- Create parameter
     param_admin.edit_parameter(
       p_par_id => pit_util.harmonize_name(c_context_prefix, p_context_name),
       p_par_pgr_id => c_parameter_group,
-      p_par_description => p_comment, -- || c_standard_comment,
+      p_par_description => replace(p_comment, c_standard_comment) || c_standard_comment,
       p_par_string_value => upper(p_settings));
   end create_named_context;
 
@@ -763,8 +685,8 @@ end;
     p_context_name in varchar2,
     p_comment in varchar2 default null)
   as
-    l_toggle_name varchar(30);
-    l_context_name varchar2(30);
+    l_toggle_name pit_util.ora_name_type;
+    l_context_name pit_util.ora_name_type;
   begin
 
     pit_util.check_toggle_settings(p_toggle_name, p_module_list, p_context_name);

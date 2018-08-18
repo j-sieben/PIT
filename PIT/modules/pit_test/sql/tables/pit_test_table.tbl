@@ -1,10 +1,10 @@
 create table pit_test_table(
   message_id number,
-  component varchar2(30),
-  outcome varchar2(30),
+  component &ORA_NAME_TYPE.,
+  outcome &ORA_NAME_TYPE.,
   message message_type,
   call_stack call_stack_type,
-  params varchar2(4000),
+  params varchar2(4000 byte),
   constraint pk_pit_test_table primary key(message_id)
 ) nested table call_stack.params store as pit_test_table_params;
 

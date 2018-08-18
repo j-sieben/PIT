@@ -2,7 +2,7 @@
 create table pit_log (
   log_id integer, 
   session_id varchar2(64 char),
-  user_name varchar2(30 byte),
+  user_name &ORA_NAME_TYPE.,
   log_date timestamp (6), 
   msg_text clob, 
   msg_stack varchar2(2000 char), 

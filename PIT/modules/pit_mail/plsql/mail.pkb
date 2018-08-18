@@ -1,19 +1,23 @@
 create or replace package body mail
 as
 
-  c_pkg constant varchar2(30) := $$PLSQL_UNIT;
+  subtype address_char is varchar2(200 char);
+
+  C_PKG constant pit_util.ora_name_type := $$PLSQL_UNIT;
+  C_BOUNDARY constant varchar2(100) := 'Your.Boundary.0987654321';
+  C_WALLET_PATH constant varchar2(2000) := 'file:<your Path to the wallet>';
+  C_WALLET_PWD constant varchar2(20) := '<WalletPWD>';
 
   cr varchar2(2) := utl_tcp.crlf;
   g_host varchar2(64);
   g_sender varchar2(200);
-  g_port pls_integer := 25;
+  g_port binary_integer := 25;
   g_usr varchar2(64);
   g_pwd varchar2(64);
   g_encoding varchar2(20);
   g_is_multipart_mail boolean := false;
-  c_boundary constant varchar2(100) := 'ConDeS.Boundary.0987654321';
   g_html_content_type varchar2(200);
-  g_multipart_content_type varchar2(200) := 'multipart/mixed; boundary=' || c_boundary;
+  g_multipart_content_type varchar2(200) := 'multipart/mixed; boundary=' || C_BOUNDARY;
 
   g_trace_text clob := '';
   g_prompt_flag boolean := false;
@@ -22,7 +26,7 @@ as
   function mail_server_access_granted
     return boolean
   as
-    l_access_granted pls_integer := 0;
+    l_access_granted binary_integer := 0;
   begin
     select count(*)
       into l_access_granted
@@ -44,15 +48,13 @@ as
   function mail_server_accessible
     return boolean
   as
-    c_wallet_path constant varchar2(2000) := 'file:C:\app\product\12.1.0\dbhome_1\owm\wallets\sieben';
-    c_wallet_pwd constant varchar2(20) := 'WalletPwd123!';
     tcpconnection utl_tcp.connection;
   begin
     tcpconnection := utl_tcp.open_connection(
                        remote_host => g_host,
                        remote_port => g_port,
-                       wallet_path => c_wallet_path,
-                       wallet_password => c_wallet_pwd);
+                       wallet_path => C_WALLET_PATH,
+                       wallet_password => C_WALLET_PWD);
     utl_tcp.close_connection(tcpconnection);
     pit.verbose(msg.MAIL_SERVER_ACCESSIBLE);
     return true;
@@ -69,7 +71,7 @@ as
   procedure initialize
   as
   begin
-    pit.enter_optional('initialize', c_pkg);
+    pit.enter_optional('initialize', C_PKG);
     select case value
              when 'AL32UTF8' then 'utf-8'
              else 'iso-8859-15' end char_set
@@ -147,7 +149,7 @@ as
     return varchar2
   as
     l_address varchar2(200);
-    l_idx pls_integer;
+    l_idx binary_integer;
   begin
     l_idx := instr(p_address, '<');
     if l_idx > 0 then
@@ -166,7 +168,7 @@ as
     l_result varchar2(200);
     l_quoted_name varchar2(200);
     l_mail_address varchar2(200) := p_address;
-    l_idx pls_integer;
+    l_idx binary_integer;
   begin
     pit.enter('encode_mail_address');
 
@@ -188,7 +190,7 @@ as
   procedure write_log(
     p_text in varchar2)
   as
-    l_text varchar2(32767);
+    l_text pit_util.max_char;
   begin
     l_text := p_text;
     case
@@ -235,7 +237,7 @@ as
     l_comment varchar2(2) := '--';
   begin
     if g_is_multipart_mail then
-      write_body(p_conn, l_comment || c_boundary || case p_last_boundary when 'Y' then l_comment else null end);
+      write_body(p_conn, l_comment || C_BOUNDARY || case p_last_boundary when 'Y' then l_comment else null end);
     end if;
   end write_boundary;
 
@@ -256,7 +258,7 @@ as
   procedure authenticate_via_plain(
     p_conn in out nocopy utl_smtp.connection)
   as
-    l_auth_string varchar2(32767);
+    l_auth_string pit_util.max_char;
   begin
     pit.verbose(msg.MAIL_LOGIN, msg_args('PLAIN', g_usr || '/' || g_pwd));
     utl_smtp.command(p_conn, 'AUTH PLAIN');
@@ -273,9 +275,9 @@ as
     p_conn out nocopy utl_smtp.connection)
   as
     l_reply utl_smtp.replies;
-    c_login constant varchar2(20) := 'LOGIN';
-    c_plain constant varchar2(20) := 'PLAIN';
-    c_ntlm constant varchar2(20) := 'NTLM';
+    C_LOGIN constant varchar2(10) := 'LOGIN';
+    C_PLAIN constant varchar2(10) := 'PLAIN';
+    C_NTLM constant varchar2(10) := 'NTLM';
   begin
     pit.enter('connect_mail_server');
 
@@ -286,7 +288,7 @@ as
         -- Check required authentication procedure
         pit.verbose(msg.MAIL_LOGIN_METHODS, msg_args(replace(l_reply(i).text, 'AUTH ', '')));
         case
-        when instr(l_reply(i).text, c_plain) > 0 then
+        when instr(l_reply(i).text, C_PLAIN) > 0 then
           authenticate_via_plain(p_conn);
         /*when instr(l_reply(i).text, mail_cram.c_hash_md5) > 0 then
           mail_cram.authenticate(
@@ -300,13 +302,13 @@ as
             p_hash_method => mail_cram.c_hash_sha1,
             p_user_name => g_usr,
             p_password => g_pwd);*/
-        /*when instr(l_reply(i).text, c_ntlm) > 0 then
+        /*when instr(l_reply(i).text, C_NTLM) > 0 then
           mail_ntlm.authenticate(
             p_conn => p_conn,
             p_host => g_host,
             p_user_name => g_usr,
             p_password => g_pwd);*/
-        when instr(l_reply(i).text, c_login) > 0 then
+        when instr(l_reply(i).text, C_LOGIN) > 0 then
           authenticate_via_login(p_conn);
         else
           raise utl_smtp.transient_error;
@@ -334,7 +336,7 @@ as
     p_recipients in mail.address_tab,
     p_cc_recipients in mail.address_tab)
   as
-    l_sender varchar2(200);
+    l_sender address_char;
   begin
     l_sender := extract_mail_address(coalesce(p_sender, g_sender));
     pit.enter('set_recipient_list');

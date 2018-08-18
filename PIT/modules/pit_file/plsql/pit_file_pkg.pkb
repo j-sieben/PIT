@@ -2,25 +2,25 @@ create or replace
 package body pit_file_pkg
 as
   /* Konstanten und Variablen */
-  type param_tab is table of varchar2(30)
-    index by varchar2(30);
+  type param_tab is table of pit_util.ora_name_type
+    index by pit_util.ora_name_type;
   g_param_list param_tab;
   
-  c_param_group constant varchar2(20) := 'PIT';
-  c_pit_file constant varchar2(30) := 'PIT_FILE';
-  c_fire_threshold constant varchar2(30) := c_pit_file || '_FIRE_THRESHOLD';
-  c_out_directory constant varchar2(30) := c_pit_file || '_DIRECTORY';
-  c_file_name constant varchar2(30) := c_pit_file || '_FILE_NAME';
-  c_enter_template constant varchar2(30 char) := c_pit_file || '_ENTER_TEMPLATE';
-  c_leave_template constant varchar2(30 char) := c_pit_file || '_LEAVE_TEMPLATE';
-  c_message_template constant varchar2(30 char) := c_pit_file || '_MSG_TEMPLATE';
-  c_level_indicator  constant varchar2(30 char) := c_pit_file || '_LEVEL_INDICATOR';
+  C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
+  C_PIT_FILE constant pit_util.ora_name_type := 'PIT_FILE';
+  C_FIRE_THRESHOLD constant pit_util.ora_name_type := C_PIT_FILE || '_FIRE_THRESHOLD';
+  C_OUT_DIRECTORY constant pit_util.ora_name_type := C_PIT_FILE || '_DIRECTORY';
+  C_FILE_NAME constant pit_util.ora_name_type := C_PIT_FILE || '_FILE_NAME';
+  C_ENTER_TEMPLATE constant pit_util.ora_name_type := C_PIT_FILE || '_ENTER_TEMPLATE';
+  C_LEAVE_TEMPLATE constant pit_util.ora_name_type := C_PIT_FILE || '_LEAVE_TEMPLATE';
+  C_MESSAGE_TEMPLATE constant pit_util.ora_name_type := C_PIT_FILE || '_MSG_TEMPLATE';
+  C_LEVEL_INDICATOR  constant pit_util.ora_name_type := C_PIT_FILE || '_LEVEL_INDICATOR';
   
-  c_write_append constant char(1) := 'A';  
-  c_write_replace constant char(1) := 'W';
-  c_enter_flag constant varchar2(5) := '> ';
-  c_leave_flag constant varchar2(5) := '< ';
-  c_level_sign constant char(1) := '.';
+  C_WRITE_APPEND constant pit_util.flag_type := 'A';  
+  C_WRITE_REPLACE constant pit_util.flag_type := 'W';
+  C_ENTER_FLAG constant varchar2(5) := '> ';
+  C_LEAVE_FLAG constant varchar2(5) := '< ';
+  C_LEVEL_SIGN constant char(1) := '.';
   
   g_dir varchar2(2000);
   g_filename varchar2(100);
@@ -28,7 +28,7 @@ as
   g_message_template varchar2(2000);
   g_enter_template varchar2(2000);
   g_leave_template varchar2(2000);
-  g_level_indicator varchar2(10);
+  g_level_indicator varchar2(100);
   
   /* Initialization
    * %usage Reads several parameters into global variables
@@ -36,10 +36,10 @@ as
   procedure initialize
   as
   begin
-    g_message_template := param.get_string(c_message_template, c_param_group);
-    g_enter_template := param.get_string(c_enter_template, c_param_group);
-    g_leave_template := param.get_string(c_leave_template, c_param_group);
-    g_level_indicator := param.get_string(c_level_indicator, c_param_group);
+    g_message_template := param.get_string(C_MESSAGE_TEMPLATE, C_PARAM_GROUP);
+    g_enter_template := param.get_string(C_ENTER_TEMPLATE, C_PARAM_GROUP);
+    g_leave_template := param.get_string(C_LEAVE_TEMPLATE, C_PARAM_GROUP);
+    g_level_indicator := param.get_string(C_LEVEL_INDICATOR, C_PARAM_GROUP);
   end initialize;
 
   
@@ -94,9 +94,9 @@ as
   as
     l_unit_name varchar2(61);
     l_indent varchar2(2000);
-    l_indent_length number;
+    l_indent_length binary_integer;
     l_timing varchar2(100);
-    l_message varchar2(32767);
+    l_message pit_util.max_char;
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;
@@ -137,10 +137,10 @@ as
   as
   begin
     close_file;
-    open_file(c_write_replace);
+    open_file(C_WRITE_REPLACE);
     write_to_file('');
     close_file;
-    open_file(c_write_append);
+    open_file(C_WRITE_APPEND);
   end purge;
   
   
@@ -164,11 +164,11 @@ as
     self in out pit_file)
   as
   begin
-    g_dir := param.get_string(c_out_directory, c_param_group);
-    g_filename := param.get_string(c_file_name, c_param_group);
+    g_dir := param.get_string(C_OUT_DIRECTORY, C_PARAM_GROUP);
+    g_filename := param.get_string(C_FILE_NAME, C_PARAM_GROUP);
     -- Test
-    open_file(c_write_append);
-    self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
+    open_file(C_WRITE_APPEND);
+    self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
     self.status := msg.PIT_MODULE_INSTANTIATED;
   exception
     when others then

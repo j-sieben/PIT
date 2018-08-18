@@ -1,13 +1,13 @@
 create table pit_message(
-   pms_name varchar2(30 char), 
-   pms_pmg_name varchar2(30 char),
-   pms_pml_name varchar2(30 char),
+   pms_name &ORA_NAME_TYPE., 
+   pms_pmg_name &ORA_NAME_TYPE.,
+   pms_pml_name &ORA_NAME_TYPE.,
    pms_text clob, 
    pms_description clob,
    pms_pse_id number(3,0),
    pms_custom_error number,
    pms_active_error number,
-   pms_id varchar2(50 char) generated always as (case pms_pml_name when '&DEFAULT_LANGUAGE.' then pms_name else null end) virtual,
+   pms_id &ORA_NAME_TYPE. generated always as (case pms_pml_name when '&DEFAULT_LANGUAGE.' then pms_name else null end) virtual,
    constraint pit_message_pk primary key (pms_name, pms_pml_name),
    constraint pms_id_u unique (pms_id),
    constraint pms_pmg_name_fk foreign key (pms_pmg_name)

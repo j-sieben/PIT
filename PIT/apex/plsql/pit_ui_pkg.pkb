@@ -1,9 +1,9 @@
 create or replace package body pit_ui_pkg 
 as
 
-  c_pkg constant varchar2(30 byte) := $$PLSQL_UNIT;
-  c_true constant char(1 byte) := 'Y';
-  c_false constant char(1 byte) := 'N';
+  C_PKG constant pit_util.ora_name_type := $$PLSQL_UNIT;
+  C_TRUE constant pit_util.flag_type := 'Y';
+  C_FALSE constant pit_util.flag_type := 'N';
   
   /* Hilfsfunktionen */
   -- TODO: Auslagern in UTIL-Package
@@ -12,12 +12,12 @@ as
     return blob
   as
     l_blob blob;
-    l_lang_context  integer := dbms_lob.DEFAULT_LANG_CTX;
-    l_warning       integer := dbms_lob.WARN_INCONVERTIBLE_CHAR;
-    l_dest_offset   integer := 1;
-    l_source_offset integer := 1;
+    l_lang_context binary_integer := dbms_lob.DEFAULT_LANG_CTX;
+    l_warning binary_integer := dbms_lob.WARN_INCONVERTIBLE_CHAR;
+    l_dest_offset binary_integer := 1;
+    l_source_offset binary_integer := 1;
   begin
-    pit.enter_detailed('clob_to_blob', c_pkg);
+    pit.enter_detailed('clob_to_blob', C_PKG);
     
     dbms_lob.createtemporary(l_blob, true, dbms_lob.call);
       dbms_lob.converttoblob (
@@ -43,7 +43,7 @@ as
   begin
     pit.enter_optional(
       p_action => 'download_blob', 
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(msg_param('p_file_name', p_file_name)));
     
     htp.init;
@@ -70,7 +70,7 @@ as
   begin
     pit.enter_optional(
       p_action => 'download_clob', 
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(msg_param('p_file_name', p_file_name)));
     
     l_blob := clob_to_blob(p_clob);
@@ -82,14 +82,14 @@ as
   
   /* INTERFACE */
   procedure set_language_settings(
-    p_pml_list in varchar2)
+    p_pml_list in pit_util.max_sql_char)
   as
     l_pml_list wwv_flow_global.vc_arr2;
     l_pml_default_order pit_message_language.pml_default_order%type;
   begin
     pit.enter_mandatory(
       p_action => 'set_language_settings',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(
                     msg_param('p_pml_list', p_pml_list)));
     
@@ -113,15 +113,15 @@ as
   
 
   procedure merge_message(
-    p_pms_name in varchar2,
-    p_pms_pml_name in varchar2,
+    p_pms_name in pit_util.ora_name_type,
+    p_pms_pml_name in pit_util.ora_name_type,
     p_pms_text in clob,
-    p_pms_pse_id in number,
-    p_pms_custom_error number) as
+    p_pms_pse_id in binary_integer,
+    p_pms_custom_error binary_integer) as
   begin
     pit.enter_mandatory(
       p_action => 'merge_message',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(
                     msg_param('p_pms_name', p_pms_name),
                     msg_param('p_pms_pml_name', p_pms_pml_name),
@@ -142,12 +142,12 @@ as
   
 
   procedure delete_message(
-    p_pms_name in varchar2,
-    p_pms_pml_name in varchar2) as
+    p_pms_name in pit_util.ora_name_type,
+    p_pms_pml_name in pit_util.ora_name_type) as
   begin
     pit.enter_mandatory(
       p_action => 'delete_message',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(
                     msg_param('p_pms_name', p_pms_name),
                     msg_param('p_pms_pml_name', p_pms_pml_name)));
@@ -161,14 +161,14 @@ as
   
     
   procedure export_messages(
-    p_message_pattern in varchar2)
+    p_message_pattern in pit_util.max_sql_char)
   as
     l_messages clob;
     l_file_name varchar2(100);
   begin
     pit.enter_mandatory(
       p_action => 'export_messages',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(msg_param('p_message_pattern', p_message_pattern)));
       
     l_messages := pit_admin.get_messages(
@@ -189,14 +189,14 @@ as
   
   
   procedure translate_messages(
-    p_target_language in varchar2,
-    p_message_pattern in varchar2)
+    p_target_language in pit_util.ora_name_type,
+    p_message_pattern in pit_util.max_sql_char)
   as
     l_xliff xmltype;
   begin
     pit.enter_mandatory(
       p_action => 'translate_messages',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(
                     msg_param('p_target_language', p_target_language),
                     msg_param('p_message_pattern', p_message_pattern)));
@@ -215,17 +215,17 @@ as
 
   /* NAMED CONTEXTS */
   procedure merge_named_context(
-    p_context_name in varchar2,
-    p_log_level in number,
-    p_trace_level in number,
-    p_trace_timing in varchar2,
-    p_module_list in varchar2,
-    p_comment in varchar2)
+    p_context_name in pit_util.ora_name_type,
+    p_log_level in binary_integer,
+    p_trace_level in binary_integer,
+    p_trace_timing in pit_util.flag_type,
+    p_module_list in pit_util.max_sql_char,
+    p_comment in pit_util.max_char)
   as
   begin
     pit.enter_mandatory(
       p_action => 'merge_named_context',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(
                     msg_param('p_context_name', p_context_name),
                     msg_param('p_log_level', to_char(p_log_level)),
@@ -238,7 +238,7 @@ as
       p_context_name => p_context_name,
       p_log_level => p_log_level,
       p_trace_level => p_trace_level,
-      p_trace_timing => p_trace_timing = c_true,
+      p_trace_timing => p_trace_timing = C_TRUE,
       p_module_list => p_module_list,
       p_comment => p_comment);
     
@@ -247,12 +247,12 @@ as
     
     
   procedure delete_named_context(
-    p_context_name in varchar2)
+    p_context_name in pit_util.ora_name_type)
   as
   begin
     pit.enter_mandatory(
       p_action => 'delete_named_context',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(msg_param('p_context_name', p_context_name)));
       
     pit_admin.remove_named_context(p_context_name);
@@ -263,15 +263,15 @@ as
   
   /* TOGGLES */
   procedure merge_context_toggle(
-    p_toggle_name in varchar2,
-    p_module_list in varchar2,
-    p_context_name in varchar2,
-    p_comment in varchar2)
+    p_toggle_name in pit_util.ora_name_type,
+    p_module_list in pit_util.max_sql_char,
+    p_context_name in pit_util.ora_name_type,
+    p_comment in pit_util.max_sql_char)
   as
   begin
     pit.enter_mandatory(
       p_action => 'merge_context_toggle',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(
                     msg_param('p_toggle_name', p_toggle_name),
                     msg_param('p_module_list', p_module_list),
@@ -289,12 +289,12 @@ as
   
   
   procedure delete_context_toggle(
-    p_toggle_name in varchar2)
+    p_toggle_name in pit_util.ora_name_type)
   as
   begin
     pit.enter_mandatory(
       p_action => 'delete_context_toggle',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(msg_param('p_toggle_name', p_toggle_name)));
     
     pit_admin.remove_context_toggle(p_toggle_name);
@@ -312,7 +312,7 @@ as
   begin
     pit.enter_mandatory(
       p_action => 'validate_is_integer',
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params => msg_params(msg_param('p_value', p_value)));
       
     if regexp_instr(p_value, '(,\.)', 1) > 0 then
@@ -329,17 +329,17 @@ as
   
   
   procedure export_parameter_group(
-    p_parameter_groups in varchar2 default null)
+    p_parameter_groups in pit_util.max_sql_char default null)
   as
     l_pgr_list wwv_flow_global.vc_arr2;
     l_zip_file blob;
     l_param_group_file blob;
     
-    c_zip_file_name constant varchar2(50) := 'Parameter_ALL.zip';
+    C_ZIP_FILE_NAME constant varchar2(50) := 'Parameter_ALL.zip';
   begin
     pit.enter_mandatory(
       p_action => 'export_parameter_group', 
-      p_module => c_pkg,
+      p_module => C_PKG,
       p_params=> msg_params(msg_param('p_parameter_groups', p_parameter_groups)));
       
     l_pgr_list := apex_util.string_to_table(p_parameter_groups);
@@ -363,7 +363,7 @@ as
     end if;
     apex_zip.finish(l_zip_file);
     
-    download_blob(l_zip_file, c_zip_file_name);
+    download_blob(l_zip_file, C_ZIP_FILE_NAME);
     
     pit.leave_mandatory;
   end export_parameter_group;

@@ -18,7 +18,7 @@ as
    *        Welce Uebersetzungen mit welchem Vorrang verwendet werden sollen.
    */
   procedure set_language_settings(
-    p_pml_list in varchar2);
+    p_pml_list in pit_util.max_sql_char);
     
   
   /* Prozedur zur Verwaltung von Meldungen
@@ -30,11 +30,11 @@ as
    * %usage Wird verwendet, um eine Meldung zu editieren oder zu erstellen
    */
   procedure merge_message(
-    p_pms_name in varchar2,
-    p_pms_pml_name in varchar2,
+    p_pms_name in pit_util.ora_name_type,
+    p_pms_pml_name in pit_util.ora_name_type,
     p_pms_text in clob,
-    p_pms_pse_id in number,
-    p_pms_custom_error number);
+    p_pms_pse_id in binary_integer,
+    p_pms_custom_error binary_integer);
     
   
   /* Prozedur zum Entfernen von Meldungen
@@ -45,8 +45,8 @@ as
    *        entfernt, ansonsten nur die angeforderte Uebersetzung.
    */
   procedure delete_message(
-    p_pms_name in varchar2,
-    p_pms_pml_name in varchar2);
+    p_pms_name in pit_util.ora_name_type,
+    p_pms_pml_name in pit_util.ora_name_type);
     
   
   /* Prozedur zum Exportieren von Meldungen
@@ -55,7 +55,7 @@ as
    * %usage Wird verwendet, um eine Datei zu erstellen und im Browser herunterzuladen.
    */
   procedure export_messages(
-    p_message_pattern in varchar2);
+    p_message_pattern in pit_util.max_sql_char);
   
   
   /* Prozedur zur Erstellung einer XLIFF-Datei mit allen angeforderten Meldungen
@@ -66,26 +66,26 @@ as
    * %usage Wird verwendet, um eine Datei zu erstellen und im Browser herunterzuladen.
    */
   procedure translate_messages(
-    p_target_language in varchar2,
-    p_message_pattern in varchar2);
+    p_target_language in pit_util.ora_name_type,
+    p_message_pattern in pit_util.max_sql_char);
     
   
   /* Prozedur zur Verwaltung benannter Kontexte
    * %param p_context_name Name des Kontextes
    * %param p_log_level Eingestellter Debugging-Level
    * %param p_trace_level Eingestellter Trace-Level
-   * %param p_trace_timing Flag, das anzeigt, ob Zeitinformationen erhoben werden sollen
+   * %param p_trace_timing Flag, das anzeigt, ob Zeitinformationen erhoben werden sollen (Y|N)
    * %param p_module_list Liste der Ausgabemodule, ':'-separiert
    * %param p_comment Beschreibung des Kontextes
    * %usage Wird verwendet, um einen Kontext zu administrieren
    */
   procedure merge_named_context(
-    p_context_name in varchar2,
-    p_log_level in number,
-    p_trace_level in number,
-    p_trace_timing in varchar2,
-    p_module_list in varchar2,
-    p_comment in varchar2);
+    p_context_name in pit_util.ora_name_type,
+    p_log_level in binary_integer,
+    p_trace_level in binary_integer,
+    p_trace_timing in pit_util.flag_type,
+    p_module_list in pit_util.max_sql_char,
+    p_comment in pit_util.max_char);
     
     
   /* Prozedur zum Loeschen eines Kontextes
@@ -93,7 +93,7 @@ as
    * %usage Wird verwendet, um einen Kontext zu loeschen
    */
   procedure delete_named_context(
-    p_context_name in varchar2);
+    p_context_name in pit_util.ora_name_type);
     
   
   /* Prozedur zur Erzeugung eines Kontext-Toggles
@@ -104,10 +104,10 @@ as
    * %usage Wird verwendet, um einen Kontext-Toggle zu erstellen.
    */
   procedure merge_context_toggle(
-    p_toggle_name in varchar2,
-    p_module_list in varchar2,
-    p_context_name in varchar2,
-    p_comment in varchar2);
+    p_toggle_name in pit_util.ora_name_type,
+    p_module_list in pit_util.max_sql_char,
+    p_context_name in pit_util.ora_name_type,
+    p_comment in pit_util.max_sql_char);
     
   
   /* Prozedur loescht einen bestehenden Kontext-Toggle
@@ -115,7 +115,7 @@ as
    * %usage Wird verwendet, um einen Toggle zu entfernen.
    */
   procedure delete_context_toggle(
-    p_toggle_name in varchar2);
+    p_toggle_name in pit_util.ora_name_type);
   
   
   /* Funktion prueft, ob uebergebene Zahl eine Ganzzahl ist
@@ -134,7 +134,7 @@ as
    *        angeforderten Parametergruppen als separate Dateien enthaelt.
    */
   procedure export_parameter_group(
-    p_parameter_groups in varchar2 default null);
+    p_parameter_groups in pit_util.max_sql_char default null);
    
 end pit_ui_pkg;
 /

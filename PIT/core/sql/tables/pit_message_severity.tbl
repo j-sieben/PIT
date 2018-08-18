@@ -1,6 +1,6 @@
 create table pit_message_severity(
   pse_id number,
-  pse_name varchar2(30 char),
+  pse_name &ORA_NAME_TYPE.,
   pse_display_name varchar2(50 char),
   constraint pit_message_severity_pk primary key(pse_id)
 ) organization index;

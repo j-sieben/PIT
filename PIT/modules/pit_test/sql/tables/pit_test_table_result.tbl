@@ -1,7 +1,7 @@
 create table pit_test_table_result(
-  test_id varchar2(30),
+  test_id &ORA_NAME_TYPE.,
   sort_seq number,
-  component varchar2(30),
+  component &ORA_NAME_TYPE.,
   params varchar2(200)
 );
 

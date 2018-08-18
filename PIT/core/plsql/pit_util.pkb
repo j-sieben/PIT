@@ -1,23 +1,23 @@
 create or replace package body pit_util
 as
 
-  /**** TYPE DECLARATIONS ****/
 
   /**** CONSTANTS ****/
-  c_name_too_long constant varchar2(200) := 'Toggle name is too long. Please use a maximum of 20 byte';
+  c_pkg constant ora_name_type := $$PLSQL_UNIT;
+  c_name_too_long constant varchar2(200) := 'Toggle name is too long. Please use a maximum of ' || (c_max_length - 10) || ' byte';
   c_wrong_pattern constant varchar2(2000) := '#WHAT# not correct. Please use a valid format as described in the documentation. Checked: #PATTERN#';
   c_context_not_existing constant varchar2(200) := 'The context name you entered does not exist. Please create the named context first.';
   
   c_parameter_group constant varchar2(5) := 'PIT';
-  c_context_group constant varchar2(30) := 'CONTEXT';
-  c_context_prefix constant varchar2(30) := c_context_group || '_';
+  c_context_group constant ora_name_type := 'CONTEXT';
+  c_context_prefix constant ora_name_type := c_context_group || '_';
   
   c_true constant char(1 byte) := 'Y';
   c_false constant char(1 byte) := 'N';
   
   
   /**** GLOBAL VARS ****/
-  g_user varchar2(30);
+  g_user ora_name_type;
   g_error_prefix varchar2(5 byte);
   g_error_postfix varchar2(5 byte);
   
@@ -25,7 +25,7 @@ as
   /**** HELPER ****/
   procedure initialize
   as
-    l_prefix_length pls_integer;
+    l_prefix_length binary_integer;
   begin
     -- set package vars
     g_user := user;
@@ -152,8 +152,8 @@ as
   as
     c_setting_regex constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(Y|N)\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|N\|))$';
   begin
-    -- context name must not be longer than 20 byte
-    if length(p_context_name) > 20 then 
+    -- context name must not be longer than 10 byte under C_MAX_LENGTH
+    if length(p_context_name) > c_max_length - 10 then 
       raise_application_error(-20000, c_name_too_long);
     end if;
     -- check context pattern
@@ -173,12 +173,12 @@ as
     p_module_list in varchar2,
     p_context_name in varchar2)
   as
-    l_context_name varchar2(30);
+    l_context_name ora_name_type;
     l_exists char(1);
     c_module_regex constant varchar2(200) := '^[A-Z_$#.]+(\:[A-Z_$#.]+)*$';
   begin
-    -- toggle name must not be longer than 20 byte
-    if length(p_toggle_name) > 20 then 
+    -- toggle name must not be longer than 10 byte under C_MAX_LENGTH
+    if length(p_toggle_name) > c_max_length - 10 then 
       raise_application_error(-20000, c_name_too_long);
     end if;
     -- check module pattern
@@ -201,6 +201,91 @@ as
     when no_data_found then
       raise_application_error(-20000, c_context_not_existing);      
   end check_toggle_settings;
+  
+  
+  procedure recompile_invalid_objects
+  as
+    -- Constants
+    c_compile_error constant varchar2(200) := 'Error when compiling #TYPE# #OWNER#.#NAME#: #ERROR#';
+    c_invalid_object constant varchar2(200) := 'Invalid: #TYPE# #OWNER#.#NAME#';
+    c_compiled constant varchar2(200) := '#TYPE# #OWNER#.#NAME# compiled';
+    c_type constant ora_name_type := 'TYPE';
+    c_type_body constant ora_name_type := 'TYPE BODY';
+    c_package constant ora_name_type := 'PACKAGE';
+    c_package_body constant ora_name_type := 'PACKAGE BODY';
+    c_recompile_stmt constant varchar2(1000) := q'^alter #TYPE# #OWNER#.#NAME# compile #POSTFIX#^';
+    c_max_compile_runs constant number := 3;
+
+    -- Variables
+    l_stmt varchar2(1000);
+    l_index binary_integer;
+    l_no binary_integer;
+
+    -- Exceptions
+    compilation_error exception;
+    pragma exception_init(compilation_error, -24344);
+
+    -- Cursors
+    cursor invalid_objects_cur is
+      select distinct obj.owner, obj.object_name, obj.object_type, count(*) over () cnt,
+             case obj.object_type
+             when c_type then 1
+             when c_type_body then 2
+             when c_package then 3
+             when c_package_body then 4
+             else 5 end recompile_order,
+             case when obj.object_type in (c_type_body, c_package_body) then 'body'
+             end recompile_postfix
+        from all_dependencies dep
+        join all_objects obj
+          on dep.type = obj.object_type
+         and dep.name = obj.object_name
+       where obj.status != 'VALID'
+         and obj.owner = sys_context('USERENV', 'CURRENT_SCHEMA')
+         and obj.object_name != c_pkg
+       order by obj.object_name, recompile_order;
+  begin
+    l_index := dbms_application_info.set_session_longops_nohint;
+    for i in 1 .. c_max_compile_runs loop
+      dbms_output.put_line('compile Run ' || i);
+      for obj in invalid_objects_cur loop
+        l_stmt := pit_util.bulk_replace(c_recompile_stmt, char_table(
+                    '#OWNER#', obj.owner,
+                    '#TYPE#', replace(obj.object_type, ' BODY'),
+                    '#NAME#', obj.object_name,
+                    '#POSTFIX#', obj.recompile_postfix));
+        dbms_application_info.set_session_longops(
+          l_index, l_no, 'Compiling ' || obj.object_type || obj.object_name, 0, 0, i, obj.cnt);
+        if i < c_max_compile_runs then
+          begin
+            execute immediate l_stmt;
+            dbms_output.put_line(
+              pit_util.bulk_replace(c_compiled, char_table(
+                '#TYPE#', obj.object_type,
+                '#OWNER#', obj.owner,
+                '#NAME#', obj.object_name)));
+          exception
+            when compilation_error then
+              null;
+            when others then
+              dbms_output.put_line(
+                pit_util.bulk_replace(c_compile_error, char_table(
+                  '#TYPE#', obj.object_type,
+                  '#OWNER#', obj.owner,
+                  '#NAME#', obj.object_name,
+                  '#ERROR#', sqlerrm)));
+          end;
+        else
+          dbms_output.put_line(
+            pit_util.bulk_replace(c_invalid_object, char_table(
+              '#TYPE#', obj.object_type,
+              '#OWNER#', obj.owner,
+              '#NAME#', obj.object_name)));
+        end if;
+      end loop;
+    end loop;
+  end recompile_invalid_objects;
+  
   
 begin
   initialize;

@@ -1,5 +1,23 @@
 create or replace package pit_util
+  authid definer
 as
+
+  /**** TYPE DECLARATIONS ****/
+  $IF dbms_db_version.ver_le_11 $THEN
+  c_max_length constant binary_integer := 30;
+  subtype ora_name_type is varchar2(30 byte);
+  $ELSIF dbms_db_version.ver_le_12_1 $THEN
+  c_max_length constant binary_integer := 30;
+  subtype ora_name_type is varchar2(30 byte);
+  $ELSE
+  c_max_length constant binary_integer := dbms_standard.ORA_MAX_NAME_LEN;
+  subtype ora_name_type is dbms_standard.dbms_id;
+  $END
+  -- As extende char length is stored as a length delimited CLOB, 
+  -- MAX_SQL_CHAR is still set to 4000 byte. Use CLOB otherwise
+  subtype max_sql_char is varchar2(4000 byte);
+  subtype max_char is varchar2(32767 byte);
+  subtype flag_type is char(1 byte);
 
   /* Getter for SYS.STANDARD.USER to avoid environment changes to SQL
    */
@@ -99,6 +117,13 @@ as
     p_toggle_name in varchar2,
     p_module_list in varchar2,
     p_context_name in varchar2);
+  
+  
+  /* Procedure to recompile invalid objects
+   * %usage Called internally when recreating MSG package to recompile packages
+   *        with dependencies on MSG
+   */
+  procedure recompile_invalid_objects;
     
 end pit_util;
 /

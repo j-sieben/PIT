@@ -6,10 +6,10 @@ as
    */
   /* PUBLIC PACKAGE TYPES */
   type context_type is record(
-    log_level number,
-    trace_level number,
+    log_level binary_integer,
+    trace_level binary_integer,
     trace_timing boolean,
-    log_modules varchar2(2000));
+    log_modules pit_util.max_sql_char);
     
 
   /* Initialization procedure
@@ -35,11 +35,11 @@ as
    *        log procedure of all active output modules and passes the message.
    */
   procedure log_event(
-    p_severity in integer,
-    p_message_name in varchar2,
+    p_severity in binary_integer,
+    p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
-    p_affected_id in varchar2,
-    p_module_list in varchar2);
+    p_affected_id in pit_util.max_sql_char,
+    p_module_list in pit_util.max_sql_char);
   
   
   /* Traces entering a procedure
@@ -56,10 +56,10 @@ as
    *        It will determine timing information and maintain a call stack.
    */
   procedure enter(
-    p_action in varchar2,
-    p_module in varchar2,
+    p_action in pit_util.ora_name_type,
+    p_module in pit_util.ora_name_type,
     p_params in msg_params,
-    p_trace_level in number,
+    p_trace_level in binary_integer,
     p_client_info in varchar2 default null);
 
   
@@ -69,7 +69,7 @@ as
    *        It will determine timing information and maintain a call stack.
    */
   procedure leave(
-    p_trace_level in number);  
+    p_trace_level in binary_integer);  
   
   
   /* Purges the message stack after a given point in time
@@ -82,7 +82,7 @@ as
    */
   procedure purge_log(
     p_date_before in date,
-    p_severity_greater_equal in number default null);
+    p_severity_greater_equal in binary_integer default null);
   
   
   /* Prints a message to the output modules. Used to pass user information
@@ -94,7 +94,7 @@ as
    *        print procedure of all active output modules and passes the message.
    */
   procedure print(
-    p_message_name in varchar2,
+    p_message_name in pit_util.ora_name_type,
     p_arg_list msg_args default null);
   
   
@@ -110,9 +110,9 @@ as
    *        called <MESSAGE_NAME>_ERR that can be used to capture the error.
    */
   procedure raise_error(
-    p_severity in number,
-    p_message_name varchar2,
-    p_affected_id in varchar2,
+    p_severity in binary_integer,
+    p_message_name pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args);
   
   
@@ -128,9 +128,9 @@ as
    *        called <MESSAGE_NAME>_ERR that can be used to capture the error.
    */
   procedure handle_error(
-    p_severity in number,
-    p_message_name varchar2,
-    p_affected_id in varchar2,
+    p_severity in binary_integer,
+    p_message_name pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args);
   
   
@@ -143,8 +143,8 @@ as
    *        constructs an instance of MESSAGE_TYPE and returns the message instance.
    */
   function get_message(
-    p_message_name in varchar2,
-    p_affected_id in varchar2,
+    p_message_name in pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
     p_arg_list msg_args)
     return message_type;
     
@@ -157,7 +157,7 @@ as
    *        constructs an instance of MESSAGE_TYPE and returns the message text.
    */
   function get_message_text(
-    p_message_name in varchar2,
+    p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args default null)
     return clob;
     
@@ -190,10 +190,10 @@ as
    *        for a given session.
    */
   procedure set_context(
-    p_log_level in integer,
-    p_trace_level in integer,
+    p_log_level in binary_integer,
+    p_trace_level in binary_integer,
     p_trace_timing in boolean,
-    p_module_list in varchar2);
+    p_module_list in pit_util.max_sql_char);
     
   
   /* Overloaded version that takes an instanvce of CONTEXT_TYPE-record as input parameter
@@ -210,7 +210,7 @@ as
    *        fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
    */
   procedure set_context(
-    p_context_name in varchar2);
+    p_context_name in pit_util.ora_name_type);
   
   
   /* Procedure to reset log settings to the default settings

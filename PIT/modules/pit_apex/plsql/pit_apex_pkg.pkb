@@ -11,27 +11,27 @@ as
   */
 
   /* CONSTANTS AND VARIABLES */
-  c_param_group    constant varchar2(20 char) := 'PIT';
-  c_fire_threshold constant varchar2(30 char) := 'PIT_APEX_FIRE_THRESHOLD';
-  c_trg_fire_threshold constant varchar2(30 char) := 'PIT_APEX_TRG_FIRE_THRESHOLD';
-  c_trg_trace_threshold constant varchar2(30 char) := 'PIT_APEX_TRG_TRACE_THRESHOLD';
-  c_trg_trace_timing constant varchar2(30 char) := 'PIT_APEX_TRG_TRACE_TIMING';
-  c_trg_log_modules constant varchar2(30 char) := 'PIT_APEX_TRG_LOG_MODULES';
-  c_yes constant varchar2(3 byte) := 'YES';
+  C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
+  C_FIRE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_FIRE_THRESHOLD';
+  C_TRG_FIRE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_TRG_FIRE_THRESHOLD';
+  C_TRG_TRACE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_TRG_TRACE_THRESHOLD';
+  C_TRG_TRACE_TIMING constant pit_util.ora_name_type := 'PIT_APEX_TRG_TRACE_TIMING';
+  C_TRG_LOG_MODULES constant pit_util.ora_name_type := 'PIT_APEX_TRG_LOG_MODULES';
+  C_YES constant varchar2(3 byte) := 'YES';
+  C_CHUNK_SIZE constant integer := 8192;
   
   g_apex_triggered_context pit_pkg.context_type;
-  c_chunk_size constant integer := 8192;
   g_fire_threshold number;
 
   /* HELPER */
   procedure initialize
   as
   begin
-    g_fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
-    g_apex_triggered_context.log_level := param.get_integer(c_trg_fire_threshold, c_param_group);
-    g_apex_triggered_context.trace_level := param.get_integer(c_trg_trace_threshold, c_param_group);
-    g_apex_triggered_context.trace_timing := param.get_boolean(c_trg_trace_timing, c_param_group);
-    g_apex_triggered_context.log_modules := param.get_string(c_trg_log_modules, c_param_group);
+    g_fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
+    g_apex_triggered_context.log_level := param.get_integer(C_TRG_FIRE_THRESHOLD, C_PARAM_GROUP);
+    g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
+    g_apex_triggered_context.trace_timing := param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP);
+    g_apex_triggered_context.log_modules := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
   end initialize;
   
 
@@ -52,10 +52,10 @@ as
    */
   function get_msg_param(
     p_call_stack in call_stack_type,
-    p_position in number)
+    p_position in binary_integer)
     return varchar2
   as
-    l_position number;
+    l_position binary_integer;
   begin
     l_position := round((p_position - 0.25)/2);
     if p_call_stack.params.exists(l_position) then
@@ -78,7 +78,7 @@ as
     p_message in message_type)
   as
     l_severity binary_integer range 1..7;
-    l_message varchar2(32767);
+    l_message pit_util.max_char;
   begin
     if valid_environment then
       l_severity := round(p_message.severity/10);
@@ -142,16 +142,16 @@ as
   
 
   /* helper procedure to pass clob to APEX, using htp.p
-   * clob is splitted into chunks of c_chunk_size bytes to circumvent the limitation
+   * clob is splitted into chunks of C_CHUNK_SIZE bytes to circumvent the limitation
    * of http-streams of 32 KByte
    */
   procedure print_clob(
     p_text in clob)
   as
-    l_offset integer := 1;
-    l_amount integer := c_chunk_size;
-    l_chunk varchar2(32767);
-    l_length integer := dbms_lob.getlength(p_text);
+    l_offset binary_integer := 1;
+    l_amount binary_integer := C_CHUNK_SIZE;
+    l_chunk pit_util.max_char;
+    l_length binary_integer := dbms_lob.getlength(p_text);
   begin
     if valid_environment then
       while l_length > 0 and p_text is not null loop
@@ -172,7 +172,7 @@ as
   procedure log(
     p_message in message_type)
   as
-    error_count integer;
+    error_count binary_integer;
   begin
     if valid_environment then
       -- Entscheidungsbaum zur Ausgabe der einzelnen Schweregrade
@@ -258,7 +258,7 @@ as
   as
   begin
     if valid_environment then
-      if v('DEBUG') = c_yes then
+      if v('DEBUG') = C_YES then
         pit_pkg.set_context(g_apex_triggered_context);
       else
         pit.reset_context;

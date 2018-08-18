@@ -1,22 +1,23 @@
 create or replace
 package body pit_mail_pkg
 as
-  g_con utl_smtp.connection;
-  g_mail_template clob;
   
   type param_tab is table of varchar2(32767)
     index by varchar2(30);
   g_param_list param_tab;
   
-  c_param_group constant varchar2(20) := 'PIT';
-  c_fire_threshold constant varchar2(30) := 'PIT_MAIL_FIRE_THRESHOLD';
-  c_template constant varchar2(30) := 'PIT_MAIL_TEMPLATE';
-  c_host constant varchar2(30) := 'PIT_MAIL_HOST';
-  c_from constant varchar2(30) := 'PIT_MAIL_FROM_ADDRESS';
-  c_to constant varchar2(30) := 'PIT_MAIL_TO_ADDRESS';
-  c_subject constant varchar2(30) := 'PIT_MAIL_SUBJECT';
+  C_PARAM_GROUP constant varchar2(20) := 'PIT';
+  C_FIRE_THRESHOLD constant pit_util.ora_name_type := 'PIT_MAIL_FIRE_THRESHOLD';
+  C_TEMPLATE constant pit_util.ora_name_type := 'PIT_MAIL_TEMPLATE';
+  C_HOST constant pit_util.ora_name_type := 'PIT_MAIL_HOST';
+  C_FROM constant pit_util.ora_name_type := 'PIT_MAIL_FROM_ADDRESS';
+  C_TO constant pit_util.ora_name_type := 'PIT_MAIL_TO_ADDRESS';
+  C_SUBJECT constant pit_util.ora_name_type := 'PIT_MAIL_SUBJECT';
   
-  c_return varchar2(10) := utl_tcp.crlf;
+  C_RETURN varchar2(10) := utl_tcp.crlf;
+  
+  g_con utl_smtp.connection;
+  g_mail_template clob;
   
   /* HELPER */
   /* Method to send header information for a mail
@@ -37,23 +38,23 @@ as
   procedure log(
     p_message in message_type)
   as
-    l_mail_text varchar2(32767);
+    l_mail_text pit_util.max_char;
   begin
     -- Messagetext vorbereiten
     l_mail_text := g_mail_template;
       
     -- Verbindung herstellen
-    g_con := utl_smtp.open_connection(g_param_list(c_host));
-    utl_smtp.helo(g_con, g_param_list(c_host));
-    utl_smtp.mail(g_con, g_param_list(c_from));
-    utl_smtp.rcpt(g_con, g_param_list(c_to));
+    g_con := utl_smtp.open_connection(g_param_list(C_HOST));
+    utl_smtp.helo(g_con, g_param_list(C_HOST));
+    utl_smtp.mail(g_con, g_param_list(C_FROM));
+    utl_smtp.rcpt(g_con, g_param_list(C_TO));
     
     -- Senden
     utl_smtp.open_data(g_con);
-    send_header('From', g_param_list(c_from));
-    send_header('To', g_param_list(c_to));
-    send_header('Subject', g_param_list(c_subject));
-    utl_smtp.write_raw_data(g_con, utl_raw.cast_to_raw(c_return || l_mail_text));
+    send_header('From', g_param_list(C_FROM));
+    send_header('To', g_param_list(C_TO));
+    send_header('Subject', g_param_list(C_SUBJECT));
+    utl_smtp.write_raw_data(g_con, utl_raw.cast_to_raw(C_RETURN || l_mail_text));
     
     -- Aufraeumen
     utl_smtp.close_data(g_con);
@@ -75,14 +76,14 @@ as
   procedure initialize_module(self in out PIT_MAIL)
   as
   begin
-    self.fire_threshold := param.get_integer(c_fire_threshold, c_param_group);
+    self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
     self.status := msg.PIT_MODULE_INSTANTIATED;
     -- Copy parameters
-    g_mail_template := param.get_string(c_template, c_param_group);
-    g_param_list(c_host) := param.get_string(c_host, c_param_group);
-    g_param_list(c_from) := param.get_string(c_from, c_param_group);
-    g_param_list(c_to) := param.get_string(c_to, c_param_group);
-    g_param_list(c_subject) := param.get_string(c_subject, c_param_group);
+    g_mail_template := param.get_string(C_TEMPLATE, C_PARAM_GROUP);
+    g_param_list(C_HOST) := param.get_string(C_HOST, C_PARAM_GROUP);
+    g_param_list(C_FROM) := param.get_string(C_FROM, C_PARAM_GROUP);
+    g_param_list(C_TO) := param.get_string(C_TO, C_PARAM_GROUP);
+    g_param_list(C_SUBJECT) := param.get_string(C_SUBJECT, C_PARAM_GROUP);
   exception
     when others then
       self.fire_threshold := pit.level_off;

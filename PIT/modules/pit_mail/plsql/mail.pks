@@ -6,7 +6,7 @@ as
 
   /** Public type declarations  */
   type address_rec is record(
-    user_name varchar2(30),
+    user_name pit_util.ora_name_type,
     email varchar2(200));
   type address_tab is table of address_rec;
 

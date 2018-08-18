@@ -1,6 +1,6 @@
 create table pit_trace_level(
   ptl_id number,
-  ptl_name varchar2(30 char),
+  ptl_name &ORA_NAME_TYPE.,
   ptl_display_name varchar2(50 char),
   constraint pit_trace_level_pk primary key(ptl_name)
 ) organization index;

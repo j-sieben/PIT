@@ -1,13 +1,13 @@
 create or replace package body pit
 as
   /*************************** PACKAGE VARIABLES ********************************/
-  g_module varchar2(30);
-  g_owner varchar2(30);
-  g_action varchar2(30);
-  g_lineno number;
-  g_caller_t varchar2(30);
+  g_module pit_util.ora_name_type;
+  g_owner pit_util.ora_name_type;
+  g_action pit_util.ora_name_type;
+  g_lineno binary_integer;
+  g_caller_t pit_util.ora_name_type;
   
-  c_pass_message constant varchar2(30) := 'PIT_PASS_MESSAGE';
+  C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
   
   /******************************* INTERFACE ************************************/
   
@@ -242,9 +242,9 @@ as
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null)
   as
-    l_message_name varchar2(30);
+    l_message_name pit_util.ora_name_type;
   begin
-    l_message_name := coalesce(p_message_name, c_pass_message);
+    l_message_name := coalesce(p_message_name, C_PASS_MESSAGE);
     pit_pkg.handle_error(level_error, l_message_name, p_affected_id, p_arg_list);
     leave;
   end sql_exception;
@@ -255,9 +255,9 @@ as
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null)
   as
-    l_message_name varchar2(30);
+    l_message_name pit_util.ora_name_type;
   begin
-    l_message_name := coalesce(p_message_name, c_pass_message);
+    l_message_name := coalesce(p_message_name, C_PASS_MESSAGE);
     pit_pkg.handle_error(level_fatal, l_message_name, p_affected_id, p_arg_list);
   end stop;
   
@@ -541,7 +541,7 @@ as
     p_arg_list msg_args := null,
     p_affected_id in varchar2 default null)
   as
-    l_stmt varchar2(32767) := 'select 1 from dual where exists (#STMT#)';
+    l_stmt pit_util.max_char := 'select 1 from dual where exists (#STMT#)';
   begin
     pit.assert_not_null(l_stmt);
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
@@ -558,7 +558,7 @@ as
     p_arg_list msg_args := null,
     p_affected_id in varchar2 default null)
   as
-    l_stmt varchar2(32767) := 'select 1 from dual where not exists (#STMT#)';
+    l_stmt pit_util.max_char := 'select 1 from dual where not exists (#STMT#)';
   begin
     pit.assert_not_null(l_stmt);
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
@@ -613,12 +613,12 @@ as
       select pit_module_meta(module_name, module_available, module_active) module
         from table(pit_pkg.get_modules);
   begin
-    for module in modules loop
-       pipe row (module.module);
+    for m in modules loop
+       pipe row (m.module);
     end loop;
     return;
   exception
-    when no_data_needed then
+    when NO_DATA_NEEDED then
       null;
   end get_modules;
     
@@ -628,15 +628,15 @@ as
     pipelined
   as
     cursor modules is
-      select column_value
+      select column_value module
         from table(pit_pkg.get_active_modules);
   begin
-    for module in modules loop
-       pipe row (module.column_value);
+    for m in modules loop
+       pipe row (m.module);
     end loop;
     return;
   exception
-    when no_data_needed then
+    when NO_DATA_NEEDED then
       null;
   end get_available_modules;
     
@@ -646,15 +646,15 @@ as
     pipelined
   as
     cursor modules is
-      select column_value
+      select column_value module
         from table(pit_pkg.get_active_modules);
   begin
-    for module in modules loop
-       pipe row (module.column_value);
+    for m in modules loop
+       pipe row (m.module);
     end loop;
     return;
   exception
-    when no_data_needed then
+    when NO_DATA_NEEDED then
       null;
   end get_active_modules;
   
