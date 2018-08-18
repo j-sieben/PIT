@@ -2,13 +2,6 @@ create or replace package body pit_util
 as
 
   /**** TYPE DECLARATIONS ****/
-  type predefined_error_rec is record(
-    source_type varchar2(30),
-    owner varchar2(30),
-    package_name varchar2(30),
-    error_name varchar2(30));
-  type predefined_error_t is table of predefined_error_rec index by binary_integer;
-  
 
   /**** CONSTANTS ****/
   c_name_too_long constant varchar2(200) := 'Toggle name is too long. Please use a maximum of 20 byte';
@@ -25,7 +18,6 @@ as
   
   /**** GLOBAL VARS ****/
   g_user varchar2(30);
-  g_predefined_errors predefined_error_t;
   g_error_prefix varchar2(5 byte);
   g_error_postfix varchar2(5 byte);
   
@@ -33,38 +25,8 @@ as
   /**** HELPER ****/
   procedure initialize
   as
-    cursor predefined_errors_cur is
-        with errors as(
-             select type source_type, owner, name package_name,
-                    upper(substr(text, instr(text, '(') + 1, instr(text, ')') - instr(text, '(') - 1)) init
-               from all_source a
-              where (owner in ('SYS') or owner like 'APEX%')
-                and upper(text) like '%PRAGMA EXCEPTION_INIT%'
-                and name not in ('PIT_ADMIN', 'PIT_UTIL'))
-      select source_type, owner, package_name,
-             -- don't convert to numbers here as it's possible that conversion errors occur
-             trim(replace(substr(init, instr(init, ',') + 1), '''', '')) error_number,
-             trim(substr(init, 1, instr(init, ',') - 1)) error_name
-        from errors
-       where trim(substr(init, 1, instr(init, ',') - 1)) is not null;
-    l_predefined_error predefined_error_rec;
-    l_error_number pls_integer;
     l_prefix_length pls_integer;
   begin
-    -- scan all_source view for predefined Oracle errors
-    for err in predefined_errors_cur loop
-      begin
-        l_error_number := to_number(err.error_number, '99999');
-        l_predefined_error.source_type := err.source_type;
-        l_predefined_error.owner := err.owner;
-        l_predefined_error.package_name := err.package_name;
-        l_predefined_error.error_name := err.error_name;
-        g_predefined_errors(err.error_number) := l_predefined_error;
-      exception
-        when others then
-          dbms_output.put_line('Error when trying to convert error number ' || err.error_number);
-      end;
-    end loop;
     -- set package vars
     g_user := user;
     g_error_prefix := param.get_string('ERROR_PREFIX', c_parameter_group);
@@ -184,42 +146,6 @@ as
   
   
   /**** VALIDATION ****/
-  procedure check_error(
-    p_pms_name in pit_message.pms_name%type,
-    p_pms_custom_error in pit_message.pms_custom_error%type)
-  as
-    l_predefined_error predefined_error_rec;
-    l_message varchar2(2000);
-    l_message_length binary_integer;
-    l_error_regexp varchar2(1000);
-    c_error_regexp constant varchar2(100) := q'~^(#NAME#|#NAME#_ERR)$~';
-    c_msg_too_long constant varchar2(200) := 
-      q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
-    c_predefined_error constant varchar2(200) :=
-      q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
-  begin
-    l_message_length := length(p_pms_name);
-    if l_message_length > 26 then
-      l_message := pit_util.bulk_replace(c_msg_too_long, char_table(
-                     '#MESSAGE#', p_pms_name,
-                     '#LENGTH#', l_message_length));
-       raise_application_error(-20000, l_message);
-    end if;
-    if g_predefined_errors.exists(p_pms_custom_error) then
-      l_error_regexp := replace(c_error_regexp, '#NAME#', p_pms_name);
-      if not regexp_like(g_predefined_errors(p_pms_custom_error).error_name, l_error_regexp) then
-        l_predefined_error := g_predefined_errors(p_pms_custom_error);
-        l_message := pit_util.bulk_replace(c_predefined_error, char_table(
-                       '#ERROR#', p_pms_custom_error,
-                       '#NAME#', l_predefined_error.error_name,
-                       '#OWNER#', l_predefined_error.owner,
-                       '#PKG#', l_predefined_error.package_name));
-        raise_application_error(-20000, l_message);
-      end if;
-    end if;
-  end check_error;
-  
-  
   procedure check_context_settings(
     p_context_name in varchar2,
     p_settings in varchar2)
