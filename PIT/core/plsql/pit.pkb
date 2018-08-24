@@ -228,12 +228,12 @@ as
     p_log_modules in varchar2 default null)
   as
   begin
-    pit_pkg.log_event(
-      p_severity => p_log_threshold,
-      p_message_name => p_message_name,
-      p_arg_list => p_arg_list,
-      p_affected_id => p_affected_id,
-      p_module_list => p_log_modules);
+    pit_pkg.log_specific(
+    p_message_name => p_message_name,
+    p_affected_id => p_affected_id,
+    p_arg_list => p_arg_list,
+    p_log_threshold => p_log_threshold,
+    p_log_modules => p_log_modules);
   end log_specific;
   
 

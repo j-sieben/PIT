@@ -42,7 +42,7 @@ as
   c_adapter_preference constant pit_util.ora_name_type := 'ADAPTER_PREFERENCE';
 
   /* context constants */
-  C_GLOBAL_CONTEXT constant pit_util.ora_name_type := substr('PIT_CTX_&INSTALL_USER.', 1, 30);
+  C_GLOBAL_CONTEXT constant pit_util.ora_name_type := substr('PIT_CTX_' || c_package_owner, 1, 30);
   C_CONTEXT_TYPE constant pit_util.ora_name_type := C_GLOBAL_CONTEXT || '_TYPE';
   C_CONTEXT_GROUP constant pit_util.ora_name_type := 'CONTEXT';
   C_CONTEXT_PREFIX constant pit_util.ora_name_type := C_CONTEXT_GROUP || '_';
@@ -578,12 +578,16 @@ as
    *        upon settings in the global context
    */
   function log_me(
-    p_severity in integer)
+    p_severity in pit_message.pms_pse_id%type,
+    p_message_name in pit_message.pms_name%type)
     return boolean
   as
   begin
     get_context_values;
     return p_severity <= greatest(g_ctx.log_level, pit.level_error);
+  exception
+    when no_data_found then
+      return false;
   end log_me;
 
 
@@ -678,7 +682,7 @@ as
     l_message message_type;
     l_module_list varchar2(2000);
   begin
-    if log_me(p_severity) then
+    if log_me(p_severity, p_message_name) then
       if p_module_list is not null then
         l_module_list := g_ctx.module_list;
         set_context(g_ctx.log_level, g_ctx.trace_level, g_ctx.trace_timing, p_module_list);
@@ -699,6 +703,61 @@ as
       end if;
     end if;
   end log_event;
+
+
+  procedure log_specific(
+    p_message_name in pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
+    p_arg_list in msg_args,
+    p_log_threshold in pit_message.pms_pse_id%type,
+    p_log_modules in pit_util.max_sql_char)
+  as
+    l_message message_type;
+    l_ctx_old context_type;
+    l_ctx_new context_type;
+    l_context_name pit_util.ora_name_type;
+    l_ctx_change boolean := false;
+  begin
+    get_context_values;
+    l_ctx_old.log_level := g_ctx.log_level;
+    l_ctx_old.trace_level := g_ctx.trace_level;
+    l_ctx_old.trace_timing := g_ctx.trace_timing;
+    l_ctx_old.log_modules := g_ctx.module_list;
+    l_ctx_new := l_ctx_old;
+    l_context_name := g_ctx.context_name;
+    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+
+    if l_message.severity <= coalesce(p_log_threshold, g_ctx.log_level) then
+      -- Switch to log modules passed in if necessary
+      if p_log_modules is not null then
+        l_ctx_new.log_modules := p_log_modules;
+        l_ctx_change := true;
+      end if;
+      -- Set differing log_threshold if necessary
+      if p_log_threshold is not null then
+        l_ctx_new.log_level := p_log_threshold;
+        l_ctx_change := true;
+      end if;
+      -- persist changes
+      if l_ctx_change then
+        set_context(l_ctx_new);
+      end if;
+
+      raise_event(
+        p_event => c_log_event,
+        p_event_focus => c_event_focus_active,
+        p_message => l_message);
+
+      -- clean up after setting changes
+      if l_ctx_change then
+        if l_context_name = c_context_default then
+          reset_context;
+        else
+          set_context(l_ctx_old);
+        end if;
+      end if;
+    end if;
+  end log_specific;
 
 
   procedure enter(

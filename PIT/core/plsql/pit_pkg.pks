@@ -41,6 +41,29 @@ as
     p_affected_id in pit_util.max_sql_char,
     p_module_list in pit_util.max_sql_char);
   
+
+  /* Logs messages generically
+   * %param  p_message_name   Name of the message to log
+   * %param  p_affected_id    Optional ID of an item a log entry relates to
+   * %param  p_arg_list       List of replacement values for the message
+   * %param  p_log_threshold  Threshold that is taken as a comparison to the message
+   *                          severity to decide whether a message should be logged
+   * %param  p_log_modules    List of output modules to log to. This list is taken
+   *                          for this single call only. It does not affected the overall
+   *                          log module settings for the active or default context
+   * %usage  This procedure is called from PIT. It takes the message_name and
+   *         constructs an instance of MESSAGE_TYPE for it. It then calls any
+   *         log procedure of all active output modules and passes the message.
+   *         This overloaded version is used to provide a mechanism to log different
+   *         messages to a certain set of log modules only
+   */
+  procedure log_specific(
+    p_message_name in pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
+    p_arg_list in msg_args,
+    p_log_threshold in pit_message.pms_pse_id%type,
+    p_log_modules in pit_util.max_sql_char);
+    
   
   /* Traces entering a procedure
    * @param p_action Nam of the block that is executed. Normally the procedure
