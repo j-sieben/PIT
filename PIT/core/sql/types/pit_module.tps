@@ -9,6 +9,8 @@ create or replace type pit_module as object(
     p_message in message_type),
   member procedure print(
     p_message in message_type),
+  member procedure notify(
+    p_message in message_type),
   member procedure enter (
     p_call_stack call_stack_type),
   member procedure leave (

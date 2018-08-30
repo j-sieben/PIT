@@ -17,11 +17,13 @@ as
   C_TRG_TRACE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_TRG_TRACE_THRESHOLD';
   C_TRG_TRACE_TIMING constant pit_util.ora_name_type := 'PIT_APEX_TRG_TRACE_TIMING';
   C_TRG_LOG_MODULES constant pit_util.ora_name_type := 'PIT_APEX_TRG_LOG_MODULES';
+  C_WEB_SOCKET_SERVER constant pit_util.ora_name_type := 'PIT_WEB_SOCKET_SERVER';
   C_YES constant varchar2(3 byte) := 'YES';
   C_CHUNK_SIZE constant integer := 8192;
   
   g_apex_triggered_context pit_pkg.context_type;
   g_fire_threshold number;
+  g_websocket_server varchar2(1000 byte);
 
   /* HELPER */
   procedure initialize
@@ -32,6 +34,7 @@ as
     g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
     g_apex_triggered_context.trace_timing := param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP);
     g_apex_triggered_context.log_modules := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
+    g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
   end initialize;
   
 
@@ -206,7 +209,34 @@ as
   as
   begin
     print_clob(p_message.message_text);
-  end;
+  end print;
+
+
+  procedure notify(
+    p_message in message_type)
+  as
+    l_clob clob;
+    l_message json_object_t := json_object_t('{}');
+  begin
+    l_message.put('id', p_message.id);
+    l_message.put('message_name', p_message.message_name);
+    l_message.put('affected_id', p_message.affected_id);
+    l_message.put('session_id', p_message.session_id);
+    l_message.put('user_name', p_message.user_name);
+    l_message.put('message_text', to_char(p_message.message_text));
+    l_message.put('message_description', to_char(p_message.message_description));
+    l_message.put('severity', to_char(p_message.severity));
+    l_message.put('stack', p_message.stack);
+    l_message.put('backtrace', p_message.backtrace);
+    l_message.put('error_number', to_char(p_message.error_number));
+    
+    pit.verbose(msg.MAIL_LOG, msg_args(g_websocket_server || ':' || l_message.stringify));
+    l_clob := apex_web_service.make_rest_request( 
+                p_url => g_websocket_server,
+                p_http_method => 'POST',
+                p_body   => l_message.stringify()
+              );
+  end notify;
 
 
   procedure enter(

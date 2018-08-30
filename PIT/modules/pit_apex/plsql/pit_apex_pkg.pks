@@ -7,6 +7,8 @@ as
   
   procedure print(p_message in message_type);
   
+  procedure notify(p_message in message_type);
+  
   procedure enter(
     p_call_stack in call_stack_type);
     

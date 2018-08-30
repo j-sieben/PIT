@@ -87,6 +87,13 @@ begin
     p_context_name => 'CONTEXT_OFF',
     p_settings => '10|10|N|',
     p_comment => 'Named context, switches logging off [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_WEB_SOCKET_SERVER',
+    p_par_pgr_id => 'PIT',
+    p_par_description => 'WebSocket-Server zum Pushen von Nachrichten an PIT_APEX',
+    p_par_string_value => 'http://localhost:8880'
+  );
     
   commit;
 end;

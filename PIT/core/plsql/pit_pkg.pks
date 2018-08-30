@@ -120,6 +120,28 @@ as
     p_message_name in pit_util.ora_name_type,
     p_arg_list msg_args default null);
   
+
+  /* Notify output modules
+   * %param  p_message_name   Name of the message to log
+   * %param  p_affected_id    Optional ID of an item a log entry relates to
+   * %param  p_arg_list       List of replacement values for the message
+   * %param  p_log_threshold  Threshold that is taken as a comparison to the message
+   *                          severity to decide whether a message should be logged
+   * %param  p_log_modules    List of output modules to log to. This list is taken
+   *                          for this single call only. It does not affected the overall
+   *                          log module settings for the active or default context
+   * %usage  This procedure is called from PIT. It takes the message_name and
+   *         constructs an instance of MESSAGE_TYPE for it. It then calls any
+   *         notify procedure of all active output modules and passes the message.
+   *         Notifications are meant to be used for progress messages and the like.
+   */
+  procedure notify(
+    p_message_name in pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
+    p_arg_list in msg_args,
+    p_log_threshold in pit_message.pms_pse_id%type,
+    p_log_modules in pit_util.max_sql_char);
+  
   
   /* Raises an error
    * @param p_severity Severity of the message to raise (FATAL|ERROR)

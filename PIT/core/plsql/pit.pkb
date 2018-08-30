@@ -229,11 +229,11 @@ as
   as
   begin
     pit_pkg.log_specific(
-    p_message_name => p_message_name,
-    p_affected_id => p_affected_id,
-    p_arg_list => p_arg_list,
-    p_log_threshold => p_log_threshold,
-    p_log_modules => p_log_modules);
+      p_message_name => p_message_name,
+      p_affected_id => p_affected_id,
+      p_arg_list => p_arg_list,
+      p_log_threshold => p_log_threshold,
+      p_log_modules => p_log_modules);
   end log_specific;
   
 
@@ -413,6 +413,23 @@ as
   begin
     pit_pkg.print(p_message_name, p_arg_list);
   end print;
+  
+
+  procedure notify(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_log_threshold in number default null,
+    p_log_modules in varchar2 default null)
+  as
+  begin
+    pit_pkg.notify(
+      p_message_name => p_message_name,
+      p_affected_id => p_affected_id,
+      p_arg_list => p_arg_list,
+      p_log_threshold => p_log_threshold,
+      p_log_modules => p_log_modules);
+  end notify;
   
   
   

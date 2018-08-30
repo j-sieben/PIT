@@ -4,6 +4,8 @@ create type pit_apex under pit_module
       p_message in message_type),
    overriding member procedure print(
       p_message in message_type),
+   overriding member procedure notify(
+      p_message in message_type),
    overriding member procedure enter (
       p_call_stack in call_stack_type),
    overriding member procedure leave (

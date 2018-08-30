@@ -21,6 +21,13 @@ as
     null;
   end print;
   
+  member procedure notify (
+    p_message in message_type)
+  as
+  begin
+    null;
+  end notify;
+  
   member procedure enter (
     p_call_stack call_stack_type)
   as

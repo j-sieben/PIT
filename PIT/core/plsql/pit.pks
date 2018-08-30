@@ -424,6 +424,30 @@ as
   procedure print (
     p_message_name in varchar2,
     p_arg_list in msg_args default null);
+
+
+  /* procedure to notify output modules
+   * @param  p_message_name   Name of the message. Reference to package MSG
+   * @param [p_arg_list]      Optional list of replacement information
+   * @param [p_affected_id]   Optional id of an item a message relates to
+   * @param  p_log_threshold  Optional log level for the log process. Should the
+   *                          severity of the requested message be higher than this level, it
+   *                          won't get logged. If null, the message is logged if it's severity
+   *                          is higher than the actual log level defined.
+   * @param  p_log_modules    Optional list of colon-separated log modules to be
+   *                          used for this log. If provided, the log message is broadcasted to 
+   *                          this list of modules only. It won't affect the settings of the actual
+   *                          log context. If null, the settings of the log context apply
+   * @usage  Use this method to notify output modules. This method is supposed to be used for
+   *         immediate logging purposes, such as progress messages and the like. If you don't need
+   *         this immediate mechanism, log or print may be alternatives.
+   */
+  procedure notify(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_log_threshold in number default null,
+    p_log_modules in varchar2 default null);
   
   
   /* Procedure to purge the message log. Overloaded

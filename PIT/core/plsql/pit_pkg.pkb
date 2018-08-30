@@ -75,6 +75,7 @@ as
   C_PRINT_EVENT constant integer := 4;
   C_ENTER_EVENT constant integer := 5;
   C_LEAVE_EVENT constant integer := 6;
+  C_NOTIFY_EVENT constant integer := 7;
 
   -- defined here to avoid dependency from PIT
   C_TRACE_MANDATORY constant integer := 20;
@@ -556,6 +557,8 @@ as
           l_modules(l_idx).purge(p_date_before, p_severity_greater_equal);
         when C_PRINT_EVENT then
           l_modules(l_idx).print(p_message);
+        when C_NOTIFY_EVENT then
+          l_modules(l_idx).notify(p_message);
         when C_ENTER_EVENT then
           l_modules(l_idx).enter(p_call_stack);
         when C_LEAVE_EVENT then
@@ -744,8 +747,8 @@ as
       end if;
 
       raise_event(
-        p_event => c_log_event,
-        p_event_focus => c_event_focus_active,
+        p_event => C_LOG_EVENT,
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
         p_message => l_message);
 
       -- clean up after setting changes
@@ -852,6 +855,61 @@ as
     when others then
       pit.error(msg.PIT_FAIL_MESSAGE_CREATION, msg_args(p_message_name));
   end print;
+  
+  
+  procedure notify(
+    p_message_name in pit_util.ora_name_type,
+    p_affected_id in pit_util.max_sql_char,
+    p_arg_list in msg_args,
+    p_log_threshold in pit_message.pms_pse_id%type,
+    p_log_modules in pit_util.max_sql_char)
+  as
+    l_message message_type;
+    l_ctx_old context_type;
+    l_ctx_new context_type;
+    l_context_name pit_util.ora_name_type;
+    l_ctx_change boolean := false;
+  begin
+    get_context_values;
+    l_ctx_old.log_level := g_ctx.log_level;
+    l_ctx_old.trace_level := g_ctx.trace_level;
+    l_ctx_old.trace_timing := g_ctx.trace_timing;
+    l_ctx_old.log_modules := g_ctx.module_list;
+    l_ctx_new := l_ctx_old;
+    l_context_name := coalesce(g_ctx.context_name, C_CONTEXT_DEFAULT);
+    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+
+    if l_message.severity <= coalesce(p_log_threshold, g_ctx.log_level) then
+      -- Switch to log modules passed in if necessary
+      if p_log_modules is not null then
+        l_ctx_new.log_modules := p_log_modules;
+        l_ctx_change := true;
+      end if;
+      -- Set differing log_threshold if necessary
+      if p_log_threshold is not null then
+        l_ctx_new.log_level := p_log_threshold;
+        l_ctx_change := true;
+      end if;
+      -- persist changes
+      if l_ctx_change then
+        set_context(l_ctx_new);
+      end if;
+
+      raise_event(
+        p_event => C_NOTIFY_EVENT,
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
+        p_message => l_message);
+
+      -- clean up after setting changes
+      if l_ctx_change then
+        if l_context_name = c_context_default then
+          reset_context;
+        else
+          set_context(l_ctx_old);
+        end if;
+      end if;
+    end if;
+  end notify;
 
 
   procedure raise_error(
