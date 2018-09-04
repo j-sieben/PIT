@@ -213,10 +213,10 @@ end;
     dbms_lob.append(l_script, c_start);
     for par in param_cur(p_pgr_id) loop
       if par.row_num = 1 then
-        l_chunk := utl_text.bulk_replace(c_group_template, char_table(
-                     '#PARAM_GROUP#', par.pgr_id,
-                     '#pgr_description#', par.pgr_description,
-                     '#GROUP_MODIFIABLE#', par.group_modifiable));
+        l_chunk := replace(replace(replace(c_group_template,
+                     '#PARAM_GROUP#', par.pgr_id),
+                     '#pgr_description#', par.pgr_description),
+                     '#GROUP_MODIFIABLE#', par.group_modifiable);
         dbms_lob.append(l_script, l_chunk);
       end if;
       calc_clause(l_clause, par.par_string_value, '#STRING#', c_string_template);
@@ -230,11 +230,11 @@ end;
       calc_clause(l_clause, par.par_pat_id, '#PARAM_TYPE#', c_param_type_template);
       calc_clause(l_clause, par.par_validation_string, '#VALIDATION#', c_validataion_template);
       calc_clause(l_clause, par.par_validation_message, '#VAL_MSG#', c_val_msg_template);
-      l_chunk := utl_text.bulk_replace(c_param_template, char_table(
-                   '#PARAM_NAME#', par.par_id,
-                   '#PARAM_GROUP#', par.pgr_id,
-                   '#PARAM_DESCRIPTION#', par.par_description,
-                   '#CLAUSES#', l_clause));
+      l_chunk := replace(replace(replace(replace(c_param_template, 
+                   '#PARAM_NAME#', par.par_id),
+                   '#PARAM_GROUP#', par.pgr_id),
+                   '#PARAM_DESCRIPTION#', par.par_description),
+                   '#CLAUSES#', l_clause);
       l_clause := null;
       dbms_lob.append(l_script, l_chunk);
     end loop;
