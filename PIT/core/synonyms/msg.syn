@@ -1,1 +1,0 @@
-create synonym msg for &INSTALL_USER..msg;

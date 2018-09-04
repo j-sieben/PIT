@@ -14,7 +14,7 @@ declare
                  'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'MSG_ARGS_CHAR', 'PIT_MODULE', 
                  'DEFAULT_ADAPTER', 'CALL_STACK_TYPE', 'PIT_MODULE_LIST', 'PIT_CONTEXT', '', 
                  'PIT_MODULE_META', 'PIT_MODULE_LIST', -- Typen
-                 'MSG', 'PIT', 'PIT_PKG', 'PIT_ADMIN', -- Packages
+                 'MSG', 'PIT', 'PIT_PKG', 'PIT_ADMIN', 'PIT_UTIL', -- Packages
                  'PIT_MESSAGE_LANGUAGE_V', 'PIT_MESSAGE_V', -- Views
                  'PIT_MESSAGE', 'PIT_MESSAGE_LANGUAGE', 'PIT_MESSAGE_SEVERITY', 'PIT_TRACE_LEVEL', 'PIT_MESSAGE_GROUP',  -- Tabellen
                  'MSG',  -- Synonyme

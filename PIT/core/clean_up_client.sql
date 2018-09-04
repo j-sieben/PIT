@@ -1,3 +1,5 @@
+alter session set current_schema=&REMOTE_USER.;
+
 declare
   object_does_not_exist exception;
   pragma exception_init(object_does_not_exist, -4043);
@@ -8,14 +10,14 @@ declare
   synonym_does_not_exist exception;
   pragma exception_init(synonym_does_not_exist, -1434);
   cursor delete_object_cur is
-          select object_name name, object_type type
-            from all_objects
+          select owner, object_name name, object_type type
+            from dba_objects
            where object_name in (
                  '', -- Typen
                  '', -- Packages
                  '', -- Views
                  '',   -- Tabellen
-                 'PIT', 'PIT_LOG', 'MSG', 'MSG_ARGS', 'MSG_PARAM', 'MSG_PARAMS', -- Synonyme
+                 'PIT', 'PIT_ADMIN', 'PIT_LOG', 'MSG', 'MSG_ARGS', 'MSG_PARAM', 'MSG_PARAMS', -- Synonyme
                  '' -- Sequenzen
                  )
              and object_type not like '%BODY'
@@ -29,7 +31,7 @@ begin
                         when 'TYPE' then ' force' 
                         when 'TABLE' then ' cascade constraints purge' 
                         end;
-     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.name || ' deleted.');
+     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.owner || '.' || obj.name || ' deleted.');
     
     exception
       when object_does_not_exist or table_does_not_exist or sequence_does_not_exist or synonym_does_not_exist then

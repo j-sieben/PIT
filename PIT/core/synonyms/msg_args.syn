@@ -1,1 +1,0 @@
-create synonym msg_args for &INSTALL_USER..msg_args;

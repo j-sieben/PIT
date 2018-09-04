@@ -3,8 +3,8 @@ declare
           select object_name name, object_type type
             from all_objects
            where object_name in (
-                 'PIT_FILE', 'FILE_ADAPTER', -- Typen
-                 'PIT_FILE_PKG', 'MAIL', -- Packages
+                 'PIT_MAIL', -- Typen
+                 'PIT_MAIL_PKG', 'MAIL', -- Packages
                  '', -- Tabellen
                  '' -- Sequenzen
                  )
