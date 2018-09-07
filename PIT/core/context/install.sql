@@ -1,5 +1,4 @@
 define ctx_dir=core/context/
-define sql_dir=&ctx_dir.sql/
 define plsql_dir=&ctx_dir.plsql/
 
 prompt &h3.Checking installation prerequisites
@@ -13,16 +12,16 @@ prompt &h3.Installing context parameters
 
 prompt &h3.Create type declarations
 prompt &s1.Create type ARGS
-@&sql_dir.types/args.tps
+@&ctx_dir.types/args.tps
 show errors
 
 prompt &h3.Installing packages
 prompt &s1.Create package UTL_CONTEXT
-@&plsql_dir.utl_context.pks
+@&ctx_dir.packages/utl_context.pks
 show errors
 
 prompt &s1.Create package body UTL_CONTEXT
-@&plsql_dir.utl_context.pkb
+@&ctx_dir.packages/utl_context.pkb
 show errors
 
 -- ONLY REQUIRED IF USED STANDALONE

@@ -1,14 +1,12 @@
 
 prompt &h3.Grant SYSTEM privileges
-prompt &s1.create session, create procedure, create table, create type to &INSTALL_USER.
-@check_has_system_privilege "create session"
-@check_has_system_privilege "create procedure"
-@check_has_system_privilege "create table"
-@check_has_system_privilege "create type"
+@tools/check_has_system_privilege.sql "create session"
+@tools/check_has_system_privilege.sql "create procedure"
+@tools/check_has_system_privilege.sql "create table"
+@tools/check_has_system_privilege.sql "create type"
 
 prompt &h3.Grant OBJECT privileges
-prompt &s1.Select on sys.dba_context
-@check_has_object_privilege select dba_context
+@tools/check_has_object_privilege.sql select dba_context
 
 begin
   $IF dbms_db_version.ver_le_11 $THEN

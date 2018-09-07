@@ -1,0 +1,1 @@
+prompt &s1.No action for PIT_FILE client uninstall necessary

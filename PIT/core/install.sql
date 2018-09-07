@@ -2,30 +2,29 @@ define core_dir=core/
 
 
 prompt
-prompt &h1.Installing parameter package
+prompt &h1.Installing parameter framework
 @&core_dir.parameters/install.sql
 
 prompt
-prompt &h1.Installing context package
+prompt &h1.Installing context framework
 @&core_dir.context/install.sql
 
-
 prompt
-prompt &h1.Installing PIT core
-prompt &h2.Check installation prerequisites
+prompt &h2.Installing PIT core
+prompt &h3.Check installation prerequisites
 @&core_dir.check_prerequisites.sql
 
-prompt &h2.Remove existing installation
+prompt &h3.Remove existing installation
 @&core_dir.clean_up_install.sql
 
-prompt &h2.Setting compile flags
-@&core_dir.set_compile_flags.sql
+prompt &h3.Setting compile flags
+@&core_dir.set_compiler_flags.sql
 
 prompt &h2.Create sequences
 prompt &s1.Create sequence PIT_LOG_SEQ
 @&core_dir.sequences/pit_log_seq.seq
 
-prompt &h2.Create tables and initial data
+prompt &h2.Create tables
 prompt &s1.Create table PIT_MESSAGE_SEVERITY
 @&core_dir.tables/pit_message_severity.tbl
 
@@ -44,8 +43,10 @@ prompt &s1.Create view PIT_MESSAGE_LANGUAGE_V
 prompt &s1.Create table PIT_MESSAGE
 @&core_dir.tables/pit_message.tbl
 
-prompt &s1.Create trigger PIT_MESSAGE_TRG_BRIU
+prompt &h2.Merge initial data
+@&core_dir.scripts/merge_initial_data.sql
 
+prompt &h2.Create views
 prompt &s1.Create view PIT_MESSAGE_V
 @&core_dir.views/pit_message_v.vw
 
@@ -103,6 +104,7 @@ prompt &s1.Create type PIT_MODULE_IIST
 @&core_dir.types/pit_module_list.tps
 show errors
 
+
 prompt &h2.Create package declarations
 prompt &s1.Create package PIT_ADMIN
 @&core_dir.packages/pit_admin.pks
@@ -121,7 +123,7 @@ prompt &s1.Create package Body PIT_UTIL
 show errors
 
 prompt &s1.Create default parameters
-@&core_dir.create_parameters.sql
+@&core_dir.scripts/create_parameters.sql
 
 prompt &s1.Create internal messages
 @&core_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
@@ -139,7 +141,7 @@ prompt &s1.Create package PIT_PKG
 show errors  
 
 prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
-@&core_dir.create_global_context.sql
+@&core_dir.scripts/create_global_context.sql
 
 prompt &h2.Create type bodies
 prompt &s1.Create type body MESSAGE_TYPE

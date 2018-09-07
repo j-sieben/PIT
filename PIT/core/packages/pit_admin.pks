@@ -1,5 +1,5 @@
 create or replace package pit_admin
-authid current_user
+authid definer
 as 
   /**
     Package to administer PIT. Provides methods to create or maintain messages.
@@ -87,6 +87,15 @@ as
     p_pms_name in pit_message.pms_name%type,
     p_pms_pml_name in pit_message.pms_pml_name%type);
     
+    
+  /* Procedure to remoce a single pit_message. Will delete all translations as well
+   * %param  p_pmg_name  Name of the message group to delete
+   * %usage  is called to remove mistyped or unnecessary messages in all languages.
+   *         Will commit and re-create the MSG package.
+   */
+  procedure remove_message_group(
+    p_pmg_name in pit_message_group.pmg_name%type);
+    
   
   /* Procedure to remove all messages
    * %usage Is called if a new set of messages shall be installed and all old and
@@ -127,6 +136,15 @@ as
   procedure remove_translation(
     p_language in pit_message.pms_pml_name%type);
     
+    
+  /* Method to set default language settings
+   * %param  p_pml_list  List of colon-separated language names
+   * %usage  Is used to initially set the default language settings
+   *         Precedence is set accoding to the sort order: First languages preceede later languages
+   */
+  procedure set_language_settings(
+    p_pml_list in pit_util.max_sql_char);
+    
 
   /* Procedure to (re-) create package MSG
    * %param p_directory Optional parameter to define a directory object the creation script shall be written to.
@@ -146,8 +164,8 @@ as
    *                            by filtering messages that start with P_MESSAGE_PATTERN
    * %param  p_pmg_id           Optional message group to filter message output
    * %return XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor
-   * %usage Call this function to create an XLIFF-File that can be used to translate all
-   *        error messages into a target language at once.
+   * %usage  Call this function to create an XLIFF-File that can be used to translate all
+   *         error messages into a target language at once.
    */
   function get_messages(
     p_message_pattern in varchar2 default null,

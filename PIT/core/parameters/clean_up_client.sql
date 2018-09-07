@@ -1,3 +1,4 @@
+alter session set current_schema=&REMOTE_USER.;
 
 declare
   object_does_not_exist exception;
@@ -16,7 +17,7 @@ declare
                  '', -- Packages
                  'PARAMETER_VW', -- Views
                  'PARAMETER_LOCAL',   -- Tabellen
-                 'PARAM', 'PARAM_ADMIN', 'PARAMETER',  -- Synonyme
+                 '',  -- Synonyme
                  '' -- Sequenzen
                  )
              and object_type not like '%BODY'
@@ -41,3 +42,6 @@ begin
   end loop;
 end;
 /
+
+prompt &s1. revoking client rights
+@core/parameters/revoke_client_rights.sql

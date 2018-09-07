@@ -20,8 +20,7 @@ begin
                       end;
     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.name || ' deleted.');
   end loop;
-exception
-   when others then
-      raise;
+  
+  pit_admin.remove_message_group('PIT_APEX');
 end;
 /

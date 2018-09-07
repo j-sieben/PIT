@@ -8,13 +8,13 @@
   - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
 */
 
-@init.sql &1. &2.
+@init/init.sql &1. &2.
 
 alter session set current_schema=sys;
 prompt
 prompt &section.
 prompt &h1.Checking whether required users exist
-@check_users_exist.sql &INSTALL_USER.
+@tools/check_users_exist.sql &INSTALL_USER.
 
 prompt &h2.grant user rights
 @set_grants.sql

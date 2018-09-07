@@ -1,3 +1,2 @@
 
-prompt &s1.create session to &REMOTE_USER.
-grant create session to &REMOTE_USER.;
+@tools/check_has_system_privilege.sql "create session"

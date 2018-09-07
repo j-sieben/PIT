@@ -321,6 +321,27 @@ as
   end remove_message;
 
 
+  procedure remove_message_group(
+    p_pmg_name in pit_message_group.pmg_name%type)
+  as
+    cursor pmg_cur(p_pmg_name in pit_message_group.pmg_name%type) is
+      select pms_name
+        from pit_message
+       where pms_pmg_name = p_pmg_name;
+  begin
+    -- remove all messages within group
+    for msg in pmg_cur(p_pmg_name) loop
+      remove_message(msg.pms_name, g_default_language);
+    end loop;
+    -- remove group itself
+    delete from pit_message_group
+     where pmg_name = p_pmg_name;
+    commit;
+    
+    create_message_package;
+  end remove_message_group;
+  
+
   procedure remove_all_messages
   as
   begin
@@ -438,6 +459,37 @@ as
     delete from pit_message
      where pms_pml_name = upper(p_language);
   end remove_translation;
+  
+  
+  procedure set_language_settings(
+    p_pml_list in pit_util.max_sql_char)
+  as
+    l_pml_list wwv_flow_global.vc_arr2;
+    l_pml_default_order pit_message_language.pml_default_order%type;
+  begin
+    pit.enter_mandatory(
+      p_action => 'set_language_settings',
+      p_module => C_PKG,
+      p_params => msg_params(
+                    msg_param('p_pml_list', p_pml_list)));
+
+    update pit_message_language
+       set pml_default_order = 0
+     where pml_default_order != 10;
+
+    if p_pml_list is not null then
+      l_pml_list := apex_util.string_to_table(p_pml_list);
+      l_pml_default_order := (l_pml_list.count + 1) * 10;
+      for i in l_pml_list.first .. l_pml_list.last loop
+        update pit_message_language
+           set pml_default_order = l_pml_default_order
+         where pml_name = l_pml_list(i);
+        l_pml_default_order := l_pml_default_order - 10;
+      end loop;
+    end if;
+
+    pit.leave_mandatory;
+  end set_language_settings;
 
 
   procedure create_message_package (

@@ -8,13 +8,19 @@
   - REMOTE_USER:  database user who shall be enabled to use PIT
 */
 
-@init_client.sql &1. &2.
+@init/init_client.sql &1. &2.
 
 prompt &section.Uninstalling PIT Client &REMOTE_USER.
 
-prompt &h1.Revoking Grants to &REMOTE_USER.
-alter session set current_schema=&INSTALL_USER.;
-@core/revoke_client_rights.sql
+prompt
+prompt &section.
+prompt &h1.Unnstalling PIT output modules
+@modules/pit_console/clean_up_client.sql
+@modules/pit_table/clean_up_client.sql
+@modules/pit_apex/clean_up_client.sql
+--@modules/pit_test/clean_up_client.sql
+@modules/pit_file/clean_up_client.sql
+@modules/pit_mail/clean_up_client.sql
 
 prompt
 prompt &h1.Uninstalling PIT objects in schema &REMOTE_USER.

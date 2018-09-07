@@ -1,12 +1,10 @@
-prompt &s1.Grant execute on PARAM to &REMOTE_USER.
-grant execute on &INSTALL_USER..param to &REMOTE_USER.;
-prompt &s1.Grant execute on PARAM_ADMIN to &REMOTE_USER.
-grant execute on &INSTALL_USER..param_admin to &REMOTE_USER.;
 
-prompt &s1.Grant select and references rights on parameter tables to &REMOTE_USER.
-grant select on &INSTALL_USER..parameter_tab to &REMOTE_USER.;
-grant select on &INSTALL_USER..parameter_group to &REMOTE_USER.;
-grant references on &INSTALL_USER..parameter_group to &REMOTE_USER.;
-grant select on &INSTALL_USER..parameter_type to &REMOTE_USER.;
-grant references on &INSTALL_USER..parameter_type to &REMOTE_USER.;
+@tools/grant_access.sql execute PARAM
+@tools/grant_access.sql execute PARAM_ADMIN
 
+@tools/grant_access.sql select PARAMETER_GROUP
+@tools/grant_access.sql references PARAMETER_GROUP
+@tools/grant_access.sql select PARAMETER_TAB
+@tools/grant_access.sql references PARAMETER_TAB
+@tools/grant_access.sql select PARAMETER_TYPE
+@tools/grant_access.sql references PARAMETER_TYPE

@@ -1,4 +1,4 @@
-@init.sql &1. &2.
+@init/init.sql &1. &2.
 
 prompt &h2.grant user rights
 @set_grants.sql

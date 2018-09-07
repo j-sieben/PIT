@@ -1,44 +1,20 @@
-alter session set current_schema=&REMOTE_USER.;
 
-declare
-  object_does_not_exist exception;
-  pragma exception_init(object_does_not_exist, -4043);
-  table_does_not_exist exception;
-  pragma exception_init(table_does_not_exist, -942);
-  sequence_does_not_exist exception;
-  pragma exception_init(sequence_does_not_exist, -2282);
-  synonym_does_not_exist exception;
-  pragma exception_init(synonym_does_not_exist, -1434);
-  cursor delete_object_cur is
-          select owner, object_name name, object_type type
-            from dba_objects
-           where object_name in (
-                 '', -- Typen
-                 '', -- Packages
-                 '', -- Views
-                 '',   -- Tabellen
-                 'PIT', 'PIT_ADMIN', 'PIT_LOG', 'MSG', 'MSG_ARGS', 'MSG_PARAM', 'MSG_PARAMS', -- Synonyme
-                 '' -- Sequenzen
-                 )
-             and object_type not like '%BODY'
-             and owner = upper('&REMOTE_USER.')
-           order by object_type, object_name;
-begin
-  for obj in delete_object_cur loop
-    begin
-      execute immediate 'drop ' || obj.type || ' ' || obj.name ||
-                        case obj.type 
-                        when 'TYPE' then ' force' 
-                        when 'TABLE' then ' cascade constraints purge' 
-                        end;
-     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.owner || '.' || obj.name || ' deleted.');
-    
-    exception
-      when object_does_not_exist or table_does_not_exist or sequence_does_not_exist or synonym_does_not_exist then
-        dbms_output.put_line('&s1.' || obj.type || ' ' || obj.name || ' does not exist.');
-      when others then
-        raise;
-    end;
-  end loop;
-end;
-/
+prompt &h3.Revoke rights and drop synonyms
+-- Types
+@tools/revoke_access.sql execute CHAR_TABLE
+@tools/revoke_access.sql execute CLOB_TABLE
+@tools/revoke_access.sql execute MESSAGE_TYPE
+@tools/revoke_access.sql execute MSG
+@tools/revoke_access.sql execute MSG_ARGS
+@tools/revoke_access.sql execute MSG_PARAM
+@tools/revoke_access.sql execute MSG_PARAMS
+@tools/revoke_access.sql execute PIT
+@tools/revoke_access.sql execute PIT_ADMIN
+@tools/revoke_access.sql execute PIT_UTIL
+@tools/revoke_access.sql execute UTL_CONTEXT
+@tools/revoke_access.sql execute UTL_TEXT
+
+-- Tables and Views
+@tools/revoke_access.sql select PIT_CALL_STACK
+@tools/revoke_access.sql select PIT_LOG
+@tools/revoke_access.sql select UTL_TEXT_TEMPLATES
