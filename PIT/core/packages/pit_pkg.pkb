@@ -695,39 +695,6 @@ as
         p_message => l_message);
     end if;
   end log_event;
-                                                          
-                                                          
-  procedure log_specific(
-    p_severity in binary_integer,
-    p_message_name in pit_util.ora_name_type,
-    p_arg_list in msg_args,
-    p_affected_id in pit_util.max_sql_char,
-    p_module_list in pit_util.max_sql_char)
-  as
-    l_message message_type;
-    l_module_list varchar2(2000);
-  begin
-    get_context_values;
-    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
-    -- log only, if message severity level is below optionally passed in P_SEVERITY param
-    if l_message.severity <= p_severity then
-      -- persist output modules for later recovery
-      if p_module_list is not null then
-        l_module_list := g_ctx.module_list;
-        set_context(g_ctx.log_level, g_ctx.trace_level, g_ctx.trace_timing, p_module_list);
-      end if;
-                                                          
-      raise_event(
-        p_event => c_log_event,
-        p_event_focus => c_event_focus_active,
-        p_message => l_message);
-                                                          
-      -- reset output modules                                                    
-      if p_module_list is not null then
-        set_context(g_ctx.log_level, g_ctx.trace_level, g_ctx.trace_timing, l_module_list);
-      end if;
-    end if;
-  end log_specific;
 
 
   procedure log_specific(
