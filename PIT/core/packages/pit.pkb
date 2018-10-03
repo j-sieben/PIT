@@ -232,7 +232,7 @@ as
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
       p_arg_list => p_arg_list,
-      p_log_threshold => p_log_threshold,
+      p_log_threshold => coalesce(p_log_threshold, pit.level_all),
       p_log_modules => p_log_modules);
   end log_specific;
   
