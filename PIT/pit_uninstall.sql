@@ -1,3 +1,11 @@
+/*
+  Script to uninstall PIT
+  
+  Parameters:
+  -- 1: PIT_OWNER: database user who own PIT
+  -- 2: DEFAULT LANGUAGE: Default language of the APEX messages
+*/
+
 @init/init.sql &1. &2.
 
 prompt &h2.grant user rights

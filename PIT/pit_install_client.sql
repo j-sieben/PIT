@@ -19,7 +19,7 @@ prompt &h1.Installing PIT client &REMOTE_USER.
 prompt
 prompt &section.
 prompt &h1.Checking whether required users exist
-@check_users_exist.sql
+@tools.check_users_exist.sql
 
 alter session set current_schema=&INSTALL_USER.;
 

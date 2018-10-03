@@ -468,7 +468,7 @@ as
     p_affected_id in varchar2 default null)
   as
   begin
-    if not p_condition then
+    if not p_condition  or p_condition is null then
        pit.error(p_message_name, p_arg_list, p_affected_id);
     end if;
   end assert;

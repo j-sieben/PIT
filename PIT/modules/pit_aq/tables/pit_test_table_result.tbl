@@ -1,0 +1,12 @@
+create table pit_test_table_result(
+  test_id &ORA_NAME_TYPE.,
+  sort_seq number,
+  component &ORA_NAME_TYPE.,
+  params varchar2(200)
+);
+
+comment on table pit_test_table_result is 'Table for predefined test results';
+comment on column pit_test_table_result.test_id is 'Name of the test the results are collected for';
+comment on column pit_test_table_result.sort_seq is 'sort criteria for the result list';
+comment on column pit_test_table_result.component is 'Name of the component (PIT_TEST_TABLE.COMPONENT)';
+comment on column pit_test_table_result.params is 'Params (PIT_TEST_TABLE.PARAMS)';

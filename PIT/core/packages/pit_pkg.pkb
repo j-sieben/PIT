@@ -1159,22 +1159,6 @@ as
   end get_available_modules;
 
 
-  function cast_to_char_list(
-    p_msg_args msg_args)
-    return msg_args_char
-  as
-    l_arg_list msg_args_char := msg_args_char();
-  begin
-    if p_msg_args is not null then
-      for i in p_msg_args.first .. p_msg_args.last loop
-        l_arg_list.extend;
-        l_arg_list(i) := dbms_lob.substr(p_msg_args(i), 4000, 1);
-      end loop;
-    end if;
-    return l_arg_list;
-  end cast_to_char_list;
-
-
 begin
   initialize;
 end pit_pkg;

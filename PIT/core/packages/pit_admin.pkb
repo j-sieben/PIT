@@ -467,11 +467,6 @@ as
     l_pml_list wwv_flow_global.vc_arr2;
     l_pml_default_order pit_message_language.pml_default_order%type;
   begin
-    pit.enter_mandatory(
-      p_action => 'set_language_settings',
-      p_module => C_PKG,
-      p_params => msg_params(
-                    msg_param('p_pml_list', p_pml_list)));
 
     update pit_message_language
        set pml_default_order = 0
@@ -487,8 +482,7 @@ as
         l_pml_default_order := l_pml_default_order - 10;
       end loop;
     end if;
-
-    pit.leave_mandatory;
+    
   end set_language_settings;
 
 
@@ -557,7 +551,7 @@ as
       execute immediate l_sql_text;
     end if;
 
-    pit_util.recompile_invalid_objects;
+    -- pit_util.recompile_invalid_objects;
 
   end create_message_package;
 

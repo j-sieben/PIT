@@ -1,0 +1,1076 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<UT>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="8597446a-8178-4899-a430-9c0524ba1920" name="Reset context and clear log table" class="oracle.dbtools.unit_test.startup.PlSqlStartup">
+         <startup>
+            <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</description>
+            <code>begin
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</code>
+         </startup>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="9393dc28-c79a-4473-8cba-b1ed2738e162" name="Has ENTER component" class="oracle.dbtools.unit_test.process_validation.QueryReturningNoRows">
+         <validation>
+            <class>oracle.dbtools.unit_test.process_validation.QueryReturningNoRows</class>
+            <name>Abfrage gibt keine Zeilen zurück</name>
+            <description>select 1
+  from pit_test_table
+ where component = 'ENTER';</description>
+            <code>select 1
+  from pit_test_table
+ where component = 'ENTER';</code>
+         </validation>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="09C2A5900281410BA7BE11A1FA801588" name="PIT.ENTER_MANDATORY does not create log" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ENTER_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="6B03485F697540B29C64811C8D29F860" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_ACTION" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="98B9B5CA4D39409EB2EC2B32C3950F15" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" position="1" sequence="4" data_level="1" data_type="OBJECT" in_out="IN" type_owner="DOAG" type_name="MSG_PARAM" char_length="0" char_used="0"/>
+         <arg id="24566D5063D64C1496ADF4EE26821567" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_MODULE" position="2" sequence="2" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="5A7C01FF306C49FB9E2D32BC16798978" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_PARAMS" position="3" sequence="3" data_level="0" data_type="TABLE" in_out="IN" type_owner="DOAG" type_name="MSG_PARAMS" char_length="0" char_used="0"/>
+         <arg id="E7EB1E837C794E0E9FA6AE2E2374AACE" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_CLIENT_INFO" position="4" sequence="5" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="A608E730B92740BC838164A459F918FE" lib_id="8597446a-8178-4899-a430-9c0524ba1920" lib_name="Reset context and clear log table"/>
+         <teardown id="1DEA64A574B040C2A14E04AD99893F12">
+            <teardown>
+               <class>oracle.dbtools.unit_test.teardown.PlSqlTeardown</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.reset_context;
+  pit.leave_mandatory;
+  delete from pit_test_table;
+  commit;
+end;</description>
+               <code>begin
+  pit.reset_context;
+  pit.leave_mandatory;
+  delete from pit_test_table;
+  commit;
+end;</code>
+            </teardown>
+         </teardown>
+         <test_impl id="E5CA8ED444F640B796DEAC5563810D18" test_id="09C2A5900281410BA7BE11A1FA801588" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'FOO' as P_ACTION,
+       'FOO' as P_MODULE,
+       Msg_params(msg_param('Key', 'Value')) as P_PARAMS,
+       'My Info' as P_CLIENT_INFO
+  from dual</description>
+               <code>select 'FOO' as P_ACTION,
+       'FOO' as P_MODULE,
+       Msg_params(msg_param('Key', 'Value')) as P_PARAMS,
+       'My Info' as P_CLIENT_INFO
+  from dual</code>
+            </dvq>
+            <parm argId="E7EB1E837C794E0E9FA6AE2E2374AACE" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_CLIENT_INFO&quot;>My Info&lt;/DataValue>" test_out_val="true"/>
+            <parm argId="5A7C01FF306C49FB9E2D32BC16798978" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_PARAMS&quot;/>" test_out_val="true"/>
+            <parm argId="6B03485F697540B29C64811C8D29F860" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ACTION&quot;>FOO&lt;/DataValue>" test_out_val="true"/>
+            <parm argId="24566D5063D64C1496ADF4EE26821567" utiId="E5CA8ED444F640B796DEAC5563810D18" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_MODULE&quot;>FOO&#x9;&lt;/DataValue>" test_out_val="true"/>
+            <validation id="65015771E0CA4E1397771835A1C41AA5" apply="true" lib_id="9393dc28-c79a-4473-8cba-b1ed2738e162" lib_name="Has ENTER component"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="c0daaa9b-4bc3-47bf-814b-9aa5034910a9" name="reset Context" class="oracle.dbtools.unit_test.startup.PlSqlStartup">
+         <startup>
+            <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  pit.reset_context;
+end;</description>
+            <code>begin
+  pit.reset_context;
+end;</code>
+         </startup>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="fbbb4c4f-4034-423d-a49d-9554e9e86a02" name="reset Context" class="oracle.dbtools.unit_test.teardown.PlSqlTeardown">
+         <teardown>
+            <class>oracle.dbtools.unit_test.teardown.PlSqlTeardown</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  pit.reset_context;
+end;</description>
+            <code>begin
+  pit.reset_context;
+end;</code>
+         </teardown>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="f7174440-8cac-4736-902e-524865f96083" name="PIT.SET_CONTEXT with detailled parameters" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="SET_CONTEXT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="dcc43e54-9b09-4814-9145-19e4ec49f9f3" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_LOG_LEVEL" position="1" sequence="1" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" data_precision="38" radix="10" pls_type="INTEGER" char_length="0" char_used="0"/>
+         <arg id="e6260e7c-3e5b-44d9-b25f-e9e83cd5b356" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_TRACE_LEVEL" position="2" sequence="2" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" data_precision="38" radix="10" pls_type="INTEGER" char_length="0" char_used="0"/>
+         <arg id="920f79af-3a96-4429-a8d4-7988c0ad7e61" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_TRACE_TIMING" position="3" sequence="3" data_level="0" data_type="PL/SQL BOOLEAN" in_out="IN" pls_type="BOOLEAN" char_length="0" char_used="0"/>
+         <arg id="f5b75ba4-11d3-47e3-b4fb-57e1376579f6" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_MODULE_LIST" position="4" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="11405347-94f0-4ab2-b9e9-a6167c3705ba" lib_id="c0daaa9b-4bc3-47bf-814b-9aa5034910a9" lib_name="reset Context"/>
+         <teardown id="20148174-e84d-4936-898f-4fa0c3398475" lib_id="fbbb4c4f-4034-423d-a49d-9554e9e86a02" lib_name="reset Context"/>
+         <test_impl id="28238f26-ef56-4a52-9329-a783837b8f01" test_id="f7174440-8cac-4736-902e-524865f96083" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <parm argId="f5b75ba4-11d3-47e3-b4fb-57e1376579f6" utiId="28238f26-ef56-4a52-9329-a783837b8f01" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_MODULE_LIST&quot;>PIT_TEST&lt;/DataValue>" test_out_val="true"/>
+            <parm argId="dcc43e54-9b09-4814-9145-19e4ec49f9f3" utiId="28238f26-ef56-4a52-9329-a783837b8f01" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_LOG_LEVEL&quot;>10&lt;/DataValue>" test_out_val="true"/>
+            <parm argId="920f79af-3a96-4429-a8d4-7988c0ad7e61" utiId="28238f26-ef56-4a52-9329-a783837b8f01" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_TRACE_TIMING&quot;>true&lt;/DataValue>" test_out_val="true"/>
+            <parm argId="e6260e7c-3e5b-44d9-b25f-e9e83cd5b356" utiId="28238f26-ef56-4a52-9329-a783837b8f01" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_TRACE_LEVEL&quot;>50&lt;/DataValue>" test_out_val="true"/>
+            <validation id="b12d65b6-8e7c-44ae-b951-40e63c4388a8" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from global_context
+ where attribute = 'CONTEXT_ACTIVE'
+   and value = '10|50|Y|PIT_TEST'</description>
+                  <code>select 1
+  from global_context
+ where attribute = 'CONTEXT_ACTIVE'
+   and value = '10|50|Y|PIT_TEST'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="b4c35c22-7583-44b7-9789-150bb32dcb99" name="PIT.SET_CONTEXT with named context" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="SET_CONTEXT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="7fb1b13a-4c90-4f64-9127-fb8c432d1919" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="2" argument_name="P_CONTEXT_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="b5bcbb4d-2d13-4ee1-a96a-7da33a34b928" lib_id="c0daaa9b-4bc3-47bf-814b-9aa5034910a9" lib_name="reset Context"/>
+         <teardown id="78f97f02-9667-42b5-8e8a-a97db7c9b263" lib_id="fbbb4c4f-4034-423d-a49d-9554e9e86a02" lib_name="reset Context"/>
+         <test_impl id="5bd51435-e3f1-4e6a-8036-c3cc91368856" test_id="b4c35c22-7583-44b7-9789-150bb32dcb99" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <parm argId="7fb1b13a-4c90-4f64-9127-fb8c432d1919" utiId="5bd51435-e3f1-4e6a-8036-c3cc91368856" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_CONTEXT_NAME&quot;>TEST_FULL&lt;/DataValue>" test_out_val="true"/>
+            <validation id="0d3043ba-b787-4fdb-ad3f-df7d0289a980" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from parameter_tab
+ where parameter_id = 'CONTEXT_TEST_FULL'
+   and parameter_group_id = 'PIT'
+   and to_char(string_value) = utl_context.get_Value('PIT_CTX', 'CONTEXT_ACTIVE')</description>
+                  <code>select 1
+  from parameter_tab
+ where parameter_id = 'CONTEXT_TEST_FULL'
+   and parameter_group_id = 'PIT'
+   and to_char(string_value) = utl_context.get_Value('PIT_CTX', 'CONTEXT_ACTIVE')</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="92ca927e-6328-486a-854b-3c65f8ce7786" name="Activate named context TEST_FULL" class="oracle.dbtools.unit_test.startup.PlSqlStartup">
+         <startup>
+            <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  pit.reset_context(false);
+  pit.set_context('TEST_FULL');
+end;</description>
+            <code>begin
+  pit.reset_context(false);
+  pit.set_context('TEST_FULL');
+end;</code>
+         </startup>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="ab66aa57-e4ee-4c1f-857f-0121ee9f9da3" name="Has ENTER entry" class="oracle.dbtools.unit_test.process_validation.QueryReturningRows">
+         <validation>
+            <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+            <name>Abfrage gibt Zeilen zurück</name>
+            <description>select 1
+  from pit_test_table
+ where component = 'ENTER'</description>
+            <code>select 1
+  from pit_test_table
+ where component = 'ENTER'</code>
+         </validation>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="3a2ea1cc-89b5-4c7c-a9de-a4003fce29ad" name="PIT.ENTER_MANDATORY creates log" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ENTER_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="ffff77d4-58b9-41b1-b4e8-6bdd9fc6ba34" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_ACTION" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="2584ed6d-9e0e-4638-8565-c46b786fdbfe" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" position="1" sequence="4" data_level="1" data_type="OBJECT" in_out="IN" type_owner="DOAG" type_name="MSG_PARAM" char_length="0" char_used="0"/>
+         <arg id="302760cb-0931-41bf-bab2-c48227e9abde" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_MODULE" position="2" sequence="2" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="5f6b9993-6ab9-49c8-b887-1dbcf2eebc8e" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_PARAMS" position="3" sequence="3" data_level="0" data_type="TABLE" in_out="IN" type_owner="DOAG" type_name="MSG_PARAMS" char_length="0" char_used="0"/>
+         <arg id="52f23b3c-6365-4b8c-b453-67b622e94baf" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_CLIENT_INFO" position="4" sequence="5" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="d6f51dca-f22a-463a-ab22-0857a12372aa" lib_id="92ca927e-6328-486a-854b-3c65f8ce7786" lib_name="Activate named context TEST_FULL"/>
+         <teardown id="00d08ea7-bb2b-47a4-b490-7002a509422c">
+            <teardown>
+               <class>oracle.dbtools.unit_test.teardown.PlSqlTeardown</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.reset_context;
+  pit.leave_mandatory;
+  delete from pit_test_table;
+  commit;
+end;</description>
+               <code>begin
+  pit.reset_context;
+  pit.leave_mandatory;
+  delete from pit_test_table;
+  commit;
+end;</code>
+            </teardown>
+         </teardown>
+         <test_impl id="1440a401-dabc-4225-860c-cc8e37be82b3" test_id="3a2ea1cc-89b5-4c7c-a9de-a4003fce29ad" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'FOO' as P_ACTION,
+       'FOO' as P_MODULE,
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS,
+       'My Info' as P_CLIENT_INFO
+  from dual</description>
+               <code>select 'FOO' as P_ACTION,
+       'FOO' as P_MODULE,
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS,
+       'My Info' as P_CLIENT_INFO
+  from dual</code>
+            </dvq>
+            <parm argId="ffff77d4-58b9-41b1-b4e8-6bdd9fc6ba34" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_ACTION&quot;/>" test_out_val="true"/>
+            <parm argId="5f6b9993-6ab9-49c8-b887-1dbcf2eebc8e" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_PARAMS&quot;/>" test_out_val="true"/>
+            <parm argId="52f23b3c-6365-4b8c-b453-67b622e94baf" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_CLIENT_INFO&quot;/>" test_out_val="true"/>
+            <parm argId="302760cb-0931-41bf-bab2-c48227e9abde" utiId="1440a401-dabc-4225-860c-cc8e37be82b3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MODULE&quot;/>" test_out_val="true"/>
+            <validation id="a528ef48-4f14-4bea-9cbd-00719e2a1ea9" apply="true" lib_id="ab66aa57-e4ee-4c1f-857f-0121ee9f9da3" lib_name="Has ENTER entry"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" name="Reset context and clear test table" class="oracle.dbtools.unit_test.teardown.PlSqlTeardown">
+         <teardown>
+            <class>oracle.dbtools.unit_test.teardown.PlSqlTeardown</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</description>
+            <code>begin
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</code>
+         </teardown>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="dc68fdda-cbb4-47e8-98fa-113726a70a42" name="PIT.SET_CONTEXT with invalid parameters" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="SET_CONTEXT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="f6fbb091-f95c-4b83-8f30-3fb67259b8ac" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_LOG_LEVEL" position="1" sequence="1" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" data_precision="38" radix="10" pls_type="INTEGER" char_length="0" char_used="0"/>
+         <arg id="26a6e2d0-06eb-43b2-bace-194dbd6824a2" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_TRACE_LEVEL" position="2" sequence="2" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" data_precision="38" radix="10" pls_type="INTEGER" char_length="0" char_used="0"/>
+         <arg id="68174ff2-6c5f-4e51-b0c4-4f283e5ad510" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_TRACE_TIMING" position="3" sequence="3" data_level="0" data_type="PL/SQL BOOLEAN" in_out="IN" pls_type="BOOLEAN" char_length="0" char_used="0"/>
+         <arg id="8cf39324-90c0-4958-b9eb-58059ba0b179" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="1" argument_name="P_MODULE_LIST" position="4" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="478b57f2-b781-489a-a34c-7f3dae90d61c" lib_id="92ca927e-6328-486a-854b-3c65f8ce7786" lib_name="Activate named context TEST_FULL"/>
+         <teardown id="8db7f511-d273-4c6e-ab4c-3ac241bb3b03" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="ee84bb65-b531-4554-a45a-f274e88b76a9" test_id="dc68fdda-cbb4-47e8-98fa-113726a70a42" name="Testimplementierung 1" expected_ret="Exception" expected_err="20000">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 80 as P_LOG_LEVEL, 
+       10 as P_TRACE_LEVEL, 
+       'N' as P_TRACE_TIMING,
+       'PIT_TEST' as P_MODULE_LIST 
+  from dual 
+union all
+select 30,60,'Y','PIT_TEST' from dual union all
+select 30,30,'N',null from dual union all
+select null,30,'N',null from dual union all
+select 30,null,'N',null from dual union all
+select null,null,null,null from dual</description>
+               <code>select 80 as P_LOG_LEVEL, 
+       10 as P_TRACE_LEVEL, 
+       'N' as P_TRACE_TIMING,
+       'PIT_TEST' as P_MODULE_LIST 
+  from dual 
+union all
+select 30,60,'Y','PIT_TEST' from dual union all
+select 30,30,'N',null from dual union all
+select null,30,'N',null from dual union all
+select 30,null,'N',null from dual union all
+select null,null,null,null from dual</code>
+            </dvq>
+            <parm argId="68174ff2-6c5f-4e51-b0c4-4f283e5ad510" utiId="ee84bb65-b531-4554-a45a-f274e88b76a9" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_TRACE_TIMING&quot;/>" test_out_val="true"/>
+            <parm argId="f6fbb091-f95c-4b83-8f30-3fb67259b8ac" utiId="ee84bb65-b531-4554-a45a-f274e88b76a9" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_LOG_LEVEL&quot;/>" test_out_val="true"/>
+            <parm argId="8cf39324-90c0-4958-b9eb-58059ba0b179" utiId="ee84bb65-b531-4554-a45a-f274e88b76a9" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MODULE_LIST&quot;/>" test_out_val="true"/>
+            <parm argId="26a6e2d0-06eb-43b2-bace-194dbd6824a2" utiId="ee84bb65-b531-4554-a45a-f274e88b76a9" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_TRACE_LEVEL&quot;/>" test_out_val="true"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="2d29174a-8398-43f1-aa32-17ac5fa456af" name="PIT.LEAVE_MANDATORY creates log" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="LEAVE_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="7ca23b56-581e-4b5e-86a2-4cf1bd27f95c">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.set_context('TEST_FULL');
+  pit.enter_mandatory('FOO', 'FOO');
+end;</description>
+               <code>begin
+  pit.set_context('TEST_FULL');
+  pit.enter_mandatory('FOO', 'FOO');
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="6faaa49e-3f0b-4a29-bbe7-fcaec98c51ba" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="57d173b0-466a-4ec4-ab93-4a886816060f" test_id="2d29174a-8398-43f1-aa32-17ac5fa456af" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="bca24200-c71a-4056-b48f-ed909d035585" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'LEAVE'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'LEAVE'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="DACFCA86CAC345B9A8078D7E1EF5ED5F" name="PIT.LEAVE_MANDATORY does not create log" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="LEAVE_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="CE534EDA0E074E7CAAAA73F8752890B9" lib_id="92ca927e-6328-486a-854b-3c65f8ce7786" lib_name="Activate named context TEST_FULL"/>
+         <test_impl id="F98076D637A44F18953C07F21C718814" test_id="DACFCA86CAC345B9A8078D7E1EF5ED5F" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="D9820DB7537B41A3BBD9AB693F807F80" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningNoRows</class>
+                  <name>Abfrage gibt keine Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'LEAVE'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'LEAVE'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="b87be218-4ec1-476b-bfcb-6b6670f29596" name="PIT.ERROR is raised anyway" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ERROR" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="68435600-08da-46b0-8592-2a420d29dda6" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="cca63da9-d4b0-4504-aaf0-e7e6a5ad1e8b" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" position="1" sequence="3" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="c9a58c78-b490-4a80-afee-7f94e196b46d" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="2" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <arg id="23796f80-64ed-4278-9651-29a33e377038" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" argument_name="P_AFFECTED_ID" position="3" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="dc82ef2c-1f47-4470-89ad-f6752650ca1b">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.reset_context(false);
+  pit.set_context('TEST_OFF');
+end;</description>
+               <code>begin
+  pit.reset_context(false);
+  pit.set_context('TEST_OFF');
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="90fadd40-ff52-4c62-8ef0-fd9695fb29c2" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="b20fa01e-4741-4c2b-9d63-8b1e09e083da" test_id="b87be218-4ec1-476b-bfcb-6b6670f29596" name="Testimplementierung 1" expected_ret="Exception" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'SQL_ERROR' p_message_name,
+       msg_args('Test error') p_arg_list,
+       '123' p_affected_id
+  from dual</description>
+               <code>select 'SQL_ERROR' p_message_name,
+       msg_args('Test error') p_arg_list,
+       '123' p_affected_id
+  from dual</code>
+            </dvq>
+            <parm argId="68435600-08da-46b0-8592-2a420d29dda6" utiId="b20fa01e-4741-4c2b-9d63-8b1e09e083da" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+            <parm argId="23796f80-64ed-4278-9651-29a33e377038" utiId="b20fa01e-4741-4c2b-9d63-8b1e09e083da" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_AFFECTED_ID&quot;/>" test_out_val="true"/>
+            <parm argId="c9a58c78-b490-4a80-afee-7f94e196b46d" utiId="b20fa01e-4741-4c2b-9d63-8b1e09e083da" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="e2ee0e56-e50d-486b-be2f-d78c42c1450c" name="PIT_TEST_CASES.CATCH_ERROR_ANYWAY" obj_name="PIT_TEST_CASES" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="CATCH_ERROR_ANYWAY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <teardown id="8bd22894-f61f-4a64-9539-5eb6baefac49">
+            <teardown>
+               <class>oracle.dbtools.unit_test.teardown.PlSqlTeardown</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</description>
+               <code>begin
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</code>
+            </teardown>
+         </teardown>
+         <test_impl id="cb6bd279-c649-4505-b69b-a7938f247710" test_id="e2ee0e56-e50d-486b-be2f-d78c42c1450c" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="704f2e25-e529-4fdb-b00c-4aa634f05660" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'LOG'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'LOG'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="6adadda7-2c07-4b9c-ba3f-ac31e2d6545d" name="PIT.SET_CONTEXT with non existing name" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="SET_CONTEXT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="f4c52584-eada-415f-a3f8-928dbc9fc521" owner="DOAG" object_name="SET_CONTEXT" package_name="PIT" object_id="183490" overload="2" argument_name="P_CONTEXT_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <teardown id="51c94338-aeca-47e0-93b6-ad7d42c1bcad" lib_id="fbbb4c4f-4034-423d-a49d-9554e9e86a02" lib_name="reset Context"/>
+         <test_impl id="e3bac95e-3f82-44c1-8178-a245ac183494" test_id="6adadda7-2c07-4b9c-ba3f-ac31e2d6545d" name="Testimplementierung 1" expected_ret="Exception" expected_err="ANY">
+            <parm argId="f4c52584-eada-415f-a3f8-928dbc9fc521" utiId="e3bac95e-3f82-44c1-8178-a245ac183494" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_CONTEXT_NAME&quot;/>" test_out_val="true"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="b6fb2456-abe4-4db8-bddd-37774a62b153" name="PIT.ERROR with non existing name" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ERROR" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="4a4cd907-63fe-433e-a6b8-74780d301f32" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="4dff9680-f7d2-42b0-b564-6c717cdefe3e" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" position="1" sequence="3" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="fc99e8d6-29d9-40d7-9b5b-85654a90a82f" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="2" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <arg id="97e080f7-a7bf-4daa-afd9-7700b5e4c281" owner="DOAG" object_name="ERROR" package_name="PIT" object_id="183490" argument_name="P_AFFECTED_ID" position="3" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="6a4c9c33-f8b5-4107-a615-c6732ad8a849" lib_id="92ca927e-6328-486a-854b-3c65f8ce7786" lib_name="Activate named context TEST_FULL"/>
+         <teardown id="329414db-defa-4024-b552-e48b1e0b6abb" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="2065a96a-71e5-4bae-a49d-0bc03721ff93" test_id="b6fb2456-abe4-4db8-bddd-37774a62b153" name="Testimplementierung 1" expected_ret="Exception" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'FOO' as P_MESSAGE_NAME,
+       null as P_ARG_LIST, 
+       null as P_AFFECTED_ID 
+  from dual</description>
+               <code>select 'FOO' as P_MESSAGE_NAME,
+       null as P_ARG_LIST, 
+       null as P_AFFECTED_ID 
+  from dual</code>
+            </dvq>
+            <parm argId="97e080f7-a7bf-4daa-afd9-7700b5e4c281" utiId="2065a96a-71e5-4bae-a49d-0bc03721ff93" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_AFFECTED_ID&quot;/>" test_out_val="true"/>
+            <parm argId="fc99e8d6-29d9-40d7-9b5b-85654a90a82f" utiId="2065a96a-71e5-4bae-a49d-0bc03721ff93" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+            <parm argId="4a4cd907-63fe-433e-a6b8-74780d301f32" utiId="2065a96a-71e5-4bae-a49d-0bc03721ff93" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="ae65c058-99dd-4731-aeec-d76095c1c142" name="PIT.WARN is fired" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="WARN" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="55640202-89b5-4158-97a5-0d3630147c87" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="2746c8a5-ceee-4b62-ab26-5bc01815bef7" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" position="1" sequence="3" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="3dd5afd6-383b-4423-8c8a-6720fdfa11e3" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="2" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <arg id="7d902d37-fbb0-43a8-8b3d-b7ea8695a6f6" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" argument_name="P_AFFECTED_ID" position="3" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="b62077dd-5aa3-4a70-b209-51b32557ac5e" lib_id="92ca927e-6328-486a-854b-3c65f8ce7786" lib_name="Activate named context TEST_FULL"/>
+         <teardown id="9c2c6516-a278-4624-a9ea-444b462c2ac6" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="d4854830-e4c1-4fa3-a446-fbb3deaa2ec7" test_id="ae65c058-99dd-4731-aeec-d76095c1c142" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test warning') as P_ARG_LIST, 
+       '123' as P_AFFECTED_ID
+  from dual</description>
+               <code>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test warning') as P_ARG_LIST, 
+       '123' as P_AFFECTED_ID
+  from dual</code>
+            </dvq>
+            <parm argId="55640202-89b5-4158-97a5-0d3630147c87" utiId="d4854830-e4c1-4fa3-a446-fbb3deaa2ec7" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+            <parm argId="7d902d37-fbb0-43a8-8b3d-b7ea8695a6f6" utiId="d4854830-e4c1-4fa3-a446-fbb3deaa2ec7" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_AFFECTED_ID&quot;/>" test_out_val="true"/>
+            <parm argId="3dd5afd6-383b-4423-8c8a-6720fdfa11e3" utiId="d4854830-e4c1-4fa3-a446-fbb3deaa2ec7" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+            <validation id="a63ddcc7-036c-4e88-9188-772ca2892afa" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'LOG'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'LOG'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="d5523081-0682-48ea-8106-bbe02eee7343" name="Activate namend context TEST_OFF" class="oracle.dbtools.unit_test.startup.PlSqlStartup">
+         <startup>
+            <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  pit.reset_context(false);
+  pit.set_context('TEST_OFF');
+end;</description>
+            <code>begin
+  pit.reset_context(false);
+  pit.set_context('TEST_OFF');
+end;</code>
+         </startup>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="8A386A9A0C05426E835D3022C2F22818" name="PIT.WARN is not fired" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="WARN" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="EDBF1760A0B84C369A2A5EF7225E5732" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="7613405599A24F6B9D2FDFD1A739E760" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" position="1" sequence="3" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="BF042E43A77544DA81D52931EA8FE830" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="2" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <arg id="0C863C080C12404EA5746AA01D6482EC" owner="DOAG" object_name="WARN" package_name="PIT" object_id="183490" argument_name="P_AFFECTED_ID" position="3" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="B52D49D380654E9CB13546B3712A9393" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="F7C12B370EDE41CE9629482D5898C047" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="B891D9F1CB864F0381FC03B95AD58984" test_id="8A386A9A0C05426E835D3022C2F22818" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test warning') as P_ARG_LIST, 
+       '123' as P_AFFECTED_ID
+  from dual</description>
+               <code>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test warning') as P_ARG_LIST, 
+       '123' as P_AFFECTED_ID
+  from dual</code>
+            </dvq>
+            <parm argId="0C863C080C12404EA5746AA01D6482EC" utiId="B891D9F1CB864F0381FC03B95AD58984" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_AFFECTED_ID&quot;/>" test_out_val="true"/>
+            <parm argId="EDBF1760A0B84C369A2A5EF7225E5732" utiId="B891D9F1CB864F0381FC03B95AD58984" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+            <parm argId="BF042E43A77544DA81D52931EA8FE830" utiId="B891D9F1CB864F0381FC03B95AD58984" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+            <validation id="1022389E228941EDB1DC834EB75599B6" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningNoRows</class>
+                  <name>Abfrage gibt keine Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'LOG'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'LOG'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="DF6166B0404240D684B1E3CD78107276" name="PIT.LEAVE_MANDATORY captures timing" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="LEAVE_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="A783488B78CD4424B1322FC77205EF5A">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.set_context('TEST_FULL');
+  pit.enter_mandatory('FOO', 'FOO');
+end;</description>
+               <code>begin
+  pit.set_context('TEST_FULL');
+  pit.enter_mandatory('FOO', 'FOO');
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="7FFC59B6A82844ADB9A26057021F5CED" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="5C37DA1DE5E14D84858A3E6D29DE82A3" test_id="DF6166B0404240D684B1E3CD78107276" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="F1E3D4E03EF64CEDA2969DA07F9279D8" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table t
+ where t.component = 'LEAVE'
+   and t.call_stack.total is not null</description>
+                  <code>select 1
+  from pit_test_table t
+ where t.component = 'LEAVE'
+   and t.call_stack.total is not null</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="82E3D0AF40D04F948BBE9BC9732341DD" name="PIT.LEAVE_MANDATORY surpresses timing" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="LEAVE_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="0746A692CA364B70B19AA7E405BA393D">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  pit.set_context(10,50,false,'PIT_TEST');
+  pit.enter_mandatory('FOO', 'FOO');
+end;</description>
+               <code>begin
+  pit.set_context(10,50,false,'PIT_TEST');
+  pit.enter_mandatory('FOO', 'FOO');
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="CBFEDBE367734798873DD76A28FDBCE7" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="3AFC45991B014941B756AC899F083D4A" test_id="82E3D0AF40D04F948BBE9BC9732341DD" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="32169748786644ED82C5C3E40D22AD1B" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table t
+ where t.component = 'LEAVE'
+   and t.call_stack.total is null</description>
+                  <code>select 1
+  from pit_test_table t
+ where t.component = 'LEAVE'
+   and t.call_stack.total is null</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="f7265a7e-b057-4034-a834-678477259094" name="PIT.LOG_SPECIFIC fires anyway" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="LOG_SPECIFIC" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="746638a7-b7db-4e71-8e23-ddc6c0bca37d" owner="DOAG" object_name="LOG_SPECIFIC" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="e11f8871-7966-4076-bd10-d50991ec642d" owner="DOAG" object_name="LOG_SPECIFIC" package_name="PIT" object_id="183490" position="1" sequence="3" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="b5378e27-2ec0-4b02-bf39-ef4131f76d73" owner="DOAG" object_name="LOG_SPECIFIC" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="2" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <arg id="26112df4-e9d1-482f-91c3-89b36313d347" owner="DOAG" object_name="LOG_SPECIFIC" package_name="PIT" object_id="183490" argument_name="P_AFFECTED_ID" position="3" sequence="4" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="cbac9fa5-09e1-47ab-80c7-922193da14a8" owner="DOAG" object_name="LOG_SPECIFIC" package_name="PIT" object_id="183490" argument_name="P_LOG_THRESHOLD" position="4" sequence="5" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" radix="10" pls_type="NUMBER" char_length="0" char_used="0"/>
+         <arg id="c2a31f3e-fd1e-4f0c-9a1f-ff50faf7563a" owner="DOAG" object_name="LOG_SPECIFIC" package_name="PIT" object_id="183490" argument_name="P_LOG_MODULES" position="5" sequence="6" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="729701b0-6e5b-4010-9d0d-2e82ad55c9cc" lib_id="c0daaa9b-4bc3-47bf-814b-9aa5034910a9" lib_name="reset Context"/>
+         <teardown id="6367f80c-bec7-4e46-a90e-3657e4e2d8bc">
+            <teardown>
+               <class>oracle.dbtools.unit_test.teardown.PlSqlTeardown</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>-- Geben Sie den Code an, der nach dem
+-- Aufruf des Testvorgangs ausgeführt werden soll. Beispiel:
+BEGIN
+    NULL; -- do something
+END;
+</description>
+               <code>-- Geben Sie den Code an, der nach dem
+-- Aufruf des Testvorgangs ausgeführt werden soll. Beispiel:
+BEGIN
+    NULL; -- do something
+END;
+</code>
+            </teardown>
+         </teardown>
+         <test_impl id="d1cb6223-9556-46ee-874d-1929efb161c3" test_id="f7265a7e-b057-4034-a834-678477259094" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test message') as P_ARG_LIST, 
+       '123' as P_AFFECTED_ID, 
+       50 as P_LOG_THRESHOLD, 
+       'PIT_TEST' as P_LOG_MODULES
+  from dual</description>
+               <code>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test message') as P_ARG_LIST, 
+       '123' as P_AFFECTED_ID, 
+       50 as P_LOG_THRESHOLD, 
+       'PIT_TEST' as P_LOG_MODULES
+  from dual</code>
+            </dvq>
+            <parm argId="746638a7-b7db-4e71-8e23-ddc6c0bca37d" utiId="d1cb6223-9556-46ee-874d-1929efb161c3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+            <parm argId="cbac9fa5-09e1-47ab-80c7-922193da14a8" utiId="d1cb6223-9556-46ee-874d-1929efb161c3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_LOG_THRESHOLD&quot;/>" test_out_val="true"/>
+            <parm argId="26112df4-e9d1-482f-91c3-89b36313d347" utiId="d1cb6223-9556-46ee-874d-1929efb161c3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_AFFECTED_ID&quot;/>" test_out_val="true"/>
+            <parm argId="b5378e27-2ec0-4b02-bf39-ef4131f76d73" utiId="d1cb6223-9556-46ee-874d-1929efb161c3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+            <parm argId="c2a31f3e-fd1e-4f0c-9a1f-ff50faf7563a" utiId="d1cb6223-9556-46ee-874d-1929efb161c3" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_LOG_MODULES&quot;/>" test_out_val="true"/>
+            <validation id="1979f3ab-e98e-4ce7-9a8f-e78ec7aa5b98" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'LOG'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'LOG'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="9483fc31-9af6-4ca8-92fb-d662c0e7c2d6" name="PIT_TEST_CASES.CATCH_FATAL_AND_STOP" obj_name="PIT_TEST_CASES" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="CATCH_FATAL_AND_STOP" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="aa073700-a635-49fb-8121-6282da287297" lib_id="c0daaa9b-4bc3-47bf-814b-9aa5034910a9" lib_name="reset Context"/>
+         <teardown id="70233175-bed6-4f4c-a5c7-b8132f9edd9c" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="27e4cc4d-453b-49aa-9f68-6cc0daf1c3b6" test_id="9483fc31-9af6-4ca8-92fb-d662c0e7c2d6" name="Testimplementierung 1" expected_ret="Exception" expected_err="ANY"/>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="b507679c-e372-48a9-a0f7-8d2010ad74fc" name="PIT.PRINT is processed" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="PRINT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="e936abf3-774f-416c-9122-8902f3618b2a" owner="DOAG" object_name="PRINT" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="115df27e-33ef-4755-b2c3-c5ebe8f013a2" owner="DOAG" object_name="PRINT" package_name="PIT" object_id="183490" position="1" sequence="3" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="033751be-81f7-436c-b9e2-d27c11a86048" owner="DOAG" object_name="PRINT" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="2" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <startup id="52ccf3e2-7d7e-4e09-9b1d-db54d2069397" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="715c0945-98f6-4d3c-970f-bf497ed9aceb" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="26bf2a0b-81af-4b57-8743-b31bb5bdce61" test_id="b507679c-e372-48a9-a0f7-8d2010ad74fc" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test message') as P_ARG_LIST
+  from dual</description>
+               <code>select 'SQL_ERROR' as P_MESSAGE_NAME, 
+       msg_args('Test message') as P_ARG_LIST
+  from dual</code>
+            </dvq>
+            <parm argId="e936abf3-774f-416c-9122-8902f3618b2a" utiId="26bf2a0b-81af-4b57-8743-b31bb5bdce61" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+            <parm argId="033751be-81f7-436c-b9e2-d27c11a86048" utiId="26bf2a0b-81af-4b57-8743-b31bb5bdce61" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+            <validation id="d0eeb3d4-9306-4076-a655-5ce2c202fd7c" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'PRINT'</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'PRINT'</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="50b9be50-337c-49bf-9589-0916629b9768" name="PIT.PURGE_LOG is processed" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="PURGE_LOG" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="4fcdc3a9-c05c-49b4-9987-6d731aef4078" owner="DOAG" object_name="PURGE_LOG" package_name="PIT" object_id="183490" overload="1" argument_name="P_DATE_BEFORE" position="1" sequence="1" data_level="0" data_type="DATE" in_out="IN" pls_type="DATE" char_length="0" char_used="0"/>
+         <startup id="96c12478-a89d-4a7f-a524-c8c2df1501af" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="3d95c3a3-76ed-4687-9853-4540e9af27b1" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="ec7e805e-e6f9-4576-bee4-2dd750d8dde5" test_id="50b9be50-337c-49bf-9589-0916629b9768" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select trunc(sysdate) as P_DATE_BEFORE 
+  from dual</description>
+               <code>select trunc(sysdate) as P_DATE_BEFORE 
+  from dual</code>
+            </dvq>
+            <parm argId="4fcdc3a9-c05c-49b4-9987-6d731aef4078" utiId="ec7e805e-e6f9-4576-bee4-2dd750d8dde5" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_DATE_BEFORE&quot;/>" test_out_val="true"/>
+            <validation id="87b1e783-3429-4891-9cb4-b5e7c53ac92b" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, to_char(trunc(sysdate), 'dd.mm.yyyy hh24:mi:ss')) > 0</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, to_char(trunc(sysdate), 'dd.mm.yyyy hh24:mi:ss')) > 0</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="f00d50d2-cba8-4701-862d-88365da8a149" name="PIT.PURGE_LOG overload is processed" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="PURGE_LOG" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="9a94fe25-49b3-460f-9c71-35450d82bb57" owner="DOAG" object_name="PURGE_LOG" package_name="PIT" object_id="183490" overload="2" argument_name="P_DAYS_BEFORE" position="1" sequence="1" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" radix="10" pls_type="NUMBER" char_length="0" char_used="0"/>
+         <startup id="11048c9f-47a6-4ae2-a299-6fe8261f12ed" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="9d96a503-893d-4ab3-b5ce-7b0d3edc5cae" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="0373306e-9b26-4e25-8de2-6c5c13744fa6" test_id="f00d50d2-cba8-4701-862d-88365da8a149" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <parm argId="9a94fe25-49b3-460f-9c71-35450d82bb57" utiId="0373306e-9b26-4e25-8de2-6c5c13744fa6" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_DAYS_BEFORE&quot;>3&lt;/DataValue>" test_out_val="true"/>
+            <validation id="5f114dbd-efc4-47a7-9775-1e47432b1a03" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select 1
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, to_char(trunc(sysdate - 3), 'dd.mm.yyyy hh24:mi:ss')) > 0</description>
+                  <code>select 1
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, to_char(trunc(sysdate - 3), 'dd.mm.yyyy hh24:mi:ss')) > 0</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="91d82dee-6dfe-4f2f-92d5-21295f113429" name="PIT.RESET_CONTEXT is working" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="RESET_CONTEXT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="e60386ef-89b8-4e0c-b91b-d18bc1e1c96b" owner="DOAG" object_name="RESET_CONTEXT" package_name="PIT" object_id="183490" argument_name="P_ACTIVE_SESSION_ONLY" position="1" sequence="1" data_level="0" data_type="PL/SQL BOOLEAN" in_out="IN" pls_type="BOOLEAN" char_length="0" char_used="0"/>
+         <startup id="d1019c3b-5873-41ae-bab4-46f7c9e1a99e" lib_id="92ca927e-6328-486a-854b-3c65f8ce7786" lib_name="Activate named context TEST_FULL"/>
+         <teardown id="ecad35a7-b855-43ec-a6d5-4217b8e0f886" lib_id="fbbb4c4f-4034-423d-a49d-9554e9e86a02" lib_name="reset Context"/>
+         <test_impl id="b735d32f-1978-479e-83f5-f5c309777d3f" test_id="91d82dee-6dfe-4f2f-92d5-21295f113429" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <parm argId="e60386ef-89b8-4e0c-b91b-d18bc1e1c96b" utiId="b735d32f-1978-479e-83f5-f5c309777d3f" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ACTIVE_SESSION_ONLY&quot;>true&lt;/DataValue>" test_out_val="true"/>
+            <validation id="f01e07d7-bb5f-4ccc-8968-de3e766c803c" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningNoRows</class>
+                  <name>Abfrage gibt keine Zeilen zurück</name>
+                  <description>select 1
+  from dual
+ where utl_context.get_value('PIT_CTX', 'CONTEXT_ACTIVE') is not null</description>
+                  <code>select 1
+  from dual
+ where utl_context.get_value('PIT_CTX', 'CONTEXT_ACTIVE') is not null</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="b1ed420b-9f9a-4c9f-a22e-0e9541e86f2c" name="PIT.PURGE_LOG deletes severity" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="PURGE_LOG" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="aac8e496-3ffc-448a-b35c-57a247675807" owner="DOAG" object_name="PURGE_LOG" package_name="PIT" object_id="183490" overload="1" argument_name="P_DATE_BEFORE" position="1" sequence="1" data_level="0" data_type="DATE" in_out="IN" pls_type="DATE" char_length="0" char_used="0"/>
+         <arg id="5a83f19f-a646-4622-a535-00b7d596039e" owner="DOAG" object_name="PURGE_LOG" package_name="PIT" object_id="183490" overload="1" argument_name="P_SEVERITY_GREATER_EQUAL" position="2" sequence="2" data_level="0" data_type="NUMBER" in_out="IN" data_length="22" radix="10" pls_type="NUMBER" char_length="0" char_used="0"/>
+         <startup id="c09b4821-0b0a-49bf-8b4b-d1c3df2776a2" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="b73cbf15-9de6-4e5a-a785-957fe80e7d1a" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="2fc4d259-e40c-4aaf-8bd5-2397b1a8ed03" test_id="b1ed420b-9f9a-4c9f-a22e-0e9541e86f2c" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select trunc(sysdate) as P_DATE_BEFORE, 
+       40 as P_SEVERITY_GREATER_EQUAL
+  from dual</description>
+               <code>select trunc(sysdate) as P_DATE_BEFORE, 
+       40 as P_SEVERITY_GREATER_EQUAL
+  from dual</code>
+            </dvq>
+            <parm argId="5a83f19f-a646-4622-a535-00b7d596039e" utiId="2fc4d259-e40c-4aaf-8bd5-2397b1a8ed03" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_SEVERITY_GREATER_EQUAL&quot;/>" test_out_val="true"/>
+            <parm argId="aac8e496-3ffc-448a-b35c-57a247675807" utiId="2fc4d259-e40c-4aaf-8bd5-2397b1a8ed03" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_DATE_BEFORE&quot;/>" test_out_val="true"/>
+            <validation id="7380ff47-1704-4814-a47b-695475a3cb89" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.QueryReturningRows</class>
+                  <name>Abfrage gibt Zeilen zurück</name>
+                  <description>select *
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, '40') > 0</description>
+                  <code>select *
+  from pit_test_table
+ where component = 'PURGE_LOG'
+   and instr(params, '40') > 0</code>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="b43c6725-eef6-4520-ae47-15d5e5a97bd5" name="Enter Signature" class="oracle.dbtools.unit_test.editor.DynamicValueQuery">
+         <dvq>
+            <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+            <name>Abfrage dynamischer Werte</name>
+            <description>select 'MY_PROC' as P_ACTION, 
+       'TEST' as P_MODULE, 
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS, 
+       'My info' as P_CLIENT_INFO
+  from dual</description>
+            <code>select 'MY_PROC' as P_ACTION, 
+       'TEST' as P_MODULE, 
+       msg_params(msg_param('Key', 'Value')) as P_PARAMS, 
+       'My info' as P_CLIENT_INFO
+  from dual</code>
+         </dvq>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="90fb070d-4e42-4556-bcc4-806e0858830d" name="PIT.ENTER_MANDATORY creates log when toggled on" obj_name="PIT" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="ENTER_MANDATORY" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="9d431f54-3ac0-4cf2-b854-b495de84f9aa" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_ACTION" position="1" sequence="1" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="144c47a0-52b4-4ab0-a7af-b464e5754dee" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" position="1" sequence="4" data_level="1" data_type="OBJECT" in_out="IN" type_owner="DOAG" type_name="MSG_PARAM" char_length="0" char_used="0"/>
+         <arg id="c6271a65-34fb-445f-a0fb-1c76d4d5a368" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_MODULE" position="2" sequence="2" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="a57b4a56-d066-475b-aeda-1eecaff3c0eb" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_PARAMS" position="3" sequence="3" data_level="0" data_type="TABLE" in_out="IN" type_owner="DOAG" type_name="MSG_PARAMS" char_length="0" char_used="0"/>
+         <arg id="1e060c1c-9cea-480a-982b-65dead7e80e3" owner="DOAG" object_name="ENTER_MANDATORY" package_name="PIT" object_id="183490" argument_name="P_CLIENT_INFO" position="4" sequence="5" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <startup id="c029c027-11fc-45e5-b7c6-ee5a533bda3c" lib_id="d5523081-0682-48ea-8106-bbe02eee7343" lib_name="Activate namend context TEST_OFF"/>
+         <teardown id="2b859861-f62b-480f-b7b5-db2c6a286f41" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="e10d2498-b9a1-469b-84d6-1408ced18fb0" test_id="90fb070d-4e42-4556-bcc4-806e0858830d" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY" dq_lib_id="b43c6725-eef6-4520-ae47-15d5e5a97bd5" dq_lib_name="Enter Signature">
+            <parm argId="1e060c1c-9cea-480a-982b-65dead7e80e3" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_CLIENT_INFO&quot;/>" test_out_val="true"/>
+            <parm argId="c6271a65-34fb-445f-a0fb-1c76d4d5a368" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MODULE&quot;/>" test_out_val="true"/>
+            <parm argId="a57b4a56-d066-475b-aeda-1eecaff3c0eb" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_PARAMS&quot;/>" test_out_val="true"/>
+            <parm argId="9d431f54-3ac0-4cf2-b854-b495de84f9aa" utiId="e10d2498-b9a1-469b-84d6-1408ced18fb0" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_ACTION&quot;/>" test_out_val="true"/>
+            <validation id="d16a9ec0-e625-4f46-bf85-c9a80d4f8297" apply="true" lib_id="ab66aa57-e4ee-4c1f-857f-0121ee9f9da3" lib_name="Has ENTER entry"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtLibraryItem">
+      <libitem id="05c6a6bd-f1ee-448e-a2dc-4cc39220132e" name="Set language GERMAN" class="oracle.dbtools.unit_test.startup.PlSqlStartup">
+         <startup>
+            <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+            <name>Benutzer-PL/Sql-Code</name>
+            <description>begin
+  execute immediate 'alter session set nls_language=GERMAN';
+end;
+</description>
+            <code>begin
+  execute immediate 'alter session set nls_language=GERMAN';
+end;
+</code>
+         </startup>
+      </libitem>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="8899a6c4-3cc2-4654-918a-3a93ca14635a" name="PIT.GET_MESSAGE_TEXT return message" obj_name="PIT" obj_owner="DOAG" obj_type="FUNCTION" obj_call="GET_MESSAGE_TEXT" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <arg id="00ba1f8c-a362-4357-8e57-faa33461f63c" owner="DOAG" object_name="GET_MESSAGE_TEXT" package_name="PIT" object_id="183490" position="0" sequence="1" data_level="0" data_type="CLOB" in_out="OUT" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="70730eca-0987-481a-9fb4-a1aeb235806c" owner="DOAG" object_name="GET_MESSAGE_TEXT" package_name="PIT" object_id="183490" position="1" sequence="4" data_level="1" data_type="CLOB" in_out="IN" character_set_name="CHAR_CS" pls_type="CLOB" char_length="0" char_used="0"/>
+         <arg id="07268f0c-f4ba-49ad-adb0-990c6c8df784" owner="DOAG" object_name="GET_MESSAGE_TEXT" package_name="PIT" object_id="183490" argument_name="P_MESSAGE_NAME" position="1" sequence="2" data_level="0" data_type="VARCHAR2" in_out="IN" character_set_name="CHAR_CS" pls_type="VARCHAR2" char_used="B"/>
+         <arg id="b9fb5543-4815-4fe3-97b3-9764d445befe" owner="DOAG" object_name="GET_MESSAGE_TEXT" package_name="PIT" object_id="183490" argument_name="P_ARG_LIST" position="2" sequence="3" data_level="0" data_type="VARRAY" in_out="IN" type_owner="DOAG" type_name="MSG_ARGS" char_length="0" char_used="0"/>
+         <startup id="f9080ffd-cc65-44a4-8f27-ad67e93df901" lib_id="05c6a6bd-f1ee-448e-a2dc-4cc39220132e" lib_name="Set language GERMAN"/>
+         <test_impl id="b1b3e020-447e-417b-9519-a2e294955078" test_id="8899a6c4-3cc2-4654-918a-3a93ca14635a" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <dvq>
+               <class>oracle.dbtools.unit_test.editor.DynamicValueQuery</class>
+               <name>Abfrage dynamischer Werte</name>
+               <description>select 'GERMAN: Testfehler' as RETURNS$, 
+       'PIT_TEST' as P_MESSAGE_NAME, 
+       msg_args('Testfehler') as P_ARG_LIST
+  from dual</description>
+               <code>select 'GERMAN: Testfehler' as RETURNS$, 
+       'PIT_TEST' as P_MESSAGE_NAME, 
+       msg_args('Testfehler') as P_ARG_LIST
+  from dual</code>
+            </dvq>
+            <parm argId="00ba1f8c-a362-4357-8e57-faa33461f63c" utiId="b1b3e020-447e-417b-9519-a2e294955078" output_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot;/>" test_out_val="true"/>
+            <parm argId="b9fb5543-4815-4fe3-97b3-9764d445befe" utiId="b1b3e020-447e-417b-9519-a2e294955078" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue name=&quot;P_ARG_LIST&quot;/>" test_out_val="true"/>
+            <parm argId="07268f0c-f4ba-49ad-adb0-990c6c8df784" utiId="b1b3e020-447e-417b-9519-a2e294955078" input_value="&lt;?xml version = '1.0' encoding = 'UTF-8'?>&#xD;&#xA;&lt;DataValue is_null=&quot;true&quot; name=&quot;P_MESSAGE_NAME&quot;/>" test_out_val="true"/>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="2c836066-369c-4810-8637-51e845bcaf1a" name="PIT_TEST_CASES.TOGGLE_CONTEXT_1" obj_name="PIT_TEST_CASES" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="TOGGLE_CONTEXT_1" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="3131249d-3f21-4754-b637-45f9971037b5">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  param.set_boolean('ALLOW_TOGGLE', 'PIT', true);
+  param.set_boolean('BROADCAST_CONTEXT_SWITCH', 'PIT', true);
+
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</description>
+               <code>begin
+  param.set_boolean('ALLOW_TOGGLE', 'PIT', true);
+  param.set_boolean('BROADCAST_CONTEXT_SWITCH', 'PIT', true);
+
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="74a7b4e9-4e79-4e59-b9a9-9639fbc087d0" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="d2f55eb3-8402-44a1-b60c-43972d2479d6" test_id="2c836066-369c-4810-8637-51e845bcaf1a" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="a5c66d70-28a7-4d38-a8e0-6d87fb9bd8ac" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.ResultSetCompare</class>
+                  <name>Abfrageergebnisse vergleichen</name>
+                  <description>(select component, params    from pit_test_table where component != 'INITIALIZE_MODULE') = (select component, params from pit_test_table_result   where test_id = 'TOGGLE_CONTEXT_1' )</description>
+                  <source>select component, params    from pit_test_table where component != 'INITIALIZE_MODULE'</source>
+                  <target>select component, params from pit_test_table_result   where test_id = 'TOGGLE_CONTEXT_1' </target>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="5af21dfe-e74e-4493-ad7d-9fa2d4e5c94c" name="PIT_TEST_CASES.TOGGLE_CONTEXT_2" obj_name="PIT_TEST_CASES" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="TOGGLE_CONTEXT_2" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="698c7aad-126f-40cb-8046-20d679fa8b9a">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  param.set_boolean('ALLOW_TOGGLE', 'PIT', true);
+  param.set_boolean('BROADCAST_CONTEXT_SWITCH', 'PIT', true);
+
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</description>
+               <code>begin
+  param.set_boolean('ALLOW_TOGGLE', 'PIT', true);
+  param.set_boolean('BROADCAST_CONTEXT_SWITCH', 'PIT', true);
+
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="7ffdbfde-2c52-4426-aeb5-2c12a3263153" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="09c94895-5440-4a88-b172-78c531f14673" test_id="5af21dfe-e74e-4493-ad7d-9fa2d4e5c94c" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="a8d977de-5fa8-491d-a858-add1a297dbba" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.ResultSetCompare</class>
+                  <name>Abfrageergebnisse vergleichen</name>
+                  <description>(select component, params from pit_test_table) = (select component, params from pit_test_table_result where test_id = 'TOGGLE_CONTEXT_2')</description>
+                  <source>select component, params from pit_test_table</source>
+                  <target>select component, params from pit_test_table_result where test_id = 'TOGGLE_CONTEXT_2'</target>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtTest">
+      <test id="2ec8f8a2-e8c9-4991-b609-f231e0b33fda" name="PIT_TEST_CASES.TOGGLE_CONTEXT_3" obj_name="PIT_TEST_CASES" obj_owner="DOAG" obj_type="PROCEDURE" obj_call="TOGGLE_CONTEXT_3" src_conn_name="IdeConnections%23DOAG" coverage="false">
+         <startup id="e475cf19-5171-411d-a93b-305db82a3908">
+            <startup>
+               <class>oracle.dbtools.unit_test.startup.PlSqlStartup</class>
+               <name>Benutzer-PL/Sql-Code</name>
+               <description>begin
+  param.set_boolean('ALLOW_TOGGLE', 'PIT', true);
+  param.set_boolean('BROADCAST_CONTEXT_SWITCH', 'PIT', true);
+
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</description>
+               <code>begin
+  param.set_boolean('ALLOW_TOGGLE', 'PIT', true);
+  param.set_boolean('BROADCAST_CONTEXT_SWITCH', 'PIT', true);
+
+  pit.reset_context(false);
+  delete from pit_test_table;
+  commit;
+end;</code>
+            </startup>
+         </startup>
+         <teardown id="c0112be6-8fe6-4f4d-b110-1fe17e8a4e8f" lib_id="d8ddcac4-c777-4e81-adc8-cb318b2eb9b0" lib_name="Reset context and clear test table"/>
+         <test_impl id="d385e301-7506-414a-bf48-f0c5c67baf92" test_id="2ec8f8a2-e8c9-4991-b609-f231e0b33fda" name="Testimplementierung 1" expected_ret="Erfolgreich" expected_err="ANY">
+            <validation id="86a37d41-87e1-4566-88bb-3846f18b4613" apply="true">
+               <validation>
+                  <class>oracle.dbtools.unit_test.process_validation.ResultSetCompare</class>
+                  <name>Abfrageergebnisse vergleichen</name>
+                  <description>(select component, params from pit_test_table) = (select component, params from pit_test_table_result where test_id = 'TOGGLE_CONTEXT_3')</description>
+                  <source>select component, params from pit_test_table</source>
+                  <target>select component, params from pit_test_table_result where test_id = 'TOGGLE_CONTEXT_3'</target>
+               </validation>
+            </validation>
+         </test_impl>
+      </test>
+   </object>
+   <object class="oracle.dbtools.unit_test.testObjects.UtSuite">
+      <suite id="465b7b5d-12f8-4b2a-824c-d6914bf1ba01" name="PIT" coverage="false" source_conn_name="">
+         <suite_item test_id="09C2A5900281410BA7BE11A1FA801588" run_start="true" run_teardown="true"/>
+         <suite_item test_id="f7174440-8cac-4736-902e-524865f96083" run_start="true" run_teardown="true"/>
+         <suite_item test_id="b4c35c22-7583-44b7-9789-150bb32dcb99" run_start="true" run_teardown="true"/>
+         <suite_item test_id="3a2ea1cc-89b5-4c7c-a9de-a4003fce29ad" run_start="true" run_teardown="true"/>
+         <suite_item test_id="dc68fdda-cbb4-47e8-98fa-113726a70a42" run_start="true" run_teardown="true"/>
+         <suite_item test_id="2d29174a-8398-43f1-aa32-17ac5fa456af" run_start="true" run_teardown="true"/>
+         <suite_item test_id="DACFCA86CAC345B9A8078D7E1EF5ED5F" run_start="true" run_teardown="true"/>
+         <suite_item test_id="b87be218-4ec1-476b-bfcb-6b6670f29596" run_start="true" run_teardown="true"/>
+         <suite_item test_id="e2ee0e56-e50d-486b-be2f-d78c42c1450c" run_start="true" run_teardown="true"/>
+         <suite_item test_id="6adadda7-2c07-4b9c-ba3f-ac31e2d6545d" run_start="true" run_teardown="true"/>
+         <suite_item test_id="b6fb2456-abe4-4db8-bddd-37774a62b153" run_start="true" run_teardown="true"/>
+         <suite_item test_id="ae65c058-99dd-4731-aeec-d76095c1c142" run_start="true" run_teardown="true"/>
+         <suite_item test_id="8A386A9A0C05426E835D3022C2F22818" run_start="true" run_teardown="true"/>
+         <suite_item test_id="DF6166B0404240D684B1E3CD78107276" run_start="true" run_teardown="true"/>
+         <suite_item test_id="82E3D0AF40D04F948BBE9BC9732341DD" run_start="true" run_teardown="true"/>
+         <suite_item test_id="f7265a7e-b057-4034-a834-678477259094" run_start="true" run_teardown="true"/>
+         <suite_item test_id="9483fc31-9af6-4ca8-92fb-d662c0e7c2d6" run_start="true" run_teardown="true"/>
+         <suite_item test_id="b507679c-e372-48a9-a0f7-8d2010ad74fc" run_start="true" run_teardown="true"/>
+         <suite_item test_id="50b9be50-337c-49bf-9589-0916629b9768" run_start="true" run_teardown="true"/>
+         <suite_item test_id="f00d50d2-cba8-4701-862d-88365da8a149" run_start="true" run_teardown="true"/>
+         <suite_item test_id="91d82dee-6dfe-4f2f-92d5-21295f113429" run_start="true" run_teardown="true"/>
+         <suite_item test_id="b1ed420b-9f9a-4c9f-a22e-0e9541e86f2c" run_start="true" run_teardown="true"/>
+         <suite_item test_id="90fb070d-4e42-4556-bcc4-806e0858830d" run_start="true" run_teardown="true"/>
+         <suite_item test_id="8899a6c4-3cc2-4654-918a-3a93ca14635a" run_start="true" run_teardown="true"/>
+         <suite_item test_id="2c836066-369c-4810-8637-51e845bcaf1a" run_start="true" run_teardown="true"/>
+         <suite_item test_id="5af21dfe-e74e-4493-ad7d-9fa2d4e5c94c" run_start="true" run_teardown="true"/>
+         <suite_item test_id="2ec8f8a2-e8c9-4991-b609-f231e0b33fda" run_start="true" run_teardown="true"/>
+      </suite>
+   </object>
+</UT>

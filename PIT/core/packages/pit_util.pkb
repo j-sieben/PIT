@@ -1,7 +1,6 @@
 create or replace package body pit_util
 as
 
-
   /**** CONSTANTS ****/
   c_pkg constant ora_name_type := $$PLSQL_UNIT;
   c_name_too_long constant varchar2(200) := 'Toggle name is too long. Please use a maximum of ' || (c_max_length - 10) || ' byte';
@@ -143,6 +142,22 @@ as
   begin
     return g_error_prefix || p_pms_name || g_error_postfix;
   end get_error_name;
+
+
+  function cast_to_char_list(
+    p_msg_args msg_args)
+    return msg_args_char
+  as
+    l_arg_list msg_args_char := msg_args_char();
+  begin
+    if p_msg_args is not null then
+      for i in p_msg_args.first .. p_msg_args.last loop
+        l_arg_list.extend;
+        l_arg_list(i) := dbms_lob.substr(p_msg_args(i), 4000, 1);
+      end loop;
+    end if;
+    return l_arg_list;
+  end cast_to_char_list;
   
   
   /**** VALIDATION ****/

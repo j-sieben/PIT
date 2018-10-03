@@ -1,0 +1,19 @@
+create table pit_test_table(
+  message_id number,
+  component &ORA_NAME_TYPE.,
+  outcome &ORA_NAME_TYPE.,
+  message message_type,
+  call_stack call_stack_type,
+  params varchar2(4000 byte),
+  constraint pk_pit_test_table primary key(message_id)
+) nested table call_stack.params store as pit_test_table_params;
+
+comment on table pit_test_table is 'Table for test messages during unit tests';
+comment on column pit_test_table.message_id is 'Technical key';
+comment on column pit_test_table.component is 'Component of PIT_MODULE that was tested';
+comment on column pit_test_table.outcome is 'Flag such as OK or ERROR';
+comment on column pit_test_table.message is 'Message instance that was sent to the module';
+comment on column pit_test_table.call_stack is 'Call Stack instance that was sent to the module';
+comment on column pit_test_table.params is 'Additional Parameters such as a purge date etc.';
+
+comment on table pit_test_table_params is 'Nested table to store call_stack params instances';
