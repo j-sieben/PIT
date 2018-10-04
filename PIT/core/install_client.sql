@@ -19,9 +19,7 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute PIT_ADMIN
 @tools/grant_access.sql execute PIT_UTIL
 @tools/grant_access.sql execute UTL_CONTEXT
-@tools/grant_access.sql execute UTL_TEXT
 
 -- Tables and Views
 @tools/grant_access.sql select PIT_CALL_STACK
 @tools/grant_access.sql select PIT_LOG
-@tools/grant_access.sql select UTL_TEXT_TEMPLATES

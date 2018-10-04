@@ -12,9 +12,7 @@ prompt &h3.Revoke rights and drop synonyms
 @tools/revoke_access.sql execute PIT_ADMIN
 @tools/revoke_access.sql execute PIT_UTIL
 @tools/revoke_access.sql execute UTL_CONTEXT
-@tools/revoke_access.sql execute UTL_TEXT
 
 -- Tables and Views
 @tools/revoke_access.sql select PIT_CALL_STACK
 @tools/revoke_access.sql select PIT_LOG
-@tools/revoke_access.sql select UTL_TEXT_TEMPLATES
