@@ -15,6 +15,7 @@ col apex_ws new_val APEX_WS format a30
 
 select user sys_user,
        upper('&1.') install_user,
+       null remote_user,
        value default_language
   from V$NLS_VALID_VALUES
  where parameter = 'LANGUAGE'

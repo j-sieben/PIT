@@ -113,8 +113,7 @@ as
     l_item := utl_raw.cast_to_varchar2(
                 utl_encode.quoted_printable_encode(
                   utl_raw.cast_to_raw(p_item)));
-    replace(replace(l_result, '#ENCODING#', g_encoding), '#NAME#', l_item);
-    return l_result;
+    return replace(replace(l_result, '#ENCODING#', g_encoding), '#NAME#', l_item);
   end encode_item;
 
 
