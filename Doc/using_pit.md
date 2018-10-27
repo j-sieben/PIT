@@ -4,13 +4,13 @@ After having installed PIT, it's ready to be used within your code.
 ## Trace method calls
 To start with, you may want to add a call to `pit.enter(p_action, p_module)` at the beginning and to `pit.leave` at the end of a method you want to trace. Doing so enables PIT to collect data about your call hierarchy, the time spent and optionally the parameters passed into the method. If you want to completely instrument your code, you may want to add the respective calls to a method template of your favourite IDE.
 
-As a best practice, provide `pit.enter` with the name of your method and your package. This way, PIT is able to achieve the highest performance because if you don't pass this information in, PIT will try to gather this information from environment or call stack information, based on the database version you're using. This in any case is slower than providing the information yourself. One recommendation to pass the package name in is to create a global package constant `C_PKG constant varchar2(30 byte) := $$PLSQL_UNIT;`. After having defined this constant once, you can easily pass it in without having to rewrite the package name over and over again.
+As a best practice, provide `pit.enter` with the name of your method and your package. This way, PIT is able to achieve the highest performance because if you don't pass this information in, PIT will try to gather this information from environment or call stack information, based on the database version you're using. This in any case is slower than providing the information yourself. One recommendation to pass the package name in is to create a global package constant `C_PKG constant varchar2(30/128 byte) := $$PLSQL_UNIT;`. After having defined this constant once, you can easily pass it in without having to rewrite the package name over and over again.
 
-Please make sure, that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.sql_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches.
+Please make sure, that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.sql_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), PIT maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
 
 ### Passing parameters to trace-methods
 
-If you want to include parameters passed to a method in your tracing, this can be achieved by passing them in as an instance of `MSG_PARAMS`. This type is a nested table of `MSG_PARAM` objects, which in turn are simple key value objects. A key name may be as long as 30 byte and the param value up to 4000 byte of varchar2. You create an instance of `MSG_PARAM`by calling its constructor function:
+If you want to include parameters passed to a method in your tracing, this can be achieved by providing the methods with an instance of `MSG_PARAMS`. This type is a nested table of `MSG_PARAM` objects, which in turn is a simple key value object. A key name may be as long as `30 byte` (`128 byte` starting with Oracle 12c) and the param value up to `4000 byte` of `varchar2`. You create an instance of `MSG_PARAM`by calling its constructor function:
 
 ```
 msg_param('key', 'value');
@@ -35,6 +35,8 @@ begin
 end my_func;
 ```
 
+Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in handy if a method calculates values and you want to log the results. As it is also important to log the outcome of parameters in case of an exception, you may pass instances of `MSG_PARAMS` to the error handlers `pit.sql_exception` and `pit.stop` as well.
+
 ### Adjusting trace level
 Method `pit.enter` provides different levels of tracing. These levels are:
 - `pit.trace_off` (10),
@@ -43,9 +45,9 @@ Method `pit.enter` provides different levels of tracing. These levels are:
 - `pit.trace_detailed` (40)
 - `pit.trace_all` (50)
 
-To make their use convenient, PIT offers dedicated `enter`- and `leave` methods for the respective trace levels, such as `pit.enter_optional` and `pit.leave_optional`. Please make sure that you select a matching `leave` method for the `enter` method you chose. This makes sure that the call stack does not get out of sync, which may happen if a method is pushed on the call stack but never popped.
+To make their use convenient, PIT offers dedicated `enter`- and `leave` methods for the respective trace levels, such as `pit.enter_optional` and `pit.leave_optional`. Please make sure that you select a matching `leave` method for the `enter` method you chose. This makes sure that the call stack does not get out of sync, which may happen if a method is pushed on the call stack but never popped because of the actual trace settings.
 
-If you choose `pit.enter_mandatory`, parameters `p_action` and `p_module` are mandatory as well. Reason is that this method also sets `dbms_application_info` which in turn shows in some performance views. Therefore, `pit.enter_mandatory` also offers an optional parameter called `p_client_info` to pass in additional information that also shows up in performance views. Settings for `dbms_application_info` will be set in any case, no matter whether you actually trace your code or not.
+If you choose `pit.enter_mandatory`, this method also sets `dbms_application_info` which in turn is shown in some performance views. Therefore, `pit.enter_mandatory` also offers an optional parameter called `p_client_info` to pass in additional information that also shows up in performance views. Settings for `dbms_application_info` will be set in any case, no matter whether you actually trace your code or not.
 
 Choosing an appropriate enter method is a good practice to allow you to set your trace level easily with a context. As a best practice, you may mark your public methods `pit.enter_mandatory` (with the exception of helper packages probably) and the more important private methods within a package `pit.enter_optional`. You then have another two levels at hand to adjust when a method gets traced.
 
