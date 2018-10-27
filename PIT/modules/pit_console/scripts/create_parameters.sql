@@ -21,14 +21,14 @@ begin
   param_admin.edit_parameter(
     p_par_id => 'PIT_CONSOLE_ENTER_TEMPLATE',
     p_par_pgr_id => 'PIT',
-    p_par_description => 'Template zur Formatierung von ENTER-Ausgaben. Muss #MESSAGE# und #LEVEL# enthalten.',
+    p_par_description => 'Template zur Formatierung von ENTER-Ausgaben. Muss #MESSAGE#, #POSTFIX# und #LEVEL# enthalten.',
     p_par_string_value => q'^#LEVEL#> #MESSAGE##POSTFIX#^');
   
   param_admin.edit_parameter(
     p_par_id => 'PIT_CONSOLE_LEAVE_TEMPLATE',
     p_par_pgr_id => 'PIT',
-    p_par_description => 'Template zur Formatierung von LEAVE-Ausgaben. Muss #MESSAGE#, #TIMING# und #LEVEL# enthalten.',
-    p_par_string_value => q'^#LEVEL#< #MESSAGE##TIMING#^');
+    p_par_description => 'Template zur Formatierung von LEAVE-Ausgaben. Muss #MESSAGE#, #POSTFIX#, #TIMING# und #LEVEL# enthalten.',
+    p_par_string_value => q'^#LEVEL#< #MESSAGE##POSTFIX##TIMING#^');
   
   param_admin.edit_parameter(
     p_par_id => 'PIT_CONSOLE_LEVEL_INDICATOR',

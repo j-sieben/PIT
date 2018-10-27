@@ -136,6 +136,13 @@ as
    *        with dependencies on MSG
    */
   procedure recompile_invalid_objects;
+  
+  /* Helper to get the call/error stack */
+  function get_call_stack
+    return varchar2;
+    
+  function get_error_stack
+    return varchar2;
     
 end pit_util;
 /

@@ -34,7 +34,7 @@ as
 
   /************************* PACKAGE VARIABLES ********************************/
   /* parameter constants */
-  c_package_owner constant pit_util.ora_name_type := '&INSTALL_USER.';
+  c_package_owner constant pit_util.ora_name_type := $$PLSQL_UNIT_OWNER;
   c_param_group constant pit_util.ora_name_type := 'PIT';
   c_base_module constant pit_util.ora_name_type := 'PIT_MODULE';
 
@@ -85,7 +85,7 @@ as
   g_language pit_util.ora_name_type;
   g_user_name pit_util.ora_name_type;
   g_client_id varchar2(64);
-
+  g_active_error message_type;
 
   /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
@@ -419,16 +419,17 @@ as
   
   
   /* Method to add a call to the call stack
-   * %param p_module Module that was called
-   * %param p_action Method of the module that was called
-   * %param p_params Parameter list of parameters passed to the method
-   * %usage Called from the ENTER-Method
+   * %param  p_module              Module that was called
+   * %param  p_action              Method of the module that was called
+   * %param  p_params              Parameter list of parameters passed to the method
+   * %param  p_new_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
+   * %usage  Called from the ENTER-Method
    */
   procedure push_stack(
     p_module in varchar2,
     p_action in varchar2,
     p_params in msg_params,
-    p_trace_settings in varchar2 default null)
+    p_trace_settings in varchar2)
   as
     l_last_entry binary_integer;
   begin
@@ -453,11 +454,14 @@ as
 
 
   /* Method to remove an entry from the call stack
-   * %param p_call_stack instance of call_stack_type to pop to the stack
+   * %param  p_params              Parameter list of parameters passed to the method
+   * %param  p_call_stack          Instance of call_stack_type to pop to the stack
+   * %param  p_new_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
    * %return Last entry found on the call stack. Used to maintain timing etc.
-   * %usage Called from LEAVE-method.
+   * %usage  Called from LEAVE-method.
    */
   procedure pop_stack(
+    p_params in msg_params,
     p_call_stack in out nocopy call_stack_type,
     p_new_trace_settings out nocopy varchar2)
   as
@@ -469,6 +473,8 @@ as
     l_last_entry := g_call_stack.last;
     if l_last_entry > 0 then
       p_call_stack := g_call_stack(l_last_entry);
+      p_call_stack.params := p_params;
+      
       -- maintain timing for call stack entries
       if g_ctx.trace_timing then
         p_call_stack.leave;
@@ -497,13 +503,18 @@ as
    * %usage Called from method LOG if level is C_LEVEL_FATAL.
    *        Pops all call stack entries
    */
-  procedure clean_stack
+  procedure clean_stack(
+    p_params in msg_params)
   as
     l_call_stack call_stack_type;
     l_trace_settings pit_util.max_sql_char;
   begin
     for i in 1 .. g_call_stack.count loop
-      leave(C_TRACE_MANDATORY);
+      if i = 1 then
+        leave(C_TRACE_MANDATORY, p_params);
+      else
+        leave(C_TRACE_MANDATORY, null);
+      end if;
     end loop;
   end clean_stack;
 
@@ -630,8 +641,6 @@ as
     l_qualified_name utl_call_stack.unit_qualified_name;
     -- variable to adjust recursive call level for UTL_CALL_STACK
     l_trace_depth integer := 5;
-    l_invalid_depth exception;
-    pragma exception_init(l_invalid_depth, -64610);
     $END
   begin
     $IF dbms_db_version.ver_le_11 $THEN
@@ -641,8 +650,8 @@ as
       begin
         l_qualified_name := utl_call_stack.subprogram(l_trace_depth);
       exception
-        when l_invalid_depth then
-          l_qualified_name := utl_call_stack.subprogram(3);
+        when utl_call_stack.bad_depth_indicator then
+          l_qualified_name := utl_call_stack.subprogram(l_trace_depth - 1);
       end;
       l_module_position := greatest(least(l_qualified_name.count - 1, 1), 1);
       l_action_position := l_qualified_name.count;
@@ -679,15 +688,24 @@ as
     p_severity in binary_integer,
     p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
-    p_affected_id in pit_util.max_sql_char)
+    p_affected_id in pit_util.max_sql_char,
+    p_module_list in pit_util.max_sql_char)
   as
     l_message message_type;
   begin
     if log_me(p_severity, p_message_name) then
-      -- instantiate message
-      l_message := get_message(p_message_name, p_affected_id, p_arg_list);
-      -- Persist severity of calling environment with message
-      l_message.severity := p_severity;
+      if p_message_name is not null then
+        -- instantiate message
+        l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+        -- Persist severity of calling environment with message
+        l_message.severity := p_severity;
+      else
+        -- message has been raised as an error before, get from active error
+        l_message := g_active_error;
+        -- call stack is filled only after an error has been raised, so get it again
+        l_message.stack := pit_util.get_call_stack;
+        l_message.backtrace := pit_util.get_error_stack;
+      end if;
 
       raise_event(
         p_event => C_LOG_EVENT,
@@ -757,7 +775,7 @@ as
     p_module in pit_util.ora_name_type,
     p_params in msg_params,
     p_trace_level in binary_integer,
-    p_client_info in varchar2 default null)
+    p_client_info in varchar2)
   as
     l_action pit_util.ora_name_type := p_action;
     l_module pit_util.ora_name_type := p_module;
@@ -801,7 +819,8 @@ as
 
 
   procedure leave(
-    p_trace_level in binary_integer)
+    p_trace_level in binary_integer,
+    p_params in msg_params)
   is
     l_call_stack call_stack_type;
     l_trace_me boolean;
@@ -812,7 +831,7 @@ as
     -- Do minimal tracing if context toggle is active
     if g_ctx.allow_toggle or l_trace_me then
        -- finalize entry in call stack and pass to output modules
-       pop_stack(l_call_stack, l_new_trace_settings);
+       pop_stack(p_params, l_call_stack, l_new_trace_settings);
     end if;
 
     if l_trace_me and l_call_stack is not null then
@@ -833,7 +852,7 @@ as
 
   procedure print(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list msg_args default null)
+    p_arg_list msg_args)
   as
   begin
     raise_event(
@@ -907,25 +926,16 @@ as
     p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args)
   as
-    l_arg_list msg_args;
-    l_message message_type;
   begin
-
-    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
-
-    -- If message is C_PASS_MESSAGE, it does not contain the original
-    -- error number. Replace with active SQLCODE and get message from SQLERRM
-    if p_message_name = C_PASS_MESSAGE then
-      l_message.error_number := sqlcode;
-      $IF dbms_db_version.ver_le_11 $THEN
-      l_message.message_text := substr(sqlerrm, instr(sqlerrm, ' ') + 1);
-      $ELSE
-      l_message.message_text := utl_call_stack.error_msg(1);
-      $END
+    if p_message_name is not null then
+      g_active_error := get_message(p_message_name, p_affected_id, p_arg_list);
+      g_active_error.severity := p_severity;
+      g_active_error.error_number := coalesce(g_active_error.error_number, -20000);
     end if;
+
     raise_application_error(
-      l_message.error_number,
-      dbms_lob.substr(l_message.message_text, 2048, 1));
+      g_active_error.error_number,
+      dbms_lob.substr(g_active_error.message_text, 2048, 1));
   end raise_error;
 
 
@@ -933,20 +943,23 @@ as
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list in msg_args)
+    p_arg_list in msg_args,
+    p_params in msg_params)
   as
   begin
     log_event(p_severity, p_message_name, p_arg_list, p_affected_id, null);
     if p_severity = pit.level_fatal then
-      clean_stack;
+      clean_stack(p_params);
       raise_error(pit.level_fatal, p_message_name, p_affected_id, p_arg_list);
+    else
+      leave(C_TRACE_MANDATORY, p_params);
     end if;
   end;
 
 
   procedure purge_log(
     p_date_before in date,
-    p_severity_greater_equal in binary_integer default null)
+    p_severity_greater_equal in binary_integer)
   as
   begin
     raise_event(
@@ -982,7 +995,7 @@ as
 
   function get_message_text(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list in msg_args default null)
+    p_arg_list in msg_args)
     return clob
   as
   begin

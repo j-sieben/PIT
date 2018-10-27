@@ -240,12 +240,11 @@ as
   procedure sql_exception(
     p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null)
+    p_affected_id in varchar2 default null,
+    p_params in msg_params default null)
   as
-    l_message_name pit_util.ora_name_type;
   begin
-    l_message_name := coalesce(p_message_name, C_PASS_MESSAGE);
-    pit_pkg.handle_error(level_error, l_message_name, p_affected_id, p_arg_list);
+    pit_pkg.handle_error(level_error, p_message_name, p_affected_id, p_arg_list, p_params);
     leave;
   end sql_exception;
 
@@ -253,12 +252,11 @@ as
   procedure stop(
     p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null)
+    p_affected_id in varchar2 default null,
+    p_params in msg_params default null)
   as
-    l_message_name pit_util.ora_name_type;
   begin
-    l_message_name := coalesce(p_message_name, C_PASS_MESSAGE);
-    pit_pkg.handle_error(level_fatal, l_message_name, p_affected_id, p_arg_list);
+    pit_pkg.handle_error(level_fatal, p_message_name, p_affected_id, p_arg_list, p_params);
   end stop;
   
   
@@ -350,33 +348,36 @@ as
   end enter;
   
   
-  procedure leave_mandatory
+  procedure leave_mandatory(
+    p_params in msg_params default null)
   as
   begin
     $IF pit_admin.c_trace_le_mandatory $THEN
-    leave(trace_mandatory);
+    leave(trace_mandatory, p_params);
     $ELSE
     null;
     $END
   end leave_mandatory;
   
   
-  procedure leave_optional
+  procedure leave_optional(
+    p_params in msg_params default null)
   as
   begin
     $IF pit_admin.c_trace_le_optional $THEN
-    leave(trace_optional);
+    leave(trace_optional, p_params);
     $ELSE
     null;
     $END
   end leave_optional;
   
   
-  procedure leave_detailed
+  procedure leave_detailed(
+    p_params in msg_params default null)
   as
   begin
     $IF pit_admin.c_trace_le_detailed $THEN
-    leave(trace_detailed);
+    leave(trace_detailed, p_params);
     $ELSE
     null;
     $END
@@ -384,11 +385,12 @@ as
   
   
   procedure leave(
-    p_trace_level in number default pit.trace_all)
+    p_trace_level in number default pit.trace_all,
+    p_params in msg_params default null)
   is
   begin
     $IF pit_admin.c_trace_le_all $THEN
-    pit_pkg.leave(p_trace_level);
+    pit_pkg.leave(p_trace_level, p_params);
     $ELSE
     null;
     $END

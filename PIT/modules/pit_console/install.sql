@@ -1,6 +1,7 @@
 define console_dir=modules/pit_console/
-define sql_dir=&console_dir.sql/
-define plsql_dir=&console_dir.plsql/
+define script_dir=&console_dir.scripts/
+define plsql_dir=&console_dir.packages/
+define type_dir=&console_dir.types/
 
 prompt
 prompt &section.
@@ -11,7 +12,7 @@ prompt &h2.Clean up existing installation
 prompt
 prompt &h2.Install module PIT_CONSOLE
 prompt &s1.Create type PIT_CONSOLE
-@&sql_dir.types/pit_console.tps
+@&type_dir.pit_console.tps
 show errors
 
 prompt &s1.Create package PIT_CONSOLE_PKG
@@ -19,7 +20,7 @@ prompt &s1.Create package PIT_CONSOLE_PKG
 show errors
 
 prompt &s1.Create type body PIT_CONSOLE
-@&sql_dir.types/pit_console.tpb
+@&type_dir.pit_console.tpb
 show errors
 
 prompt &s1.Create package body PIT_CONSOLE_PKG
@@ -27,4 +28,4 @@ prompt &s1.Create package body PIT_CONSOLE_PKG
 show errors
 
 prompt &s1.Create PIT_CONSOLE parameters
-@&console_dir.create_parameters.sql
+@&script_dir.create_parameters.sql

@@ -19,9 +19,20 @@ as
   g_user ora_name_type;
   g_error_prefix varchar2(5 byte);
   g_error_postfix varchar2(5 byte);
+  g_call_stack_template varchar2(1000 byte);
+  g_error_stack_template varchar2(1000 byte);
   
   
   /**** HELPER ****/
+  procedure append(
+    p_text in out nocopy varchar2,
+    p_chunk in varchar2)
+  as
+  begin
+    p_text := p_text || p_chunk || chr(10);
+  end append;
+  
+  
   procedure initialize
   as
     l_prefix_length binary_integer;
@@ -36,6 +47,9 @@ as
     if g_error_postfix is not null then
       g_error_postfix := '_' || g_error_postfix;
     end if;
+    
+    g_call_stack_template := param.get_string('PIT_CALL_STACK_TEMPLATE', c_parameter_group);
+    g_error_stack_template := param.get_string('PIT_ERROR_STACK_TEMPLATE', c_parameter_group);
     
     l_prefix_length := coalesce(length(g_error_prefix), 0) + coalesce(length(g_error_postfix), 0);
     case when l_prefix_length > 4 then
@@ -301,6 +315,59 @@ as
     end loop;
   end recompile_invalid_objects;
   
+  
+  function get_call_stack
+    return varchar2
+  as
+    l_depth binary_integer;
+    l_stack varchar2(32767);
+  begin
+    $IF dbms_db_version.ver_le_11 $THEN
+    return dbms_utility.format_call_stack;
+    $ELSE
+    l_depth := utl_call_stack.dynamic_depth;
+    
+    append(l_stack, g_call_stack_template);
+    
+    for i in 1 .. l_depth loop
+      if utl_call_stack.subprogram(i)(1) not like 'PIT%' then
+        append(l_stack,
+          lpad(to_char(utl_call_stack.unit_line(i), '99999'), 5) || ' ' ||
+          rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
+          utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
+      end if;
+    end loop;
+    
+    return l_stack;
+    $END
+  end get_call_stack;
+  
+  
+  function get_error_stack
+    return varchar2
+  as
+    l_depth binary_integer;
+    l_stack varchar2(32767);
+  begin
+    $IF dbms_db_version.ver_le_11 $THEN
+    return dbms_utility.format_error_backtrace;
+    $ELSE
+    l_depth := utl_call_stack.error_depth;
+    
+    append(l_stack, g_error_stack_template);
+    
+    for i in 1 .. l_depth loop
+      if instr(utl_call_stack.error_msg(i), 'PIT') = 0 then
+        append(l_stack,
+          lpad(i, 5) || ' ' ||
+          rpad('ORA-' || trim(to_char(utl_call_stack.error_number(i),'00000')), 10) ||
+          utl_call_stack.error_msg(i));
+      end if;
+    end loop;
+    
+    return l_stack;
+    $END
+  end get_error_stack;
   
 begin
   initialize;

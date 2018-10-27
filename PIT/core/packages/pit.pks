@@ -189,6 +189,8 @@ as
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_params]       Instance of <code>msg_params</code> with a list of
+   *                         key-value pairs representing parameter name and -value.
    * @usage  Call this procedure in EXCEPTION handlers of your code.<br>
    *         <code>sql_exception</code> not only reports the error but handles it as well.
    *         This means that if you pass any error that occurred to this
@@ -199,13 +201,16 @@ as
   procedure sql_exception(
     p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_params in msg_params default null);
   
   
   /* Exception handler that handles an error and calls leave and re-raises the error
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_params]       Instance of <code>msg_params</code> with a list of
+   *                         key-value pairs representing parameter name and -value.
    * @usage  Call this procedure in EXCEPTION handlers of your code.<br>
    *         <code>stop</code> not only reports the error but handles it as well.
    *         This means that if you pass any error that occurred to this
@@ -216,7 +221,8 @@ as
   procedure stop(
     p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_params in msg_params default null);
   
   
   
@@ -334,6 +340,8 @@ as
   
   
   /* Traces leaving a method, level mandatory
+   * @param [p_params]      Instance of <code>msg_params</code> with a list of
+   *                        key-value pairs representing parameter name and -value.
    * @usage  Call this procedure if you normally leave a method. It's important
    *         to make sure that any possible exit point of a method first calls
    *         this procedure to make sure that the call stack is correctly
@@ -345,10 +353,13 @@ as
    *         if you called <code>sql_exception</code> or <code>stop</code> within
    *         the exception block, as these procedures handle this call.
    */
-  procedure leave_mandatory;
+  procedure leave_mandatory(
+    p_params in msg_params default null);
   
   
   /* Traces leaving a method, level optional
+   * @param [p_params]      Instance of <code>msg_params</code> with a list of
+   *                        key-value pairs representing parameter name and -value.
    * @usage  Call this procedure if you normally leave a method. It's important
    *         to make sure that any possible exit point of a method first calls
    *         this procedure to make sure that the call stack is correctly
@@ -360,10 +371,13 @@ as
    *         if you called <code>sql_exception</code> or <code>stop</code> within
    *         the exception block, as these procedures handle this call.
    */
-  procedure leave_optional;
+  procedure leave_optional(
+    p_params in msg_params default null);
   
   
   /* Traces leaving a method, level detailed
+   * @param [p_params]      Instance of <code>msg_params</code> with a list of
+   *                        key-value pairs representing parameter name and -value.
    * @usage Call this procedure if you normally leave a method. It's important
    *        to make sure that any possible exit point of a method first calls
    *        this procedure to make sure that the call stack is correctly
@@ -375,12 +389,15 @@ as
    *        if you called <code>sql_exception</code> or <code>stop</code> within
    *        the exception block, as these procedures handle this call.
    */
-  procedure leave_detailed;
+  procedure leave_detailed(
+    p_params in msg_params default null);
   
   
   /* Traces leaving a method, level variable
    * @param  p_trace_level  Optional trace level. References <code>trace_level</code><br>
    *                        defaults to <code>trace_all</code>.
+   * @param [p_params]      Instance of <code>msg_params</code> with a list of
+   *                        key-value pairs representing parameter name and -value.
    * @usage  Call this procedure if you normally leave a method. It's important
    *         to make sure that any possible exit point of a method first calls
    *         this procedure to make sure that the call stack is correctly
@@ -393,7 +410,8 @@ as
    *         from the environmental procedures.
    */
   procedure leave(
-    p_trace_level in number default pit.trace_all);
+    p_trace_level in number default pit.trace_all,
+    p_params in msg_params default null);
   
   
   /* Procedure to set dbms_application_info.

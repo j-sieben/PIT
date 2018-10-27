@@ -94,6 +94,24 @@ begin
     p_par_description => 'WebSocket-Server zum Pushen von Nachrichten an PIT_APEX',
     p_par_string_value => 'http://localhost:8880'
   );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_CALL_STACK_TEMPLATE',
+    p_par_pgr_id => 'PIT',
+    p_par_description =>'Template that is used in Version 12 onwards to create a call stack string',
+    p_par_string_value => q'^* Call Stack
+Line  Schema          Object
+----- --------------- ----------------------------------------------^'
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_ERROR_STACK_TEMPLATE',
+    p_par_pgr_id => 'PIT',
+    p_par_description =>'Template that is used in Version 12 onwards to create a error stack string',
+    p_par_string_value => q'^* Error Stack
+Level Error#    Message
+----- --------- ----------------------------------------------------^'
+  );
     
   commit;
 end;
