@@ -94,6 +94,12 @@ exception
 end;
 ```
 
+## Passing Error Codes
+
+Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality is not required for PIT to work but comes in handy if you need to maintain return codes that other application parts required, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `P_ERROR_CODE`. This can be any information you like up to 30 char in width.
+
+If you use this feature, this error code is passed around as part of the message instance, so it's very easy for any output module to get access to this information and do whatever you require with it.
+
 ## Throwing errors with `pit.log_specific`
 
 Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. Do not use it for normal logging. 
