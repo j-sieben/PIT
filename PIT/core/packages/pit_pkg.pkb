@@ -689,6 +689,7 @@ as
     p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
+    p_error_code in varchar2,
     p_module_list in pit_util.max_sql_char)
   as
     l_message message_type;
@@ -696,7 +697,7 @@ as
     if log_me(p_severity, p_message_name) then
       if p_message_name is not null then
         -- instantiate message
-        l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+        l_message := get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
         -- Persist severity of calling environment with message
         l_message.severity := p_severity;
       else
@@ -718,6 +719,7 @@ as
   procedure log_specific(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
+    p_error_code in varchar2,
     p_arg_list in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
     p_log_modules in pit_util.max_sql_char)
@@ -735,7 +737,7 @@ as
     l_ctx_old.log_modules := g_ctx.module_list;
     l_ctx_new := l_ctx_old;
     l_context_name := g_ctx.context_name;
-    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+    l_message := get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
 
     if l_message.severity <= coalesce(p_log_threshold, g_ctx.log_level) then
       -- Switch to log modules passed in if necessary
@@ -825,22 +827,46 @@ as
     l_call_stack call_stack_type;
     l_trace_me boolean;
     l_new_trace_settings pit_util.max_sql_char;
+    l_who_am_i pit_util.ora_name_type;
+    l_found_entry binary_integer;
   begin
     l_trace_me := trace_me(p_trace_level);
 
     -- Do minimal tracing if context toggle is active
     if g_ctx.allow_toggle or l_trace_me then
-       -- finalize entry in call stack and pass to output modules
-       pop_stack(p_params, l_call_stack, l_new_trace_settings);
-    end if;
+      $IF dbms_db_version.ver_le_11 $THEN
+      l_found_entry := g_call_stack.last;
+      $ELSE
+      -- Get actual unit name and try to find it in stack. If found, pap all entries including this one.
+      begin
+        l_who_am_i := utl_call_stack.subprogram(4)(2);
+      exception
+        when others then
+          -- if called from an anonymous block, level 2 is not defined
+          l_who_am_i := utl_call_stack.subprogram(4)(1);
+      end;
+      l_found_entry := g_call_stack.last + 1; -- Set found to a value higher max to avoid deleting entries if nothing is found
+      for i in reverse 1 .. g_call_stack.last loop
+        if l_who_am_i = upper(g_call_stack(i).method_name) then
+          l_found_entry := i;
+          exit;
+        end if;
+      end loop;
+      $END
+      
+      for i in reverse l_found_entry .. g_call_stack.last loop
+        -- finalize entry in call stack and pass to output modules
+        pop_stack(p_params, l_call_stack, l_new_trace_settings);
 
-    if l_trace_me and l_call_stack is not null then
-      -- replace existing ID with new ID to allow for persitance
-      l_call_stack.id := pit_log_seq.nextval;
-      raise_event(
-        p_event => C_LEAVE_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE,
-        p_call_stack => l_call_stack);
+        if l_trace_me and l_call_stack is not null then
+          -- replace existing ID with new ID to allow for persistance
+          l_call_stack.id := pit_log_seq.nextval;
+          raise_event(
+            p_event => C_LEAVE_EVENT,
+            p_event_focus => C_EVENT_FOCUS_ACTIVE,
+            p_call_stack => l_call_stack);
+        end if;
+      end loop;
     end if;
 
     reset_toggle_context(l_new_trace_settings);
@@ -858,7 +884,7 @@ as
     raise_event(
        p_event => C_PRINT_EVENT,
        p_event_focus => C_EVENT_FOCUS_ACTIVE,
-       p_message => get_message(p_message_name, null, p_arg_list));
+       p_message => get_message(p_message_name, p_arg_list, null, null));
   exception
     when others then
       pit.error(msg.PIT_FAIL_MESSAGE_CREATION, msg_args(p_message_name));
@@ -885,7 +911,7 @@ as
     l_ctx_old.log_modules := g_ctx.module_list;
     l_ctx_new := l_ctx_old;
     l_context_name := coalesce(g_ctx.context_name, C_CONTEXT_DEFAULT);
-    l_message := get_message(p_message_name, p_affected_id, p_arg_list);
+    l_message := get_message(p_message_name, p_arg_list, p_affected_id, null);
 
     if l_message.severity <= coalesce(p_log_threshold, g_ctx.log_level) then
       -- Switch to log modules passed in if necessary
@@ -923,12 +949,13 @@ as
   procedure raise_error(
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
+    p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list in msg_args)
+    p_error_code in varchar2)
   as
   begin
     if p_message_name is not null then
-      g_active_error := get_message(p_message_name, p_affected_id, p_arg_list);
+      g_active_error := get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
       g_active_error.severity := p_severity;
       g_active_error.error_number := coalesce(g_active_error.error_number, -20000);
     end if;
@@ -942,19 +969,20 @@ as
   procedure handle_error(
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
-    p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args,
+    p_affected_id in pit_util.max_sql_char,
+    p_error_code in varchar2,
     p_params in msg_params)
   as
   begin
-    log_event(p_severity, p_message_name, p_arg_list, p_affected_id, null);
+    log_event(p_severity, p_message_name, p_arg_list, p_affected_id, p_error_code, null);
     if p_severity = pit.level_fatal then
       clean_stack(p_params);
-      raise_error(pit.level_fatal, p_message_name, p_affected_id, p_arg_list);
+      raise_error(pit.level_fatal, p_message_name, p_arg_list, p_affected_id, p_error_code);
     else
       leave(C_TRACE_MANDATORY, p_params);
     end if;
-  end;
+  end handle_error;
 
 
   procedure purge_log(
@@ -975,8 +1003,9 @@ as
 
   function get_message(
     p_message_name in pit_util.ora_name_type,
+    p_arg_list msg_args,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list msg_args)
+    p_error_code in varchar2)
    return message_type
   as
   begin
@@ -984,6 +1013,7 @@ as
              p_message_name => p_message_name,
              p_message_language => g_language,
              p_affected_id => p_affected_id,
+             p_error_code => p_error_code,
              p_session_id => g_client_id,
              p_user_name => g_user_name,
              p_arg_list => p_arg_list);
@@ -999,7 +1029,7 @@ as
     return clob
   as
   begin
-    return get_message(p_message_name, null, p_arg_list).message_text;
+    return get_message(p_message_name, p_arg_list, null, null).message_text;
   end get_message_text;
 
 

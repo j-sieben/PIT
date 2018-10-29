@@ -58,12 +58,17 @@ as
   function trace_all return number deterministic;
   
   /* Method to log a message regardless of the actual log settings.
-   * @param  p_message_name  Name of the message. Reference to package MSG
-   * @param [p_arg_list]     Optional list of replacement information
-   * @param [p_affected_id]  Optional id of an item a message relates to
-   * @param [p_module_list]  Optional list of module names, separated by seicolon
-   *                         that is used to log the message. If NULL, the list of
-   *                         actually set modules is used.
+   * @param  p_message_name   Name of the message. Reference to package MSG
+   * @param [p_arg_list]      Optional list of replacement information
+   * @param [p_affected_id]   Optional id of an item a message relates to
+   * @param [p_error_code]    Optional error code, usable by external applications
+   * @param [p_log_threshold] Optional log level for the log process. Should the
+   *                          severity of the requested message be higher than this level, it
+   *                          won't get logged. If null, the message is logged if it's severity
+   *                          is higher than the actual log level defined.
+   * @param [p_module_list]   Optional list of module names, separated by semicolon
+   *                          that is used to log the message. If NULL, the list of
+   *                          actually set modules is used.
    * @usage  Call this procedure to emit debug messages regardless of log settings.
    *         Use this method if you want to emit a message anyway or if you decide
    *         to emit a log message or not in code outside PIT.
@@ -75,13 +80,15 @@ as
     p_message_name in varchar2,
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
+    p_log_threshold in number default null,
     p_module_list in varchar2 default null); 
     
   
   /* Captures debug information, level verbose
    * @param  p_message_name  Name of the message. Reference to package MSG
-   * @param  [p_arg_list]    Optional list of replacement information
-   * @param  [p_affected_id] Optional id of an item a message relates to
+   * @param [p_arg_list]     Optional list of replacement information
+   * @param [p_affected_id]  Optional id of an item a message relates to
    * @usage  Call this procedure to emit debug messages. Normal usage
    *         is to report verbose information that is useful for a detailled
    *         code insight on development and production systems.
@@ -140,6 +147,7 @@ as
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Call this procedure to emit error messages. Normal usage
    *         is to report errors which have occured but which are not seen
    *         as fatal for the application.
@@ -147,48 +155,30 @@ as
   procedure error(
     p_message_name in varchar2,
     p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Captures debug information, level fatal
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Call this procedure to emit fatal error messages. Normal usage
    *         is to report errors which cause the application to abort operation.
    */
   procedure fatal(
     p_message_name in varchar2,
     p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null);
-
-
-  /* procedure to generically log
-   * @param  p_message_name   Name of the message. Reference to package MSG
-   * @param [p_arg_list]      Optional list of replacement information
-   * @param [p_affected_id]   Optional id of an item a message relates to
-   * @param  p_log_threshold  Optional log level for the log process. Should the
-   *                          severity of the requested message be higher than this level, it
-   *                          won't get logged. If null, the message is logged if it's severity
-   *                          is higher than the actual log level defined.
-   * @param  p_log_modules    Optional list of colon-separated log modules to be
-   *                          used for this log. If provided, the log message is broadcasted to 
-   *                          this list of modules only. It won't affect the settings of the actual
-   *                          log context. If null, the settings of the log context apply
-   * @usage  Use this method to implement more generic logging mechanisms. 
-   */
-  procedure log_specific(
-    p_message_name in varchar2,
-    p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
-    p_log_threshold in number default null,
-    p_log_modules in varchar2 default null);
+    p_error_code in varchar2 default null);
     
 
   /* sql_exception
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @param [p_params]       Instance of <code>msg_params</code> with a list of
    *                         key-value pairs representing parameter name and -value.
    * @usage  Call this procedure in EXCEPTION handlers of your code.<br>
@@ -202,6 +192,7 @@ as
     p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
     p_params in msg_params default null);
   
   
@@ -209,6 +200,7 @@ as
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @param [p_params]       Instance of <code>msg_params</code> with a list of
    *                         key-value pairs representing parameter name and -value.
    * @usage  Call this procedure in EXCEPTION handlers of your code.<br>
@@ -222,6 +214,7 @@ as
     p_message_name in varchar2 default null,
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
     p_params in msg_params default null);
   
   
@@ -240,6 +233,20 @@ as
     p_message_name in varchar2,
     p_arg_list in msg_args default null)
     return clob;
+    
+  
+  /* Heklper function to retrieve a message_type instance
+   * %param  p_message_name  Name of the Message
+   * %param [p_arg_list]     Optional list of message parameters
+   * %param [p_affected_id]  Optional reference to an object the message relates to
+   * %param [p_error_code]   Optional error code, usable by external applications
+   */
+  function get_message(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null)
+    return message_type;
   
   
   /* Traces entering a method, level mandatory
@@ -511,6 +518,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -522,7 +530,8 @@ as
     p_condition in boolean,
     p_message_name in varchar2 default msg.ASSERT_TRUE,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
   
   
   /* Assertion function that checks whether p_condition is null. Overloaded
@@ -530,6 +539,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -541,7 +551,8 @@ as
     p_condition in varchar2,
     p_message_name in varchar2 default msg.ASSERT_IS_NULL,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Assertion function that checks whether p_condition is null. Overloaded
@@ -549,6 +560,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -560,7 +572,8 @@ as
     p_condition in number,
     p_message_name in varchar2 default msg.ASSERT_IS_NULL,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Assertion function that checks whether p_condition is null. Overloaded
@@ -568,6 +581,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -579,7 +593,8 @@ as
     p_condition in date,
     p_message_name in varchar2 default msg.ASSERT_IS_NULL,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
   
   
   /* Assertion function that checks whether p_condition is not null. Overloaded
@@ -587,6 +602,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -598,7 +614,8 @@ as
     p_condition in varchar2,
     p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Assertion function that checks whether p_condition is not null. Overloaded
@@ -606,6 +623,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -617,7 +635,8 @@ as
     p_condition in number,
     p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Assertion function that checks whether p_condition is not null. Overloaded
@@ -625,6 +644,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Methods for <em>Contract Driven Development</em><br>
    *         Use this procedure to check whether an expression evaluates to true.
    *         If the assertion fails, an error is thrown.<br>
@@ -636,7 +656,8 @@ as
     p_condition in date,
     p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Assertion function that checks whether p_stmt returns any values
@@ -644,6 +665,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Pass a select statement that is expected to return a row.
    *         If the statement does return a row, it will silently quit, otherwise
    *         it will throw a client specific error message. If this
@@ -654,7 +676,8 @@ as
     p_stmt in varchar2,
     p_message_name in varchar2 default msg.ASSERT_EXISTS,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
     
     
   /* Assertion function that checks whether p_stmt returns no values
@@ -662,6 +685,7 @@ as
    * @param [p_message_name] Name of the message. Reference to package MSG
    * @param [p_arg_list]     Optional list of replacement information
    * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
    * @usage  Pass a select statement that is expected to return no rows.
    *         If the statement does not return a row, it will silently quit, otherwise
    *         it will throw a client specific error message. If this
@@ -672,7 +696,8 @@ as
     p_stmt in varchar2,
     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
     p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null);
   
   
   /* Procedure to set the trace context for the active session

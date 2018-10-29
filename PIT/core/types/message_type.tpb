@@ -5,6 +5,7 @@ as
     p_message_name in varchar2,
     p_message_language in varchar2,
     p_affected_id in varchar2,
+    p_error_code in varchar2,
     p_session_id in varchar2,
     p_user_name in varchar2,
     p_arg_list msg_args)
@@ -23,6 +24,7 @@ as
     self.id := pit_log_seq.nextval;
     self.message_name := p_message_name;
     self.affected_id := p_affected_id;
+    self.error_code := p_error_code;
     self.session_id := p_session_id;
     self.user_name := p_user_name;
     self.message_args := p_arg_list;

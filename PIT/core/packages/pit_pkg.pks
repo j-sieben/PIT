@@ -27,6 +27,7 @@ as
    * @param  p_message_name  Name of the message to log
    * @param  p_arg_list      List of replacement values for the message
    * @param  p_affected_id   Optional ID of an item a log entry relates to
+   * %param  p_error_code    Additional error code, used in external applications
    * @param  p_module_list   List of module names, separated by semicolon
    *                         that is used to log the message. If NULL, the list of
    *                         actually set modules is used.
@@ -39,12 +40,14 @@ as
     p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
+    p_error_code in varchar2,
     p_module_list in pit_util.max_sql_char);
   
 
   /* Logs messages generically
    * %param  p_message_name   Name of the message to log
    * %param  p_affected_id    Optional ID of an item a log entry relates to
+   * %param  p_error_code     Additional error code, used in external applications
    * %param  p_arg_list       List of replacement values for the message
    * %param  p_log_threshold  Threshold that is taken as a comparison to the message
    *                          severity to decide whether a message should be logged
@@ -60,6 +63,7 @@ as
   procedure log_specific(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
+    p_error_code in varchar2,
     p_arg_list in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
     p_log_modules in pit_util.max_sql_char);
@@ -150,8 +154,9 @@ as
   /* Raises an error
    * @param  p_severity      Severity of the message to raise (FATAL|ERROR)
    * @param  p_message_name  Name of the message to raise 
-   * @param  p_affected_id   ID of an object that is affected by this message
    * @param  p_arg_list      List of replacement values for the message
+   * @param  p_affected_id   ID of an object that is affected by this message
+   * %param  p_error_code    Additional error code, used in external applications
    * @usage  This procedure is called from PIT. It takes the message_name and
    *         constructs an instance of MESSAGE_TYPE for it. It then calls raises
    *         an error with the respective message that can be caught by the exception
@@ -161,15 +166,17 @@ as
   procedure raise_error(
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
+    p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list in msg_args);
+    p_error_code in varchar2);
   
   
   /* Handels an error
    * @param  p_severity      Severity of the message to log (FATAL|ERROR)
    * @param  p_message_name  Name of the message to log
-   * @param  p_affected_id   ID of an object that is affected by this message
    * @param  p_arg_list      List of replacement values for the message
+   * @param  p_affected_id   ID of an object that is affected by this message
+   * %param  p_error_code    Additional error code, used in external applications
    * @param  p_params        Instance of <code>msg_params</code> with a list of
    *                         key-value pairs representing parameter name and -value.
    * @usage  This procedure is called from PIT. It takes the message_name and
@@ -181,23 +188,26 @@ as
   procedure handle_error(
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
-    p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args,
+    p_affected_id in pit_util.max_sql_char,
+    p_error_code in varchar2,
     p_params in msg_params);
   
   
   /* Returns an instance of type MESSAGE_TYPE.
    * @param  p_message_name  Name of the message to log
-   * @param  p_affected_id   ID of an object that is affected by this message
    * @param  p_arg_list      List of replacement values for the message
+   * @param  p_affected_id   ID of an object that is affected by this message
+   * %param  p_error_code    Optional error code, usable by external applications
    * @return Instance of the requested message.
    * @usage  This procedure is called from PIT. It takes the message_name,
    *         constructs an instance of MESSAGE_TYPE and returns the message instance.
    */
   function get_message(
     p_message_name in pit_util.ora_name_type,
+    p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list msg_args)
+    p_error_code in varchar2)
     return message_type;
     
     
