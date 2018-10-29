@@ -100,7 +100,7 @@ Sometimes, it's useful to have the ability to maintain custom error codes with e
 
 If you use this feature, this error code is passed around as part of the message instance, so it's very easy for any output module to get access to this information and do whatever you require with it.
 
-## Throwing errors with `pit.log_specific`
+## Throwing errors with `pit.log` (formerly called `log_specific`)
 
 Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. Do not use it for normal logging. 
 
