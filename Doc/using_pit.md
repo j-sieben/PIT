@@ -8,6 +8,19 @@ As a best practice, provide `pit.enter` with the name of your method and your pa
 
 Please make sure, that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.sql_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), PIT maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
 
+Starting with version 12c, PIT has extended its possibility of handling the call stack by utilizing `UTL_CALL_STACK`under the covers. This makes call stack maintenance more stable and reliable and allows for even less code in the application. Imagine a method `A` that calls method `B` which in turn calls method `C`. In `C`, an error is raised, but it is catched at method `A`. Normally, there would be no way to clear the call stack if not any of the methods `A`, `B` and `C` would offer an exception handler. Methods `C` and `B` would then implement a dummy handler such as 
+
+```
+...
+exception
+  when others then
+    pit.leave;
+    raise;
+end;
+```
+
+which is rather ugly. Starting with 12c, this is not necessary anymore. Simply throw the error and catch it where you require it and PIT will clean the call stack up to the actual method that caught the exception.
+
 ### Passing parameters to trace-methods
 
 If you want to include parameters passed to a method in your tracing, this can be achieved by providing the methods with an instance of `MSG_PARAMS`. This type is a nested table of `MSG_PARAM` objects, which in turn is a simple key value object. A key name may be as long as `30 byte` (`128 byte` starting with Oracle 12c) and the param value up to `4000 byte` of `varchar2`. You create an instance of `MSG_PARAM`by calling its constructor function:
