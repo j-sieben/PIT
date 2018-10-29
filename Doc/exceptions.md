@@ -65,7 +65,7 @@ end;
 Method `pit.stop`, on the other hand, is ideal for working in conjunction with `pit.fatal` or `raise`. The difference to `pit.sql_exception` is that `pit.stop` will throw an exception after it has logged the original exception. The thrown exception may be just the one that was passed in or any other message you see fit.
 
 ### Passing predefined messages to PIT
-If you threw the excpetion with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.sql_exception` or `pit.stop` respectively. To achieve this, there is predefined message called `pit.PASS_MESSAGE` that gets thrown if you call the methods without parameters. If you do so, the already existing message (which is stored in the backtrace) will be used for logging, allowing for individual parameters throughout the code.
+If you threw the excpetion with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.sql_exception` or `pit.stop` respectively. To achieve this,simply call the exception handlers without parameters.
 
 If you review the next code sample, you will get the idea of how it works immediately:
 
@@ -93,6 +93,10 @@ exception
    pit.sql_exception(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 end;
 ```
+
+## Passing parameters to exception handlers
+
+Sometimes it's useful to be able to pass output parameter values even in the case of exceptions. To achieve that, `pit.SQL_EXCEPTION` and `pit.STOP` provide an optional parameter called `P_PARAMS` that accepts an instance of `MSG_PARAMS` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
 
 ## Passing Error Codes
 
