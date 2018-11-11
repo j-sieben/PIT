@@ -193,6 +193,16 @@ Method `pit.sql_exception` is used to achieve two goals:
 
 If you defined a message for your own exception, simply raise the error by calling `pit.error(msg.CHILD_RECORD_FOUND_ERR);`. In your exception handler, you catch this exception as you would do with any other exception in PIT. Further details on throwing and catching exceptions can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/exceptions.md).
 
+## Logging independently of log settings
+
+If you require PIT to log any information regardless of any log settings, this is possible by calling method `pit.log`. To enhance its usability, this method accepts some additional parameters.
+
+First, the message severity is taken from the message you pass in. So if you want to log a message with severity `pit.LEVEL_ERROR`, this then defines the severity of the logging. You can limit this by using a parameter call `P_LOG_THRESHOLD`. If set, only messages are logged with a severity lower or equal this value.
+
+You then can decide upon the output modules to use for this log process. Without changing any log settings, you may want to log a specific message to one output module only. This is possible by passing in the list of requested output modules as a colon-separated list into parameter `P_MODULE_LIST`. As said, this does not effect any log settings but will be set for this single log process.
+
+Imagine an application like a flow control system that needs to log changed status messages to a dedicated output module called PIT_FLOW_CONTROL. By calling `pit.log` with parameter `p_module_list => 'PIT_FLOW_CONTROL` only this output module will receive the status change message. 
+
 ## Handling message parameters
 
 Messages require parameters. To pass parameters to a message, an object of type `MSG_ARGS` is provided. This is a `varray(20) of clob`. I chose a clob varray because the parameters have to keep their defined order to make sure that the right parameter is replaced at the right position within the message. To prepare a message for replacements of parameters, you add anchors of the form `#n#` to the message, with `n` being an integer between 1 and 20. Here's an example of a message with replacement anchors and the code to call it:
@@ -212,17 +222,6 @@ If your output module implements a `print`-method, you can use this method to pa
 
 Main use obviously is to pass validation messages, status messages and the like to the view layer. To achieve this, you normally create a message of severity `pit.level_verbose`. This way, only a constant for the message is created in the MSG package. To use it, you simply call `pit.print(msg.MY_MESSAGE)` and you're done.
 
-## Using PIT creatively
-As PIT is not centered around debugging and logging, but around messages, you may use PIT whenever you have to deal with messages. In this context, it may be necessary to habe a logging mechanism that can't be easily switched off by setting a parameter or a context. In a project I created a Finite State Machine (FSM) in PL/SQL to control complex workflows. I needed a way to log any status change and any occurence of events, regardless of the actual logging settings. This is, where `pit.log_specific` comes in handy.
-
-`pit.log_specific` at first glance looks like any other logging method. It allows you to pass in a message constant, optionally enriched by message parameters as well as a affected ID, allowing you to reference a specific instance within your messages. Actually, the use within the FSM context brought me to extend the interface with this option. Reason is, that in my project many instances of the FSM object undergo a process cycle which is defined by the various transitions within the FSM. Therefore, when logging the status changes, I needed an easy way to group related status changes together. This is where the `p_affected_id` is important. An output module may store it in a separate column of a logging table, allowing for easy grouping of messages.
-
-What makes `pit.log_specific` exceptionally useful is its possibility to define an optional list of output modules. If present, the list of modules is defined active, but only for the length of the call to `pit.log_specific`. This allows to log these specific messages to a certain set of output modules only. For FSM, I created a dedicated output module that normally is not part of the overall logging but that gets used whithin the FSM. Being able to set any list of modules you need is a great thing for testing purposes: Just include a `pit_test`output module in the list of modules for `pit.log_specific` and all of your status changes get notified to the test module as well.
-
-An optional parameter called `p_log_threshold` may be used to control a certain level of logging even within `pit.log_specific`. This allows you to reduce the amount of status messages on production systems if you like.
-
-Another interesting use case of `p_affected_id` came up when creating [`utl_apex`](https://github.com/j-sieben/UTL_APEX), available here on GitHub as well. In the environment of validating user input, I decided to utilize this parameter to hold the ID of the input field the user edited content at. In the `pit_apex` output module I decided to look up the label of the passed in element id and try an replace an anchor called `#ITEM_LABEL#` with this label. This way, I could generically log element related exceptions with the element and at the same time include the element label in the error message. So my advice here is: Be creative!
-
 ## Using PIT to assert conditions
 
 If you code using the *Contractor Pattern*, you want to assert that incoming parameters meet certain conditions. Should an assertion fail, an exception is thrown and an error message needs to be generated. To help you on this, PIT provides a basic set of assertion methods. Here are the methods PIT provides so far:
@@ -237,13 +236,15 @@ Most methods are provided with overloads for `varchar2`, `number` and `date`, th
 
 I added the paramter `p_affected_id` to the assertion methods as I did before in the log methods. Reason is that many validations require a reference to an input field or similar. E.g. in APEX you have the possibility to attach an error message to a specific input field. I found it cumbersome to validate input, create a message for it and then have to deal with proper placement of that message on the screen. By adding `p_affected_id` it's now possible to simply pass in the id of the element you're working at and you're done, the rest is done within output module `pit_apex`.
 
+Plus, you have the ability to pass in any custom error codes you like. If the assertion fails, those custom error codes are integrated into the message instance for later reference.
+
 What makes all assertion methods convenient is that they come with a default message (which of course can be translated as any other message PIT uses). Should you require to do so, you may pass in your own message that gets thrown if the assertion fails. Simply pass in the message name and the message parameters optionally. Here's an example on how to check an assertion with a user defined message:
 
 ```
 begin
   pit.assert(
     p_condition => p_param in (10,20,30),
-    p_messag_name => msg.PARAM_OUT_OF_RANGE, 
+    p_message_name => msg.PARAM_OUT_OF_RANGE, 
     p_arg_list => msg_args('P_PARAM', '10,20,30', to_char(p_param))
   );
   ...
@@ -252,4 +253,4 @@ end;
 
 If the assertion throws an error, this may lead to a message like »Parameter 'P_PARAM' is supposed to be in the range of [10,20,30] but was 45.«
 
-
+Be creative when thinking about these methods. In a project it turned out to be very convenient to wrap these assertion methods into a method that didn't throw an exception but rather catched any upcoming error and integrated into an APEX error stack. This way, it is very convenient to test a set of conditions and all conditions that fail add to the error stack.
