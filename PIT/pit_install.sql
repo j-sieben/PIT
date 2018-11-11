@@ -11,6 +11,11 @@
 @init/init.sql &1. &2.
 
 alter session set current_schema=sys;
+
+prompt
+prompt &section.
+prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Installation at user &INSTALL_USER.
+
 prompt
 prompt &section.
 prompt &h1.Checking whether required users exist
@@ -25,11 +30,9 @@ alter session set plsql_ccflags = 'development:&INSTALL_ON_DEV., pit_installed:F
 alter session set plsql_optimize_level = 3;
 alter session set plsql_code_type='NATIVE';
 alter session set plscope_settings='IDENTIFIERS:ALL';
-
 prompt
 prompt &section.
-prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Installation at user &INSTALL_USER.
-prompt &h2.Installing core functionality
+prompt &h1.Installing core functionality
 @core/install.sql
 
 prompt &s1.Set Compiler-Flags
@@ -46,9 +49,14 @@ prompt &h1.Installing PIT output modules
 @modules/pit_mail/install.sql
 
 
+prompt
+prompt &section.
+prompt &h1.Clean up
 prompt &h2.Revoke user rights
 @revoke_grants.sql
 
+prompt
+prompt &section.
 prompt &h1.Finished PIT-Installation
 
 exit

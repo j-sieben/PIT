@@ -52,6 +52,7 @@ as
     p_method_name in varchar2,
     p_params in msg_params,
     p_call_level in integer,
+    p_trace_level in integer,
     p_trace_timing in char,
     p_trace_settings in varchar2)
     return self as result
@@ -66,6 +67,7 @@ as
     self.params := p_params;
     self.user_name := p_user_name;
     self.call_level := p_call_level;
+    self.trace_level := p_trace_level;
     self.trace_timing := p_trace_timing;
     self.trace_settings := p_trace_settings;
     if self.trace_timing = 'Y' then

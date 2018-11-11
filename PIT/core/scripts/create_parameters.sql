@@ -72,22 +72,6 @@ begin
    ,p_par_validation_string => 'length(#STRING_VALUE#) < 4'
    ,p_par_validation_message => 'Postfix length must not exceed 3 characters'
   );
-  
-  pit_admin.create_named_context(
-    p_context_name => 'CONTEXT_DEBUG',
-    p_settings => '70|50|Y|PIT_CONSOLE',
-    p_comment => 'Named context, switches logging on [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
-
-  pit_admin.create_named_context(
-    p_context_name => 'CONTEXT_DEFAULT',
-    p_settings => '30|10|N|PIT_TABLE:PIT_APEX',
-    p_comment => 'Named context, default values [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
-
-  pit_admin.create_named_context(
-    p_context_name => 'CONTEXT_OFF',
-    p_settings => '10|10|N|',
-    p_comment => 'Named context, switches logging off [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
-
   param_admin.edit_parameter(
     p_par_id => 'PIT_WEB_SOCKET_SERVER',
     p_par_pgr_id => 'PIT',
@@ -112,6 +96,31 @@ Line  Schema          Object
 Level Error#    Message
 ----- --------- ----------------------------------------------------^'
   );
+
+  param_admin.edit_parameter(
+    p_par_id => 'NAME_SPELLING'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Default spelling for database object names'
+   ,p_par_string_value => q'^LOWER^'
+   ,p_par_validation_string => q'^#STRING_VALUE# in ('LOWER', 'UPER', 'UNCHANGED')^'
+   ,p_par_validation_message => 'Allowed values are LOWER|UPPER|UNCHANGED'
+  );
+  
+  pit_admin.create_named_context(
+    p_context_name => 'CONTEXT_DEBUG',
+    p_settings => '70|50|Y|PIT_CONSOLE',
+    p_comment => 'Named context, switches logging on [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
+
+  pit_admin.create_named_context(
+    p_context_name => 'CONTEXT_DEFAULT',
+    p_settings => '30|10|N|PIT_TABLE:PIT_APEX',
+    p_comment => 'Named context, default values [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
+
+  pit_admin.create_named_context(
+    p_context_name => 'CONTEXT_OFF',
+    p_settings => '10|10|N|',
+    p_comment => 'Named context, switches logging off [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]');
+
     
   commit;
 end;

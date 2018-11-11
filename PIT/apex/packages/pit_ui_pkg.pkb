@@ -323,8 +323,6 @@ as
     C_ZIP_FILE_NAME constant varchar2(50) := 'Parameter_ALL.zip';
   begin
     pit.enter_mandatory(
-      p_action => 'export_parameter_group', 
-      p_module => C_PKG,
       p_params=> msg_params(msg_param('p_parameter_groups', p_parameter_groups)));
       
     l_pgr_list := apex_util.string_to_table(p_parameter_groups);

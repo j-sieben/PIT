@@ -8,6 +8,8 @@ as
    begin
       p_user_name := substr(l_id, 1, instr(l_id, ':') - 1);
       p_session_id := substr(l_id, instr(l_id, ':') + 1);
+      -- If APEX is set to logging, adjust context to predefined log settings defined in PIT_APEX params
+      pit_apex_pkg.set_apex_triggered_context;
    end get_session_details;
    
    constructor function apex_adapter(

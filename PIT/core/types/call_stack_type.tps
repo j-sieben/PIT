@@ -15,6 +15,7 @@ create or replace type call_stack_type is object (
   call_level integer,
   last_resume_point integer,
   last_cpu_resume_point integer,
+  trace_level integer,
   trace_timing char(1),
   trace_settings varchar2(4000),
   member procedure pause,
@@ -28,6 +29,7 @@ create or replace type call_stack_type is object (
     p_method_name in varchar2,
     p_params in msg_params,
     p_call_level in integer,
+    p_trace_level in integer,
     p_trace_timing in char,
     p_trace_settings in varchar2)
     return self as result

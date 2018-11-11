@@ -28,9 +28,6 @@ as
    * @param  p_arg_list      List of replacement values for the message
    * @param  p_affected_id   Optional ID of an item a log entry relates to
    * %param  p_error_code    Additional error code, used in external applications
-   * @param  p_module_list   List of module names, separated by semicolon
-   *                         that is used to log the message. If NULL, the list of
-   *                         actually set modules is used.
    * @usage This procedure is called from PIT. It takes the message_name and
    *        constructs an instance of MESSAGE_TYPE for it. It then calls any
    *        log procedure of all active output modules and passes the message.
@@ -40,8 +37,7 @@ as
     p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
-    p_error_code in varchar2,
-    p_module_list in pit_util.max_sql_char);
+    p_error_code in varchar2);
   
 
   /* Logs messages generically

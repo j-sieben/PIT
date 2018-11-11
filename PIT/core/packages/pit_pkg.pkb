@@ -15,6 +15,7 @@ as
   type context_rec is record (
     context_name pit_util.ora_name_type,
     settings pit_util.max_sql_char,
+    
     log_level binary_integer,
     trace_level binary_integer,
     trace_timing boolean,
@@ -53,6 +54,7 @@ as
   C_ALLOW_TOGGLE constant pit_util.ora_name_type := 'ALLOW_TOGGLE';
   C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
   C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
+  C_NAME_SPELLING constant pit_util.ora_name_type := 'NAME_SPELLING';
   C_CTX_DEL constant pit_util.flag_type := '|';
   C_LIST_DEL constant pit_util.flag_type := ':';
   C_CTX_NAME_DEL constant pit_util.flag_type := '@';
@@ -86,6 +88,7 @@ as
   g_user_name pit_util.ora_name_type;
   g_client_id varchar2(64);
   g_active_error message_type;
+  g_name_spelling varchar2(10 byte);
 
   /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
@@ -192,13 +195,16 @@ as
   procedure store_settings_locally(
     p_settings in varchar2)
   as
+    l_settings args;
   begin
     g_ctx.settings := substr(p_settings, 1, instr(p_settings, C_CTX_NAME_DEL) - 1);
     g_ctx.context_name := substr(g_ctx.settings, instr(p_settings, C_CTX_NAME_DEL) + 1);
-    g_ctx.log_level := to_number(regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 1));
-    g_ctx.trace_level := to_number(regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 2));
-    g_ctx.trace_timing := regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 3) = C_TRUE;
-    g_ctx.module_list := regexp_substr(g_ctx.settings, C_SPLIT_REGEX, 1, 4);
+    l_settings := pit_util.string_to_table(g_ctx.settings, '|');
+    
+    g_ctx.log_level := to_number(l_settings(1));
+    g_ctx.trace_level := to_number(l_settings(2));
+    g_ctx.trace_timing := l_settings(3) = C_TRUE;
+    g_ctx.module_list := l_settings(4);
     g_ctx.active_log_modules := get_modules_by_name(g_ctx.module_list);
   end store_settings_locally;
 
@@ -255,7 +261,7 @@ as
     if g_ctx.allow_toggle then
       -- after raised event, check whether toggle context requires context switch
       case
-      when instr(p_settings, C_CONTEXT_DEFAULT) > 0 then
+      when instr(p_settings, utl_context.get_value(C_GLOBAL_CONTEXT, C_CONTEXT_DEFAULT)) > 0 then
         reset_active_context;
       when p_settings is not null then
         set_active_context(p_settings);
@@ -314,8 +320,7 @@ as
       select ctx_name, string_value
         from contexts
        where ctx_name != C_CONTEXT_ACTIVE;
-    l_ctx context_type;
-    l_ctx_name pit_util.ora_name_type;
+    l_ctx args;
   begin
     g_named_ctx_list.delete;
 
@@ -335,9 +340,9 @@ as
     for ctx in context_cur loop
       -- Switch between Toggles and Contextes
       if ctx.name like C_TOGGLE_PREFIX || '%' then
-        for i in 1 .. regexp_count(ctx.name, C_LIST_DEL) + 1 loop
-          l_ctx_name := regexp_substr(ctx.name, '[^' || C_LIST_DEL || ']+', 1, i);
-          utl_context.set_value(C_GLOBAL_CONTEXT, l_ctx_name, ctx.setting, g_client_id);
+        l_ctx := pit_util.string_to_table(ctx.name, ':');
+        for i in 1 .. l_ctx.count loop
+          utl_context.set_value(C_GLOBAL_CONTEXT, l_ctx(i), ctx.setting, g_client_id);
         end loop;
       else
         utl_context.set_value(C_GLOBAL_CONTEXT, ctx.name, ctx.setting, g_client_id);
@@ -429,6 +434,7 @@ as
     p_module in varchar2,
     p_action in varchar2,
     p_params in msg_params,
+    p_trace_level in binary_integer,
     p_trace_settings in varchar2)
   as
     l_last_entry binary_integer;
@@ -448,6 +454,7 @@ as
           p_method_name => p_action,
           p_params => p_params,
           p_call_level => l_last_entry + 1,
+          p_trace_level => p_trace_level,
           p_trace_timing => case when g_ctx.trace_timing then C_TRUE else C_FALSE end,
           p_trace_settings => check_context_toggle(p_trace_settings, l_last_entry));
   end push_stack;
@@ -497,26 +504,6 @@ as
       g_call_stack.delete(l_last_entry);
     end if;
   end pop_stack;
-
-
-  /* Helper method to clean stack after a fatal error has ocurred.
-   * %usage Called from method LOG if level is C_LEVEL_FATAL.
-   *        Pops all call stack entries
-   */
-  procedure clean_stack(
-    p_params in msg_params)
-  as
-    l_call_stack call_stack_type;
-    l_trace_settings pit_util.max_sql_char;
-  begin
-    for i in 1 .. g_call_stack.count loop
-      if i = 1 then
-        leave(C_TRACE_MANDATORY, p_params);
-      else
-        leave(C_TRACE_MANDATORY, null);
-      end if;
-    end loop;
-  end clean_stack;
 
 
   /************************** CENTRAL FUNCTIONALITY **************************/
@@ -621,7 +608,28 @@ as
     get_context_values;
     return p_severity <= g_ctx.trace_level;
   end trace_me;
-
+  
+  
+  /* Helper method to harmonize the spelling of database names etc.
+   * %param  p_name  Name to harmonize
+   * %return Harmonized name
+   * %usage  Is used to harmonize the spelling of names. Conversion is based on parameter PIT.NAME_SPELLING
+   */
+  function harmonize_name(
+    p_name in varchar2)
+    return varchar2
+  as
+  begin
+    case g_name_spelling
+    when 'LOWER' then
+      return lower(p_name);
+    when 'UPPER' then
+      return upper(p_name);
+    else
+      return p_name;
+    end case;
+  end harmonize_name;
+  
 
   /* Helper method to get module and action from UTL_CALL_STACK
    * %param p_trace_level Controls the recursive level needed by UTL_CALL_STACK
@@ -636,11 +644,10 @@ as
   as
     $IF dbms_db_version.ver_le_11 $THEN
     $ELSE
+    l_depth binary_integer := 4;
     l_module_position integer;
     l_action_position integer;
     l_qualified_name utl_call_stack.unit_qualified_name;
-    -- variable to adjust recursive call level for UTL_CALL_STACK
-    l_trace_depth integer := 5;
     $END
   begin
     $IF dbms_db_version.ver_le_11 $THEN
@@ -648,19 +655,13 @@ as
     $ELSE
     if p_action is null or p_module is null then
       begin
-        l_qualified_name := utl_call_stack.subprogram(l_trace_depth);
+        p_action := harmonize_name(utl_call_stack.subprogram(l_depth)(2));
+        p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
       exception
-        when utl_call_stack.bad_depth_indicator then
-          l_qualified_name := utl_call_stack.subprogram(l_trace_depth - 1);
+        when others then
+          p_action := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
       end;
-      l_module_position := greatest(least(l_qualified_name.count - 1, 1), 1);
-      l_action_position := l_qualified_name.count;
     end if;
-    if l_action_position > 1 then
-      -- Anonymous blocks don't have a module, leave it out
-      p_module := lower(coalesce(p_module, l_qualified_name(l_module_position)));
-    end if;
-    p_action := lower(coalesce(p_action, l_qualified_name(l_action_position)));
     $END
   end get_module_and_action;
 
@@ -671,10 +672,11 @@ as
   begin
     g_language := sys_context('USERENV', 'LANGUAGE');
     g_language := substr(g_language, 1, instr(g_language, '_') - 1);
+    g_name_spelling := param.get_string(C_NAME_SPELLING, C_PARAM_GROUP);
     g_call_stack.delete;
     g_ctx.context_type := param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP);
-    g_ctx.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, c_param_group);
-    g_ctx.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, c_param_group);
+    g_ctx.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, C_PARAM_GROUP);
+    g_ctx.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, C_PARAM_GROUP);
     load_modules;
     load_adapter;
     get_context_list;
@@ -689,8 +691,7 @@ as
     p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args,
     p_affected_id in pit_util.max_sql_char,
-    p_error_code in varchar2,
-    p_module_list in pit_util.max_sql_char)
+    p_error_code in varchar2)
   as
     l_message message_type;
   begin
@@ -779,8 +780,8 @@ as
     p_trace_level in binary_integer,
     p_client_info in varchar2)
   as
-    l_action pit_util.ora_name_type := p_action;
     l_module pit_util.ora_name_type := p_module;
+    l_action pit_util.ora_name_type := p_action;
     l_trace_me boolean;
   begin
     l_trace_me := trace_me(p_trace_level);
@@ -795,6 +796,7 @@ as
         p_module => l_module,
         p_action => l_action,
         p_params => p_params,
+        p_trace_level => p_trace_level,
         p_trace_settings => get_toggle_context(p_module, p_action));
         
       if g_ctx.allow_toggle then
@@ -827,27 +829,24 @@ as
     l_call_stack call_stack_type;
     l_trace_me boolean;
     l_new_trace_settings pit_util.max_sql_char;
-    l_who_am_i pit_util.ora_name_type;
+    l_module pit_util.ora_name_type;
+    l_action pit_util.ora_name_type;
     l_found_entry binary_integer;
   begin
     l_trace_me := trace_me(p_trace_level);
-
+    
     -- Do minimal tracing if context toggle is active
-    if g_ctx.allow_toggle or l_trace_me then
+    if (g_ctx.allow_toggle or l_trace_me) and g_call_stack.last > 0 then
       $IF dbms_db_version.ver_le_11 $THEN
       l_found_entry := g_call_stack.last;
       $ELSE
-      -- Get actual unit name and try to find it in stack. If found, pap all entries including this one.
-      begin
-        l_who_am_i := utl_call_stack.subprogram(4)(2);
-      exception
-        when others then
-          -- if called from an anonymous block, level 2 is not defined
-          l_who_am_i := utl_call_stack.subprogram(4)(1);
-      end;
+      get_module_and_action(
+        p_module => l_module,
+        p_action => l_action);
+      
       l_found_entry := g_call_stack.last + 1; -- Set found to a value higher max to avoid deleting entries if nothing is found
       for i in reverse 1 .. g_call_stack.last loop
-        if l_who_am_i = upper(g_call_stack(i).method_name) then
+        if upper(l_action) = upper(g_call_stack(i).method_name) then
           l_found_entry := i;
           exit;
         end if;
@@ -865,6 +864,11 @@ as
             p_event => C_LEAVE_EVENT,
             p_event_focus => C_EVENT_FOCUS_ACTIVE,
             p_call_stack => l_call_stack);
+        end if;
+    
+        if g_ctx.allow_toggle then
+          -- toggle may have set a new trace level, Check and set accordingly for higher entries on stack
+          l_trace_me := trace_me(p_trace_level); 
         end if;
       end loop;
     end if;
@@ -975,12 +979,12 @@ as
     p_params in msg_params)
   as
   begin
-    log_event(p_severity, p_message_name, p_arg_list, p_affected_id, p_error_code, null);
+    log_event(p_severity, p_message_name, p_arg_list, p_affected_id, p_error_code);
+    
+    leave(C_TRACE_MANDATORY, p_params);
+    
     if p_severity = pit.level_fatal then
-      clean_stack(p_params);
       raise_error(pit.level_fatal, p_message_name, p_arg_list, p_affected_id, p_error_code);
-    else
-      leave(C_TRACE_MANDATORY, p_params);
     end if;
   end handle_error;
 

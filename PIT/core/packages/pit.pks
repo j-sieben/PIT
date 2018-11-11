@@ -250,10 +250,10 @@ as
   
   
   /* Traces entering a method, level mandatory
-   * @param  p_action       Short description of what the method is used for.
+   * @param [p_action]      Short description of what the method is used for.
    *                        You may choose the method name or a free description.
    *                        As this parameter goes to DBMS_APPLICATION_INFO, it's mandatory
-   * @param  p_module       Short description of what the environment of that method is.
+   * @param [p_module]      Short description of what the environment of that method is.
    *                        As this parameter goes to DBMS_APPLICATION_INFO, it's mandatory
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
@@ -266,8 +266,8 @@ as
    *         for a given use case.
    */
   procedure enter_mandatory(
-    p_action in varchar2,
-    p_module in varchar2,
+    p_action in varchar2 default null,
+    p_module in varchar2 default null,
     p_params in msg_params default null,
     p_client_info in varchar2 default null);
     

@@ -154,7 +154,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log_event(level_all, p_message_name, p_arg_list, p_affected_id, null, null);
+    pit_pkg.log_event(level_all, p_message_name, p_arg_list, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -168,7 +168,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_debug $THEN
-    pit_pkg.log_event(level_debug, p_message_name, p_arg_list, p_affected_id, null, null);
+    pit_pkg.log_event(level_debug, p_message_name, p_arg_list, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -182,7 +182,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log_event(level_info, p_message_name, p_arg_list, p_affected_id, null, null);
+    pit_pkg.log_event(level_info, p_message_name, p_arg_list, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -196,7 +196,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_warn $THEN
-    pit_pkg.log_event(level_warn, p_message_name, p_arg_list, p_affected_id, null, null);
+    pit_pkg.log_event(level_warn, p_message_name, p_arg_list, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -273,8 +273,8 @@ as
   
 
   procedure enter_mandatory(
-    p_action in varchar2,
-    p_module in varchar2,
+    p_action in varchar2 default null,
+    p_module in varchar2 default null,
     p_params in msg_params default null,
     p_client_info in varchar2 default null)
   as

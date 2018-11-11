@@ -115,8 +115,8 @@ as
         -- Get item label to include it into the message
         begin 
              with params as(
-                  select v('APP_ID') application_id,
-                         v('APP_PAGE_ID') page_id,
+                  select to_number(v('APP_ID')) application_id,
+                         to_number(v('APP_PAGE_ID')) page_id,
                          p_message.affected_id item_name
                     from dual)
            select /*+ no_merge (params) */ label
@@ -195,7 +195,7 @@ as
       when pit.level_fatal then
         debug_message(p_message);
         log_error(p_message);
-        wwv_flow.g_unrecoverable_error := true;
+        apex_application.stop_apex_engine;
       else
         -- Level off
         null;
@@ -288,7 +288,7 @@ as
   as
   begin
     if valid_environment then
-      if v('DEBUG') = C_YES then
+      if apex_application.g_debug then
         pit_pkg.set_context(g_apex_triggered_context);
       else
         pit.reset_context;
@@ -298,7 +298,7 @@ as
 
 
   procedure initialize_module(
-    self in out pit_apex)
+    self in out nocopy pit_apex)
   as
   begin
     if valid_environment then
@@ -311,11 +311,7 @@ as
   exception
     when others then
       self.status := msg.pit_fail_module_init;
-      $if dbms_db_version.ver_le_11 $then
-      self.stack := dbms_utility.format_error_backtrace;
-      $else
-      self.stack := dbms_utility.format_error_stack;
-      $end
+      self.stack := pit_util.get_error_stack;
   end initialize_module;
 
 begin

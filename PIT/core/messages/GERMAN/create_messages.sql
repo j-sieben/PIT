@@ -308,7 +308,7 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'PIT_PASS_MESSAGE',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^#SQLERRM#^',
+    p_pms_text => q'^#1#^',
     p_pms_description => q'^^',
     p_pms_pse_id => 70,
     p_pms_pml_name => '&DEFAULT_LANGUAGE.',
@@ -338,7 +338,7 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'SQL_ERROR',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Ein SQL-Fehler ist aufgetreten: #1#^',
+    p_pms_text => q'^Ein SQL-Fehler ist aufgetreten: #SQLERRM#^',
     p_pms_description => q'^Allgemeine Fehlermeldung. Nähere Informationen siehe im Meldungsparameter.^',
     p_pms_pml_name => 'GERMAN',
     p_pms_pse_id => 30,

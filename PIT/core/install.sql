@@ -10,14 +10,14 @@ prompt &h1.Installing context framework
 @&core_dir.context/install.sql
 
 prompt
-prompt &h2.Installing PIT core
-prompt &h3.Check installation prerequisites
+prompt &h1.Installing PIT core
+prompt &h2.Check installation prerequisites
 @&core_dir.check_prerequisites.sql
 
-prompt &h3.Remove existing installation
+prompt &h2.Remove existing installation
 @&core_dir.clean_up_install.sql
 
-prompt &h3.Setting compile flags
+prompt &h2.Setting compile flags
 @&core_dir.set_compiler_flags.sql
 
 prompt &h2.Create sequences
@@ -105,21 +105,22 @@ prompt &s1.Create type PIT_MODULE_IIST
 show errors
 
 
-prompt &h2.Create package declarations
-prompt &s1.Create package PIT_ADMIN
-@&core_dir.packages/pit_admin.pks
-show errors
-
+prompt &h2.Create ADMIN package declarations
 prompt &s1.Create package PIT_UTIL
 @&core_dir.packages/pit_util.pks
 show errors
 
-prompt &s1.Create package Body PIT_ADMIN
-@&core_dir.packages/pit_admin.pkb
+prompt &s1.Create package PIT_ADMIN
+@&core_dir.packages/pit_admin.pks
 show errors
 
+prompt &h2.Create ADMIN package implementations
 prompt &s1.Create package Body PIT_UTIL
 @&core_dir.packages/pit_util.pkb
+show errors
+
+prompt &s1.Create package Body PIT_ADMIN
+@&core_dir.packages/pit_admin.pkb
 show errors
 
 prompt &s1.Create default parameters
@@ -128,6 +129,7 @@ prompt &s1.Create default parameters
 prompt &s1.Create internal messages
 @&core_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
 
+prompt &h2.Create CORE package declarations
 prompt &s1.Create package MSG
 @&core_dir.packages/msg.pks
 show errors
@@ -160,7 +162,7 @@ prompt &s1.Create type body PIT_MODULE
 @&core_dir.types/pit_module.tpb
 show errors
 
-prompt &h2.Create package bodies
+prompt &h2.Create CORE package implementations
 prompt &s1.Create package body PIT
 @&core_dir.packages/pit.pkb
 show errors

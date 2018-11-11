@@ -28,10 +28,10 @@ as
     self.session_id := p_session_id;
     self.user_name := p_user_name;
     self.message_args := p_arg_list;
-    if sqlcode > 0 then
-      self.stack := dbms_utility.format_error_stack;
-      self.backtrace := dbms_utility.format_error_backtrace;
+    if sqlcode != 0 then
       self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 11));
+      self.stack := pit_util.get_call_stack;
+      self.backtrace := pit_util.get_error_stack;
     end if;
 
     -- replace anchors with msg params
