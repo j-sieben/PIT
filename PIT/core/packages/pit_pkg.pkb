@@ -644,16 +644,21 @@ as
   as
     $IF dbms_db_version.ver_le_11 $THEN
     $ELSE
-    l_depth binary_integer := 4;
-    l_module_position integer;
-    l_action_position integer;
-    l_qualified_name utl_call_stack.unit_qualified_name;
+    l_depth binary_integer;
     $END
   begin
     $IF dbms_db_version.ver_le_11 $THEN
     null;
     $ELSE
     if p_action is null or p_module is null then
+      l_depth := utl_call_stack.dynamic_depth;
+      for i in 1 .. l_depth loop
+        if utl_call_stack.subprogram(i)(1) not like 'PIT%' then
+          l_depth := i;
+          exit;
+        end if;
+      end loop;
+      -- Get actual unit name and try to find it in stack. If found, pop all entries including this one
       begin
         p_action := harmonize_name(utl_call_stack.subprogram(l_depth)(2));
         p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
