@@ -23,4 +23,8 @@ prompt &h3.Grant rights and create synonyms
 -- Tables and Views
 @tools/grant_access.sql select PIT_CALL_STACK
 @tools/grant_access.sql select PIT_LOG
+@tools/grant_access.sql select PIT_MESSAGE
+@tools/grant_access.sql select PIT_MESSAGE_LANGUAGE
+@tools/grant_access.sql select PIT_MESSAGE_LANGUAGE_V
 @tools/grant_access.sql "select, references" PIT_TRANSLATABLE_ITEM
+@tools/grant_access.sql select PIT_TRANSLATABLE_ITEM_V
