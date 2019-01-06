@@ -12,7 +12,7 @@ create or replace type pit_aq under pit_module
   overriding member procedure purge(
     self in out nocopy pit_aq,
     p_purge_date in date,
-    p_severity_greater_equal in number default null),
+    p_severity_greater_equal in integer default null),
   overriding member procedure enter(
     self in out nocopy pit_aq,
     p_call_stack in call_stack_type),

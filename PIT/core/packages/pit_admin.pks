@@ -25,7 +25,7 @@ as
    */
   function get_message_text(
     p_pms_name in pit_message.pms_name%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type := null)
+    p_pms_pml_name in pit_message_language.pml_name%type := null)
     return varchar2;
     
 
@@ -57,7 +57,7 @@ as
     p_pms_pse_id in pit_message.pms_pse_id%type,
     p_pms_description in pit_message.pms_description%type default null,
     p_pms_pmg_name in pit_message_group.pmg_name%type default null,
-    p_pms_pml_name in pit_message.pms_pml_name%type default null,
+    p_pms_pml_name in pit_message_language.pml_name%type default null,
     p_error_number in pit_message.pms_custom_error%type default null);
     
 
@@ -72,7 +72,7 @@ as
   procedure translate_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type,
+    p_pms_pml_name in pit_message_language.pml_name%type,
     p_pms_description in pit_message.pms_description%type default null);
     
     
@@ -85,7 +85,7 @@ as
    */
   procedure remove_message(
     p_pms_name in pit_message.pms_name%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type);
+    p_pms_pml_name in pit_message_language.pml_name%type);
     
     
   /* Procedure to remoce a single pit_message. Will delete all translations as well
@@ -114,7 +114,7 @@ as
    *        error messages into a target language at once.
    */
   function get_translation_xml(
-    p_target_language in pit_message.pms_pml_name%type,
+    p_target_language in pit_message_language.pml_name%type,
     p_message_pattern in varchar2 default null)
     return xmltype;
     
@@ -134,7 +134,7 @@ as
    *        Will not commit.
    */
   procedure remove_translation(
-    p_language in pit_message.pms_pml_name%type);
+    p_language in pit_message_language.pml_name%type);
     
     
   /* Method to set default language settings
@@ -178,6 +178,24 @@ as
    */  
   procedure write_message_file(
     p_directory in varchar2 := 'DATA_DIR');
+    
+  
+  /* Translatable items */  
+  procedure merge_translatable_item(
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type,
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_name in varchar2,
+    p_pti_display_name in varchar2 default null,
+    p_pti_description in clob default null);    
+    
+  procedure delete_translatable_item(
+    p_pti_id in pit_translatable_item.pti_id%type);
+    
+  
+  function get_translatable_items(
+    p_pmg_name in pit_message_group.pmg_name%type default null)
+    return clob;
     
     
   /* Procedure to create a named context

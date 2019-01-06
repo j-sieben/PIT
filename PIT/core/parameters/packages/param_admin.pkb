@@ -1,9 +1,9 @@
 create or replace package body param_admin
 as
   
-  c_pkg constant varchar2(30 byte) := $$PLSQL_UNIT;
-  c_true constant char(1 byte) := 'Y';
-  c_false constant char(1 byte) := 'N';
+  c_pkg constant &ORA_NAME_TYPE. := $$PLSQL_UNIT;
+  c_true constant &FLAG_TYPE. := &C_TRUE.;
+  c_false constant &FLAG_TYPE. := &C_FALSE.;
 
   function convert_boolean(
     p_value in boolean)

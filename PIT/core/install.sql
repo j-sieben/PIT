@@ -24,6 +24,9 @@ prompt &h2.Create sequences
 prompt &s1.Create sequence PIT_LOG_SEQ
 @&core_dir.sequences/pit_log_seq.seq
 
+prompt &s1.Create sequence PIT_TRANSLATABLE_ITEM_SEQ
+@&core_dir.sequences/pit_translatable_item_seq.seq
+
 prompt &h2.Create tables
 prompt &s1.Create table PIT_MESSAGE_SEVERITY
 @&core_dir.tables/pit_message_severity.tbl
@@ -43,12 +46,18 @@ prompt &s1.Create view PIT_MESSAGE_LANGUAGE_V
 prompt &s1.Create table PIT_MESSAGE
 @&core_dir.tables/pit_message.tbl
 
+prompt &s1.Create table PIT_TRANSLATABLE_ITEM
+@&core_dir.tables/pit_translatable_item.tbl
+
 prompt &h2.Merge initial data
 @&core_dir.scripts/merge_initial_data.sql
 
 prompt &h2.Create views
 prompt &s1.Create view PIT_MESSAGE_V
 @&core_dir.views/pit_message_v.vw
+
+prompt &s1.Create view PIT_TRANSLATABLE_ITEM_V
+@&core_dir.views/pit_translatable_item_v.vw
 
 prompt &h2.Create type declarations
 prompt &s1.Create type ARGS

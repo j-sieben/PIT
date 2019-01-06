@@ -52,7 +52,7 @@ as
     p_call_stack in call_stack_type,
     p_template in varchar2)
   as
-    l_unit_name varchar2(61);
+    l_unit_name varchar2(257 byte);
     l_indent varchar2(2000);
     l_indent_length binary_integer;
     l_timing varchar2(100);

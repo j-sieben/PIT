@@ -11,9 +11,6 @@ as
   c_context_group constant ora_name_type := 'CONTEXT';
   c_context_prefix constant ora_name_type := c_context_group || '_';
   
-  c_true constant char(1 byte) := 'Y';
-  c_false constant char(1 byte) := 'N';
-  
   
   /**** GLOBAL VARS ****/
   g_user ora_name_type;
@@ -63,8 +60,24 @@ as
   
   
   /**** INTERFACE ****/
+  function get_true
+    return flag_type
+  as
+  begin
+    return C_TRUE;
+  end get_true;
+  
+  
+  function get_false
+    return flag_type
+  as
+  begin
+    return C_FALSE;
+  end get_false;
+  
+  
   function get_user
-    return varchar2
+    return ora_name_type
   as
   begin
     return g_user;
@@ -94,7 +107,7 @@ as
     p_chunks in char_table)
     return varchar2
   as
-    l_string varchar2(32767) := p_string;
+    l_string max_char := p_string;
   begin
     for i in p_chunks.first .. p_chunks.last loop
       if mod(i, 2) = 1 then
@@ -109,7 +122,7 @@ as
     p_clob in out nocopy clob,
     p_chunk in clob)
   as
-    l_length number;
+    l_length binary_integer;
   begin
     l_length := dbms_lob.getlength(p_chunk);
     if l_length > 0 then
@@ -127,7 +140,7 @@ as
     p_keep_null boolean default true)
     return varchar2
   as
-    l_result varchar2(32767);
+    l_result max_char;
   begin
     for i in p_chunk_list.first .. p_chunk_list.last loop
       if i > 1 and (p_chunk_list(i) is not null or p_keep_null) then
@@ -176,7 +189,7 @@ as
   
   /**** VALIDATION ****/
   procedure check_context_settings(
-    p_context_name in varchar2,
+    p_context_name in ora_name_type,
     p_settings in varchar2)
   as
     c_setting_regex constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(Y|N)\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|N\|))$';
@@ -198,12 +211,12 @@ as
   
   
   procedure check_toggle_settings(
-    p_toggle_name in varchar2,
+    p_toggle_name in ora_name_type,
     p_module_list in varchar2,
-    p_context_name in varchar2)
+    p_context_name in ora_name_type)
   as
     l_context_name ora_name_type;
-    l_exists char(1);
+    l_exists flag_type;
     c_module_regex constant varchar2(200) := '^[A-Z_$#.]+(\:[A-Z_$#.]+)*$';
   begin
     -- toggle name must not be longer than 10 byte under C_MAX_LENGTH
@@ -243,7 +256,7 @@ as
     c_package constant ora_name_type := 'PACKAGE';
     c_package_body constant ora_name_type := 'PACKAGE BODY';
     c_recompile_stmt constant varchar2(1000) := q'^alter #TYPE# #OWNER#.#NAME# compile #POSTFIX#^';
-    c_max_compile_runs constant number := 3;
+    c_max_compile_runs constant binary_integer := 3;
 
     -- Variables
     l_stmt varchar2(1000);
@@ -320,7 +333,7 @@ as
     return varchar2
   as
     l_depth binary_integer;
-    l_stack varchar2(32767);
+    l_stack max_char;
   begin
     $IF dbms_db_version.ver_le_11 $THEN
     return dbms_utility.format_call_stack;
@@ -347,7 +360,7 @@ as
     return varchar2
   as
     l_depth binary_integer;
-    l_stack varchar2(32767);
+    l_stack max_char;
   begin
     $IF dbms_db_version.ver_le_11 $THEN
     return dbms_utility.format_error_backtrace;

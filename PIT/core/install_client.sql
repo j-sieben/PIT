@@ -23,3 +23,4 @@ prompt &h3.Grant rights and create synonyms
 -- Tables and Views
 @tools/grant_access.sql select PIT_CALL_STACK
 @tools/grant_access.sql select PIT_LOG
+@tools/grant_access.sql "select, references" PIT_TRANSLATABLE_ITEM

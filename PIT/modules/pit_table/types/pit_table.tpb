@@ -1,4 +1,4 @@
-  create or replace type body pit_table as
+create or replace type body pit_table as
   overriding member procedure log(
     p_message in message_type)
   as
@@ -24,7 +24,7 @@
   
   overriding member procedure purge(
     p_purge_date in date,
-    p_severity_greater_equal in number default null)
+    p_severity_greater_equal in integer default null)
   as
   begin
     pit_table_pkg.purge(p_purge_date, p_severity_greater_equal);

@@ -1,10 +1,17 @@
-create or replace type call_stack_type is object (
+create or replace type call_stack_type
+  authid definer
+is object (
   -- Attributes
-  id number,
+  id integer,
+  user_name &ORA_NAME_TYPE.,
+  module_name &ORA_NAME_TYPE.,
+  method_name &ORA_NAME_TYPE.,
+  app_module varchar2(48 byte),
+  app_action varchar2(32 byte),
+  client_info varchar2(64 byte),
   session_id varchar2(64 byte),
-  user_name varchar2(30 byte),
-  module_name varchar2(30 byte),
-  method_name varchar2(30 byte),
+  long_op_idx integer,
+  long_op_sno integer,
   params msg_params,
   wall_clock timestamp,
   elapsed integer,
@@ -17,16 +24,22 @@ create or replace type call_stack_type is object (
   last_cpu_resume_point integer,
   trace_level integer,
   trace_timing char(1),
-  trace_settings varchar2(4000),
-  member procedure pause,
-  member procedure resume,
-  member procedure leave,
+  trace_settings varchar2(4000 byte),
+  member procedure pause(
+    self in out nocopy call_stack_type),
+  member procedure resume(
+    self in out nocopy call_stack_type),
+  member procedure leave(
+    self in out nocopy call_stack_type),
   constructor function call_stack_type(
     self in out nocopy call_stack_type,
     p_session_id in varchar2,
     p_user_name in varchar2,
     p_module_name in varchar2,
     p_method_name in varchar2,
+    p_app_module in varchar2,
+    p_app_action in varchar2,
+    p_client_info in varchar2,
     p_params in msg_params,
     p_call_level in integer,
     p_trace_level in integer,

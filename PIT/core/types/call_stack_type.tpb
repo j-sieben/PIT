@@ -1,11 +1,12 @@
 create or replace type body call_stack_type
 as
-  member procedure pause
+  member procedure pause(
+    self in out nocopy call_stack_type)
   as
     now_time integer;
     now_cpu_time integer;
   begin
-    if self.trace_timing = 'Y' then
+    if self.trace_timing = &C_TRUE. then
       now_time := dbms_utility.get_time;
       now_cpu_time := dbms_utility.get_cpu_time;
       self.elapsed := coalesce(self.elapsed, 0)
@@ -15,22 +16,24 @@ as
     end if;
   end pause;
 
-  member procedure resume
+  member procedure resume(
+    self in out nocopy call_stack_type)
   as
   begin
-    if self.trace_timing = 'Y' then
+    if self.trace_timing = &C_TRUE. then
       self.last_resume_point := dbms_utility.get_time;
       self.last_cpu_resume_point := dbms_utility.get_cpu_time;
     end if;
   end resume;
 
-  member procedure leave
+  member procedure leave(
+    self in out nocopy call_stack_type)
   as
     now timestamp;
     now_time integer;
     now_cpu_time integer;
   begin
-    if self.trace_timing = 'Y' then
+    if self.trace_timing = &C_TRUE. then
       now := localtimestamp;
       now_time := dbms_utility.get_time;
       now_cpu_time := dbms_utility.get_cpu_time;
@@ -50,6 +53,9 @@ as
     p_user_name in varchar2,
     p_module_name in varchar2,
     p_method_name in varchar2,
+    p_app_module in varchar2,
+    p_app_action in varchar2,
+    p_client_info in varchar2,
     p_params in msg_params,
     p_call_level in integer,
     p_trace_level in integer,
@@ -64,13 +70,16 @@ as
     self.session_id := p_session_id;
     self.module_name := p_module_name;
     self.method_name := p_method_name;
+    self.app_module := p_app_module;
+    self.app_action := p_app_action;
+    self.client_info := p_client_info;
     self.params := p_params;
     self.user_name := p_user_name;
     self.call_level := p_call_level;
     self.trace_level := p_trace_level;
     self.trace_timing := p_trace_timing;
     self.trace_settings := p_trace_settings;
-    if self.trace_timing = 'Y' then
+    if self.trace_timing = &C_TRUE. then
       now_time := dbms_utility.get_time;
       now_cpu_time := dbms_utility.get_cpu_time;
       self.wall_clock := localtimestamp;

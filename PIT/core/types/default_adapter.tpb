@@ -20,7 +20,7 @@ as
    as
    begin
       self.environment := 'DEFAULT';
-      self.status := 1;
+      self.status := &C_TRUE.;
       return;
    end default_adapter;
 end;

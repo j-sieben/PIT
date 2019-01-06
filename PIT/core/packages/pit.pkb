@@ -271,6 +271,53 @@ as
     return pit_pkg.get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
   end get_message;
   
+  
+  function get_trans_item_name(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return varchar2
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_name;
+  end get_trans_item_name; 
+  
+    
+  function get_trans_item_display_name(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return varchar2
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_display_name;
+  end get_trans_item_display_name; 
+  
+    
+  function get_trans_item_description(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return clob
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, null, p_pti_pml_name).pti_description;
+  end get_trans_item_description; 
+  
+    
+  function get_trans_item(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return pit_util.translatable_item_rec
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name);
+  end get_trans_item; 
+  
 
   procedure enter_mandatory(
     p_action in varchar2 default null,
@@ -280,7 +327,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_mandatory $THEN
-    enter(p_action, p_module, p_params, trace_mandatory);
+    enter(p_action, p_module, p_params, trace_mandatory, p_client_info);
     $ELSE
     null;
     $END
@@ -290,11 +337,12 @@ as
   procedure enter_optional(
     p_action in varchar2 default null,
     p_module in varchar2 default null,
-    p_params in msg_params default null)
+    p_params in msg_params default null,
+    p_client_info in varchar2 default null)
   as
   begin
     $IF pit_admin.c_trace_le_optional $THEN
-    enter(p_action, p_module, p_params, trace_optional);
+    enter(p_action, p_module, p_params, trace_optional, p_client_info);
     $ELSE
     null;
     $END
@@ -304,11 +352,12 @@ as
   procedure enter_detailed(
     p_action in varchar2 default null,
     p_module in varchar2 default null,
-    p_params in msg_params default null)
+    p_params in msg_params default null,
+    p_client_info in varchar2 default null)
   as
   begin
     $IF pit_admin.c_trace_le_detailed $THEN
-    enter(p_action, p_module, p_params, trace_detailed);
+    enter(p_action, p_module, p_params, trace_detailed, p_client_info);
     $ELSE
     null;
     $END
@@ -400,13 +449,19 @@ as
   
   
   procedure long_op(
-    p_operation in varchar2,
+    p_target in varchar2,
     p_sofar in number,
-    p_total in number default 100)
+    p_total in number default 100,
+    p_units in varchar2 default null,
+    p_op_name in varchar2)
   as
   begin
-    /*TODO: Implementation required */
-    null;
+    pit_pkg.long_op(
+      p_target => p_target,
+      p_sofar => p_sofar,
+      p_total => p_total,
+      p_units => p_units,
+      p_op_name => p_op_name);
   end long_op;
   
   
@@ -473,7 +528,7 @@ as
   as
   begin
     if not p_condition  or p_condition is null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert;
   
@@ -487,7 +542,7 @@ as
   as
   begin
     if p_condition is not null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert_is_null;
   
@@ -501,7 +556,7 @@ as
   as
   begin
     if p_condition is not null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert_is_null;
   
@@ -515,7 +570,7 @@ as
   as
   begin
     if p_condition is not null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert_is_null;
   
@@ -529,7 +584,7 @@ as
   as
   begin
     if p_condition is null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert_not_null;
   
@@ -543,7 +598,7 @@ as
   as
   begin
     if p_condition is null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert_not_null;
   
@@ -557,7 +612,7 @@ as
   as
   begin
     if p_condition is null then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert_not_null;
   
@@ -643,7 +698,7 @@ as
         from table(pit_pkg.get_modules);
   begin
     for m in modules loop
-       pipe row (m.module);
+      pipe row (m.module);
     end loop;
     return;
   exception
@@ -661,7 +716,7 @@ as
         from table(pit_pkg.get_active_modules);
   begin
     for m in modules loop
-       pipe row (m.module);
+      pipe row (m.module);
     end loop;
     return;
   exception
@@ -679,7 +734,7 @@ as
         from table(pit_pkg.get_active_modules);
   begin
     for m in modules loop
-       pipe row (m.module);
+      pipe row (m.module);
     end loop;
     return;
   exception

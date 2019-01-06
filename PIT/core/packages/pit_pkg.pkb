@@ -55,16 +55,16 @@ as
   C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
   C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
   C_NAME_SPELLING constant pit_util.ora_name_type := 'NAME_SPELLING';
-  C_CTX_DEL constant pit_util.flag_type := '|';
-  C_LIST_DEL constant pit_util.flag_type := ':';
-  C_CTX_NAME_DEL constant pit_util.flag_type := '@';
+  C_CTX_DEL constant char(1 byte) := '|';
+  C_LIST_DEL constant char(1 byte) := ':';
+  C_CTX_NAME_DEL constant char(1 byte) := '@';
 
   /* adapter constants */
-  C_ADAPTER_OK constant binary_integer := 1;
+  C_ADAPTER_OK constant pit_util.flag_type := pit_util.C_TRUE;
 
   /* generic constants */
-  C_TRUE constant pit_util.flag_type := 'Y';
-  C_FALSE constant pit_util.flag_type := 'N';
+  C_TRUE constant pit_util.flag_type := pit_util.C_TRUE;
+  C_FALSE constant pit_util.flag_type := pit_util.C_FALSE;
   C_SPLIT_REGEX constant varchar2(10) := '[^\|]+';
 
   /* "events" */
@@ -433,30 +433,63 @@ as
   procedure push_stack(
     p_module in varchar2,
     p_action in varchar2,
+    p_app_module in varchar2,
+    p_app_action in varchar2,
+    p_client_info in varchar2,
     p_params in msg_params,
     p_trace_level in binary_integer,
     p_trace_settings in varchar2)
   as
+    l_app_module varchar2(48 byte);
+    l_app_action varchar2(32 byte);
+    l_client_info varchar2(64 byte);
     l_last_entry binary_integer;
+    l_next_entry binary_integer;
+    l_sno binary_integer;
+    l_call_stack_entry call_stack_type;
   begin
     l_last_entry := g_call_stack.count;
+    l_next_entry := l_last_entry + 1;
 
     -- maintain timing
-    if l_last_entry > 0 and g_ctx.trace_timing then
-       g_call_stack(l_last_entry).pause();
+    if l_last_entry > 0 then
+      l_call_stack_entry := g_call_stack(l_last_entry);
+      if g_ctx.trace_timing then
+        l_call_stack_entry.pause();
+      end if;
     end if;
+    
+    -- maintain application info
+    case when p_trace_level = pit.trace_mandatory then
+      l_app_module := substr(coalesce(p_app_module, p_module), 1, 48);
+      l_app_action := substr(coalesce(p_app_action, p_action), 1, 32);
+      l_client_info := substr(p_client_info, 1, 64); 
+    else
+      l_app_module := substr(coalesce(p_app_module, l_call_stack_entry.app_module), 1, 48);
+      l_app_action := substr(coalesce(p_app_action, l_call_stack_entry.app_action), 1, 32);
+      l_client_info := substr(coalesce(p_client_info, l_call_stack_entry.client_info), 1, 64);
+    end case;
 
-    g_call_stack(l_last_entry + 1) :=
-       call_stack_type(
-          p_session_id => g_client_id,
-          p_user_name => g_user_name,
-          p_module_name => p_module,
-          p_method_name => p_action,
-          p_params => p_params,
-          p_call_level => l_last_entry + 1,
-          p_trace_level => p_trace_level,
-          p_trace_timing => case when g_ctx.trace_timing then C_TRUE else C_FALSE end,
-          p_trace_settings => check_context_toggle(p_trace_settings, l_last_entry));
+    l_call_stack_entry := 
+      call_stack_type(
+        p_session_id => g_client_id,
+        p_user_name => g_user_name,
+        p_module_name => p_module,
+        p_method_name => p_action,
+        p_app_module => l_app_module,
+        p_app_action => l_app_action,
+        p_client_info => p_client_info,
+        p_params => p_params,
+        p_call_level => l_next_entry,
+        p_trace_level => p_trace_level,
+        p_trace_timing => case when g_ctx.trace_timing then C_TRUE else C_FALSE end,
+        p_trace_settings => check_context_toggle(p_trace_settings, l_last_entry));
+    g_call_stack(l_next_entry) := l_call_stack_entry;
+    
+    -- Administer application info
+    dbms_application_info.set_module(l_app_module, l_app_action);
+    dbms_application_info.set_client_info(l_client_info);
+    
   end push_stack;
 
 
@@ -476,6 +509,8 @@ as
     l_module_name p_call_stack.module_name%type;
     l_method_name p_call_stack.method_name%type;
     l_predecessor call_stack_type;
+    l_actual_entry call_stack_type;
+    l_sno binary_integer;
   begin
     l_last_entry := g_call_stack.last;
     if l_last_entry > 0 then
@@ -501,7 +536,19 @@ as
         end case;
       end if;
       
+      l_actual_entry := g_call_stack(l_last_entry);
+      
+      -- Administer DBMS_APPLICATION_INFO
+      dbms_application_info.set_module(l_actual_entry.app_module, l_actual_entry.app_action);
+      dbms_application_info.set_client_info(l_actual_entry.client_info);
+      dbms_output.put_line('Idx und SNO: '  || l_actual_entry.long_op_idx || ', ' || l_actual_entry.long_op_sno);
+      
       g_call_stack.delete(l_last_entry);
+    end if;
+    
+    if g_call_stack.count = 0 then
+      dbms_application_info.set_module(null, null);
+      dbms_application_info.set_client_info(null);
     end if;
   end pop_stack;
 
@@ -785,9 +832,10 @@ as
     p_trace_level in binary_integer,
     p_client_info in varchar2)
   as
-    l_module pit_util.ora_name_type := p_module;
-    l_action pit_util.ora_name_type := p_action;
+    l_module pit_util.ora_name_type;
+    l_action pit_util.ora_name_type;
     l_trace_me boolean;
+    l_set_app_info boolean;
   begin
     l_trace_me := trace_me(p_trace_level);
     
@@ -800,9 +848,12 @@ as
       push_stack(
         p_module => l_module,
         p_action => l_action,
+        p_app_module => p_module,
+        p_app_action => p_action,
+        p_client_info => p_client_info,
         p_params => p_params,
         p_trace_level => p_trace_level,
-        p_trace_settings => get_toggle_context(p_module, p_action));
+        p_trace_settings => get_toggle_context(l_module, l_action));
         
       if g_ctx.allow_toggle then
         l_trace_me := trace_me(p_trace_level);
@@ -815,12 +866,7 @@ as
         p_event_focus => C_EVENT_FOCUS_ACTIVE,
         p_call_stack => g_call_stack(g_call_stack.last));
     end if;
-
-    -- set dbms_application info anyway in mandatory level
-    if p_trace_level = pit.trace_mandatory then
-      dbms_application_info.set_module(l_module, l_action);
-      dbms_application_info.set_client_info(p_client_info);
-    end if;
+    
   exception
     when others then
       pit.error(msg.PIT_FAIL_MESSAGE_CREATION, msg_args(sqlerrm));
@@ -883,6 +929,34 @@ as
     when others then
       pit.error(msg.PIT_FAIL_MESSAGE_CREATION);
   end leave;
+  
+  
+  procedure long_op(
+    p_target in varchar2,
+    p_sofar in number,
+    p_total in number,
+    p_units in varchar2,
+    p_op_name in varchar2)
+  as
+    l_idx binary_integer;
+    l_op_name varchar2(64 byte);
+  begin
+    l_op_name := substr(
+                   coalesce(p_op_name, 
+                            g_call_stack(g_call_stack.last).app_module || '.' || g_call_stack(g_call_stack.last).app_action
+                   ), 1, 64);
+    l_idx := coalesce(g_call_stack(g_call_stack.last).long_op_idx, dbms_application_info.set_session_longops_nohint);
+    dbms_application_info.set_session_longops(
+      rindex => l_idx,
+      slno => g_call_stack(g_call_stack.last).long_op_sno,
+      op_name => l_op_name,
+      sofar => p_sofar,
+      totalwork => p_total,
+      target_desc => substr(p_target, 1, 32),
+      units => substr(coalesce(p_units, 'iterations'), 1, 32)); 
+    dbms_output.put_line('LongOP: ' || l_idx || ', ' || g_call_stack(g_call_stack.last).long_op_sno || ', ' || l_op_name);
+    g_call_stack(g_call_stack.last).long_op_idx := l_idx;
+  end long_op;
 
 
   procedure print(
@@ -1040,6 +1114,43 @@ as
   begin
     return get_message(p_message_name, p_arg_list, null, null).message_text;
   end get_message_text;
+  
+  
+  function get_trans_item(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args,
+    p_pti_pml_name in pit_message_language.pml_name%type)
+    return pit_util.translatable_item_rec
+  as
+    l_pti_rec pit_util.translatable_item_rec;
+    l_pml_name varchar2(100 byte);
+  begin
+    -- P_PTI_PML_NMAE takes precedence over SYS_CONTEXT.LANGUAGE over default language of PIT
+    l_pml_name := sys_context('USERENV', 'LANGUAGE');
+    l_pml_name := coalesce(p_pti_pml_name, substr(l_pml_name, 1, instr(l_pml_name, '_') - 1));
+    select pti_name, pti_display_name, pti_description
+      into l_pti_rec
+      from (select pti_name, pti_display_name, pti_description,
+                   rank() over (order by pml_default_order desc) ranking
+              from pit_translatable_item
+              join pit_message_language
+                on pti_pml_name = pml_name
+             where pti_id = p_pti_id
+               and pti_pmg_name = p_pti_pmg_name
+                   -- try to find available translation or fallback to default language
+               and (pml_name = l_pml_name or pml_default_order = 10))
+     where ranking = 1;
+    
+    if p_arg_list is not null then
+      for i in p_arg_list.first .. p_arg_list.last loop
+        l_pti_rec.pti_name := replace(l_pti_rec.pti_name, '#' || i || '#', p_arg_list(i));
+        l_pti_rec.pti_display_name := replace(l_pti_rec.pti_display_name, '#' || i || '#', p_arg_list(i));
+      end loop;
+    end if;
+    
+    return l_pti_rec;
+  end get_trans_item;
 
 
   /* CONTEXT MAINTENANCE */

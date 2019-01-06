@@ -44,7 +44,7 @@ as
   
   member procedure purge (
     p_purge_date in date := null,
-    p_severity_greater_equal in number := null)
+    p_severity_greater_equal in integer := null)
   as
   begin
     null;

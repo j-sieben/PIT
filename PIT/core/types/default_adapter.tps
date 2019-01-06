@@ -1,6 +1,6 @@
 create or replace type default_adapter as object(
-   environment varchar2(30),
-   status char(1),
+   environment &ORA_NAME_TYPE.,
+   status &FLAG_TYPE.,
    member procedure get_session_details(
       self in out nocopy default_adapter,
       p_user_name out nocopy varchar2,

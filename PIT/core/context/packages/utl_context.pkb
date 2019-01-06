@@ -3,8 +3,8 @@ as
   /* PACKAGE CONSTANTS */
   -- Global Constants
   c_package_name constant varchar2(30 byte) := $$PLSQL_UNIT;
-  c_true constant char(1) := 'Y';
-  c_false constant char(1) := 'N';
+  c_true constant &FLAG_TYPE. := &C_TRUE.;
+  c_false constant &FLAG_TYPE. := &C_FALSE.;
 
   -- Parameter Maintenance
   c_parameter_group_id constant varchar2(10) := 'CONTEXT';
@@ -144,9 +144,9 @@ as
         from dba_context
        where package = c_package_name
          and schema = '&INSTALL_USER.';
-    l_dummy varchar2(30);
-    l_context_type varchar2(30);
-    l_parameter_id varchar2(30);
+    l_dummy &ORA_NAME_TYPE.;
+    l_context_type &ORA_NAME_TYPE.;
+    l_parameter_id &ORA_NAME_TYPE.;
     l_empty_ctx_setting context_setting_rec;
   begin
     g_user := user;
@@ -222,8 +222,8 @@ as
     p_client_id in varchar2)
     return varchar2
   as
-    l_value varchar2(4000);
-    l_client_identifier varchar2(64);
+    l_value varchar2(4000 byte);
+    l_client_identifier varchar2(64 byte);
   begin
     l_client_identifier := sys_context(c_env, c_client_id);
     dbms_session.set_identifier(p_client_id);
@@ -239,7 +239,7 @@ as
     p_client_id varchar2 default null)
     return varchar2
   as
-    l_value varchar2(4000);
+    l_value varchar2(4000 byte);
   begin
     read_settings(p_context);
     l_value := sys_context(p_context, p_attribute);
@@ -279,8 +279,8 @@ as
     p_client_id varchar2 default null)
     return varchar2
   as
-    l_value varchar2(4000);
-    c_name_delimiter char(1) := '@';
+    l_value varchar2(4000 byte);
+    c_name_delimiter char(1 byte) := '@';
   begin
     read_settings(p_context);
     for i in p_attribute_list.first .. p_attribute_list.last loop

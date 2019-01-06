@@ -247,19 +247,57 @@ as
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
     return message_type;
+    
+
+  /* Function to retrieve a PIT translatable item (PTI)
+   * %param  p_pti_pmg_name  Name of the message group the PTI belongs to
+   * %param  p_pti_id        ID of the item to retreive translations for
+   * %param [p_arg_list]     Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI
+   * %param [p_pti_pml_name] Oracle language reference
+   * %return Varchar2, CLOB or PIT_UTIL.TRANSLATABLE_ITEM_REC, depending on the method
+   * %usage  Three distinct methods to get access to name, display_name and description, returning varchar2 or CLOB.
+   *         One method to return a record of type PIT.PIT_TRANSLATABLE_ITEM_REC containting all three translated items.
+   *         This API is aimed towards PL/SQL code that needs direct access to the
+   *         respective items without the need to declare a record variable.
+   *         In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL
+   *         If access to more than one item is required, rather call the overloaded method returning a record.
+   */
+  function get_trans_item_name(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return varchar2;  
+    
+  function get_trans_item_display_name(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return varchar2;  
+    
+  function get_trans_item_description(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return CLOB;
+    
+  function get_trans_item(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+    return pit_util.translatable_item_rec;
   
   
   /* Traces entering a method, level mandatory
-   * @param [p_action]      Short description of what the method is used for.
-   *                        You may choose the method name or a free description.
-   *                        As this parameter goes to DBMS_APPLICATION_INFO, it's mandatory
-   * @param [p_module]      Short description of what the environment of that method is.
-   *                        As this parameter goes to DBMS_APPLICATION_INFO, it's mandatory
+   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
+   * @deprecated            Will be removed in a future version
+   * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
+   * @deprecated            Will be removed in a future version
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
    * @param [p_client_info] Optional value for CLIENT_INFO column of V$SESSION.
-   *                        This parameter exists in ENTER_MANDATORY only as this method automatically
-   *                        sets DBMS_APPLICATION_INFO with the respective values
    * @usage  Call this procedure to indicate the entrance to a method that
    *         always should be traced (should tracing be switched on).<br>
    *         Normal usage is to call this procedure within the major procedures
@@ -273,17 +311,15 @@ as
     
     
   /* Traces entering a method, level optional
-   * @param  p_action  Short description of what the method is used for.
-   *                   You may choose the method name or a free description.
-   * @param  p_module  Short description of what the environment of that method is.
-   *                   If null, it defaults
-   *                   <ul>
-   *                     <li>to the module of the predecessor at the call stack,
-   *                         if existing</li>
-   *                     <li>to the package name</li>
-   *                   </ul>
-   * @param [p_params] Instance of <code>msg_params</code> with a list of
-   *                   key-value pairs representing parameter name and -value.
+   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
+   * @deprecated            Will be removed in a future version
+   * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
+   * @deprecated            Will be removed in a future version
+   * @param [p_params]      Instance of <code>msg_params</code> with a list of
+   *                        key-value pairs representing parameter name and -value.
+   * @param [p_client_info] Optional value for CLIENT_INFO column of V$SESSION.
+   *                        This parameter exists in ENTER_MANDATORY only as this method automatically
+   *                        sets DBMS_APPLICATION_INFO with the respective values
    * @usage  Call this procedure to indicate the entrance to a method that
    *         optionally should be traced (should tracing be switched on).<br>
    *         Normal usage is to call this procedure within detail procedures
@@ -292,21 +328,20 @@ as
   procedure enter_optional(
     p_action in varchar2 default null,
     p_module in varchar2 default null,
-    p_params in msg_params default null);
+    p_params in msg_params default null,
+    p_client_info in varchar2 default null);
     
     
   /* Traces entering a method, level detailed
-   * @param  p_action  Short description of what the method is used for.
-   *                   You may choose the method name or a free description.
-   * @param  p_module  Short description of what the environment of that method is.
-   *                   If null, it defaults
-   *                   <ul>
-   *                     <li>to the module of the predecessor at the call stack,
-   *                         if existing</li>
-   *                     <li>to the package name</li>
-   *                   </ul>
-   * @param [p_params] Instance of <code>msg_params</code> with a list of
-   *                   key-value pairs representing parameter name and -value.
+   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
+   * @deprecated            Will be removed in a future version
+   * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
+   * @deprecated            Will be removed in a future version
+   * @param [p_params]      Instance of <code>msg_params</code> with a list of
+   *                        key-value pairs representing parameter name and -value.
+   * @param [p_client_info] Optional value for CLIENT_INFO column of V$SESSION.
+   *                        This parameter exists in ENTER_MANDATORY only as this method automatically
+   *                        sets DBMS_APPLICATION_INFO with the respective values
    * @usage  Call this procedure to indicate the entrance to a method that
    *         should be traced on development only (should tracing be switched on).<br>
    *         Normal usage is to call this procedure within the helper procedures
@@ -315,19 +350,15 @@ as
   procedure enter_detailed(
     p_action in varchar2 default null,
     p_module in varchar2 default null,
-    p_params in msg_params default null);
+    p_params in msg_params default null,
+    p_client_info in varchar2 default null);
     
     
   /* enter
-   * @param  p_action       Short description of what the method is used for.
-   *                        You may choose the method name or a free description.
-   * @param  p_module       Short description of what the environment of that method is.
-   *                        If null, it defaults
-   *                        <ul>
-   *                          <li>to the module of the predecessor at the call stack,
-   *                              if existing</li>
-   *                          <li>to the package name</li>
-   *                        </ul>
+   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
+   * @deprecated            Will be removed in a future version
+   * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
+   * @deprecated            Will be removed in a future version
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
    * @param [p_trace_level] Optional inidcation of the trace level this method should use.
@@ -422,19 +453,26 @@ as
   
   
   /* Procedure to set dbms_application_info.
-   * @param  p_operation  Description of the operation
-   * @param  p_sofar      Percentage of the task completed (0 .. 100 or individual scale)
-   * @param [p_total]     Amount of work to be done. Defaults to 100 (percent)
+   * @param  p_target   Description of the operation. Max length is 32 byte.
+   * @param  p_sofar    Percentage of the task completed (0 .. 100 or individual scale)
+   * @param [p_total]   Amount of work to be done. Defaults to 100 (percent)
+   * @param [p_units]   Unit of work, eg. "rows processed" or similar. Defaults to "iterations done"
+   * @param [p_op_name] Optional indication of the task that is performed. If NULL, the package.method name is used.
+   *                    Max length is 64 byte.
    * @usage  Use this procedure to pass information about long operations to the
    *         database. If this task is completed, call this procedure with
-   *         <code>p_sofar = p_total</code> to allow for proper state cleansing.<br>
+   *         <code>p_sofar = p_total (or p_sofar = 100)</code> to allow for proper state cleansing.<br>
    *         If you call <code>sql_exception</code> or <code>stop</code>, the
    *         state will be cleaned as well.
+   *         This method will work only if tracing is enabled, as it takes op_name from the call stack and persists
+   *         the actual index with the call stack.
    */
   procedure long_op(
-    p_operation in varchar2,
+    p_target in varchar2,
     p_sofar in number,
-    p_total in number default 100);
+    p_total in number default 100,
+    p_units in varchar2 default null,
+    p_op_name in varchar2 default null);
   
   
   /* Procedure to pass a message to the view layer.

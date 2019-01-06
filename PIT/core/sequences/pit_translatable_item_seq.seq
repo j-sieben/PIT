@@ -1,0 +1,3 @@
+/* Sequence is used for primary keys of translatable items only, therefore no specific requirements reg. ordering or caching
+ */
+create sequence pit_translatable_item_seq;

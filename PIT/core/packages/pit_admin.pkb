@@ -20,10 +20,10 @@ as
   c_context_prefix constant varchar2(30) := c_context_group || '_';
   c_toggle_group constant varchar2(30) := 'TOGGLE';
   c_toggle_prefix constant varchar2(30) := c_toggle_group || '_';
-  c_true constant pit_util.flag_type := 'Y';
-  c_false constant pit_util.flag_type := 'N';
+  c_true constant pit_util.flag_type := pit_util.c_true;
+  c_false constant pit_util.flag_type := pit_util.c_false;
   c_xliff_ns constant varchar2(100) := 'urn:oasis:names:tc:xliff:document:1.2';
-  c_del pit_util.flag_type := '|';
+  c_del char(1 byte) := '|';
   c_min_error constant number := -20999;
   c_max_error constant number := -20000;
   c_default_language constant number := 10;
@@ -178,7 +178,7 @@ as
   
   function get_message_text(
     p_pms_name in pit_message.pms_name%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type := null)
+    p_pms_pml_name in pit_message_language.pml_name%type := null)
     return varchar2
   as
     l_pms_text pit_message.pms_text%type;
@@ -186,10 +186,10 @@ as
     select pms_text
       into l_pms_text
       from (select pms_text, pms_pse_id,
-                   rank() over (order by l.pml_default_order desc) ranking
-              from pit_message m
-              join pit_message_language_v l on m.pms_pml_name = l.pml_name
-             where m.pms_name = coalesce(p_pms_name, g_default_language))
+                   rank() over (order by pml_default_order desc) ranking
+              from pit_message
+              join pit_message_language_v on pms_pml_name = pml_name
+             where pms_name = coalesce(p_pms_name, g_default_language))
       where ranking = 1;
     return l_pms_text;
   exception
@@ -221,7 +221,7 @@ as
     p_pms_pse_id in pit_message.pms_pse_id%type,
     p_pms_description in pit_message.pms_description%type default null,
     p_pms_pmg_name in pit_message_group.pmg_name%type default null,
-    p_pms_pml_name in pit_message.pms_pml_name%type default null,
+    p_pms_pml_name in pit_message_language.pml_name%type default null,
     p_error_number in pit_message.pms_custom_error%type default null)
   as
     l_pms_name pit_message.pms_name%type;
@@ -280,7 +280,7 @@ as
   procedure translate_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_text in pit_message.pms_text%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type,
+    p_pms_pml_name in pit_message_language.pml_name%type,
     p_pms_description in pit_message.pms_description%type default null)
   as
     l_pms_pse_id pit_message.pms_pse_id%type;
@@ -307,7 +307,7 @@ as
 
   procedure remove_message(
     p_pms_name in pit_message.pms_name%type,
-    p_pms_pml_name in pit_message.pms_pml_name%type)
+    p_pms_pml_name in pit_message_language.pml_name%type)
   as
   begin
     if upper(p_pms_pml_name) = g_default_language then
@@ -350,7 +350,7 @@ as
 
 
   function get_translation_xml(
-    p_target_language in pit_message.pms_pml_name%type,
+    p_target_language in pit_message_language.pml_name%type,
     p_message_pattern in varchar2 default null)
     return xmltype
   as
@@ -453,7 +453,7 @@ as
 
 
   procedure remove_translation(
-    p_language in pit_message.pms_pml_name%type)
+    p_language in pit_message_language.pml_name%type)
   as
   begin
     delete from pit_message
@@ -670,6 +670,96 @@ end;
   begin
     dbms_xslprocessor.clob2file(get_messages, p_directory, c_file_name);
   end write_message_file;
+  
+  
+  procedure merge_translatable_item(
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type,
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_name in varchar2,
+    p_pti_display_name in varchar2 default null,
+    p_pti_description in clob default null)
+  as
+  begin
+    merge into pit_translatable_item t
+    using (select p_pti_id pti_id,
+                  coalesce(p_pti_pml_name, g_default_language) pti_pml_name,
+                  p_pti_pmg_name pti_pmg_name,
+                  p_pti_name pti_name,
+                  p_pti_display_name pti_display_name,
+                  p_pti_description pti_description
+             from dual) s
+       on (t.pti_id = s.pti_id
+       and t.pti_pml_name = s.pti_pml_name)
+      when matched then update set
+           t.pti_pmg_name = s.pti_pmg_name,
+           t.pti_name = s.pti_name,
+           t.pti_display_name = s.pti_display_name,
+           t.pti_description = s.pti_description
+      when not matched then insert(pti_id, pti_pmg_name, pti_pml_name, pti_name, pti_display_name, pti_description)
+           values(s.pti_id, s.pti_pmg_name, s.pti_pml_name, s.pti_name, s.pti_display_name, s.pti_description);
+  end merge_translatable_item;
+  
+  
+  procedure delete_translatable_item(
+    p_pti_id in pit_translatable_item.pti_id%type)
+  as
+  begin
+    delete from pit_translatable_item
+     where pti_id = p_pti_id;
+  end delete_translatable_item;
+  
+  
+  function get_translatable_items(
+    p_pmg_name in pit_message_group.pmg_name%type default null)
+    return clob
+  as
+    cursor pti_cur(
+      p_pmg_name in pit_message_group.pmg_name%type) is
+      select i.*, rank() over (partition by pti_id order by pml_default_order) rang
+        from pit_translatable_item i
+        join pit_message_language ml
+          on i.pti_pml_name = ml.pml_name
+       where ml.pml_default_order > 0
+         and i.pti_pmg_name = p_pmg_name
+       order by i.pti_id, ml.pml_default_order;
+    l_script clob;
+    l_chunk pit_util.max_char;
+    c_start constant varchar2(200) := q'~begin
+~';
+    c_end constant varchar2(200) := q'~
+  commit;
+end;
+/~';
+    c_pti_template constant varchar2(300) := q'~
+  pit_admin.merge_translatable_item(
+    p_pti_id => #PTI_ID#,
+    p_pti_pml_name => q'^#PTI_PML_NAME#^',
+    p_pti_pmg_name => q'^#PTI_PMG_NAME#^',
+    p_pti_name => q'^#PTI_NAME#^',
+    p_pti_display_name => q'^#PTI_DISPLAY_NAME#^',
+    p_pti_description => q'^#PTI_DESCRIPTION_NAME#^'
+  );
+~';
+  begin
+    dbms_lob.createtemporary(l_script, false, dbms_lob.call);
+    dbms_lob.append(l_script, c_start);
+
+    for pti in pti_cur(p_pmg_name) loop
+      l_chunk := pit_util.bulk_replace(c_pti_template, char_table(
+                   '#PTI_ID#', to_char(pti.pti_id),
+                   '#PTI_PML_NAME#', pti.pti_pml_name,
+                   '#PTI_PMG_NAME#', pti.pti_pmg_name,
+                   '#PTI_NAME#', pti.pti_name,
+                   '#PTI_DISPLAY_NAME#', pti.pti_display_name,
+                   '#PTI_DESCRIPTION_NAME#', pti.pti_description
+                 ));
+      dbms_lob.append(l_script, l_chunk);
+    end loop;
+    
+    dbms_lob.append(l_script, c_end);
+    return l_script;
+  end get_translatable_items;
 
 
   procedure create_named_context(

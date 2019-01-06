@@ -1,8 +1,8 @@
 create or replace package body param
 as
 
-  c_true constant parameter_group.pgr_is_modifiable%type := 'Y';
-  c_false constant parameter_group.pgr_is_modifiable%type := 'N';
+  c_true constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
+  c_false constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
   c_max_char_length constant number := 32767;
   c_max_raw_length constant number := 2000;
   

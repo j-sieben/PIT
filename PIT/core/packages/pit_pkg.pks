@@ -98,6 +98,28 @@ as
     p_params in msg_params);  
   
   
+  /* Procedure to set dbms_application_info.
+   * @param  p_target   Description of the operation
+   * @param  p_sofar    Percentage of the task completed (0 .. 100 or individual scale)
+   * @param  p_total    Amount of work to be done
+   * @param  p_units    Unit of work, eg. "rows processed" or similar
+   * @param  p_op_name  Actual action. Either passed in manually or taken from the method name
+   * @usage  Use this procedure to pass information about long operations to the
+   *         database. If this task is completed, call this procedure with
+   *         <code>p_sofar = p_total (or p_sofar = 100)</code> to allow for proper state cleansing.<br>
+   *         If you call <code>sql_exception</code> or <code>stop</code>, the
+   *         state will be cleaned as well.
+   *         This method will work only if tracing is enabled, as it takes op_name from the call stack and persists
+   *         the actual index with the call stack.
+   */
+  procedure long_op(
+    p_target in varchar2,
+    p_sofar in number,
+    p_total in number,
+    p_units in varchar2,
+    p_op_name in varchar2);
+  
+  
   /* Purges the message stack after a given point in time
    * @param  p_date_before             Date, before which the message log is purged 
    * @param  p_severity_greater_equal  Optional severity level that controls which
@@ -218,6 +240,22 @@ as
     p_message_name in pit_util.ora_name_type,
     p_arg_list in msg_args)
     return clob;
+    
+
+  /* Function to retrieve a PIT translatable item (PTI)
+   * %param  p_pti_pmg_name  Name of the message group the PTI belongs to
+   * %param  p_pti_id        ID of the item to retreive translations for
+   * %param  p_arg_list      MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI
+   * %param  p_pti_pml_name  Oracle language reference
+   * %return Record of type PIT_UTIL.TRANSLATABLE_ITEM_REC with access to PTI_NAME, PTI_DISPLAY_NAME and PTI_DESCRIPTION
+   * %usage  method to get access to a translated item.
+   */
+  function get_trans_item(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args,
+    p_pti_pml_name in pit_message_language.pml_name%type)
+    return pit_util.translatable_item_rec;
     
     
   /* CONTEXT MAINTENANCE */

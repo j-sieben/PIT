@@ -36,7 +36,7 @@ as
   overriding member procedure purge(
     self in out nocopy pit_aq,
     p_purge_date in date,
-    p_severity_greater_equal in number default null)
+    p_severity_greater_equal in integer default null)
   as
   begin
     pit_aq_pkg.purge_log(

@@ -2,8 +2,6 @@ create or replace package body pit_ui_pkg
 as
 
   C_PKG constant pit_util.ora_name_type := $$PLSQL_UNIT;
-  C_TRUE constant pit_util.flag_type := 'Y';
-  C_FALSE constant pit_util.flag_type := 'N';
   
   /* Hilfsfunktionen */
   -- TODO: Auslagern in UTIL-Package
@@ -223,7 +221,7 @@ as
       p_context_name => p_context_name,
       p_log_level => p_log_level,
       p_trace_level => p_trace_level,
-      p_trace_timing => p_trace_timing = C_TRUE,
+      p_trace_timing => p_trace_timing = pit_util.C_TRUE,
       p_module_list => p_module_list,
       p_comment => p_comment);
     

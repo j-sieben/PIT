@@ -11,7 +11,7 @@ as
 
   overriding member procedure purge(
     p_purge_date in date,
-    p_severity_greater_equal in number default null)
+    p_severity_greater_equal in integer default null)
   as
   begin
     pit_file_pkg.purge;

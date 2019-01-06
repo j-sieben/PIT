@@ -20,13 +20,13 @@ as
    *                            it is visible, otherwise a default value is provided
    * session: ... only within the session that set the value (pseduo local context)
    */
-  c_global constant varchar2(20) := 'GLOBAL';
-  c_force_user constant varchar2(20) := 'FORCE_USER';
-  c_force_client_id constant varchar2(20) := 'FORCE_CLIENT_ID';
-  c_force_user_client_id constant varchar2(20) := 'FORCE_USER_CLIENT_ID';
-  c_prefer_client_id constant varchar2(20) := 'PREFER_CLIENT_ID';
-  c_prefer_user_client_id constant varchar2(25) := 'PREFER_USER_CLIENT_ID';
-  c_session constant varchar2(20) := 'SESSION';
+  c_global constant varchar2(20 byte) := 'GLOBAL';
+  c_force_user constant varchar2(20 byte) := 'FORCE_USER';
+  c_force_client_id constant varchar2(20 byte) := 'FORCE_CLIENT_ID';
+  c_force_user_client_id constant varchar2(20 byte) := 'FORCE_USER_CLIENT_ID';
+  c_prefer_client_id constant varchar2(20 byte) := 'PREFER_CLIENT_ID';
+  c_prefer_user_client_id constant varchar2(25 byte) := 'PREFER_USER_CLIENT_ID';
+  c_session constant varchar2(20 byte) := 'SESSION';
   
   
   /* Procedure to set a value in one of the available contexts
