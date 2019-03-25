@@ -21,4 +21,4 @@ comment on column pit_log.msg_stack is 'Error stack in case of error';
 comment on column pit_log.msg_backtrace is 'Call stack in case of error';
 comment on column pit_log.severity is 'severity of the message logged';
 
-create index idx_pit_log_ses_user on pit_log(session_id, user_name)
+create index idx_pit_log_ses_user on pit_log(session_id, user_name);
