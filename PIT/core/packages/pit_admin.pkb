@@ -508,7 +508,7 @@ as
     cursor message_cur is
         with messages as(
              select pms_name,
-                    coalesce(pms_active_error, pms_custom_error) pms_custom_error
+                    case pms_custom_error when C_MAX_ERROR then pms_active_error else pms_custom_error end pms_custom_error
                from pit_message m
               where pms_pml_name = g_default_language)
       select replace(l_constant_template, '#CONSTANT#', pms_name) constant_chunk,
@@ -522,12 +522,11 @@ as
        order by pms_name;
 
   begin
-    -- persist active error numbers for -20000 errors in message table
+    -- persist active error numbers for all errors in message table
     merge into pit_message m
     using (select pms_name, pms_pml_name, c_min_error - 1 + dense_rank() over (order by pms_name) pms_active_error
              from pit_message
-            where pms_pse_id <= 30
-              and pms_custom_error = c_max_error) v
+            where pms_pse_id <= 30) v
        on (m.pms_name = v.pms_name
        and m.pms_pml_name = v.pms_pml_name)
      when matched then update set

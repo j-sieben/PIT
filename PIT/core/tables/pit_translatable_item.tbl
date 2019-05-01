@@ -26,3 +26,11 @@ comment on column pit_translatable_item.pti_display_name is 'Display name. Used 
 comment on column pit_translatable_item.pti_description is 'Help text or further description. No replacement anchors allowed';
 comment on column pit_translatable_item.pti_uid is 'Virtual column as a surrogate primary key for references';
 
+create or replace trigger ard_pit_translatable_item
+after delete on pit_translatable_item
+for each row
+begin
+  delete from pit_translatable_item
+   where pti_id = :old.pti_uid;
+end;
+/

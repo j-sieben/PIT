@@ -14,8 +14,7 @@ as
   begin
     select pms_text, pms_description, pms_pse_id, error_number
       into self.message_text, self.message_description, self.severity, self.error_number
-      from (select pms_pml_name, pms_text, pms_description, pms_pse_id,
-                   coalesce(pms_active_error, pms_custom_error) error_number,
+      from (select pms_pml_name, pms_text, pms_description, pms_pse_id, pms_active_error error_number,
                    rank() over (order by l.pml_default_order desc) ranking
               from pit_message m
               join pit_message_language_v l on m.pms_pml_name = l.pml_name
