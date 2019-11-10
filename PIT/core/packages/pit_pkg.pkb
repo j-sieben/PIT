@@ -541,7 +541,6 @@ as
       -- Administer DBMS_APPLICATION_INFO
       dbms_application_info.set_module(l_actual_entry.app_module, l_actual_entry.app_action);
       dbms_application_info.set_client_info(l_actual_entry.client_info);
-      dbms_output.put_line('Idx und SNO: '  || l_actual_entry.long_op_idx || ', ' || l_actual_entry.long_op_sno);
       
       g_call_stack.delete(l_last_entry);
     end if;

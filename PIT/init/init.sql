@@ -21,6 +21,7 @@ select user sys_user,
  where parameter = 'LANGUAGE'
    and value = upper('&2.');
 
+-- ADJUST THIS SETTING IF YOU WANT ANOTHER TYPE 
 define FLAG_TYPE="char(1 byte)";
 define C_TRUE="'Y'";
 define C_FALSE="'N'";

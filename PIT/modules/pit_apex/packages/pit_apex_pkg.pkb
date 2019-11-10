@@ -215,7 +215,7 @@ as
   procedure notify(
     p_message in message_type)
   as
-    l_clob clob;
+    l_response clob;
     l_message json_object_t := json_object_t('{}');
   begin
     l_message.put('id', p_message.id);
@@ -230,12 +230,11 @@ as
     l_message.put('backtrace', p_message.backtrace);
     l_message.put('error_number', to_char(p_message.error_number));
     
-    pit.verbose(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
-    l_clob := apex_web_service.make_rest_request( 
-                p_url => g_websocket_server,
-                p_http_method => 'POST',
-                p_body   => l_message.stringify()
-              );
+    pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
+    l_response := apex_web_service.make_rest_request( 
+                    p_url => g_websocket_server,
+                    p_http_method => 'GET',
+                    p_body => l_message.stringify());
   end notify;
 
 

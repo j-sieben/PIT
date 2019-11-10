@@ -625,10 +625,11 @@ as
     p_error_code in varchar2 default null)
   as
     l_stmt pit_util.max_char := 'select 1 from dual where exists (#STMT#)';
+    l_result number;
   begin
     pit.assert_not_null(l_stmt);
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-    execute immediate l_stmt;
+    execute immediate l_stmt into l_result;
   exception
     when no_data_found then
       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
@@ -643,10 +644,11 @@ as
     p_error_code in varchar2 default null)
   as
     l_stmt pit_util.max_char := 'select 1 from dual where not exists (#STMT#)';
+    l_result number;
   begin
     pit.assert_not_null(l_stmt);
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-    execute immediate l_stmt;
+    execute immediate l_stmt into l_result;
   exception
     when no_data_found then
       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
