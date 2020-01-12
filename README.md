@@ -30,7 +30,7 @@ procedure my_proc(
 as
 begin
   -- trace entering and leaving a method
-  pit.enter('my_proc');
+  pit.enter;
   <do_something>
   -- internal debugging
   pit.debug(msg.STEP_ONE_COMPLETED, msg_args(p_param1));
@@ -48,7 +48,7 @@ exception
   -- catch your own exceptions just the same way
   when msg.STEP_TWO_FAILED_ERR then
     -- and provide the predefined message along with it
-    pit.stop(msg.STEP_TWO_FAILED);
+    pit.stop;
 end my_proc;
 ```
 As you can see, the code amount for instrumentation is minimal, no need to hardcode any message text, no possibility to mistype a message name. The code remains clean, concise and easy to understand. All delivery problems of the debug and exception messages are taken away from the code.
