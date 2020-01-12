@@ -52,6 +52,8 @@ end my_func;
 
 Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in handy if a method calculates values and you want to log the results. As it is also important to log the outcome of parameters in case of an exception, you may pass instances of `MSG_PARAMS` to the error handlers `pit.sql_exception` and `pit.stop` as well.
 
+Be aware that it is possible to pass parameters to the leave methods as well. This comes in handy for calculated out parameters or functions returning values. Those calculated values can easily be logged passing them to the leave methods.
+
 ### Adjusting trace level
 Method `pit.enter` provides different levels of tracing. These levels are:
 - `pit.trace_off` (10),
