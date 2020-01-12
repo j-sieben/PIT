@@ -1311,6 +1311,7 @@ as
   begin
     l_message_stack := g_message_stack;
     g_message_stack.delete;
+    g_collect_mode := false;
     return l_message_stack;
   end get_message_collection;
   
