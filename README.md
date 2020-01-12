@@ -30,7 +30,7 @@ procedure my_proc(
 as
 begin
   -- trace entering and leaving a method
-  pit.enter('my_proc');
+  pit.enter;
   <do_something>
   -- internal debugging
   pit.debug(msg.STEP_ONE_COMPLETED, msg_args(p_param1));
@@ -48,7 +48,7 @@ exception
   -- catch your own exceptions just the same way
   when msg.STEP_TWO_FAILED_ERR then
     -- and provide the predefined message along with it
-    pit.stop(msg.STEP_TWO_FAILED);
+    pit.stop;
 end my_proc;
 ```
 As you can see, the code amount for instrumentation is minimal, no need to hardcode any message text, no possibility to mistype a message name. The code remains clean, concise and easy to understand. All delivery problems of the debug and exception messages are taken away from the code.
@@ -112,6 +112,20 @@ More information on contexts can be found [here](https://github.com/j-sieben/PIT
 With PIT, it's possible to create a white or black list of code units which toggle logging on or off. Imagine a predefined context `CONTEXT_ALL` which defines complete logging (`70|50|Y|PIT_CONSOLE:PIT_FILE`). As per default, logging is set to no logging at all, as you are in production environment. Then you can create a parameter called `TOGGLE_<Name>` with a value of `MY_PACKAGE|MY_OTHER_PACKAGE:CONTEXT_ALL`. If you enter one of these packages, PIT will set the context to `CONTEXT_ALL`, tracing anything from now on. Once you leave these packages, context will be switched back to defaut settings.
 
 You may have as many toggle parameters as you like. Plus, PIT offers a set of methods in the `pit_admin` package to create toggles for your code to avoid having to manually format the parameters accordingly.
+
+### Collect messages and exceptions and handle them in bulk
+
+Often, UI forms require you to validate the user's input. Those validation methods are placed in a package, probably as part of a transaction API, near the tables. If you validate your code, those methods typically stop validating upon the first exception that occurs. To the end user, this is very unfriendly, you want to see all validation issues there are. To avoid this, you only had the chance to either recode all validation methods in package which are closer to the UI and implement your own way of validating all aspects and collect the exceptions or to break up to validation logic into many trivial methods which only implement the validation of one aspect at a time and construct something around it that collects the upcoming validation issues.
+
+A similar example would be that you test password complexity. Say, you need at least six digits and you require the password to contain at least on special sign. If you validate the password, it is not helpful to state that the password must be at least six characters and, after the user has fixed this, moan about a missing special character.
+
+Both scenarios can now be solved by using `PIT` in collect mode. To set this mode, you simply call `PIT.start_message_collection` prior to calling the validation logic. Any PIT message that is raised during the processing of the validation code, fi. by using the `PIT.assert...` methods, are not raised immediately but stored in an internal collection within `PIT`.
+
+You stop this mode by calling `PIT.stop_message_collection`. `PIT` now examines the list of collected messages, looking for a message with severity `FATAL` or `ERROR`, whatever is worse. Based on the worst severity, `PIT` now throws an exception called `PIT_BULK_FATAL` or `PIT_BULK_ERROR` respectively. If you catch those, you get access to the collected messages using `PIT.get_message_collection` and can now iterate through all messages collected and present them to the end user.
+
+Of course you can omit the call to `PIT.stop_message_collection` and directly work with the collected messages. If you do so, `PIT` automatically switches off collection mode. `PIT.get_message_collection` will include all collected messages of all severities you have parameterized to fire, so calling this method will even be useful if no exception was raised after stopping collect mode.
+
+More details on working in collect mode can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages.md).
 
 ### Output modules
 Another aspect of flexibility is the possibility to easily extend or change output modules. This is accomplished by object oriented programming. PIT uses an object called `PIT_MODULE` as an abstract class for all output modules. If you install a new output module by inheriting from `PIT_MODULE` (`create type PIT_CONSOLE under PIT_MODULE ...`) this new module gets known to PIT and may be used immediately without having to change PIT itself.
