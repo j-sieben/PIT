@@ -38,9 +38,9 @@ Neither the validation logic nor the UI logic cross any permitted boundaries, th
 
 To wrap things up, I'd like to describe the proper use of the `PIT` collect mode:
 
-1.  Implement your validation logic in a separate method within the transaction API (A transaction API is not a Table API, as a transaction API deals with use cases instead of table rows). Implement you validation logic using `PIT.assert...` methods or by raising exception using the `PIT.error/fatal` methods.
-2.  In your transaction API, prior to saving the data to database tables, call you validation logic in normal mode
+1.  Implement your validation logic in a separate method within the transaction API (A transaction API is not a table API, as a transaction API deals with use cases instead of table rows). Implement your validation logic using `PIT.assert...` methods or by raising exception using the `PIT.error/fatal` methods.
+2.  In your transaction API, prior to saving the data to database tables, call your validation logic in normal mode.
 3.  In your UI package dealing with the user data entries, enrich missing data, harmonize spelling issues, provide missing default values and the like and then call the validation logic in collect mode by wrapping the call of the validation logic with calls to `PIT.start_message_collection` and `PIT.stop_message_collection`. If validation errors occur, this will throw an exception you can catch.
-4.  Handle exception `msg.PIT_BULK_FATAL_ERR` and `msg.PIT_BULK_ERROR_ERR` (exception prefix is dependent on your parameterization) and call you internal helper method to pass the result of `PIT.get_message_collection` along with a list of matching error code to UI field mappings.
+4.  Handle exception `msg.PIT_BULK_FATAL_ERR` and `msg.PIT_BULK_ERROR_ERR` (exception pre- or postfix is based on your parameterization) and call your internal helper method to pass the result of `PIT.get_message_collection` along with a list of matching »error code to UI field« mappings.
 
-This way you don't need to duplicate you validation logic but make it reusable in a user friendly manner.
+This way you don't need to duplicate your validation logic but make it reusable in a user friendly manner.
