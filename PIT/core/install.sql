@@ -88,6 +88,10 @@ prompt &s1.Create type MESSAGE_TYPE
 @&core_dir.types/message_type.tps
 show errors
 
+prompt &s1.Create type PIT_MESSAGE_TABLE
+@&core_dir.types/pit_message_table.tps
+show errors
+
 prompt &s1.Create type CALL_STACK_TYPE
 @&core_dir.types/call_stack_type.tps
 show errors

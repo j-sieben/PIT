@@ -780,6 +780,32 @@ as
    */
   procedure reset_context(
     p_active_session_only in boolean default true);
+    
+  
+  /* Procedure to switch PIT collection mode on
+   * %usage  Is used to set PIT to collect mode, where all messages are collected rather than thrown or processed immediate.
+   *         This mode allows for validation methods to perfrom all internal validations prior to raising validation errors.
+   */
+  procedure start_message_collection;
+  
+  
+  /* Procedure to switch PIT collection mode off
+   * %usage  If called, the list of raised messages is examined.
+   *         If at least one message of secverity C_LEVEL_FATAL is present, exception PIT_BULK_FATAL is raised. 
+   *         If at least one message of secverity C_LEVEL_ERROR is present, exception PIT_BULK_ERROR is raised. 
+   *         While processing these errors, use GET_COLLECTED_MESSAGES to retrieve a list of all collected messages
+   */
+  procedure stop_message_collection;
+  
+  
+  /* Method to retrieve the collection of messages raised since setting PIT to collect mode
+   * %return Instance of PIT_MESSAGE_TABLE, a list of message instances
+   * %usage  Is used to retrieve a list of all messages raised during the collect cycle. It implicitly terminates collection
+   *         mode by calling SET_COLLECT_MODE(FALSE) if PIT is still in collection mode. Normal usage is terminating collection
+   *         mode explicity and deal with the list of messages in the exception block
+   */
+  function get_message_collection
+    return pit_message_table;
   
   
   /* Pipelined function to retrieve a list of all installed modules

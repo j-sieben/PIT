@@ -11,6 +11,22 @@ as
     trace_timing boolean,
     log_modules pit_util.max_sql_char);
     
+  
+  /* CONSTANTS */
+  C_LEVEL_OFF constant number := 10;
+  C_LEVEL_FATAL constant number := 20;
+  C_LEVEL_ERROR constant number := 30;
+  C_LEVEL_WARN constant number := 40;
+  C_LEVEL_INFO constant number := 50;
+  C_LEVEL_DEBUG constant number := 60;
+  C_LEVEL_ALL constant number := 70;
+  
+  C_TRACE_OFF constant number := 10;
+  C_TRACE_MANDATORY constant number := 20;
+  C_TRACE_OPTIONAL constant number := 30;
+  C_TRACE_DETAILED constant number := 40;
+  C_TRACE_ALL constant number := 50;
+    
 
   /* Initialization procedure
    * Made public to allow for any session to the PIT.
@@ -319,6 +335,33 @@ as
    */
   procedure reset_context;
   
+  
+  /* Procedure to toggle PIT collection mode
+   * %param  p_mode  Flag to indicate whether PIT shall collect messages (TRUE) or not (FALSE);
+   * %usage  Is used to set PIT to collect mode, where all messages are collected rather than thrown or processed immediate.
+   *         This mode allows for validation methods to perfrom all internal validations prior to raising validation errors.
+   *         If collection mode is switched off by passing FALSE into this function, the list of raised messages is examined.
+   *         If at least one message of secverity C_LEVEL_FATAL is present, exception PIT_BULK_FATAL is raised. 
+   *         If at least one message of secverity C_LEVEL_ERROR is present, exception PIT_BULK_ERROR is raised. 
+   */
+  procedure set_collect_mode(
+    p_mode in boolean);
+    
+    
+  /* Method to read the actually set collection mode */
+  function get_collect_mode
+    return boolean;
+    
+  
+  /* Method to retrieve the collection of messages raised since setting PIT to collect mode
+   * %return Instance of PIT_MESSAGE_TABLE, a list of message instances
+   * %usage  Is used to retrieve a list of all messages raised during the collect cycle. It implicitly terminates collection
+   *         mode by calling SET_COLLECT_MODE(FALSE) if PIT is still in collection mode. Normal usage is terminating collection
+   *         mode explicity and deal with the list of messages in the exception block
+   */
+  function get_message_collection
+    return pit_message_table;
+    
   
   /* MODULE MAINTENANCE */
   /* Function to retrieve a list of all installed modules

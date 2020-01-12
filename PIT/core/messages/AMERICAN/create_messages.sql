@@ -280,7 +280,7 @@ begin
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1#^',
     p_pms_pse_id => 70,
-    p_pms_pml_name => '&DEFAULT_LANGUAGE.',
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => null
   );
 
@@ -344,6 +344,26 @@ begin
     p_pms_text => q'^Message #1# does not exist. Call PIT using Package MSG to avoid this error.^',
     p_pms_pml_name => 'AMERICAN',
     p_pms_pse_id => 30,
+    p_error_number => -20000
+  );
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_BULK_ERROR',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^An error occurred during execution of a bulk processing.^',
+    p_pms_description => q'^If PIT is in collect mode and at least one error of level C_LEVEL_ERROR is raised, this error is thrown.^',
+    p_pms_pml_name => 'AMERICAN',
+    p_pms_pse_id => 30,
+    p_error_number => -20000
+  );
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_BULK_FATAL',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => 'A fatal error occurred during execution of a bulk processing.',
+    p_pms_description => q'^If PIT is in collect mode and at least one error of level C_LEVEL_FATAL is raised, this error is thrown.^',
+    p_pms_pml_name => 'AMERICAN',
+    p_pms_pse_id => 20,
     p_error_number => -20000
   );
 

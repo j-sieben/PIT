@@ -79,9 +79,6 @@ as
   C_LEAVE_EVENT constant integer := 6;
   C_NOTIFY_EVENT constant integer := 7;
 
-  -- defined here to avoid dependency from PIT
-  C_TRACE_MANDATORY constant integer := 20;
-
   /* package vars */
   g_active_adapter default_adapter;
   g_language pit_util.ora_name_type;
@@ -89,6 +86,8 @@ as
   g_client_id varchar2(64);
   g_active_error message_type;
   g_name_spelling varchar2(10 byte);
+  g_collect_mode boolean;
+  g_message_stack pit_message_table;
 
   /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
@@ -550,6 +549,17 @@ as
       dbms_application_info.set_client_info(null);
     end if;
   end pop_stack;
+  
+  
+  /************************* GENERIC HELPER METHODS *************************/
+  procedure push_message(
+    p_message in out nocopy message_type)
+  as
+  begin
+    p_message.error_code := coalesce(p_message.error_code, p_message.message_name);
+    g_message_stack.extend;
+    g_message_stack(g_message_stack.last) := p_message;
+  end push_message;
 
 
   /************************** CENTRAL FUNCTIONALITY **************************/
@@ -728,6 +738,8 @@ as
     g_ctx.context_type := param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP);
     g_ctx.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, C_PARAM_GROUP);
     g_ctx.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, C_PARAM_GROUP);
+    g_collect_mode := false;
+    g_message_stack := pit_message_table();
     load_modules;
     load_adapter;
     get_context_list;
@@ -760,10 +772,14 @@ as
         l_message.backtrace := pit_util.get_error_stack;
       end if;
 
-      raise_event(
-        p_event => C_LOG_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE,
-        p_message => l_message);
+      if g_collect_mode then
+        push_message(l_message);
+      else
+        raise_event(
+          p_event => C_LOG_EVENT,
+          p_event_focus => C_EVENT_FOCUS_ACTIVE,
+          p_message => l_message);
+      end if;
     end if;
   end log_event;
 
@@ -1042,9 +1058,13 @@ as
       g_active_error.error_number := coalesce(g_active_error.error_number, -20000);
     end if;
 
-    raise_application_error(
-      g_active_error.error_number,
-      dbms_lob.substr(g_active_error.message_text, 2048, 1));
+    if g_collect_mode then
+      push_message(g_active_error);
+    else
+      raise_application_error(
+        g_active_error.error_number,
+        dbms_lob.substr(g_active_error.message_text, 2048, 1));
+    end if;
   end raise_error;
 
 
@@ -1238,7 +1258,62 @@ as
     utl_context.reset_context(C_GLOBAL_CONTEXT);
     initialize;
   end reset_context;
-
+  
+  
+  procedure set_collect_mode(
+    p_mode in boolean)
+  as
+    l_min_severity C_LEVEL_ALL%type := C_LEVEL_ALL;
+  begin
+    g_collect_mode := p_mode;
+    if g_collect_mode then
+      g_message_stack.delete;
+    else
+      for i in 1 .. g_message_stack.count loop
+        if l_min_severity > g_message_stack(i).severity then
+          l_min_severity := g_message_stack(i).severity;
+        end if;
+      end loop;
+      case l_min_severity
+      when C_LEVEL_ERROR then
+        raise_error(
+          p_severity => C_LEVEL_ERROR,
+          p_message_name => msg.PIT_BULK_ERROR,
+          p_arg_list => null,
+          p_affected_id => null,
+          p_error_code => null);
+      when C_LEVEL_FATAL then
+        raise_error(
+          p_severity => C_LEVEL_FATAL,
+          p_message_name => msg.PIT_BULK_FATAL,
+          p_arg_list => null,
+          p_affected_id => null,
+          p_error_code => null);
+      else
+        null;
+      end case;
+    end if;
+  end set_collect_mode;
+    
+    
+  function get_collect_mode
+    return boolean
+  as
+  begin
+    return g_collect_mode;
+  end get_collect_mode;
+    
+  
+  function get_message_collection
+    return pit_message_table
+  as
+    l_message_stack pit_message_table;
+  begin
+    l_message_stack := g_message_stack;
+    g_message_stack.delete;
+    return l_message_stack;
+  end get_message_collection;
+  
 
   /* MODULE MAINTENANCE */
   function get_modules

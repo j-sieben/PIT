@@ -385,6 +385,26 @@ begin
     p_error_number => -20000
   );
 
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_BULK_ERROR',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => 'Während einer Mengenverarbeitung trat mindestens ein Fehler auf.',
+    p_pms_description => q'^Wenn PIT im collect-modus ist, wird dieser Fehler geworfen, wenn der schwerwiegenste Fehler den Schweregrad ERROR hatte.^',
+    p_pms_pml_name => 'GERMAN',
+    p_pms_pse_id => 30,
+    p_error_number => -20000
+  );
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_BULK_FATAL',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => 'Während einer Mengenverarbeitung trat mindestens ein fataler Fehler auf.',
+    p_pms_description => q'^Wenn PIT im collect-modus ist, wird dieser Fehler geworfen, wenn der schwerwiegenste Fehler den Schweregrad FATAL hatte.^',
+    p_pms_pml_name => 'GERMAN',
+    p_pms_pse_id => 20,
+    p_error_number => -20000
+  );
+
   commit;
 end;
 /

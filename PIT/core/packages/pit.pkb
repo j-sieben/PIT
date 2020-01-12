@@ -691,6 +691,32 @@ as
   end reset_context;
   
   
+  procedure start_message_collection
+  as
+  begin
+    if not pit_pkg.get_collect_mode then
+      pit_pkg.set_collect_mode(true);
+    end if;
+  end start_message_collection;
+  
+  
+  procedure stop_message_collection
+  as
+  begin
+    if pit_pkg.get_collect_mode then
+      pit_pkg.set_collect_mode(false);
+    end if;
+  end stop_message_collection;
+  
+  
+  function get_message_collection
+    return pit_message_table
+  as
+  begin
+    return pit_pkg.get_message_collection;
+  end get_message_collection;
+  
+  
   function get_modules
     return pit_module_list
     pipelined
