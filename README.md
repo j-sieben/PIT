@@ -125,6 +125,8 @@ You stop this mode by calling `PIT.stop_message_collection`. `PIT` now examines 
 
 Of course you can omit the call to `PIT.stop_message_collection` and directly work with the collected messages. If you do so, `PIT` automatically switches off collection mode. `PIT.get_message_collection` will include all collected messages of all severities you have parameterized to fire, so calling this method will even be useful if no exception was raised after stopping collect mode.
 
+More details on working in collect mode can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages).
+
 ### Output modules
 Another aspect of flexibility is the possibility to easily extend or change output modules. This is accomplished by object oriented programming. PIT uses an object called `PIT_MODULE` as an abstract class for all output modules. If you install a new output module by inheriting from `PIT_MODULE` (`create type PIT_CONSOLE under PIT_MODULE ...`) this new module gets known to PIT and may be used immediately without having to change PIT itself.
 A big advantage of this approach is that `PIT_MODULE` implements all necessary functionality as stubs. Because of this you only need to implement the behaviour you require for your new output module and leave all other modules. Say you plan to create a `PIT_MAIL` output module. It wouldn't make sense to implement a `purge` method as a sent mail cannot be purged. So if you don't need it, you don't implement it.
