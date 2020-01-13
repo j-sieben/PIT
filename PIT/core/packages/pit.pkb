@@ -617,42 +617,83 @@ as
   end assert_not_null;
   
   
-  procedure assert_exists(
-    p_stmt in varchar2,
-    p_message_name in varchar2 default msg.ASSERT_EXISTS,
-    p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null)
-  as
-    l_stmt pit_util.max_char := 'select 1 from dual where exists (#STMT#)';
-    l_result number;
-  begin
-    pit.assert_not_null(l_stmt);
-    l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-    execute immediate l_stmt into l_result;
-  exception
-    when no_data_found then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
-  end assert_exists;
-    
-    
-  procedure assert_not_exists(
-    p_stmt  in varchar2,
-    p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-    p_arg_list msg_args := null,
-    p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null)
-  as
-    l_stmt pit_util.max_char := 'select 1 from dual where not exists (#STMT#)';
-    l_result number;
-  begin
-    pit.assert_not_null(l_stmt);
-    l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-    execute immediate l_stmt into l_result;
-  exception
-    when no_data_found then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
-  end assert_not_exists;
+   procedure assert_exists(
+     p_stmt in varchar2,
+     p_message_name in varchar2 default msg.ASSERT_EXISTS,
+     p_arg_list msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null)
+   as
+     l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum =
+  1';
+     l_count number;
+   begin
+     pit.assert_not_null(l_stmt);
+     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+     execute immediate l_stmt into l_count;
+     if l_count = 0 then
+        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+     end if;
+   end assert_exists;
+  
+  
+   procedure assert_exists(
+     p_cursor in out nocopy sys_refcursor,
+     p_message_name in varchar2 default msg.ASSERT_EXISTS,
+     p_arg_list msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null)
+   as
+     l_id number;
+     l_cnt number;
+   begin
+     l_id := dbms_sql.to_cursor_number(p_cursor);
+     l_cnt := dbms_sql.fetch_rows(l_id);
+     dbms_sql.close_cursor(l_id);
+  
+     if l_cnt = 0 then
+        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+     end if;
+   end assert_exists;
+  
+  
+   procedure assert_not_exists(
+     p_stmt  in varchar2,
+     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+     p_arg_list msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null)
+   as
+     l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum = 1';
+     l_count number;
+   begin
+     pit.assert_not_null(l_stmt);
+     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+     execute immediate l_stmt into l_count;
+     if l_count = 1 then
+        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+     end if;
+   end assert_not_exists;
+
+  
+   procedure assert_not_exists(
+     p_cursor in out nocopy sys_refcursor,
+     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+     p_arg_list msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null)
+   as
+     l_id number;
+     l_cnt number;
+   begin
+     l_id := dbms_sql.to_cursor_number(p_cursor);
+     l_cnt := dbms_sql.fetch_rows(l_id);
+     dbms_sql.close_cursor(l_id);
+  
+     if l_cnt > 0 then
+        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+     end if;
+   end assert_not_exists;
   
   
   /* Context Maintenance */

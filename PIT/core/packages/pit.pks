@@ -718,6 +718,26 @@ as
     p_error_code in varchar2 default null);
     
     
+  /* Assertion function that checks whether p_cursor returns no values
+   * @param  p_cursor        opened SYS_REFCURSOR instance that either returns rows or not.
+   * @param [p_message_name] Name of the message. Reference to package MSG
+   * @param [p_arg_list]     Optional list of replacement information
+   * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
+   * @usage  Pass an opened cursor that is expected to return rows.
+   *         If the cursor does return a row, it will silently quit, otherwise
+   *         it will throw a client specific error message. If this
+   *         parameter is not set, a default message <code>msg.ASSERT_EXISTS</code>
+   *         is used.
+   */
+   procedure assert_exists(
+     p_cursor in out nocopy sys_refcursor,
+     p_message_name in varchar2 default msg.ASSERT_EXISTS,
+     p_arg_list msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null);
+    
+    
   /* Assertion function that checks whether p_stmt returns no values
    * @param  p_stmt          SQL-statement that either returns rows or not.
    * @param [p_message_name] Name of the message. Reference to package MSG
@@ -736,6 +756,26 @@ as
     p_arg_list msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null);
+    
+    
+  /* Assertion function that checks whether p_cursor returns no values
+   * @param  p_cursor        opened SYS_REFCURSOR instance that either returns rows or not.
+   * @param [p_message_name] Name of the message. Reference to package MSG
+   * @param [p_arg_list]     Optional list of replacement information
+   * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
+   * @usage  Pass aopened cursor that is expected to return no rows.
+   *         If the cursor does not return a row, it will silently quit, otherwise
+   *         it will throw a client specific error message. If this
+   *         parameter is not set, a default message <code>msg.ASSERT_NOT_EXISTS</code>
+   *         is used.
+   */
+   procedure assert_not_exists(
+     p_cursor in out nocopy sys_refcursor,
+     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+     p_arg_list msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null);
   
   
   /* Procedure to set the trace context for the active session
