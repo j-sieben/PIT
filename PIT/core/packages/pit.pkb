@@ -20,7 +20,7 @@ as
   
   
   function level_off
-   return number
+  return number
    deterministic
   as
   begin
@@ -29,8 +29,8 @@ as
   
   
   function level_fatal
-   return number
-   deterministic
+  return number
+    deterministic
   as
   begin
     return 20;
@@ -47,7 +47,7 @@ as
   
   
   function level_warn
-    return number
+  return number
     deterministic
   as
   begin
@@ -56,7 +56,7 @@ as
   
   
   function level_info
-    return number
+  return number
     deterministic
   as
   begin
@@ -74,7 +74,7 @@ as
   
   
   function level_all
-    return number
+  return number
     deterministic
   as
   begin
@@ -83,7 +83,7 @@ as
   
   
   function trace_off
-    return number
+  return number
     deterministic
   as
   begin
@@ -92,7 +92,7 @@ as
   
   
   function trace_mandatory
-    return number
+  return number
     deterministic
   as
   begin
@@ -101,7 +101,7 @@ as
   
   
   function trace_optional
-    return number
+  return number
     deterministic
   as
   begin
@@ -110,7 +110,7 @@ as
   
   
   function trace_detailed
-    return number
+  return number
     deterministic
   as
   begin
@@ -119,8 +119,8 @@ as
   
   
   function trace_all
-   return number
-   deterministic
+  return number
+    deterministic
   as
   begin
     return 50;
@@ -253,7 +253,7 @@ as
   function get_message_text(
     p_message_name in varchar2,
     p_arg_list in msg_args default null)
-   return clob
+  return clob
   as
   begin
     return pit_pkg.get_message_text(p_message_name, p_arg_list);
@@ -265,7 +265,7 @@ as
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
-    return message_type
+  return message_type
   as
   begin
     return pit_pkg.get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
@@ -277,7 +277,7 @@ as
     p_pti_id in pit_translatable_item.pti_id%type,
     p_arg_list msg_args default null,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
-    return varchar2
+  return varchar2
   as
   begin
     return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_name;
@@ -289,7 +289,7 @@ as
     p_pti_id in pit_translatable_item.pti_id%type,
     p_arg_list msg_args default null,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
-    return varchar2
+  return varchar2
   as
   begin
     return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_display_name;
@@ -300,7 +300,7 @@ as
     p_pti_pmg_name in pit_message_group.pmg_name%type,
     p_pti_id in pit_translatable_item.pti_id%type,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
-    return clob
+  return clob
   as
   begin
     return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, null, p_pti_pml_name).pti_description;
@@ -312,7 +312,7 @@ as
     p_pti_id in pit_translatable_item.pti_id%type,
     p_arg_list msg_args default null,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
-    return pit_util.translatable_item_rec
+  return pit_util.translatable_item_rec
   as
   begin
     return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name);
@@ -616,84 +616,89 @@ as
     end if;
   end assert_not_null;
   
-  
-   procedure assert_exists(
-     p_stmt in varchar2,
-     p_message_name in varchar2 default msg.ASSERT_EXISTS,
-     p_arg_list msg_args := null,
-     p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null)
-   as
-     l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum =
-  1';
-     l_count number;
-   begin
-     pit.assert_not_null(l_stmt);
-     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-     execute immediate l_stmt into l_count;
-     if l_count = 0 then
-        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
-     end if;
-   end assert_exists;
-  
-  
-   procedure assert_exists(
-     p_cursor in out nocopy sys_refcursor,
-     p_message_name in varchar2 default msg.ASSERT_EXISTS,
-     p_arg_list msg_args := null,
-     p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null)
-   as
-     l_id number;
-     l_cnt number;
-   begin
-     l_id := dbms_sql.to_cursor_number(p_cursor);
-     l_cnt := dbms_sql.fetch_rows(l_id);
-     dbms_sql.close_cursor(l_id);
-  
-     if l_cnt = 0 then
-        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
-     end if;
-   end assert_exists;
+ 
+  procedure assert_exists(
+    p_stmt in varchar2,
+    p_message_name in varchar2 default msg.ASSERT_EXISTS,
+    p_arg_list msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null)
+  as
+    l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum = 1';
+    l_count number;
+  begin
+    pit.assert_not_null(l_stmt);
+    l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+    execute immediate l_stmt into l_count;
+    if l_count = 0 then
+       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+    end if;
+  end assert_exists;
   
   
-   procedure assert_not_exists(
-     p_stmt  in varchar2,
-     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-     p_arg_list msg_args := null,
-     p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null)
-   as
-     l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum = 1';
-     l_count number;
-   begin
-     pit.assert_not_null(l_stmt);
-     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-     execute immediate l_stmt into l_count;
-     if l_count = 1 then
-        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
-     end if;
-   end assert_not_exists;
-
+  procedure assert_exists(
+    p_cursor in out nocopy sys_refcursor,
+    p_message_name in varchar2 default msg.ASSERT_EXISTS,
+    p_arg_list msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null)
+  as
+    l_id number;
+    l_cnt number;
+  begin
+    l_id := dbms_sql.to_cursor_number(p_cursor);
+    l_cnt := dbms_sql.fetch_rows(l_id);
+    dbms_sql.close_cursor(l_id);
+ 
+    if l_cnt = 0 then
+       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+    end if;
+  exception
+    when others then
+      dbms_sql.close_cursor(l_id);
+  end assert_exists;
   
-   procedure assert_not_exists(
-     p_cursor in out nocopy sys_refcursor,
-     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-     p_arg_list msg_args := null,
-     p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null)
-   as
-     l_id number;
-     l_cnt number;
-   begin
-     l_id := dbms_sql.to_cursor_number(p_cursor);
-     l_cnt := dbms_sql.fetch_rows(l_id);
-     dbms_sql.close_cursor(l_id);
   
-     if l_cnt > 0 then
-        pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
-     end if;
-   end assert_not_exists;
+  procedure assert_not_exists(
+    p_stmt  in varchar2,
+    p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+    p_arg_list msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null)
+  as
+    l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum = 1';
+    l_count number;
+  begin
+    pit.assert_not_null(l_stmt);
+    l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+    execute immediate l_stmt into l_count;
+    if l_count = 1 then
+       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+    end if;
+  end assert_not_exists;
+  
+  
+  procedure assert_not_exists(
+    p_cursor in out nocopy sys_refcursor,
+    p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+    p_arg_list msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null)
+  as
+    l_id number;
+    l_cnt number;
+  begin
+    l_id := dbms_sql.to_cursor_number(p_cursor);
+    l_cnt := dbms_sql.fetch_rows(l_id);
+    dbms_sql.close_cursor(l_id);
+    
+    if l_cnt > 0 then
+      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+    end if;
+  exception
+    when others then
+      dbms_sql.close_cursor(l_id);
+  end assert_not_exists;
   
   
   /* Context Maintenance */
@@ -759,7 +764,7 @@ as
   
   
   function get_modules
-    return pit_module_list
+  return pit_module_list
     pipelined
   as
     cursor modules is
@@ -777,7 +782,7 @@ as
     
     
   function get_available_modules
-    return args 
+  return args 
     pipelined
   as
     cursor modules is
@@ -795,7 +800,7 @@ as
     
     
   function get_active_modules
-    return args 
+  return args 
     pipelined
   as
     cursor modules is
@@ -810,8 +815,7 @@ as
     when NO_DATA_NEEDED then
       null;
   end get_active_modules;
-  
-  
+    
 begin
   initialize;
 end pit;
