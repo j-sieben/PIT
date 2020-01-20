@@ -1,13 +1,18 @@
 create or replace package body pit
 as
+
+  /** Project:      PIT (www.github.com/j-sieben/PIT)
+   *  Descriptioon: PIT-API package body. Implements all functionality that is required to use PIT.
+   *  @headcom
+   */
+   
+   
   /*************************** PACKAGE VARIABLES ********************************/
   g_module pit_util.ora_name_type;
   g_owner pit_util.ora_name_type;
   g_action pit_util.ora_name_type;
   g_lineno binary_integer;
-  g_caller_t pit_util.ora_name_type;
   
-  C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
   
   /******************************* INTERFACE ************************************/
   
@@ -127,7 +132,7 @@ as
   end trace_all;
   
   
-  /* DEBUGGING */
+  /****************************** LOGGING AND DEBUGGING *********************************/
   procedure log(
     p_message_name in varchar2,
     p_arg_list in msg_args default null,
@@ -250,74 +255,7 @@ as
   end stop;
   
   
-  function get_message_text(
-    p_message_name in varchar2,
-    p_arg_list in msg_args default null)
-  return clob
-  as
-  begin
-    return pit_pkg.get_message_text(p_message_name, p_arg_list);
-  end get_message_text;
-  
-  
-  function get_message(
-    p_message_name in varchar2,
-    p_arg_list in msg_args default null,
-    p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null)
-  return message_type
-  as
-  begin
-    return pit_pkg.get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
-  end get_message;
-  
-  
-  function get_trans_item_name(
-    p_pti_pmg_name in pit_message_group.pmg_name%type,
-    p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args default null,
-    p_pti_pml_name in pit_message_language.pml_name%type := null)
-  return varchar2
-  as
-  begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_name;
-  end get_trans_item_name; 
-  
-    
-  function get_trans_item_display_name(
-    p_pti_pmg_name in pit_message_group.pmg_name%type,
-    p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args default null,
-    p_pti_pml_name in pit_message_language.pml_name%type := null)
-  return varchar2
-  as
-  begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_display_name;
-  end get_trans_item_display_name; 
-  
-    
-  function get_trans_item_description(
-    p_pti_pmg_name in pit_message_group.pmg_name%type,
-    p_pti_id in pit_translatable_item.pti_id%type,
-    p_pti_pml_name in pit_message_language.pml_name%type := null)
-  return clob
-  as
-  begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, null, p_pti_pml_name).pti_description;
-  end get_trans_item_description; 
-  
-    
-  function get_trans_item(
-    p_pti_pmg_name in pit_message_group.pmg_name%type,
-    p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args default null,
-    p_pti_pml_name in pit_message_language.pml_name%type := null)
-  return pit_util.translatable_item_rec
-  as
-  begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name);
-  end get_trans_item; 
-  
+  /****************************** TRACING *********************************/
 
   procedure enter_mandatory(
     p_action in varchar2 default null,
@@ -464,6 +402,7 @@ as
       p_op_name => p_op_name);
   end long_op;
   
+  /****************************** NOTIFICATION AND MESSAGES *********************************/
   
   procedure print(
     p_message_name in varchar2,
@@ -491,34 +430,37 @@ as
   end notify;
   
   
-  procedure purge_log(
-    p_date_before in date,
-    p_severity_greater_equal in number default null)
+  function get_message_text(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null)
+  return clob
   as
   begin
-    pit_pkg.purge_log(p_date_before, p_severity_greater_equal);
-  end purge_log;
+    return pit_pkg.get_message_text(p_message_name, p_arg_list);
+  end get_message_text;
   
   
-  procedure purge_log(
-    p_days_before in number,
-    p_severity_greater_equal in number default null)
+  function get_message(
+    p_message_name in varchar2,
+    p_arg_list in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null)
+  return message_type
   as
   begin
-    purge_log(trunc(sysdate) - p_days_before, p_severity_greater_equal);
-  end purge_log;
+    return pit_pkg.get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
+  end get_message;
   
   
-  procedure purge_session_log(
-    p_session_id in varchar2 default null)
+  function get_active_message
+    return message_type
   as
   begin
-    -- TODO: IMPLEMENTATION
-    null;
-  end purge_session_log;
+    return pit_pkg.get_active_message;
+  end get_active_message;
   
   
-  /* ASSERTION */
+  /****************************** ASSERTIONS *********************************/
   procedure assert(
     p_condition in boolean,
     p_message_name in varchar2 default msg.ASSERT_TRUE,
@@ -700,8 +642,84 @@ as
       dbms_sql.close_cursor(l_id);
   end assert_not_exists;
   
+  /****************************** INTERNATIONALIZATION *********************************/
   
-  /* Context Maintenance */
+  function get_trans_item_name(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return varchar2
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_name;
+  end get_trans_item_name; 
+  
+    
+  function get_trans_item_display_name(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return varchar2
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_display_name;
+  end get_trans_item_display_name; 
+  
+    
+  function get_trans_item_description(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return clob
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, null, p_pti_pml_name).pti_description;
+  end get_trans_item_description; 
+  
+    
+  function get_trans_item(
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_arg_list msg_args default null,
+    p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return pit_util.translatable_item_rec
+  as
+  begin
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name);
+  end get_trans_item; 
+  
+  
+  /****************************** ADMINISTRATION AND CONTROL *********************************/
+  
+  procedure purge_log(
+    p_date_before in date,
+    p_severity_lower_equal in number default null)
+  as
+  begin
+    pit_pkg.purge_log(p_date_before, p_severity_lower_equal);
+  end purge_log;
+  
+  
+  procedure purge_log(
+    p_days_before in number,
+    p_severity_lower_equal in number default null)
+  as
+  begin
+    purge_log(trunc(sysdate) - p_days_before, p_severity_lower_equal);
+  end purge_log;
+  
+  
+  procedure purge_session_log(
+    p_session_id in varchar2 default null)
+  as
+  begin
+    -- TODO: IMPLEMENTATION
+    null;
+  end purge_session_log;
+  
+  
   procedure set_context(
     p_log_level in integer,
     p_trace_level in integer,

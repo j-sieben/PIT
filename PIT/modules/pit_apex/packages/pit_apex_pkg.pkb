@@ -20,8 +20,8 @@ as
   C_WEB_SOCKET_SERVER constant pit_util.ora_name_type := 'PIT_WEB_SOCKET_SERVER';
   C_YES constant varchar2(3 byte) := 'YES';
   C_CHUNK_SIZE constant integer := 8192;
-  
-  g_apex_triggered_context pit_pkg.context_type;
+
+  g_apex_triggered_context pit_util.context_type;
   g_fire_threshold number;
   g_websocket_server varchar2(1000 byte);
 
@@ -36,7 +36,7 @@ as
     g_apex_triggered_context.log_modules := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
     g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
   end initialize;
-  
+
 
   /* valid_environment checks whether module is called within a valid APEX
    * session environment
@@ -47,8 +47,8 @@ as
   begin
     return apex_application.get_session_id is not null;
   end valid_environment;
-  
-  
+
+
   /* helper function to convert MSG_PARAMS into NAME-VALUE-Pairs
    * odd position number returns name of the parameter
    * even position number returns value of the parameter
@@ -94,14 +94,14 @@ as
       else
         l_message := dbms_lob.substr(p_message.message_text, 32760, 1);
       end if;
-      
+
       apex_debug.log_long_message(
         p_message => l_message,
         p_level => l_severity);
     end if;
   end debug_message;
-  
-  
+
+
   /* helper to add error messages to the apex error stack
    */
   procedure log_error(
@@ -113,7 +113,7 @@ as
     if valid_environment then
       if p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
         -- Get item label to include it into the message
-        begin 
+        begin
              with params as(
                   select to_number(v('APP_ID')) application_id,
                          to_number(v('APP_PAGE_ID')) page_id,
@@ -128,7 +128,7 @@ as
           when NO_DATA_FOUND then
             l_message := replace(p_message.message_text, '#ITEM_LABEL#', p_message.affected_id);
         end;
-        
+
         apex_error.add_error(
           p_message => l_message,
           p_additional_info => p_message.message_description,
@@ -142,7 +142,7 @@ as
       end if;
     end if;
   end log_error;
-  
+
 
   /* helper procedure to pass clob to APEX, using htp.p
    * clob is splitted into chunks of C_CHUNK_SIZE bytes to circumvent the limitation
@@ -166,7 +166,7 @@ as
         l_offset := l_offset + l_amount;
         l_length := l_length - l_amount;
         sys.htp.p(l_chunk);
-      end loop;      
+      end loop;
     end if;
   end print_clob;
 
@@ -229,9 +229,9 @@ as
     l_message.put('stack', p_message.stack);
     l_message.put('backtrace', p_message.backtrace);
     l_message.put('error_number', to_char(p_message.error_number));
-    
+
     pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
-    l_response := apex_web_service.make_rest_request( 
+    l_response := apex_web_service.make_rest_request(
                     p_url => g_websocket_server,
                     p_http_method => 'GET',
                     p_body => l_message.stringify());
@@ -247,27 +247,27 @@ as
     l_next_param varchar2(32767);
   begin
     if valid_environment then
-      apex_debug.enter( 
-        p_routine_name => p_call_stack.module_name || '.' || p_call_stack.method_name, 
-        p_name01 => get_msg_param(p_call_stack, 1), 
-        p_value01 => get_msg_param(p_call_stack, 2), 
-        p_name02 => get_msg_param(p_call_stack, 3), 
-        p_value02 => get_msg_param(p_call_stack, 4), 
-        p_name03 => get_msg_param(p_call_stack, 5), 
-        p_value03 => get_msg_param(p_call_stack, 6), 
-        p_name04 => get_msg_param(p_call_stack, 7), 
-        p_value04 => get_msg_param(p_call_stack, 8), 
-        p_name05 => get_msg_param(p_call_stack, 9), 
-        p_value05 => get_msg_param(p_call_stack, 10), 
-        p_name06 => get_msg_param(p_call_stack, 11), 
-        p_value06 => get_msg_param(p_call_stack, 12),  
-        p_name07 => get_msg_param(p_call_stack, 13), 
-        p_value07 => get_msg_param(p_call_stack, 14), 
-        p_name08 => get_msg_param(p_call_stack, 15), 
-        p_value08 => get_msg_param(p_call_stack, 16), 
-        p_name09 => get_msg_param(p_call_stack, 17), 
-        p_value09 => get_msg_param(p_call_stack, 18), 
-        p_name10 => get_msg_param(p_call_stack, 19),  
+      apex_debug.enter(
+        p_routine_name => p_call_stack.module_name || '.' || p_call_stack.method_name,
+        p_name01 => get_msg_param(p_call_stack, 1),
+        p_value01 => get_msg_param(p_call_stack, 2),
+        p_name02 => get_msg_param(p_call_stack, 3),
+        p_value02 => get_msg_param(p_call_stack, 4),
+        p_name03 => get_msg_param(p_call_stack, 5),
+        p_value03 => get_msg_param(p_call_stack, 6),
+        p_name04 => get_msg_param(p_call_stack, 7),
+        p_value04 => get_msg_param(p_call_stack, 8),
+        p_name05 => get_msg_param(p_call_stack, 9),
+        p_value05 => get_msg_param(p_call_stack, 10),
+        p_name06 => get_msg_param(p_call_stack, 11),
+        p_value06 => get_msg_param(p_call_stack, 12),
+        p_name07 => get_msg_param(p_call_stack, 13),
+        p_value07 => get_msg_param(p_call_stack, 14),
+        p_name08 => get_msg_param(p_call_stack, 15),
+        p_value08 => get_msg_param(p_call_stack, 16),
+        p_name09 => get_msg_param(p_call_stack, 17),
+        p_value09 => get_msg_param(p_call_stack, 18),
+        p_name10 => get_msg_param(p_call_stack, 19),
         p_value10 => get_msg_param(p_call_stack, 20));
       debug_message(l_message);
     end if;
@@ -281,14 +281,18 @@ as
   begin
     null;
   end leave;
-  
-  
+
+
   procedure set_apex_triggered_context
   as
   begin
     if valid_environment then
       if apex_application.g_debug then
-        pit_pkg.set_context(g_apex_triggered_context);
+        pit.set_context(
+          p_log_level => g_apex_triggered_context.log_level,
+          p_trace_level => g_apex_triggered_context.trace_level,
+          p_trace_timing => g_apex_triggered_context.trace_timing,
+          p_module_list => g_apex_triggered_context.log_modules);
       else
         pit.reset_context;
       end if;

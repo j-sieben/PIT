@@ -21,6 +21,13 @@ begin
   );
 
   param_admin.edit_parameter(
+    p_par_id => 'WARN_IF_UNUSABLE_MODULES'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Flag to indicate whether PIT should emit a warning if an output module could not be instantiated'
+   ,p_par_boolean_value => true
+  );
+
+  param_admin.edit_parameter(
     p_par_id => 'PIT_CTX_TYPE'
    ,p_par_pgr_id => 'CONTEXT'
    ,p_par_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'

@@ -14,8 +14,30 @@ as
   
   C_TRUE constant &FLAG_TYPE. := &C_TRUE.;
   C_FALSE constant &FLAG_TYPE. := &C_FALSE.;
+  
+  
+  /** Record to store log and trace settings
+   * @param  log_level    Actually set log level. One of the C_LEVEL_... constants
+   * @param  trace_level  Actually set trace level. One of the C_TRACE_... constants
+   * @param  trace_timing Flag to indicate whether tracing should capture timing information
+   * @param  log_modules  Colon separated list of module names used as output modules
+   */
+  type context_type is record(
+    log_level binary_integer,
+    trace_level binary_integer,
+    trace_timing boolean,
+    log_modules max_sql_char);
+    
+  /** List of CONTEXT_TYPE indexed by ORA_NAME_TYPE
+   */
+  type named_ctx_list_tab is table of context_type index by ora_name_type;
+    
 
-  /* Record to grant access to a translatable item */
+  /** Record to grant access to a translatable item
+   * @param  pti_name           Technical or internal name
+   * @param  pti_display_name   more descriptive name, used for UI purposes
+   * @param  pti_description    Additional description or help text
+   */
   type translatable_item_rec is record(
     pti_name pit_translatable_item.pti_name%type,
     pti_display_name pit_translatable_item.pti_display_name%type,
