@@ -8,7 +8,7 @@ As a best practice, provide `pit.enter` with the name of your method and your pa
 
 Let me state though that the overhead of calling the methods to retrieve package and method name starting with version 12c is minimal and should not harm your overall performance noticably. So with the exception of extreme cases you may find it sufficient to leave this information out and benefit from an even easier use of `PIT`.
 
-Please make sure, that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.sql_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), PIT maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
+Please make sure that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.sql_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), PIT maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
 
 Starting with version 12c, PIT has extended its possibility of handling the call stack by utilizing `UTL_CALL_STACK`under the covers. This makes call stack maintenance more stable and reliable and allows for even less code in the application. Imagine a method `A` that calls method `B` which in turn calls method `C`. In `C`, an error is raised, but it is catched at method `A`. Normally, there would be no way to clear the call stack if not any of the methods `A`, `B` and `C` would offer an exception handler. Methods `C` and `B` would then implement a dummy handler such as 
 
@@ -51,8 +51,6 @@ end my_func;
 ```
 
 Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in handy if a method calculates values and you want to log the results. As it is also important to log the outcome of parameters in case of an exception, you may pass instances of `MSG_PARAMS` to the error handlers `pit.sql_exception` and `pit.stop` as well.
-
-Be aware that it is possible to pass parameters to the leave methods as well. This comes in handy for calculated out parameters or functions returning values. Those calculated values can easily be logged passing them to the leave methods.
 
 ### Adjusting trace level
 Method `pit.enter` provides different levels of tracing. These levels are:
@@ -106,12 +104,12 @@ begin
 end;
 ```
 
-At the end of the script, method `pit_admin.create_message_package` is called to have `pit_admin` (re)-create package `MSG`. It rebuilds the package based on the messages found in table `MESSAGE` where the `pit_admin` writes its messages to. It therefore can be called as often as you like and will always resemble the latest status of your messages. Keep in mind that it doesn't contain the messages itself. So if you just correct a typo there's no need to recreate the message package. This package contains a constant of type `varchar2(30)` with the same name as the message and the value of the message name:
+At the end of the script, method `pit_admin.create_message_package` is called to have `pit_admin` (re)-create package `MSG`. It rebuilds the package based on the messages found in table `PIT_MESSAGE` where the `pit_admin` writes its messages to. It therefore can be called as often as you like and will always resemble the latest status of your messages. Keep in mind that it doesn't contain the messages itself. So if you just correct a typo there's no need to recreate the message package. This package contains a constant of type `varchar2(30)` (`varchar2(128)` starting with 12c) with the same name as the message and the value of the message name:
 
 ``` 
 create or replace package MSG
 as
-  MY_FIRST_MESSAGE constant varchar2(30) := 'MY_FIRST_MESSAGE';
+  MY_FIRST_MESSAGE constant varchar2(128) := 'MY_FIRST_MESSAGE';
   ...
 end msg;
 ```
@@ -174,7 +172,9 @@ as
 end MSG;
 ```
 
-This is to assure that you can't loose any error because you mistyped the message name. Additionally, the `MSG`package contains an exception called `CHILD_RECOR_FOUND_ERR`and a pragma to connect the exception to Oracle error -2292. If you want to create messages for your own errors, you do exactly the same what we did in the example above but simply pass in -20000 or null for parameter `p_error_number`. You may as well simply omit it completely, as it is an optional parameter. If `pit_admin` creates a new message of severity 20 or 30 (`PIT.level_fatal|PIT.level_error`) and no error number is passed in, it assumes a user specific error.
+This is to assure that you can't loose any error because you mistyped the message name. Additionally, the `MSG` package contains an exception called `CHILD_RECOR_FOUND_ERR`and a pragma to connect the exception to Oracle error -2292. If you want to create messages for your own errors, you do exactly the same what we did in the example above but simply pass in -20000 or null for parameter `p_error_number`. You may as well simply omit it completely, as it is an optional parameter. If `pit_admin` creates a new message of severity 20 or 30 (`PIT.level_fatal|PIT.level_error`) and no error number is passed in, it assumes a user specific error.
+
+In case you dislike the postfix `_ERR` to name an exception, you may choose a different setting by selecting a respective parameter value for it. This way, you could decide to use `X` as a prefix for example, resulting in `X_CHILD_RECORD_FOUND` as the name of the exception.
 
 After you created the message you're ready to use it in your code. As error -2292 is thrown automatically by the Oracle database, you will need to catch it in the exception block. To achieve this, simply write code like this:
 
@@ -193,7 +193,7 @@ end;
 Method `pit.sql_exception` is used to achieve two goals:
 
 - It will log the error to all output modules actually parameterized
-- It will cleanly close the call stack, as it includes a call to leave.
+- It will cleanly close the call stack, as it includes a call to `pit.leave`.
 
 If you defined a message for your own exception, simply raise the error by calling `pit.error(msg.CHILD_RECORD_FOUND_ERR);`. In your exception handler, you catch this exception as you would do with any other exception in PIT. Further details on throwing and catching exceptions can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/exceptions.md).
 
@@ -203,13 +203,13 @@ If you require PIT to log any information regardless of any log settings, this i
 
 First, the message severity is taken from the message you pass in. So if you want to log a message with severity `pit.LEVEL_ERROR`, this then defines the severity of the logging. You can limit this by using a parameter call `P_LOG_THRESHOLD`. If set, only messages are logged with a severity lower or equal this value.
 
-You then can decide upon the output modules to use for this log process. Without changing any log settings, you may want to log a specific message to one output module only. This is possible by passing in the list of requested output modules as a colon-separated list into parameter `P_MODULE_LIST`. As said, this does not effect any log settings but will be set for this single log process.
+You then can decide upon the output modules to be used for this log process. Without changing any log settings, you may want to log a specific message to one output module only. This is possible by passing in the list of requested output modules as a colon-separated list into parameter `P_MODULE_LIST`. As said, this does not effect any log settings but will be set for this single log process.
 
-Imagine an application like a flow control system that needs to log changed status messages to a dedicated output module called PIT_FLOW_CONTROL. By calling `pit.log` with parameter `p_module_list => 'PIT_FLOW_CONTROL` only this output module will receive the status change message. 
+Imagine an application like a flow control system that needs to log status messages to a dedicated output module called PIT_FLOW_CONTROL. By calling `pit.log` with parameter `p_module_list => 'PIT_FLOW_CONTROL` only this output module will receive the status change message, regardless of whether logging is switch on or off. 
 
 ## Handling message parameters
 
-Messages require parameters. To pass parameters to a message, an object of type `MSG_ARGS` is provided. This is a `varray(20) of clob`. I chose a clob varray because the parameters have to keep their defined order to make sure that the right parameter is replaced at the right position within the message. To prepare a message for replacements of parameters, you add anchors of the form `#n#` to the message, with `n` being an integer between 1 and 20. Here's an example of a message with replacement anchors and the code to call it:
+Messages require parameters. To pass parameters to a message, an object of type `MSG_ARGS` is provided. This is a `varray(20) of clob`. I chose a `varray of clob` because the parameters have to keep their defined order to make sure that the right parameter is put at the right position within the message. To prepare a message for replacements of parameters, you add anchors of the form `#n#` to the message, with `n` being an integer between 1 and 20. Here's an example of a message with replacement anchors and the code to call it:
 
 ```
 -- Message: "Couldn't delete #1# with id #2#.", name: msg.DELETE_ITEM, severity: pit.error
@@ -219,10 +219,11 @@ pit.sql_exception(msg.DELETE_ITEM, msg_args('row', to_char(id)));
 -- Resulting Message: "Couldn't delete row with id 12345."
 ```
 
-As `MSG_ARGS` is a varray of clob, it is possible to pass in parameters of any size. Your output modules should decide how to handle large messages. The next paragraph will show you what these large message may be used for.
+As `MSG_ARGS` is a `varray of clob`, it is possible to pass in parameters of any size. Your output modules should decide how to handle large messages. The next paragraph will show you what these large message may be used for.
 
 ## Printing messages to the view layer
-If your output module implements a `print`-method, you can use this method to pass a message with parameters to the view layer. Here it turns out to be a wise decision that all messages are CLOB based. This allows for messages of arbitrary size. In some projects, I even use messages to pass JSON strings of any size to APEX-applications. This fits in nicely because the print method is capable of handling clob messages and the print method implementation in the APEX output module therefore already caters for splitting this messages into appropriate chunks.
+
+If your output module implements a `print`-method, you can use this method to pass a message with parameters to the view layer. Here it turns out to be a wise decision that all messages are `clob` based. This allows for messages of arbitrary size. In some projects, I even use messages to pass JSON strings of any size to APEX-applications. This fits in nicely because the print method implementation in the APEX output module caters for splitting this messages into appropriate chunks.
 
 Main use obviously is to pass validation messages, status messages and the like to the view layer. To achieve this, you normally create a message of severity `pit.level_verbose`. This way, only a constant for the message is created in the MSG package. To use it, you simply call `pit.print(msg.MY_MESSAGE)` and you're done.
 
@@ -236,13 +237,13 @@ If you code using the *Contractor Pattern*, you want to assert that incoming par
 - `pit.assert_exists`
 - `pit.assert_not_exists`
 
-Most methods are provided with overloads for `varchar2`, `number` and `date`, the exists methods take a sql statement as parameter and check whether that statement returns at least one or no row. Only `select` statements are allowed here of course ... The most generic function is `pit.assert` which expects a boolean expression of any kind and returns without result if the condition evaluates to true and throws an exception otherwise.
+Most methods are provided with overloads for `varchar2`, `number` and `date`, the exists methods take a sql statement as parameter and check whether that statement returns at least one or no row. Only `select` statements are allowed here of course ... PIT offers an overloaded method for the `pi.assert_(not_)exists` method that either accept a sql statement as `varchar2`or an openend cursor. The most generic function is `pit.assert` which expects a boolean expression of any kind and returns without result if the condition evaluates to true and throws an exception otherwise.
 
-I added the paramter `p_affected_id` to the assertion methods as I did before in the log methods. Reason is that many validations require a reference to an input field or similar. E.g. in APEX you have the possibility to attach an error message to a specific input field. I found it cumbersome to validate input, create a message for it and then have to deal with proper placement of that message on the screen. By adding `p_affected_id` it's now possible to simply pass in the id of the element you're working at and you're done, the rest is done within output module `pit_apex`.
+I added paramter `p_affected_id` to the assertion methods as I did before in the log methods. Reason is that many validations require a reference to an input field or similar. E.g. in APEX you have the possibility to attach an error message to a specific input field. I found it cumbersome to validate input, create a message for it and then have to deal with proper placement of that message on the screen. By adding `p_affected_id` it's now possible to simply pass in the id of the element you're working at and you're done, the rest is done within output module `pit_apex`.
 
-Plus, you have the ability to pass in any custom error codes you like. If the assertion fails, those custom error codes are integrated into the message instance for later reference.
+Plus, you have the ability to pass in any custom error codes you like. If the assertion fails, those custom error codes are integrated into the message instance for later reference. Error codes can refine a constant error. Imagine a set of validations that validates whether a required input exists. Normally, all these validations will throw the same error if the validation fails. With error codes, you can refine which parameter value failed without having to create new messages for each validation.
 
-What makes all assertion methods convenient is that they come with a default message (which of course can be translated as any other message PIT uses). Should you require to do so, you may pass in your own message that gets thrown if the assertion fails. Simply pass in the message name and the message parameters optionally. Here's an example on how to check an assertion with a user defined message:
+What makes all assertion methods convenient is that they come with a default message so you can call the assertion methods with no parameter except for the test. If you need to, you may pass in your own message that gets thrown if the assertion fails. Simply pass in the message name and the message parameters optionally. Here's an example on how to check an assertion with a user defined message:
 
 ```
 begin
@@ -256,5 +257,3 @@ end;
 ```
 
 If the assertion throws an error, this may lead to a message like »Parameter 'P_PARAM' is supposed to be in the range of [10,20,30] but was 45.«
-
-Be creative when thinking about these methods. In a project it turned out to be very convenient to wrap these assertion methods into a method that didn't throw an exception but rather catched any upcoming error and integrated into an APEX error stack. This way, it is very convenient to test a set of conditions and all conditions that fail add to the error stack.
