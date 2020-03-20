@@ -212,3 +212,31 @@ end;
 ```
 
 Difference in the second option is that upon asserting you simply refer to a given message of severity `pit.level_error` or stronger. This is to be able to catch it's exception in the exception handler to divide between three `assert` methods which may be called in the called. In the exception block, the message is enriched with parameters, something that has been done in option 1 already. Option 1 therefore is slightly mor elegant in the exception block but more clumsy in the assertion block.
+
+### Throwing exceptions with `pit.assert`, custom messages and error codes
+
+```
+declare
+  l_message message_type;
+begin
+  pit.assert_not_null(p_param_1, msg.PARAM_MISSING);
+  pit.assert_not_null(p_param_2, msg.PARAM_MISSING, p_error_code => 'PARAM_2_MISSING');
+  pit.assert_not_null(p_param_3, msg.PARAM_MISSING, p_error_code => 'PARAM_3_MISSING');
+  <do something>
+exception
+  when msg.PARAM_MISSING_ERR then
+    l_message := pit.get_active_message;
+    case l_message.error_code
+      when msg.PARAM_MISSING then
+        do_something;
+      when 'PARAM_2_MISSING' then
+        do_something;
+      when 'PARAM_3_MISSING' then
+        do_something;
+end;
+```
+
+This example shows the use of error codes. Obviously, it's impossible to provide a constant for error codes passed into a message dynamically. But if you omit it, the error code will default to the message name so that it's possible to use the exceptions in a mixed mode, with or witout error codes. The exception thrown is the same but the error codes allow for a finer distinction between error scenarios. If not used, you would have to create different messages for the same kind of exception in order to distinguish between them.
+
+If you use error codes, make sure to comment them in the package specification, as you should do with the list of exceptions a method may potentially throw.
+
