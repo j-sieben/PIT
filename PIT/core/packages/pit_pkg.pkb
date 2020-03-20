@@ -599,10 +599,10 @@ as
   /* Raises an event
    * @usage  Called internally as a generic helper to throw messages to output modules
    * @param  p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
-   * @param  p_event_focus Flag to indicate whether the message shall be broadcasted to all
+   * @param  p_event_focus Flag to indicate whether the message is to be broadcasted to all
    *         available modules or only to active ones.
    * @param  p_call_stack Instance of the actual call stack in the event of ENTER|LEAVE
-   * @param  p_date_before Date indicating the point in time, up to when the log shall be purged
+   * @param  p_date_before Date indicating the point in time, up to when the log is to be purged
    * @param  p_message Instance of the message to raise
    */
   procedure raise_event(
@@ -1147,6 +1147,7 @@ as
   exception
     when NO_DATA_FOUND then
       pit.stop(msg.PIT_MSG_NOT_EXISTING, msg_args(p_message_name));
+      return null;
   end get_message;
   
   
