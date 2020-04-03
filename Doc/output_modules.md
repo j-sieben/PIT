@@ -47,7 +47,7 @@ Simply replace the module name with your name and make sure that the constructor
 
 ## Implementing your own funcitionalty
 
-My approach to implement functionality is to write stubs within the type body that simply call a package with the respective functionality. I do this because the object features are not as strong as the PL/SQL package features. No private methods or attributes are allowed and other restrictions apply. Therefore, delegating the implementation to a separate package does make sense.
+My approach to implement functionality for output modules is to write wrapper methods that simply call a package with the respective functionality. I do this because the programming features of object bodies are not as strong as PL/SQL package features. No private methods or attributes are allowed and other restrictions apply. Therefore, delegating the implementation to a separate package does make sense.
 
 So this is the implementation of the `PIT_FILE` output module:
 
