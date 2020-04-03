@@ -1,4 +1,4 @@
-# Writing you own output module
+# Writing your own output module
 
 Writing a new output module is easy. There are two steps to take: Create a new object under `PIT_MODULE` and implement overwrites of the methods you need within that new module.
 
