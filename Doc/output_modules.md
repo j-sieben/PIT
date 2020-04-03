@@ -51,7 +51,7 @@ My approach to implement functionality for output modules is to write wrapper me
 
 So this is the implementation of the `PIT_FILE` output module:
 
-´´´
+```
 create or replace type body pit_file
 as
   overriding member procedure log(
@@ -95,7 +95,7 @@ as
   end pit_file;
 end;
 /
-´´´
+```
 
 Implementing package `PIT_FILE` is not special by any means. It's a simple PL/SQL package working with the messages. There's only one thing to obey: `PIT` takes care of the transaction context, as it spans an autonomous transaction for each call. So you don't have to and shouldn't include any transaction control within this output module. Write to a table if you like and `PIT` will take care of the `commit` for you.
 
