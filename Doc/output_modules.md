@@ -8,9 +8,9 @@ Writing a new output module is easy. There are two steps to take: Create a new o
 
 1.  PIT is able to recognize new modules automatically as they can be found in view `USER_TYPES`. They share the same attribute `PIT_MODULE` as their supertype.
 
-2.  As all output module inherit from `PIT_MODULE`, they all have the methods defined at `PIT_MODULE`. This way, calling any output module automatically implements all relevant `PIT` methods. Only those methods you require are overwritten by you to make sure your output module works as expected.
+2.  As all output module inherit from `PIT_MODULE`, they all have the methods defined at `PIT_MODULE`. This way, all output modules automatically implement all methods required by `PIT`. But only those methods you require are overwritten by you to make sure your output module works as expected. All other methods fall back to a default behaviour which is an empty stub: They simply do nothing.
 
-You start by examining `PIT_MODULE`. Make yourself familiar with the methods available. Here is a short overview:
+In order to create your own output module, you start by examining `PIT_MODULE`. Make yourself familiar with the methods available. Here is a short overview:
 - `context_changed`
 This method is called if a context switch was detected. It is rarely used, but I implement it in a test output module to document that changing the context does call those methods.
 - `log`
