@@ -155,9 +155,9 @@ PIT comes ready to use with a bunch of output modules. You may want to start you
 Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on `CLIENT_IDENTIFIER`, as this is the case in APEX environments, or to stick to the `USER` function to detect a specific user. Should this turn out to not be working for you (e.g. in a proxy user environment), you may provide a new `SESSION_ADAPTER` that implements your method of detecting the session identity. Which `SESSION_ADAPTER` is used is parameterizable.
 
 ## What's more?
-### Reusable Components
 
 ### Reusable Components
+
 PIT makes havy use of parameters. Parameters are organized in parameter groups of which PIT uses the parameter group `PIT`. These parameters are maintained by separate packages `PARAM` and `PARAM_ADMIN` to retrieve and maintain parameter values in a mandator aware way. Plus, the parameter package supports a concept called `REALM` that allows to store different parameter settings depending on the realm they are defined for. This allows for storing different parameter values per realm, say a list of URLs for development, testing and production use.
 
 As this package, along with a generic parameter table, is accessible outside PIT, the parameter package may be used to organize all of your application parameters as well. The administrative package once again allows you to create and maintain parameters and to export parameters by reating a group of parameter files with all parameters and their values in a file per parameter group.
