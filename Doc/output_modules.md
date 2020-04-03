@@ -121,7 +121,7 @@ I delegated the constructor functionality to `PIT_FILE_PKG` as well. It may be i
   end initialize_module;
 ```
 
-As the bare minimum, I define a fire threshold and set my status to `msg.PIT_MODULE_INSTANTIATED`. Here, I also try to open a file at the directory given to my using a parameter of that output module. If this fails, I catch this error and mark the instance as `UNUSABLE`, using message `msg.PIT_FAIL_MODULE_INIT`. Setting my fire threshold to `pit.LEVEL_OFF` is unnecessary strictly seen as the module wont get contacted anyway if it is not usable. Please keep in mind that it is not possible to pass any arguments to the constructor method. It is required that there is a constructor without parameters in order to user it from `PIT`.
+As the bare minimum, I define a fire threshold and set my status to `msg.PIT_MODULE_INSTANTIATED`. Here, I also try to open a file at the directory defined at a parameter for that output module. If this fails, I catch this error and mark the instance as `UNUSABLE`, using message `msg.PIT_FAIL_MODULE_INIT`. Setting my fire threshold to `pit.LEVEL_OFF` is unnecessary strictly seen as the module wont get contacted anyway if it is not usable. Please keep in mind that it is not possible to pass any arguments to the constructor method. It is required that there is a constructor without parameters in order to user it from `PIT`.
 
 ## Parameters
 
