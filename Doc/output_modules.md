@@ -99,6 +99,30 @@ end;
 
 Implementing package `PIT_FILE` is not special by any means. It's a simple PL/SQL package working with the messages. There's only one thing to obey: `PIT` takes care of the transaction context, as it spans an autonomous transaction for each call. So you don't have to and shouldn't include any transaction control within this output module. Write to a table if you like and `PIT` will take care of the `commit` for you.
 
+I delegated the constructor functionality to `PIT_FILE_PKG` as well. It may be interesting to see the implementation of this method:
+
+```
+  procedure initialize_module(
+    self in out pit_file)
+  as
+  begin
+    g_dir := param.get_string(C_OUT_DIRECTORY, C_PARAM_GROUP);
+    g_filename := param.get_string(C_FILE_NAME, C_PARAM_GROUP);
+    -- Test
+    open_file(C_WRITE_APPEND);
+    self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
+    self.status := msg.PIT_MODULE_INSTANTIATED;
+  exception
+    when others then
+      -- Do NOT throw any exceptions during initalization phase!
+      self.fire_threshold := pit.level_off;
+      self.status := msg.PIT_FAIL_MODULE_INIT;
+      self.stack := dbms_utility.format_error_stack;
+  end initialize_module;
+```
+
+As the bare minimum, I define a fire threshold and set my status to `msg.PIT_MODULE_INSTANTIATED`. Here, I also try to open a file at the directory given to my using a parameter of that output module. If this fails, I catch this error and mark the instance as `UNUSABLE`, using message `msg.PIT_FAIL_MODULE_INIT`. Setting my fire threshold to `pit.LEVEL_OFF` is unnecessary strictly seen as the module wont get contacted anyway if it is not usable. Please keep in mind that it is not possible to pass any arguments to the constructor method. It is required that there is a constructor without parameters in order to user it from `PIT`.
+
 ## Parameters
 
 Any output module should have at least one parameter that controls a fire threshold for that module. Create this parameter by calling `admin_param.merge_parameter` method. But you're free to add any number of parameters to your output module. There is no restriction of what you do with the message. Write an incident at JIRA, send mails, do whatever you like. The only thing to keep in mind is performance. But if a severe error occurs, performance is probable your least problem.
