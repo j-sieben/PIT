@@ -175,3 +175,5 @@ Details to throwing and catching Exceptions can be found [here](https://github.c
 To learn more about the concept of *Context* and *Toggles* read [Context and Toggles](https://github.com/j-sieben/PIT/blob/master/Doc/handling_contexts.md)
 
 Some advice on how to keep execution speed high with PIT can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/performance.md)
+
+If you need to write your own output module, continue reading [here](https://github.com/j-sieben/PIT/blob/master/Doc/output_modules.md)
