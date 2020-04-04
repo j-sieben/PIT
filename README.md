@@ -88,7 +88,7 @@ Let's look at the requirements that derive from these use cases a bit closer.
 
 From the list of use cases you can see that there is a requirement to be very flexible in regard to output channels. Storing messages in a table or printing them to the console simply is not enough. PIT is designed from ground up to support any number of output channels such as `PIT_CONSOLE`, `PIT_TABLE`, `PIT_MAIL`, `PIT_APEX`, `PIT_FILE` and others without the need to change the basic PIT code at all. Plus, all of these output module may be present but which one will be actually used to debugging is switched on and off using a context concept. This allows for the least possible logging activities and thus preserving performance.
 
-When you think of these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, PIT allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a list and send them once a day and ignore all other messages.
+When you think about these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, PIT allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a list and send them once a day and ignore all other messages.
 
 ### Context
 
@@ -176,4 +176,4 @@ To learn more about the concept of *Context* and *Toggles* read [Context and Tog
 
 Some advice on how to keep execution speed high with PIT can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/performance.md)
 
-If you need to write your own output module, continue reading [here](https://github.com/j-sieben/PIT/blob/master/Doc/output_modules.md)
+If you need to write your own output module, continue reading [Output Modules](https://github.com/j-sieben/PIT/blob/master/Doc/output_modules.md)
