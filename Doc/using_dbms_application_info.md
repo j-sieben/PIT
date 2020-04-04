@@ -5,7 +5,7 @@
 - `V$SESSION`
 - `V$SQLAREA`
 
-Additionally, it is possible to report the status of long lasting operations to the database by using the method `dbms_application_info.set_session_longops`. By using this method, a developer reports how many iterations of a total number of iterations is performed. Information about the process of a long lasting operation is available at `V$SESSION_LONGOPS`.
+Additionally, it is possible to report the status of long lasting operations to the database by using the method `dbms_application_info.set_session_longops`. By using this method, a developer reports how many iterations of a total number of iterations is performed. Information about the process of a long lasting operation is available at `V$SESSION_LONGOPS`. If you don't have access to the mentioned views, you can access client information using `sys_context('USERENV', 'CLIENT_INFO')`  as well. Long ops are normally accessible by anyone.
 
 If you want to use this feature, make sure that tracing is set to at least `pit.trace_mandatory`, as the tracing mechanism is required for this feature.
 
@@ -14,7 +14,7 @@ PIT supports both mechanisms in a user friendly way:
 
 1. Any call to `pit.enter_mandatory` automatically sets `dbms_application_info` to the actual module and method. PIT does not recommend to set `p_module` and `p_action` manually unless there is a strong reason to do so. Internally, PIT uses the package name and method name to maintain the call stack. If you set those parameters manually, they will overwrite what is sent to `dbms_application_info`, giving you the option to provide a more user friendly status on what the code is executing.
 
-2. Any call to the other `pit.enter_%` methods will update `dbms_application_info` only if `p_module` or `p_action` are set manually. As long as a recursive call to ´pit.enter_%` does not change the settings, the application info will stay the same than set when `pit.enter_mandatory` was called.
+2. Any call to the other `pit.enter_%` methods will update `dbms_application_info` only if `p_module` or `p_action` are set manually. As long as a recursive call to `pit.enter_%` does not change the settings, the application info will stay the same as set when `pit.enter_mandatory` was called.
 
 3. If an application info was overwritten by a call to any `pit.enter_%` and the execution of the call returns to the former method, the former information is restored.
 
