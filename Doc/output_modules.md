@@ -18,7 +18,7 @@ This method is the core logging methods for all errors, warnings, debug messages
 - `print`
 This method is called if a message is passed to the UI.
 - `notify`
-This method is used to pass status messages and notifications. For web application output modules, it was thought to be used with WebSocket servers to immediately pass small information chunks to the frontend.
+This method is used to pass status messages and notifications. For web application output modules, it was planned to make use of WebSocketrs to pass small information chunks to the browser. The `PIT_APEX` module does not implement this feature yet though.
 - `enter` and `leave`
 These methods trace entering and leaving a method. They pass an instance of `CALL_STACK_TYPE` with further information on the method.
 - `purge`
