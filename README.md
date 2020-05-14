@@ -154,6 +154,8 @@ PIT comes ready to use with a bunch of output modules. You may want to start you
 
 Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on `CLIENT_IDENTIFIER`, as this is the case in APEX environments, or to stick to the `USER` function to detect a specific user. Should this turn out to not be working for you (e.g. in a proxy user environment), you may provide a new `SESSION_ADAPTER` that implements your method of detecting the session identity. Which `SESSION_ADAPTER` is used is parameterizable.
 
+The session adapter serves for another purpose as well: If the calling environment is set to debug, as this is possible within APEX, the session adapter will switch `PIT` to debug modus as well. This way, `PIT` automatically follows the application in this regard.
+
 ## What's more?
 
 ### Reusable Components
