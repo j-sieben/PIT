@@ -87,7 +87,7 @@ Writing APEX applications covering a wide range of APEX versions (from 5.1 to 20
 
 Therefore I decided to rely on my utilities named `UTL_TEXT` and `UTL_APEX` to sort out those issues. They will stabilze the API and remove most dependencies to APEX from the the controller logic within the APEX schema. Unfortunately, this will make installation a bit more complex. Before installing the APEX application, you need to install those utilities. I could have included them in the download, but that would have meant copying code between git repositories with all related problems such as newer versions etc. I don't want to do that.
 
-So you need to start downloading [https://github.com/j.sieben/UTL_TEXT](`UTL_TEXT`) and [https://github.com/j.sieben/UTL_APEX](`UTL_APEX`) first. I'm sure you benefit from those libraries even outside the context of `PIT`. `UTL_TEXT` for instance contains a very powerful and flexible code generator you may want to look at.
+So you need to start downloading [`UTL_TEXT`](https://github.com/j.sieben/UTL_TEXT) and [`UTL_APEX`](https://github.com/j.sieben/UTL_APEX) first. I'm sure you benefit from those libraries even outside the context of `PIT`. `UTL_TEXT` for instance contains a very powerful and flexible code generator you may want to look at.
 
 ### Installing `UTL_TEXT`
 
