@@ -88,7 +88,7 @@ Let's look at the requirements that derive from these use cases a bit closer.
 
 From the list of use cases you can see that there is a requirement to be very flexible in regard to output channels. Storing messages in a table or printing them to the console simply is not enough. PIT is designed from ground up to support any number of output channels such as `PIT_CONSOLE`, `PIT_TABLE`, `PIT_MAIL`, `PIT_APEX`, `PIT_FILE` and others without the need to change the basic PIT code at all. Plus, all of these output module may be present but which one will be actually used to debugging is switched on and off using a context concept. This allows for the least possible logging activities and thus preserving performance.
 
-When you think of these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, PIT allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a list and send them once a day and ignore all other messages.
+When you think about these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, PIT allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a list and send them once a day and ignore all other messages.
 
 ### Context
 
@@ -154,10 +154,12 @@ PIT comes ready to use with a bunch of output modules. You may want to start you
 
 Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on `CLIENT_IDENTIFIER`, as this is the case in APEX environments, or to stick to the `USER` function to detect a specific user. Should this turn out to not be working for you (e.g. in a proxy user environment), you may provide a new `SESSION_ADAPTER` that implements your method of detecting the session identity. Which `SESSION_ADAPTER` is used is parameterizable.
 
+The session adapter serves for another purpose as well: If the calling environment is set to debug, as this is possible within APEX, the session adapter will switch `PIT` to debug modus as well. This way, `PIT` automatically follows the application in this regard.
+
 ## What's more?
-### Reusable Components
 
 ### Reusable Components
+
 PIT makes havy use of parameters. Parameters are organized in parameter groups of which PIT uses the parameter group `PIT`. These parameters are maintained by separate packages `PARAM` and `PARAM_ADMIN` to retrieve and maintain parameter values in a mandator aware way. Plus, the parameter package supports a concept called `REALM` that allows to store different parameter settings depending on the realm they are defined for. This allows for storing different parameter values per realm, say a list of URLs for development, testing and production use.
 
 As this package, along with a generic parameter table, is accessible outside PIT, the parameter package may be used to organize all of your application parameters as well. The administrative package once again allows you to create and maintain parameters and to export parameters by reating a group of parameter files with all parameters and their values in a file per parameter group.
@@ -175,3 +177,5 @@ Details to throwing and catching Exceptions can be found [here](https://github.c
 To learn more about the concept of *Context* and *Toggles* read [Context and Toggles](https://github.com/j-sieben/PIT/blob/master/Doc/handling_contexts.md)
 
 Some advice on how to keep execution speed high with PIT can be found [here](https://github.com/j-sieben/PIT/blob/master/Doc/performance.md)
+
+If you need to write your own output module, continue reading [Output Modules](https://github.com/j-sieben/PIT/blob/master/Doc/output_modules.md)
