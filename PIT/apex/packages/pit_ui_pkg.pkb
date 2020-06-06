@@ -140,6 +140,49 @@ as
   end copy_edit_toggle;
   
   
+  /** Method to check whether a name conforms to the internal naming standards
+   * @param  p_name       Name to check
+   * @param  p_item_name  Name of the page item containing P_NAME
+   * @param  p_region_id  Static ID of the region
+   * @return Harmonized name if possible, entered name in case of error
+   * @usage  Is used as a wrapper to reduce code on various validate methods
+   */
+  function check_name(
+    p_name in pit_util.ora_name_type,
+    p_item_name in pit_util.ora_name_type,
+    p_region_id in pit_util.ora_name_type)
+    return varchar2
+  as
+    l_harmonized_name pit_util.ora_name_type;
+  begin
+    pit.enter_detailed;
+    
+    utl_apex.assert_not_null(
+        p_condition => g_edit_pmg_row.pmg_name, 
+        p_page_item => p_item_name,
+        p_region_id => p_region_id);
+        
+    if p_name is not null then
+      l_harmonized_name :=  pit_util.harmonize_sql_name(p_name);
+    else
+      l_harmonized_name := p_name;
+    end if;
+    
+    pit.leave_detailed;
+    return l_harmonized_name;
+  exception
+    when msg.INVALID_SQL_NAME_ERR then
+      utl_apex.set_error(
+        p_page_item => p_item_name,
+        p_message => msg.INVALID_SQL_NAME,
+        p_msg_args => null,
+        p_region_id => p_region_id);
+        
+      pit.leave_detailed;
+      return p_name;
+  end check_name;
+  
+  
   /** Method to download a zip with export files for all selected groups of type P_TARGET
    * @param  p_target           Type of export items. One of PMS or PTI
    * @param  p_target_language  target language (Oracle name), to translate the messages to
@@ -385,57 +428,15 @@ as
   end allows_toggles;
   
   
-  function validate_edit_pms
-    return boolean
-  as
-  begin
-    pit.enter_mandatory;
-    
-    copy_edit_pms;
-    
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_name, 
-      p_page_item => 'PMS_NAME');
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_pmg_name, 
-      p_page_item => 'PMS_PMG_NAME');
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_text,  
-      p_page_item => 'PMS_TEXT');
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_pse_id,  
-      p_page_item => 'PMS_PSE_ID');
-    
-    pit.leave_mandatory;
-    return true;
-  end validate_edit_pms;
-  
-  
   function validate_edit_pmg
     return boolean
   as
-    C_REGION_ID constant utl_apex.ora_name_type := 'EDIT_PMG';
-    C_PMG_NAME constant utl_apex.ora_name_type := 'PMG_NAME';
   begin
     pit.enter_mandatory;
     
     copy_edit_pmg;
     
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pmg_row.pmg_name, 
-      p_page_item => C_PMG_NAME,
-      p_region_id => C_REGION_ID);
-    
-    begin
-      g_edit_pmg_row.pmg_name := pit_util.harmonize_sql_name(g_edit_pmg_row.pmg_name);
-    exception
-      when msg.INVALID_SQL_NAME_ERR then
-        utl_apex.set_error(
-          p_page_item => C_PMG_NAME,
-          p_message => msg.INVALID_SQL_NAME,
-          p_msg_args => null,
-          p_region_id => C_REGION_ID);
-    end;
+    g_edit_pmg_row.pmg_name := check_name(g_edit_pmg_row.pmg_name, 'PMG_NAME', 'EDIT_PMG');
     
     pit.leave_mandatory;
     return true;
@@ -461,6 +462,31 @@ as
     
     pit.leave_mandatory;
   end process_edit_pmg;
+  
+  
+  function validate_edit_pms
+    return boolean
+  as
+  begin
+    pit.enter_mandatory;
+    
+    copy_edit_pms;
+    
+    g_edit_pms_row.pms_name := check_name(g_edit_pms_row.pms_name, 'PMS_NAME', 'EDIT_PMS');
+    
+    utl_apex.assert_not_null(
+      p_condition => g_edit_pms_row.pms_pmg_name, 
+      p_page_item => 'PMS_PMG_NAME');
+    utl_apex.assert_not_null(
+      p_condition => g_edit_pms_row.pms_text,  
+      p_page_item => 'PMS_TEXT');
+    utl_apex.assert_not_null(
+      p_condition => g_edit_pms_row.pms_pse_id,  
+      p_page_item => 'PMS_PSE_ID');
+        
+    pit.leave_mandatory;
+    return true;
+  end validate_edit_pms;
   
   
   procedure process_edit_pms
@@ -490,32 +516,17 @@ as
     return boolean
   as
     C_REGION_ID constant utl_apex.ora_name_type := 'EDIT_PGR';
-    C_PGR_ID constant utl_apex.ora_name_type := 'PGR_ID';
   begin
     pit.enter_mandatory;
     
     copy_edit_pgr;
     
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pgr_row.pgr_id,
-      p_page_item => C_PGR_ID,
-      p_region_id => C_REGION_ID);
+    g_edit_pgr_row.pgr_id := check_name(g_edit_pgr_row.pgr_id, 'PGR_ID', C_REGION_ID);
     
     utl_apex.assert_not_null(
       p_condition => g_edit_pgr_row.pgr_description,
       p_page_item => 'PGR_DESCRIPTION',
       p_region_id => C_REGION_ID);
-    
-    begin
-      g_edit_pgr_row.pgr_id := pit_util.harmonize_sql_name(g_edit_pgr_row.pgr_id);
-    exception
-      when msg.INVALID_SQL_NAME_ERR then
-        utl_apex.set_error(
-          p_page_item => C_PGR_ID,
-          p_message => msg.INVALID_SQL_NAME,
-          p_msg_args => null,
-          p_region_id => C_REGION_ID);
-    end;
       
     pit.leave_mandatory;
     return true;
@@ -550,9 +561,7 @@ as
     
     copy_edit_par;
     
-    utl_apex.assert_not_null(
-      p_condition => g_edit_par_row.par_id,
-      p_page_item => 'PAR_ID');
+    g_edit_par_row.par_id := check_name(g_edit_par_row.par_id, 'PGR_ID', 'EDIT_PAR');
     
     utl_apex.assert_not_null(
       p_condition => g_edit_par_row.par_pgr_id,
@@ -709,6 +718,7 @@ as
     pit.enter_mandatory;
     
     -- copy_edit_module;
+    -- validation logic goes here. If it exists, uncomment COPY function
     
     pit.leave_mandatory;
     return true;
