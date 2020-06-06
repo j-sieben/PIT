@@ -12,7 +12,7 @@ As with any software that contains umlauts etc, it's advisable to store the file
 
 ## `PIT` privileges
 
-The script to install PIT requires administrative privileges, as it creates users shouldn't they already exist, grants system and object privileges and so forth. If your administrator needs to have an overview about the rights the PIT installation grants to the respective users, you will find them in file `set_grants.sql` in the installation folder plus in the modules folder for specific output modules. As an example, you will find a file named `user_grants.sql` in folder `modules/pit_file/scripts` which assigns execute rights on `utl_file` to the owner of `PIT`.
+The script to install `PIT` requires administrative privileges, as it creates users shouldn't they already exist, grants system and object privileges and so forth. If your administrator needs to have an overview about the rights the `PIT` installation grants to the respective users, you will find them in file `set_grants.sql` in the installation folder plus in the modules folder for specific output modules. As an example, you will find a file named `user_grants.sql` in folder `modules/pit_file/scripts` which assigns execute rights on `utl_file` to the owner of `PIT`.
 
 There were thoughts on providing a version of the `PIT` installation files that run under the privileges of the `PIT` owner. This is obviously possible only if all necessary database grants are present. I didn't examine this path until now. If somebody has done this, please let me know, I will then include a respective script.
 
@@ -24,7 +24,7 @@ Starting with Oracle version 12c, a new privilege `inherit privileges` must be o
 
 You may run the installation scripts directly from a command line or use the predefined batch scripts provided for Windows and Unix. The batch scripts set the environment accordingly and ask for the respective parameters interactively.
 
-I recommend installing PIT in a dedicated Utility owner and grant access to other schemas using the `pit_install_client` script. This way you don't multiply your codebase. The downside to this is a certain mixture of message definitions at one database user, as all messages are stored within table `PIT_MESSAGE` within that user. Plus, as you are allowed to map an Oracle server error number to a `exception`variable only once, you have to make sure that all mappings are dealt with in a way that makes them reusable for other schemas.
+I recommend installing `PIT` in a dedicated Utility owner and grant access to other schemas using the `pit_install_client` script. This way you don't multiply your codebase. The downside to this is a certain mixture of message definitions at one database user, as all messages are stored within table `PIT_MESSAGE` within that user. Plus, as you are allowed to map an Oracle server error number to a `exception`variable only once, you have to make sure that all mappings are dealt with in a way that makes them reusable for other schemas.
 
 Messages are delivered in my mother tongue, `GERMAN` and in `AMERICAN`. Messages are located in various folders under `message/<LANGUAGE>/create_messages.sql` and can be translated or changed as you like.
 
@@ -46,7 +46,7 @@ sqlplus <sys_credentials> as sysdba
 SQL> @pit_install PIT_OWNER AMERICAN
 ```
 
-This example will install PIT within user `PIT_OWNER` and set `AMERICAN` as the default language for messages. All parameters are case insensitive.
+This example will install `PIT` within user `PIT_OWNER` and set `AMERICAN` as the default language for messages. All parameters are case insensitive.
 
 
 ## Uninstall `PIT`
@@ -80,7 +80,7 @@ SQL> @pit_install_client PIT_OWNER PIT_USER
 ```
 
 ## Uninstalling `PIT` client
-To uninstall a PIT client, simply call `pit_uninstall_client.sql` with the `PIT` owner and the `PIT` client user name as parameters:
+To uninstall a `PIT` client, simply call `pit_uninstall_client.sql` with the `PIT` owner and the `PIT` client user name as parameters:
 
 ```
 rem switch to the directory where you copied the git repository to
@@ -92,7 +92,7 @@ SQL> @pit_uninstall_client PIT_OWNER PIT_USER
 
 ## Installing the supporting APEX application
 
-`PIT` ships with an APEX application that allows you to manage `PIT` messages and global application parameters. For some it is easier to set parameters and create messages graphically than to use PL/SQL API calls. To install the supporting APEX application, it is expected that you have an APEX workspace. The workspace schema is referenced as the `PIT_USER` lateron, as this should be a schema different to the owner of `PIT`. Basically, there is no difference in a PIT client user and the APEX schema user, as both are simply using `PIT`. By installing the maintenance application, the client grants and some additional grants required are set.
+`PIT` ships with an APEX application that allows you to manage `PIT` messages and global application parameters. For some it is easier to set parameters and create messages graphically than to use PL/SQL API calls. To install the supporting APEX application, it is expected that you have an APEX workspace. The workspace schema is referenced as the `PIT_USER` lateron, as this should be a schema different to the owner of `PIT`. Basically, there is no difference in a `PIT` client user and the APEX schema user, as both are simply using `PIT`. By installing the maintenance application, the client grants and some additional grants required are set.
 
 There has been a changed approach in regard to the APEX application maintaining `PIT`. It used to be a very basic application in earlier releases. To be honest, I didn't use it too much as I normaly work with the installation files directly. But I wanted to improve the application, partly because I plan to create a second Oracle Jet-based interface for it. I want to use this small application as a proof of concept for a broader architecture problem, namely writing database applications that are UI-independent.
 
@@ -133,9 +133,9 @@ sqlplus <sys_credentials> as sysdba
 SQL> @utl_apex_install PIT_USER AMERICAN
 ```
 
-That's it, you're now prepared to install the PIT application. Obviously, the steps above are required only once for all your APEX applications of that workspace that want to make use of those libraries.
+That's it, you're now prepared to install the `PIT` application. Obviously, the steps above are required only once for all your APEX applications of that workspace that want to make use of those libraries.
 
-### Install the PIT maintenace application
+### Install the `PIT` maintenace application
 
 Script `pit_install_apex.sql` will install the appliation itself. The script will make sure that the schema owner of this APEX workspace is granted all necessary object rights to maintain PIT. It expects five parameters:
 
