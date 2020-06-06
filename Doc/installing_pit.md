@@ -2,11 +2,11 @@
 
 ## Installing `PIT`
 
-PIT installation is split into three installation files to make it easy to adjust PIT to your specific needs:
+ `PIT` installation is split into three installation files to make it easy to adjust `PIT` to your specific needs:
 
-- Core installation file, installs the core PIT packages and data structures. The owner of PIT can work with PIT, no additional installation is required
-- Client installation file, grants all necessary rights to a adifferent user to allow for centralized deployment of PIT for many schemas
-- APEX installation file, installs the APEX application to maintain PIT. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems.
+- Core installation file, installs the core PIT packages and data structures. The owner of `PIT` can work with `PIT`, no additional installation is required
+- Client installation file, grants all necessary rights to a adifferent user to allow for centralized deployment of `PIT` for many schemas
+- APEX installation file, installs the APEX application to maintain `PIT`. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems.
 
 As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL\*Plus* to install `PIT`, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`. 
 
