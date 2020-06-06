@@ -58,3 +58,6 @@ What you should not do though is accessing data from SQL using the PL/SQL-API. T
 
 Within the view, there is an analytic function that does a Top-1 search against the data. This may sound like a bad idea, but it is not, because a typical accees to a set of rows of that table will result in as many rows as you have languages for that PTI. Over this amount of data the analytic function will perform a quick window sort and give you the best possible match. It would be faster to not do it, but I couldn't think of a faster way of doing it if you have to do it anyway. So if you need to do it, here's how to do it, if you don't need to do it, you probably don't need translatable items at all.
 
+## How to transalat translatable items
+
+To translate translatable items, there are several possible strategies. They are discussed [here](https://github.com/j-sieben/PIT/blob/master/Doc/translating_messages.md)
