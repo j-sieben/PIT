@@ -14,7 +14,7 @@ begin
       p_pms_text => :new.pms_text,
       p_pms_pml_name => :new.pms_pml_name);
   else
-    pit_admin.remove_message(
+    pit_admin.delete_message(
       p_pms_name => :old.pms_name,
       p_pms_pml_name => :old.pms_pml_name);
   end if;

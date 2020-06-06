@@ -1,4 +1,5 @@
 define apex_dir=apex/
+define apex_version_dir=&apex_dir.apex_&APEX_VERSION.
 
 prompt &h2.Installation in Schema &REMOTE_USER.
 prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
@@ -24,11 +25,17 @@ prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 alter session set current_schema=&REMOTE_USER.;
 
 prompt &h3.Create UI-VIEWS
-prompt &s1.View PIT_UI_ADMIN_MESSAGE_MAIN
-@&apex_dir.views/pit_ui_admin_message_main.vw
+prompt &s1.View APEX_UI_LIST_MENU
+@&apex_dir.views/apex_ui_list_menu.vw
 
-prompt &s1.View PIT_UI_ADMIN_PARAM_MAIN
-@&apex_dir.views/pit_ui_admin_param_main.vw
+prompt &s1.View PIT_UI_ADMIN_PMS
+@&apex_dir.views/pit_ui_admin_pms.vw
+
+prompt &s1.View PIT_UI_ADMIN_PAR
+@&apex_dir.views/pit_ui_admin_par.vw
+
+prompt &s1.View PIT_UI_EDIT_PGR
+@&apex_dir.views/pit_ui_edit_pgr.vw
 
 prompt &s1.View PIT_UI_ADMIN_PIT_CONTEXT
 @&apex_dir.views/pit_ui_admin_pit_context.vw
@@ -48,6 +55,21 @@ prompt &s1.View PIT_UI_EDIT_CONTEXT
 prompt &s1.View PIT_UI_EDIT_MESSAGE_TRANS
 @&apex_dir.views/pit_ui_edit_message_trans.vw
 
+prompt &s1.View PIT_UI_EDIT_MODULE
+@&apex_dir.views/pit_ui_edit_module.vw
+
+prompt &s1.View PIT_UI_EDIT_PAR
+@&apex_dir.views/pit_ui_edit_par.vw
+
+prompt &s1.View PIT_UI_EDIT_PGR
+@&apex_dir.views/pit_ui_edit_pgr.vw
+
+prompt &s1.View PIT_UI_EDIT_PMG
+@&apex_dir.views/pit_ui_edit_pmg.vw
+
+prompt &s1.View PIT_UI_EDIT_PMS
+@&apex_dir.views/pit_ui_edit_pms.vw
+
 prompt &s1.View PIT_UI_EDIT_TOGGLE
 @&apex_dir.views/pit_ui_edit_toggle.vw
 
@@ -60,8 +82,14 @@ prompt &s1.View PIT_UI_LIST_ACTIVE_FOR_PAGE
 prompt &s1.View PIT_UI_LOV_AVAILABLE_PACKAGES
 @&apex_dir.views/pit_ui_lov_available_packages.vw
 
+prompt &s1.View PIT_UI_LOV_BOOLEAN_TRI_STATE
+@&apex_dir.views/pit_ui_lov_boolean_tri_state.vw
+
 prompt &s1.View PIT_UI_LOV_CONTEXT
 @&apex_dir.views/pit_ui_lov_context.vw
+
+prompt &s1.View PIT_UI_LOV_MESSAGE_GROUP
+@&apex_dir.views/pit_ui_lov_message_group.vw
 
 prompt &s1.View PIT_UI_LOV_MESSAGE_LANGUAGE
 @&apex_dir.views/pit_ui_lov_message_language.vw
@@ -83,7 +111,7 @@ prompt &s1.View PIT_UI_LOV_TRACE_LEVEL
 
 
 prompt &h3.Create UI-MESSAGES
-@@&apex_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
+@@&apex_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT_UI.sql
 
 
 prompt &h3.Create UI-PACKAGES
@@ -96,11 +124,11 @@ prompt &s1.Package body PIT_UI_PKG
 show errors
 
 
-prompt &h3.Install APEX-application
+prompt &h3.Install APEX-application from folder apex_&APEX_VERSION.
 prompt &s1.Prepare installation
-@&apex_dir.apex/prepare_apex_import.sql
+@&apex_version_dir./prepare_apex_import.sql
 
 
 prompt &s1.Install application
-@&apex_dir.apex/application.sql
+@&apex_version_dir/application.sql
 

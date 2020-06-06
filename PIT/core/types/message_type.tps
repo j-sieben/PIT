@@ -22,5 +22,5 @@ create or replace type message_type force is object(
     p_user_name in varchar2,
     p_arg_list msg_args)
     return self as result)
-  final instantiable;
- /
+final instantiable;
+/

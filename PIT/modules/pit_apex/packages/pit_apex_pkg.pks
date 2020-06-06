@@ -2,7 +2,8 @@ create or replace package pit_apex_pkg
   authid definer
 as
   /* Implementation package for type PIT_APEX */
-  procedure set_apex_triggered_context;
+  function get_apex_triggered_context
+    return varchar2;
   
   procedure log(p_message in message_type);
   

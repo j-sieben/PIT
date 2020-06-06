@@ -86,89 +86,6 @@ as
   end get_bool;
 
 
-  /* Helper to store a new parameter value at the database
-   * %param p_par_id Name of the parameter
-   * %param p_pgr_id Name of the parameter group
-   * %param p_string_value CLOB parameter value
-   * %param p_xml_value XML parameter value
-   * %param p_integer_value Integer parameter value
-   * %param p_float_value Float parameter value
-   * %param p_date_value Date parameter value
-   * %param p_timestamp_value Timestamp with time zone parameter value
-   * %param p_boolean_value Boolean parameter value
-   * %param p_is_modifiable Flag indicating whether this parameter is modifiable by the end user
-   * %usage Is called from the Setter Methods to adjust a parameter value.
-   */
-  procedure set_parameter(
-    p_par_id in varchar2,
-    p_pgr_id in varchar2,
-    p_string_value in parameter_tab.par_string_value%type default null,
-    p_raw_value in parameter_tab.par_raw_value%type default null,
-    p_xml_value in xmltype default null,
-    p_integer_value in number default null,
-    p_float_value in number default null,
-    p_date_value in date default null,
-    p_timestamp_value in timestamp with time zone default null,
-    p_boolean_value in boolean default null,
-    p_is_modifiable in boolean)
-  as
-    l_boolean char(1);
-    l_stmt varchar2(4000);
-    l_valid integer;
-  begin
-    get_parameter_settings(p_par_id, p_pgr_id);
-    get_bool(p_boolean_value, l_boolean);
-    -- Validiere Parameter
-    if g_param.validation_string is not null then
-      -- Erzeuge Validierungsanweisung
-      l_stmt := g_param.validation_string;
-      l_stmt := replace(l_stmt, '#STRING#', p_string_value);
-      l_stmt := replace(l_stmt, '#DATE#', p_date_value);
-      l_stmt := replace(l_stmt, '#FLOAT#', p_float_value);
-      l_stmt := replace(l_stmt, '#INTEGER#', p_integer_value);
-      l_stmt := 'begin if ' || l_stmt
-             || ' then :x := 1; else :x := 0; end if; end;';
-      -- Validiere den Ausdruck
-      execute immediate l_stmt using out l_valid;
-      if l_valid != 1 then
-        -- Validierung fehlgeschlagen, Fehler erzeugen
-        raise_application_error(-20000, g_param.validation_message);
-      end if;
-    end if;
-    if g_param.is_existing and g_param.is_modifiable then
-      merge into parameter_local p
-      using (select p_par_id pal_id,
-                    p_pgr_id pal_pgr_id,
-                    p_string_value pal_string_value,
-                    p_raw_value pal_raw_value,
-                    p_xml_value pal_xml_value,
-                    p_integer_value pal_integer_value,
-                    p_float_value pal_float_value,
-                    p_date_value pal_date_value,
-                    p_timestamp_value pal_timestamp_value,
-                    l_boolean pal_boolean_value
-               from dual) v
-         on (p.pal_id = v.pal_id
-         and p.pal_pgr_id = v.pal_pgr_id)
-       when matched then update set
-            p.pal_string_value = v.pal_string_value,
-            p.pal_raw_value = v.pal_raw_value,
-            p.pal_xml_value = v.pal_xml_value,
-            p.pal_integer_value = v.pal_integer_value,
-            p.pal_float_value = v.pal_float_value,
-            p.pal_date_value = v.pal_date_value,
-            p.pal_timestamp_value = v.pal_timestamp_value,
-            p.pal_boolean_value = v.pal_boolean_value
-       when not matched then insert
-            (pal_id, pal_pgr_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
-             pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
-            values
-            (v.pal_id, v.pal_pgr_id, v.pal_string_value, v.pal_raw_value, v.pal_xml_value, v.pal_integer_value, 
-             v.pal_float_value, v.pal_date_value, v.pal_timestamp_value, v.pal_boolean_value);
-    end if;
-  end set_parameter;
-
-
   /* Helper method to read a row of parameter into a record
    * %param p_par_id Name of the parameter
    * %param p_pgr_id Name of the parameter group
@@ -192,144 +109,193 @@ as
 
 
   /* SETTER */
+  procedure set_multiple(
+    p_par_id in varchar2,
+    p_pgr_id in varchar2,
+    p_par_string_value in parameter_tab.par_string_value%type default null,
+    p_par_raw_value in parameter_tab.par_raw_value%type default null,
+    p_par_xml_value in xmltype default null,
+    p_par_integer_value in number default null,
+    p_par_float_value in number default null,
+    p_par_date_value in date default null,
+    p_par_timestamp_value in timestamp with time zone default null,
+    p_par_boolean_value in boolean default null)
+  as
+    l_boolean char(1);
+    l_stmt varchar2(4000);
+    l_valid integer;
+  begin
+    get_parameter_settings(p_par_id, p_pgr_id);
+    get_bool(p_par_boolean_value, l_boolean);
+    -- Validiere Parameter
+    if g_param.validation_string is not null then
+      -- Erzeuge Validierungsanweisung
+      l_stmt := g_param.validation_string;
+      l_stmt := replace(l_stmt, '#STRING#', p_par_string_value);
+      l_stmt := replace(l_stmt, '#DATE#', p_par_date_value);
+      l_stmt := replace(l_stmt, '#FLOAT#', p_par_float_value);
+      l_stmt := replace(l_stmt, '#INTEGER#', p_par_integer_value);
+      l_stmt := 'begin if ' || l_stmt
+             || ' then :x := 1; else :x := 0; end if; end;';
+      -- Validiere den Ausdruck
+      execute immediate l_stmt using out l_valid;
+      if l_valid != 1 then
+        -- Validierung fehlgeschlagen, Fehler erzeugen
+        raise_application_error(-20000, g_param.validation_message);
+      end if;
+    end if;
+    if g_param.is_existing and g_param.is_modifiable then
+      merge into parameter_local p
+      using (select p_par_id pal_id,
+                    p_pgr_id pal_pgr_id,
+                    p_par_string_value pal_string_value,
+                    p_par_raw_value pal_raw_value,
+                    p_par_xml_value pal_xml_value,
+                    p_par_integer_value pal_integer_value,
+                    p_par_float_value pal_float_value,
+                    p_par_date_value pal_date_value,
+                    p_par_timestamp_value pal_timestamp_value,
+                    l_boolean pal_boolean_value
+               from dual) v
+         on (p.pal_id = v.pal_id
+         and p.pal_pgr_id = v.pal_pgr_id)
+       when matched then update set
+            p.pal_string_value = v.pal_string_value,
+            p.pal_raw_value = v.pal_raw_value,
+            p.pal_xml_value = v.pal_xml_value,
+            p.pal_integer_value = v.pal_integer_value,
+            p.pal_float_value = v.pal_float_value,
+            p.pal_date_value = v.pal_date_value,
+            p.pal_timestamp_value = v.pal_timestamp_value,
+            p.pal_boolean_value = v.pal_boolean_value
+       when not matched then insert
+            (pal_id, pal_pgr_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
+             pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
+            values
+            (v.pal_id, v.pal_pgr_id, v.pal_string_value, v.pal_raw_value, v.pal_xml_value, v.pal_integer_value, 
+             v.pal_float_value, v.pal_date_value, v.pal_timestamp_value, v.pal_boolean_value);
+    end if;
+  end set_multiple;
+  
+  
   procedure set_string(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in varchar2,
-    p_is_modifiable in boolean default false)
+    p_par_value in varchar2)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_string_value => to_clob(p_par_value),
-      p_is_modifiable => p_is_modifiable);
+      p_par_string_value => to_clob(p_par_value));
   end set_string;
   
   procedure set_clob(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_string_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_string_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_string_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_string_value => p_par_value);
   end set_clob;
   
   procedure set_raw(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in raw,
-    p_is_modifiable in boolean default false)
+    p_par_value in raw)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_raw_value => to_blob(p_par_value),
-      p_is_modifiable => p_is_modifiable);
+      p_par_raw_value => to_blob(p_par_value));
   end set_raw;
   
   procedure set_blob(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_raw_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_raw_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_raw_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_raw_value => p_par_value);
   end set_blob;
 
   procedure set_xml(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_xml_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_xml_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_xml_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_xml_value => p_par_value);
   end set_xml;
 
   procedure set_float(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_float_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_float_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_float_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_float_value => p_par_value);
   end set_float;
 
   procedure set_integer(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_integer_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_integer_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_integer_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_integer_value => p_par_value);
   end set_integer;
 
   procedure set_date(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_date_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_date_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_date_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_date_value => p_par_value);
   end set_date;
 
   procedure set_timestamp(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_tab.par_timestamp_value%type,
-    p_is_modifiable in boolean default false)
+    p_par_value in parameter_tab.par_timestamp_value%type)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_timestamp_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_timestamp_value => p_par_value);
   end set_timestamp;
 
   procedure set_boolean(
     p_par_id in parameter_tab.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in boolean,
-    p_is_modifiable in boolean default false)
+    p_par_value in boolean)
   as
   begin
-    set_parameter(
+    set_multiple(
       p_par_id => p_par_id,
       p_pgr_id => p_pgr_id,
-      p_boolean_value => p_par_value,
-      p_is_modifiable => p_is_modifiable);
+      p_par_boolean_value => p_par_value);
   end set_boolean;
 
 
@@ -433,6 +399,87 @@ as
     get_parameter(p_par_id, p_pgr_id);
     return g_parameter_rec.par_boolean_value = c_true;
   end get_boolean;
+  
+  
+  procedure reset_parameter(
+    p_par_id in parameter_tab.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+  as
+  begin
+    delete from parameter_local
+     where pal_pgr_id = p_pgr_id
+       and pal_id = p_par_id;
+  end reset_parameter;
+  
+  
+  function get_parameters
+    return clob
+  as
+    cursor local_param_cur is
+      select pal_id, pal_pgr_id, pal_string_value, 
+             l.pal_xml_value.getClobVal() pal_xml_value, pal_integer_value, 
+             to_char(pal_float_value, 'fm9999999999999999.99999999999999') pal_float_value,
+             to_char(pal_date_value, 'yyyy-mm-dd') pal_date_value,
+             to_char(pal_timestamp_value, 'yyyy-mm-dd hh24:mi:ss') pal_timestamp_value,
+             case pal_boolean_value when C_TRUE then 'true' when C_FALSE then 'false' else 'null' end pal_boolean_value
+        from parameter_local l;
+    C_START_TEMPLATE constant varchar2(100) := q'^begin
+^';
+    C_PARAM_TEMPLATE constant varchar2(100) := q'^
+  param.set_multiple(
+    p_par_id => '#PAL_ID#'
+   ,p_pgr_id => '#PAL_PGR_ID#'#CLAUSES#);
+^';
+    C_STRING_TEMPLATE constant varchar2(100) := q'~   ,p_par_string_value => q'^#STRING#^'~';
+    C_XML_TEMPLATE constant varchar2(100) := q'~   ,p_par_xml_value => xmltype(q'^#XML#^')~';
+    C_INTEGER_TEMPLATE constant varchar2(100) := q'~   ,p_par_integer_value => #INTEGER#~';
+    C_FLOAT_TEMPLATE constant varchar2(100) := q'~   ,p_par_float_value => #FLOAT#~';
+    C_DATE_TEMPLATE constant varchar2(100) := q'~   ,p_par_date_value => date '#DATE#'~';
+    C_TIMESTAMP_TEMPLATE constant varchar2(100) := q'~   ,p_par_timestamp_value => timestamp '#TIMESTAMP#'~';
+    C_BOOLEAN_TEMPLATE constant varchar2(100) := q'~   ,p_par_boolean_value => #BOOLEAN#~';
+    C_END_TEMPLATE constant varchar2(100) := q'^    
+  commit;
+end;
+/^';
+    l_script clob;
+    l_chunk clob;
+    l_clause varchar2(32767);
+    
+    procedure calc_clause(
+      p_clause in out nocopy varchar2,
+      p_value in varchar2,
+      p_pattern in varchar2,
+      p_template in varchar2)
+    as
+    begin
+      if p_value is not null then
+        p_clause := p_clause || chr(13) || replace(p_template, p_pattern, p_value);
+      end if;
+    end calc_clause;
+  begin
+    
+    l_script := C_START_TEMPLATE;
+    
+    for par in local_param_cur loop
+      calc_clause(l_clause, par.pal_string_value, '#STRING#', C_STRING_TEMPLATE);
+      calc_clause(l_clause, par.pal_xml_value, '#XML#', C_XML_TEMPLATE);
+      calc_clause(l_clause, par.pal_integer_value, '#INTEGER#', C_INTEGER_TEMPLATE);
+      calc_clause(l_clause, par.pal_float_value, '#FLOAT#', C_FLOAT_TEMPLATE);
+      calc_clause(l_clause, par.pal_date_value, '#DATE#', C_DATE_TEMPLATE);
+      calc_clause(l_clause, par.pal_timestamp_value, '#TIMESTAMP#', C_TIMESTAMP_TEMPLATE);
+      calc_clause(l_clause, par.pal_boolean_value, '#BOOLEAN#', C_BOOLEAN_TEMPLATE);
+      l_chunk := replace(replace(replace(c_param_template,
+                   '#PAL_ID#', par.pal_id),
+                   '#PAL_PGR_ID#', par.pal_pgr_id),
+                   '#CLAUSES#', l_clause);
+      l_clause := null;
+      dbms_lob.append(l_script, l_chunk);
+      
+    end loop;
+    
+    dbms_lob.append(l_script, C_END_TEMPLATE);
+    return l_script;
+  end get_parameters;
   
 end param;
 /

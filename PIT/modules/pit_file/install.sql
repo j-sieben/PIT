@@ -28,7 +28,7 @@ prompt &s1.Create package body PIT_FILE_PKG
 show errors
 
 prompt &s1.Create PIT_FILE parameters
-@&file_dir.scripts/create_parameters.sql
+@&file_dir.scripts/ParameterGroup_PIT.sql
 
 prompt ### CAVE ###
 prompt Please remember to create a directory called PIT_FILE_DIR before use.

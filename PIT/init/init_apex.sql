@@ -7,7 +7,7 @@ set pages 9999
 whenever sqlerror exit
 clear screen
 
-set termout off
+set termout on
 col sys_user new_val SYS_USER format a30
 col install_user new_val INSTALL_USER format a30
 col remote_user new_val REMOTE_USER format a30
@@ -15,6 +15,7 @@ col default_language new_val DEFAULT_LANGUAGE format a30
 col apex_ws new_val APEX_WS format a30
 col apex_alias new_val APEX_ALIAS format a30
 col app_id new_val APP_ID format a30
+col apex_version new_val APEX_VERSION format a30
 
 
 select owner install_user,
@@ -30,7 +31,9 @@ select workspace apex_ws,
  where workspace = upper('&2.');
  
 select user sys_user,
-       value default_language
+       value default_language,
+       case when &REMOTE_USER..utl_apex.get_apex_version between 5 and 18.5 then '05_1'
+            else '19_1' end apex_version
   from V$NLS_VALID_VALUES
  where parameter = 'LANGUAGE'
    and value = upper('&5.');

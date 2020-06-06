@@ -5,17 +5,28 @@ as
   
   
   /* Procedure to change the definition of a parameter group
-   * %param p_pgr_id Name of the parameter group
-   * %param p_pgr_description Longtext description of the parameter group
-   * %param p_pgr_is_modifiable Flag indicating whether parameters within this group
-   *        are allowed to be modifiable by the end user
-   * %usage Is called by the developer to maintain the settings of a parameter group.
-   *        May be used to create a new parameter group as well.
+   * %param  p_pgr_id             Name of the parameter group
+   * %param  p_pgr_description    Longtext description of the parameter group
+   * %param  p_pgr_is_modifiable  Flag indicating whether parameters within this group
+   *         are allowed to be modifiable by the end user
+   * %usage  Is called by the developer to maintain the settings of a parameter group.
+   *         May be used to create a new parameter group as well.
    */
   procedure edit_parameter_group(
     p_pgr_id in parameter_group.pgr_id%type,
     p_pgr_description in parameter_group.pgr_description%type,
     p_pgr_is_modifiable in boolean default true);
+    
+  
+  /** Procedure to delete a parameter group
+   * %param  p_pgr_id  Name of the parameter group
+   * %param [p_force]  Optional flag to indicate whether all referencing parameters should be deleted (TRUE)
+   *                   or not (FALSE, default)
+   * %usage  Is called by the developer to delete a parameter group.
+   */
+  procedure delete_parameter_group(
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_force in boolean default false);
 	
   
   /* Procedure to edit the definition of a parameter type.

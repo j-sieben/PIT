@@ -12,6 +12,8 @@ as
 
   /* CONSTANTS AND VARIABLES */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
+  C_APEX_CONTEXT constant pit_util.ora_name_type := 'CONTEXT_APEX';
+  C_DEFAULT_CONTEXT constant pit_util.ora_name_type := 'CONTEXT_DEFAULT';
   C_FIRE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_FIRE_THRESHOLD';
   C_TRG_FIRE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_TRG_FIRE_THRESHOLD';
   C_TRG_TRACE_THRESHOLD constant pit_util.ora_name_type := 'PIT_APEX_TRG_TRACE_THRESHOLD';
@@ -60,7 +62,7 @@ as
   as
     l_position binary_integer;
   begin
-    l_position := round((p_position - 0.25)/2);
+    l_position := round((p_position)/2);
     if p_call_stack.params.exists(l_position) then
       if mod(p_position, 2) = 1 then
         return p_call_stack.params(l_position).p_param;
@@ -175,25 +177,22 @@ as
   procedure log(
     p_message in message_type)
   as
-    error_count binary_integer;
   begin
     if valid_environment then
       -- Entscheidungsbaum zur Ausgabe der einzelnen Schweregrade
       case p_message.severity
       when pit.level_all then
-        debug_message(p_message);
+        apex_debug.trace(p_message.message_text);
       when pit.level_debug then
-        debug_message(p_message);
+        apex_debug.info(p_message.message_text);
       when pit.level_info then
-        debug_message(p_message);
+        apex_debug.info(p_message.message_text);
       when pit.level_warn then
-        debug_message(p_message);
-        apex_application.g_notification := p_message.message_text;
-        apex_application.g_print_success_message := null;
+        apex_debug.warn(p_message.message_text);
       when pit.level_error then
         log_error(p_message);
       when pit.level_fatal then
-        debug_message(p_message);
+        apex_debug.warn(p_message.message_text);
         log_error(p_message);
         apex_application.stop_apex_engine;
       else
@@ -279,25 +278,48 @@ as
   as
     l_message message_type;
   begin
-    null;
+    if valid_environment then
+      apex_debug.enter(
+        p_routine_name => '< ' || p_call_stack.module_name || '.' || p_call_stack.method_name,
+        p_name01 => get_msg_param(p_call_stack, 1),
+        p_value01 => get_msg_param(p_call_stack, 2),
+        p_name02 => get_msg_param(p_call_stack, 3),
+        p_value02 => get_msg_param(p_call_stack, 4),
+        p_name03 => get_msg_param(p_call_stack, 5),
+        p_value03 => get_msg_param(p_call_stack, 6),
+        p_name04 => get_msg_param(p_call_stack, 7),
+        p_value04 => get_msg_param(p_call_stack, 8),
+        p_name05 => get_msg_param(p_call_stack, 9),
+        p_value05 => get_msg_param(p_call_stack, 10),
+        p_name06 => get_msg_param(p_call_stack, 11),
+        p_value06 => get_msg_param(p_call_stack, 12),
+        p_name07 => get_msg_param(p_call_stack, 13),
+        p_value07 => get_msg_param(p_call_stack, 14),
+        p_name08 => get_msg_param(p_call_stack, 15),
+        p_value08 => get_msg_param(p_call_stack, 16),
+        p_name09 => get_msg_param(p_call_stack, 17),
+        p_value09 => get_msg_param(p_call_stack, 18),
+        p_name10 => get_msg_param(p_call_stack, 19),
+        p_value10 => get_msg_param(p_call_stack, 20));
+      debug_message(l_message);
+    end if;
   end leave;
 
 
-  procedure set_apex_triggered_context
+  function get_apex_triggered_context
+    return varchar2
   as
+    l_context pit_util.ora_name_type;
   begin
     if valid_environment then
       if apex_application.g_debug then
-        pit.set_context(
-          p_log_level => g_apex_triggered_context.log_level,
-          p_trace_level => g_apex_triggered_context.trace_level,
-          p_trace_timing => g_apex_triggered_context.trace_timing,
-          p_module_list => g_apex_triggered_context.log_modules);
+        l_context := C_APEX_CONTEXT;
       else
-        pit.reset_context;
+        l_context := C_DEFAULT_CONTEXT;
       end if;
     end if;
-  end set_apex_triggered_context;
+    return l_context;
+  end get_apex_triggered_context;
 
 
   procedure initialize_module(

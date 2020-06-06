@@ -6,8 +6,9 @@ create table pit_translatable_item(
    pti_display_name varchar2(200 char),
    pti_description clob,
    pti_uid &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_id else null end) virtual,
+   pti_upmg &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_pmg_name else null end) virtual,
    constraint pit_translatable_item_pk primary key (pti_id, pti_pmg_name, pti_pml_name),
-   constraint pti_uid_u unique (pti_uid, pti_pmg_name),
+   constraint pti_uid_u unique (pti_uid, pti_upmg),
    constraint pti_pml_name_fk foreign key (pti_pml_name)
       references pit_message_language(pml_name) on delete cascade,
    constraint pti_pmg_name_fk foreign key (pti_pmg_name)
@@ -25,6 +26,7 @@ comment on column pit_translatable_item.pti_name is 'Name. Optionally contains r
 comment on column pit_translatable_item.pti_display_name is 'Display name. Used for UI display purposes. Optionally contains replacement anchors';
 comment on column pit_translatable_item.pti_description is 'Help text or further description. No replacement anchors allowed';
 comment on column pit_translatable_item.pti_uid is 'Virtual column as a surrogate primary key for references';
+comment on column pit_translatable_item.pti_upmg is 'Virtual column as a surrogate primary key for references';
 
 create or replace trigger ard_pit_translatable_item
 after delete on pit_translatable_item

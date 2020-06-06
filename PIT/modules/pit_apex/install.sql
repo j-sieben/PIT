@@ -13,15 +13,15 @@ prompt &s1.Create type PIT_APEX
 @&apex_dir.types/pit_apex.tps
 show errors
 
-prompt &s1.Create type apex_adapter
-@&apex_dir.types/apex_adapter.tps
+prompt &s1.Create type pit_apex_adapter
+@&apex_dir.types/pit_apex_adapter.tps
 show errors
 
 prompt &s1.Merge messages for PIT_APEX
 @&msg_dir/create_messages.sql
 
 prompt &s1.Create parameter for PIT_APEX
-@&apex_dir.scripts/create_parameters.sql
+@&apex_dir.scripts/ParameterGroup_PIT.sql
 
 prompt &s1.Create package PIT_APEX_PKG
 @&apex_dir.packages/pit_apex_pkg.pks
@@ -31,8 +31,8 @@ prompt &s1.Create type body PIT_APEX
 @&apex_dir.types/pit_apex.tpb
 show errors
 
-prompt &s1.Create type body apex_adapter
-@&apex_dir.types/apex_adapter.tpb
+prompt &s1.Create type body pit_apex_adapter
+@&apex_dir.types/pit_apex_adapter.tpb
 show errors
 
 prompt &s1.Create package body PIT_APEX_PKG

@@ -1,7 +1,8 @@
 create or replace force view pit_ui_lov_available_packages as
-select owner || '.' || object_name d, object_name r
-  from all_objects
-  join all_users on owner = username
- where object_type = 'PACKAGE'
-   and oracle_maintained = 'N'
-   and username not in ('APEX_LISTENER', 'APEX_REST_PUBLIC_USER');
+select o.owner || '.' || o.object_name d, o.object_name r
+  from all_objects o
+  join all_users u 
+    on o.owner = u.username
+ where o.object_type = 'PACKAGE'
+   and u.oracle_maintained = 'N'
+   and u.username not in ('APEX_LISTENER', 'APEX_REST_PUBLIC_USER');

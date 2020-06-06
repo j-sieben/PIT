@@ -96,8 +96,8 @@ prompt &s1.Create type CALL_STACK_TYPE
 @&core_dir.types/call_stack_type.tps
 show errors
 
-prompt &s1.Create type DEFAULT_ADAPTER
-@&core_dir.types/default_adapter.tps
+prompt &s1.Create type PIT_DEFAULT_ADAPTER
+@&core_dir.types/pit_default_adapter.tps
 show errors
 
 prompt &s1.Create type PIT_CONTEXT
@@ -137,10 +137,11 @@ prompt &s1.Create package Body PIT_ADMIN
 show errors
 
 prompt &s1.Create default parameters
-@&core_dir.scripts/create_parameters.sql
+@&core_dir.scripts/ParameterGroup_PIT.sql
+@&core_dir.scripts/ParameterGroup_CONTEXT.sql
 
 prompt &s1.Create internal messages
-@&core_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
+@&core_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql
 
 prompt &h2.Create CORE package declarations
 prompt &s1.Create package MSG
@@ -167,8 +168,8 @@ prompt &s1.Create type body CALL_STACK_TYPE
 @&core_dir.types/call_stack_type.tpb
 show errors
 
-prompt &s1.Create type body DEFAULT_ADAPTER
-@&core_dir.types/default_adapter.tpb
+prompt &s1.Create type body PIT_DEFAULT_ADAPTER
+@&core_dir.types/pit_default_adapter.tpb
 show errors
 
 prompt &s1.Create type body PIT_MODULE

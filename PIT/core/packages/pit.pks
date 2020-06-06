@@ -436,7 +436,7 @@ as
    *                          severity of the requested message be higher than this level, it
    *                          won't get logged. If null, the message is logged if it's severity
    *                          is higher than the actual log level defined.
-   * @param  p_log_modules    Optional list of colon-separated log modules to be
+   * @param  p_module_list    Optional list of colon-separated log modules to be
    *                          used for this log. If provided, the log message is broadcasted to 
    *                          this list of modules only. It won't affect the settings of the actual
    *                          log context. If null, the settings of the log context apply
@@ -446,7 +446,7 @@ as
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
     p_log_threshold in number default null,
-    p_log_modules in varchar2 default null);
+    p_module_list in varchar2 default null);
   
   
   /** Retrieves the text of a given message and msg_args list
@@ -720,7 +720,13 @@ as
   
     
   /****************************** INTERNATIONALIZATION *********************************/
-
+  /** Getter to read the default language PIT is installed at
+   * @return Oracle language name of the default language
+   */
+  function get_default_language
+    return varchar2;
+    
+    
   /** Retrieves a PIT translatable item (PTI) name in the session language.
    * %usage  This API is aimed towards PL/SQL code that needs direct access to the
    *         respective items without the need to declare a record variable.

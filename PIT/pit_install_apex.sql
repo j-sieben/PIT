@@ -18,16 +18,16 @@
 
 @init/init_apex.sql &1. &2. &3. &4. &5.
 
+prompt &h1.Checking installation prerequisites
+@tools/check_apex_prerequisites.sql
+
+
 prompt &h1.Set installation grants
 @set_apex_grants.sql
 
 prompt
 prompt &section.
 prompt &h1.Installing APEX application
--- Make sure all necessary grants to access PIT as a client are existing
--- (More grants will be created later)
-@core/install_client.sql
-@core/parameters/install_client.sql
 
 @apex/install.sql
 

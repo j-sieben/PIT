@@ -332,6 +332,7 @@ as
     pit_pkg.enter(
        g_action, g_module, p_params, p_trace_level, p_client_info);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end enter;
@@ -418,7 +419,7 @@ as
     p_arg_list in msg_args default null,
     p_affected_id in varchar2 default null,
     p_log_threshold in number default null,
-    p_log_modules in varchar2 default null)
+    p_module_list in varchar2 default null)
   as
   begin
     pit_pkg.notify(
@@ -426,7 +427,7 @@ as
       p_affected_id => p_affected_id,
       p_arg_list => p_arg_list,
       p_log_threshold => p_log_threshold,
-      p_log_modules => p_log_modules);
+      p_module_list => p_module_list);
   end notify;
   
   
@@ -469,7 +470,7 @@ as
     p_error_code in varchar2 default null)
   as
   begin
-    if not p_condition  or p_condition is null then
+    if not p_condition or p_condition is null then
       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
     end if;
   end assert;
@@ -643,6 +644,13 @@ as
   end assert_not_exists;
   
   /****************************** INTERNATIONALIZATION *********************************/
+  function get_default_language
+    return varchar2
+  as
+  begin
+    return pit_util.C_DEFAULT_LANGUAGE;
+  end get_default_language;
+  
   
   function get_trans_item_name(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
@@ -786,7 +794,7 @@ as
     pipelined
   as
     cursor modules is
-      select pit_module_meta(module_name, module_available, module_active) module
+      select pit_module_meta(module_name, module_available, module_active, module_stack) module
         from table(pit_pkg.get_modules);
   begin
     for m in modules loop
@@ -805,7 +813,7 @@ as
   as
     cursor modules is
       select column_value module
-        from table(pit_pkg.get_active_modules);
+        from table(pit_pkg.get_available_modules);
   begin
     for m in modules loop
       pipe row (m.module);

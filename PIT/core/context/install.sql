@@ -8,7 +8,7 @@ prompt &h3.Remove existing installation
 @&ctx_dir.clean_up.sql
 
 prompt &h3.Installing context parameters
-@&ctx_dir.create_parameters.sql
+@&ctx_dir.ParameterGroup_CONTEXT.sql
 
 prompt &h3.Create type declarations
 prompt &s1.Create type ARGS

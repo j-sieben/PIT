@@ -10,10 +10,13 @@ prompt &h2.Grant user rights to &INSTALL_USER.
 @&mail_dir.scripts/user_grants.sql
 
 prompt &h2.Create types and packages for PIT_MAIL
+
 prompt &s1.Create PIT_MAIL parameters
-@&mail_dir.scripts/create_parameters.sql
+@&mail_dir.scripts/ParameterGroup_PIT.sql
+
 prompt &s1.Create PIT_MAIL messages
-@&mail_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
+@&mail_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT_MAIL.sql
+
 prompt &s1.Create type PIT_mail
 @&mail_dir.types/pit_mail.tps
 show errors

@@ -1,7 +1,6 @@
 create or replace package body param_admin
 as
   
-  c_pkg constant &ORA_NAME_TYPE. := $$PLSQL_UNIT;
   c_true constant &FLAG_TYPE. := &C_TRUE.;
   c_false constant &FLAG_TYPE. := &C_FALSE.;
 
@@ -40,6 +39,22 @@ as
           values
           (v.pgr_id, v.pgr_description, v.pgr_is_modifiable);
   end edit_parameter_group;
+  
+  
+  procedure delete_parameter_group(
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_force in boolean default false)
+  as
+  begin
+    if p_force then
+      delete from parameter_local
+       where pal_pgr_id = p_pgr_id;
+      delete from parameter_tab
+       where par_pgr_id = p_pgr_id;
+    end if;
+    delete from parameter_group
+     where pgr_id = p_pgr_id;
+  end delete_parameter_group;
   
 
   procedure edit_parameter_type(
@@ -141,17 +156,26 @@ as
     return clob
   as
     cursor param_cur(p_pgr_id in varchar2) is
-      select g.pgr_id, g.pgr_description, g.pgr_is_modifiable group_modifiable, 
-             p.par_id,
-             p.par_description,
-             p.par_string_value,
+      select pgr_id, pgr_description, 
+             case
+               when pgr_is_modifiable = C_TRUE then 'true'
+               when pgr_is_modifiable = C_FALSE then 'false'
+               else 'null' end pgr_is_modifiable, 
+             par_id, par_description,
+             par_string_value,
              p.par_xml_value.getclobval() par_xml_value,
              to_char(par_integer_value) par_integer_value,
              replace(to_char(par_float_value), ',', '.') par_float_value,
              to_char(par_date_value, 'yyyy-mm-dd hh24:mi:ss') par_date_value,
              to_char(par_timestamp_value, 'yyyy-mm-dd hh24:mi:ssxff tzr') par_timestamp_value,
-             par_boolean_value,
-             p.par_is_modifiable param_modifiable,
+             case 
+               when par_boolean_value = C_TRUE then 'true' 
+               when par_boolean_value = C_FALSE then 'false'
+               else 'null' end par_boolean_value,
+             case
+               when par_is_modifiable = C_TRUE then 'true'
+               when par_is_modifiable = C_FALSE then 'false'
+               else 'null' end par_is_modifiable,
              par_pat_id,
              par_validation_string,
              par_validation_message,
@@ -173,9 +197,9 @@ end;
 /~';
     c_group_template constant varchar2(32767) := q'~
   param_admin.edit_parameter_group(
-    p_par_pgr_id => '#PARAM_GROUP#',
+    p_pgr_id => '#PARAM_GROUP#',
     p_pgr_description => '#pgr_description#',
-    p_par_is_modifiable => '#GROUP_MODIFIABLE#'
+    p_pgr_is_modifiable => #GROUP_MODIFIABLE#
   );
 ~';
     c_param_template constant varchar2(32767) := q'~
@@ -191,8 +215,8 @@ end;
     c_float_template constant varchar2(100) := q'~   ,p_par_float_value => #FLOAT#~';
     c_date_template constant varchar2(100) := q'~   ,p_par_date_value => date '#DATE#'~';
     c_timestamp_template constant varchar2(100) := q'~   ,p_par_timestamp_value => timestamp '#TIMESTAMP#'~';
-    c_boolean_template constant varchar2(100) := q'~   ,p_par_boolean_value => '#BOOLEAN#'~';
-    c_modifiable_template constant varchar2(100) := q'~   ,p_par_is_modifiable => '#MODIFIABLE#'~';
+    c_boolean_template constant varchar2(100) := q'~   ,p_par_boolean_value => #BOOLEAN#~';
+    c_modifiable_template constant varchar2(100) := q'~   ,p_par_is_modifiable => #MODIFIABLE#~';
     c_param_type_template constant varchar2(100) := q'~   ,p_par_pat_id => '#PARAM_TYPE#'~';
     c_validataion_template constant varchar2(100) := q'~   ,p_par_validation_string => q'^#VALIDATION#^'~';
     c_val_msg_template constant varchar2(100) := q'~   ,p_par_validation_message => q'^#VAL_MSG#^'~';
@@ -216,7 +240,7 @@ end;
         l_chunk := replace(replace(replace(c_group_template,
                      '#PARAM_GROUP#', par.pgr_id),
                      '#pgr_description#', par.pgr_description),
-                     '#GROUP_MODIFIABLE#', par.group_modifiable);
+                     '#GROUP_MODIFIABLE#', par.pgr_is_modifiable);
         dbms_lob.append(l_script, l_chunk);
       end if;
       calc_clause(l_clause, par.par_string_value, '#STRING#', c_string_template);
@@ -226,7 +250,7 @@ end;
       calc_clause(l_clause, par.par_date_value, '#DATE#', c_date_template);
       calc_clause(l_clause, par.par_timestamp_value, '#TIMESTAMP#', c_timestamp_template);
       calc_clause(l_clause, par.par_boolean_value, '#BOOLEAN#', c_boolean_template);
-      calc_clause(l_clause, par.param_modifiable, '#MODIFIABLE#', c_modifiable_template);
+      calc_clause(l_clause, par.par_is_modifiable, '#MODIFIABLE#', c_modifiable_template);
       calc_clause(l_clause, par.par_pat_id, '#PARAM_TYPE#', c_param_type_template);
       calc_clause(l_clause, par.par_validation_string, '#VALIDATION#', c_validataion_template);
       calc_clause(l_clause, par.par_validation_message, '#VAL_MSG#', c_val_msg_template);

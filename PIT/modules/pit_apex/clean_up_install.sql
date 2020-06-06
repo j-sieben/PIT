@@ -3,7 +3,7 @@ declare
           select object_name name, object_type type
             from all_objects
            where object_name in (
-                 'PIT_APEX', 'APEX_ADAPTER', -- Typen
+                 'PIT_APEX', 'PIT_APEX_ADAPTER', -- Typen
                  'PIT_APEX_PKG', -- Packages
                  '', -- Tabellen
                  '' -- Sequenzen
@@ -21,6 +21,6 @@ begin
     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.name || ' deleted.');
   end loop;
   
-  pit_admin.remove_message_group('PIT_APEX');
+  pit_admin.delete_message_group('PIT_APEX');
 end;
 /

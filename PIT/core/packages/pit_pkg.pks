@@ -1,6 +1,6 @@
 create or replace package pit_pkg
   authid definer
-  accessible by (package PIT)
+  -- accessible by (package PIT)
 as
   /** Project:      PIT (www.github.com/j-sieben/PIT)
    *  Descriptioon: Package to implement the core PIT logic. 
@@ -46,10 +46,10 @@ as
    */
   procedure log_event(
     p_severity in binary_integer,
-    p_message_name in pit_util.ora_name_type,
-    p_arg_list in msg_args,
-    p_affected_id in pit_util.max_sql_char,
-    p_error_code in varchar2);
+    p_message_name in pit_util.ora_name_type default null,
+    p_arg_list in msg_args default null,
+    p_affected_id in pit_util.max_sql_char default null,
+    p_error_code in varchar2 default null);
   
 
   /** Logs messages regardless of log settings
@@ -163,7 +163,7 @@ as
    * @param  p_arg_list       List of replacement values for the message
    * @param  p_log_threshold  Threshold that is taken as a comparison to the message
    *                          severity to decide whether a message should be logged
-   * @param  p_log_modules    List of output modules to log to. This list is taken
+   * @param  p_module_list    List of output modules to log to. This list is taken
    *                          for this single call only. It does not affected the overall
    *                          log module settings for the active or default context
    * @usage  This procedure is called from PIT. It takes the message_name and
@@ -176,7 +176,7 @@ as
     p_affected_id in pit_util.max_sql_char,
     p_arg_list in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
-    p_log_modules in pit_util.max_sql_char);
+    p_module_list in pit_util.max_sql_char);
   
   
   /** Raises an error
@@ -193,10 +193,10 @@ as
    */
   procedure raise_error(
     p_severity in binary_integer,
-    p_message_name pit_util.ora_name_type,
-    p_arg_list in msg_args,
-    p_affected_id in pit_util.max_sql_char,
-    p_error_code in varchar2);
+    p_message_name pit_util.ora_name_type default null,
+    p_arg_list in msg_args default null,
+    p_affected_id in pit_util.max_sql_char default null,
+    p_error_code in varchar2 default null);
   
   
   /** Handels an error
@@ -215,11 +215,11 @@ as
    */
   procedure handle_error(
     p_severity in binary_integer,
-    p_message_name pit_util.ora_name_type,
-    p_arg_list in msg_args,
-    p_affected_id in pit_util.max_sql_char,
-    p_error_code in varchar2,
-    p_params in msg_params);
+    p_message_name pit_util.ora_name_type default null,
+    p_arg_list in msg_args default null,
+    p_affected_id in pit_util.max_sql_char default null,
+    p_error_code in varchar2 default null,
+    p_params in msg_params default null);
   
   
   /** Returns an instance of type MESSAGE_TYPE.
@@ -303,7 +303,7 @@ as
     p_module_list in pit_util.max_sql_char);
     
   
-  /** Overloaded version that takes an instanvce of CONTEXT_TYPE-record as input parameter
+  /** Overloaded version that takes an instance of CONTEXT_TYPE-record as input parameter
    * @param  p_context  Instance of CONTEXT_TYPE-record with the actually valid context settings
    */
   procedure set_context(
@@ -315,22 +315,28 @@ as
    *                         with predefined debug settings in the format 
    *                         [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
    *                         fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
+   * @param  p_validate      Optional flag to indicate that session data (user, client-id)
+   *                         has to be fetched dynamically. Leave this untouched.
    * @usage  This method is used to adjust the debug settings during execution of the code.
    */
   procedure set_context(
-    p_context_name in pit_util.ora_name_type);
+    p_context_name in pit_util.ora_name_type,
+    p_validate in boolean default true);
   
   
   /** Procedure to reset log settings to the default settings
+   * @param  p_validate      Optional flag to indicate that session data (user, client-id)
+   *                         has to be fetched dynamically. Leave this untouched.
    * @usage  If settings for a session were changed, calling this procedure
    *         resets these settings to the default settings as defined by the 
    *         parameters
    */
-  procedure reset_active_context;
+  procedure reset_active_context(
+    p_validate in boolean default true);
   
   
   /** Procedure to reset the complete context to default settings
-   * @usage  Use this procedure if all session settings shall be reset to the 
+   * @usage  Use this procedure to rest all session settings to the 
    *         default settings. Be aware that calling this procedure will reset
    *         ALL log settings of ALL sessions to default
    */
@@ -363,6 +369,14 @@ as
   function get_message_collection
     return pit_message_table;
     
+    
+  /** Method to retrieve the actual call stack depth.
+   * @usage  Used internally to check whether the call stack is correctly maintained
+   * @return Actual stack depth
+   */
+  function get_actual_call_stack_depth
+    return binary_integer;
+    
   
   /** MODULE MAINTENANCE */
   /** Function to retrieve a list of all installed modules
@@ -391,6 +405,15 @@ as
   function get_available_modules
    return args
    pipelined;
+   
+   
+  /** Function to retrieve status of all modules
+   * @return ARGS-type, List of module names
+   * @usage  Use this function if you require a status of all modules.
+   */
+  function report_module_status
+    return args 
+    pipelined;
  
 end pit_pkg;
 /

@@ -1,14 +1,16 @@
 # Throwing and catching exceptions with PIT
 
-After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Exception follow a naming convention that is parameterizable. As per default, any exception is derived from `<MESSAGE_NAME>_ERR`, but you're free to set your own pre- and postfix parameters (`PIT.ERROR_PREFIX`and `PIT.ERROR_POSTFIX`). The overall length of the name extension (including underscores) is limited to 4, though.
+After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Exception follow a naming convention that is parameterizable. As per default, any exception is derived from `<MESSAGE_NAME>_ERR`, but you're free to set your own pre- and postfix parameters (`PIT.ERROR_PREFIX`and `PIT.ERROR_POSTFIX`) to achieve something as `X_<MESSAGE_NAME>`. The overall length of the name extension (including underscores) is limited to 4 byte, though.
 
-Be aware that messages of severity `LEVEL_FATAL` and `LEVEL_ERROR` always get logged, regardless of any settings in the context. The only possibility from surpessing the output of these messages is to reduce the log threshold of an output module. After all, this is not a recommended practice, as you require to be informed about errors in your code anyway.
+In regard to parameterization, also note that there is a parameter called `OMIT_PIT_IN_STACK` to control whether internal PIT method calls are included in the call and error stack (if set to FALSE) or not (which is the default).
+
+Be aware that messages of severity `LEVEL_FATAL` and `LEVEL_ERROR` always get logged, regardless of any settings in the context. The only possibility to surpress the output of these messages is to reduce the log threshold of an output module. After all, this is not a recommended practice, as you require to be informed about errors in your code anyway.
 
 Let's have a look at how we can work with these errors in PIT.
 
 ## Throwing errors
 
-To throw an error, there are two different ways with specific advantages.
+To throw an error, there are two options with specific advantages.
 
 ### Throwing errors using `raise`
 
@@ -48,9 +50,11 @@ The code to catch the exception is the same, although the way to process the err
 
 Let's see how to catch exceptions with PIT and the options we have here.
 
-There are two specialized methods to handle exceptions within PIT: `pit.sql_exception` and `pit.stop`. I have to admit that the latter was the reason to call the whole package PIT ...
+There are two specialized methods to handle exceptions within PIT: `pit.sql_exception` and `pit.stop`. 
 
-Method `pit.sql_exception` is intended to be used as an exception handler for `pit.error` or `raise`. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. You may or may not define a message to be passed with this method, but normally, when used with `raise` the matching message for the exception caught may make most sense, as in the following example:
+Method `pit.sql_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
+
+The parameters for this method are all optional. If used in conjunction with `raise`, passing a matching message for the exception caught may make most sense, as in the following example:
 
 ```
 begin
@@ -62,11 +66,11 @@ exception
 end;
 ```
 
-Method `pit.stop`, on the other hand, is ideal for working in conjunction with `pit.fatal` or `raise`. The difference to `pit.sql_exception` is that `pit.stop` will throw an exception after it has logged the original exception. The thrown exception may be just the one that was passed in or any other message you see fit.
+Method `pit.stop`, on the other hand, stops the execution of the code. The difference to `pit.sql_exception` with a following `raise;` is that `pit.stop` will throw a new exception after it has logged the original exception, overwriting the old call stack. This may come in handy if you don't want to expose all the internals to the log but rather wrap all exceptions in a newly created error.
 
 ### Passing predefined messages to PIT
 
-If you threw the excpetion with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.sql_exception` or `pit.stop` respectively. To achieve this,simply call the exception handlers without parameters.
+If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.sql_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
 
 If you review the next code sample, you will get the idea of how this works immediately:
 
@@ -77,9 +81,23 @@ begin
 exception
  when msg.MY_MESSAGE_ERR then
    pit.sql_exception;
-   -- or: pit.stop;
+   -- raise;
 end;
 ```
+
+The same works with `pit.stop`:
+
+```
+begin
+  ... some work
+  pit.error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
+exception
+ when msg.MY_MESSAGE_ERR then
+   pit.stop;
+end;
+```
+
+Recall that using `pit.stop` will create a new exception and throws this, hiding the original call stack.
 
 Use this approach if you need to differ between many places the same error may occur, if the respecitive parameters have lost focus in the excpetion block or simply if you feel more comfortable with directly creating the error message where it occurs.
 
@@ -96,15 +114,34 @@ exception
 end;
 ```
 
+If a server error is catched with `pit.stop` without parameters, the original exception and message will be included into a newly created exception named `SQL_ERROR`. Please note that the error message will not contain the original error code, only the text. This is in line with the focus of the method to hide the internals. The next code snippet shows this in action:
+
+```
+declare
+  l_result number;
+begin
+  pit.enter;
+  l_result := 1/0;
+  pit.leave;
+exception
+  when others then
+    pit.stop;
+end;
+
+Error report -
+ORA-20967: A SQL error occurred: divisor is equal to zero
+ORA-06512: at line 9
+``` 
+
 ## Passing parameters to exception handlers
 
-Sometimes it's useful to be able to pass output parameter values even in the case of exceptions. To achieve that, `pit.SQL_EXCEPTION` and `pit.STOP` provide an optional parameter called `P_PARAMS` that accepts an instance of `MSG_PARAMS` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
+It's also possible to pass output parameter values even in the case of exceptions. To achieve that, `pit.SQL_EXCEPTION` and `pit.STOP` provide an optional parameter called `P_PARAMS` that accepts an instance of `MSG_PARAMS` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
 
 ## Passing Error Codes
 
-Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality is not required for PIT to work but comes in handy if you need to maintain return codes that other application parts required, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `P_ERROR_CODE`. This can be any information you like up to 30 char in width.
+Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality comes in handy if you need to maintain return codes that other application parts expose, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `P_ERROR_CODE`. This can be any information you like up to 30 char in width. Another use of this functionality is when running PIT in collection mode, as described [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages.md).
 
-If you use this feature, this error code is passed around as part of the message instance, so it's very easy for any output module to get access to this information and do whatever you require with it.
+If you use this feature, this error code is passed as part of the message instance, so that any output module can access  this information and do  with it whatever it has to.
 
 ## Throwing errors with `pit.log` (formerly called `log_specific`)
 
@@ -129,7 +166,7 @@ end;
 
 ```
 begin
-  <do something that causes Oracle to throw a non-named exception>
+  <do something that causes Oracle to throw an exception PIT has a message for>
 exception
   when msg.CHILD_RECORD_FOUND_ERR then
     pit.sql_exception(msg.CHILD_RECORD_FOUND, msg_args(...));
@@ -190,7 +227,7 @@ begin
   <do something>
 exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
-    pit.stop;
+    pit.stop; -- or: pit.sql_excetion; raise;
   when msg.PARAM_MUST_EXIST_ERR then
     pit.sql_exception;
 end;
@@ -211,7 +248,7 @@ exception
 end;
 ```
 
-Difference in the second option is that upon asserting you simply refer to a given message of severity `pit.level_error` or stronger. This is to be able to catch it's exception in the exception handler to divide between three `assert` methods which may be called in the called. In the exception block, the message is enriched with parameters, something that has been done in option 1 already. Option 1 therefore is slightly mor elegant in the exception block but more clumsy in the assertion block.
+Difference in the second option is that upon asserting you simply refer to a given message of severity `pit.level_error` or stronger. This is to be able to catch it's exception in the exception handler to divide between two `assert` methods. In the exception block, the message is enriched with parameters, something that has been done in option 1 already. Option 1 therefore is slightly more elegant in the exception block but more clumsy in the assertion block.
 
 ### Throwing exceptions with `pit.assert`, custom messages and error codes
 
@@ -239,4 +276,5 @@ end;
 This example shows the use of error codes. Obviously, it's impossible to provide a constant for error codes passed into a message dynamically. But if you omit it, the error code will default to the message name so that it's possible to use the exceptions in a mixed mode, with or witout error codes. The exception thrown is the same but the error codes allow for a finer distinction between error scenarios. If not used, you would have to create different messages for the same kind of exception in order to distinguish between them.
 
 If you use error codes, make sure to comment them in the package specification, as you should do with the list of exceptions a method may potentially throw.
+If you run PIT in collect mode, error codes are always populated. If you provide an explicit error code, it will be used, if not, the message name is used.
 

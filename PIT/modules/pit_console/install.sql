@@ -28,4 +28,4 @@ prompt &s1.Create package body PIT_CONSOLE_PKG
 show errors
 
 prompt &s1.Create PIT_CONSOLE parameters
-@&script_dir.create_parameters.sql
+@&script_dir.ParameterGroup_PIT.sql

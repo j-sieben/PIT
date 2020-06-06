@@ -12,14 +12,17 @@ as
     return self as result
   as
   begin
+    with data as(
+           select pms_pml_name, pms_text, pms_description, pms_pse_id, pms_active_error error_number,
+                  rank() over (order by l.pml_default_order desc) ranking
+             from pit_message m
+             join pit_message_language_v l on m.pms_pml_name = l.pml_name
+            where m.pms_name = p_message_name)
     select pms_text, pms_description, pms_pse_id, error_number
       into self.message_text, self.message_description, self.severity, self.error_number
-      from (select pms_pml_name, pms_text, pms_description, pms_pse_id, pms_active_error error_number,
-                   rank() over (order by l.pml_default_order desc) ranking
-              from pit_message m
-              join pit_message_language_v l on m.pms_pml_name = l.pml_name
-             where m.pms_name = p_message_name)
+      from data
      where ranking = 1;
+     
     self.id := pit_log_seq.nextval;
     self.message_name := p_message_name;
     self.affected_id := p_affected_id;
@@ -27,6 +30,7 @@ as
     self.session_id := p_session_id;
     self.user_name := p_user_name;
     self.message_args := p_arg_list;
+    
     if sqlcode != 0 then
       self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 11));
       self.stack := pit_util.get_call_stack;
@@ -40,6 +44,7 @@ as
           replace(self.message_text, '#' || i || '#', p_arg_list(i));
       end loop;
     end if;
+    
     return;
   end;
 end;
