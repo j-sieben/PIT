@@ -94,6 +94,10 @@ So you need to start downloading [`UTL_TEXT`](https://github.com/j-sieben/UTL_TE
 Start by installing `UTL_TEXT` first. Ideally, it lives in the same utility user that owns `PIT`. After installing it, you grant access to the APEX schema user. Here's a sample script on how to achieve that:
 
 ```
+rem always make sure that the console is set to UTF-8
+set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
+rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_TEXT\UTL_TEXT
 sqlplus <sys_credentials> as sysdba 
 SQL> @utl_text_install PIT_OWNER AMERICAN
@@ -107,6 +111,10 @@ SQL> @utl_text_install_client PIT_OWNER PIT_USER
 As this is an APEX library, it lives in the `PIT_USER` schema directly and does therefore not require any client grants:
 
 ```
+rem always make sure that the console is set to UTF-8
+set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
+rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_APEX\UTL_APEX
 sqlplus <sys_credentials> as sysdba 
 SQL> @utl_apex_install PIT_USER AMERICAN
