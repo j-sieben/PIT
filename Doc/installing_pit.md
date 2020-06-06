@@ -26,7 +26,7 @@ You may run the installation scripts directly from a command line or use the pre
 
 I recommend installing `PIT` in a dedicated Utility owner and grant access to other schemas using the `pit_install_client` script. This way you don't multiply your codebase. The downside to this is a certain mixture of message definitions at one database user, as all messages are stored within table `PIT_MESSAGE` within that user. Plus, as you are allowed to map an Oracle server error number to a `exception`variable only once, you have to make sure that all mappings are dealt with in a way that makes them reusable for other schemas.
 
-Messages are delivered in my mother tongue, `GERMAN` and in `AMERICAN`. Messages are located in various folders under `message/<LANGUAGE>/create_messages.sql` and can be translated or changed as you like.
+Messages are delivered in my mother tongue, `GERMAN` and in `AMERICAN`. Messages are located in various folders under `message/<LANGUAGE>/MessageGroup_PIT.sql` and can be translated or changed as you like.
 
 The installation scripts expects two parameters:
 
