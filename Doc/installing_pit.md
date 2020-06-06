@@ -33,7 +33,11 @@ The installation scripts expects two parameters:
 So here's an example on how to install PIT on a windows system:
 
 ```
-cd C:\temp\PIT
+rem always make sure that the console is set to UTF-8
+set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
+rem switch to the directory where you copied the git repository to
+cd C:\temp\PIT\PIT
 set nls_lang=AMERICAN_AMERICA.AL32UTF8
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_install PIT_OWNER AMERICAN
@@ -46,7 +50,11 @@ This example will install PIT within user `PIT_OWNER` and set `AMERICAN` as the 
 To uninstall PIT, simply call `pit_uninstall.sql` from the installation folder. This script requires a dba account as well, as it removes packages in other schemas. To make life a bit easier for me, you have to pass in the same parameters as you did when installing PIT, meaning the PIT-owner and the default language.
 
 ```
-cd C:\temp\PIT
+rem always make sure that the console is set to UTF-8
+set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
+rem switch to the directory where you copied the git repository to
+cd C:\temp\PIT\PIT
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_uninstall PIT_OWNER AMERICAN
@@ -62,7 +70,11 @@ To grant a different schema access to PIT, you call script `pit_install_client.s
 Here's an example on how to call this script:
 
 ```
-cd C:\temp\PIT
+rem always make sure that the console is set to UTF-8
+set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
+rem switch to the directory where you copied the git repository to
+cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_install_client PIT_OWNER PIT_USER
 ```
@@ -71,7 +83,11 @@ SQL> @pit_install_client PIT_OWNER PIT_USER
 To uninstall a PIT client, simply call `pit_uninstall_client.sql` with the PIT owner and the PIT client user name as parameters:
 
 ```
-cd C:\temp\PIT
+rem always make sure that the console is set to UTF-8
+set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
+rem switch to the directory where you copied the git repository to
+cd C:\temp\PIT\PIT
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_uninstall_client PIT_OWNER PIT_USER
