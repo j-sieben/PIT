@@ -3,7 +3,7 @@
 
 
 ## Using the APEX UI
-To translate messages or translatable ite,s using the APEX UI, go to the master data section (called »Stammdaten«) and select the message group or groups you want to translate (the same applies to translatable items, I don't mention this from now on). Then select the target language. Button »Meldungen übersetzen« (tranlsate messages) becomes active. If you click on it, a zip file containing XLIFF files for each message group is downloaded. You may open any of these XLIFF files using an editor such as [POEdit](https://poeditor.com) or any other translation application that can deal with XLIFF files in format 2.0.
+To translate messages or translatable items using the APEX UI, go to the master data section (called »Stammdaten«) and select the message group or groups you want to translate (the same applies to translatable items, I don't mention this from now on). Then select the target language. Button »Meldungen übersetzen« (tranlsate messages) becomes active. If you click on it, a zip file containing XLIFF files for each message group is downloaded. You may open any of these XLIFF files using an editor such as [POEdit](https://poeditor.com) or any other translation application that can deal with XLIFF files in format 2.0.
 
 Translate all entries to the target language and save the XLIFF file.
 
