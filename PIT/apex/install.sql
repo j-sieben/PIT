@@ -10,7 +10,6 @@ prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 @tools/grant_access.sql execute PIT_CONSOLE_PKG
 @tools/grant_access.sql execute PIT_FILE_PKG
 @tools/grant_access.sql execute PIT_MAIL_PKG
-@tools/grant_access.sql execute PIT_PKG
 @tools/grant_access.sql execute PIT_TABLE_PKG
 
 -- Tables and Views
