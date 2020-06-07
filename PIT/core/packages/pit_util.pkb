@@ -471,7 +471,7 @@ as
     for i in 1 .. l_depth loop
       if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
         append(l_stack,
-          lpad(to_char(utl_call_stack.unit_line(i), '99999'), 5) || ' ' ||
+          lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' ' ||
           rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
           utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
       end if;

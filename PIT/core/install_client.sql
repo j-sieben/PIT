@@ -16,6 +16,7 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute MSG_PARAM
 @tools/grant_access.sql execute MSG_PARAMS
 @tools/grant_access.sql execute PIT
+@tools/grant_access.sql execute PIT_PKG
 @tools/grant_access.sql execute PIT_ADMIN
 @tools/grant_access.sql execute PIT_UTIL
 @tools/grant_access.sql execute UTL_CONTEXT

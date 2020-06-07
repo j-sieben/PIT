@@ -1,5 +1,5 @@
 create or replace package pit
-  authid definer 
+  authid current_user 
 as
   /** Project:      PIT (www.github.com/j-sieben/PIT)
    *  Descriptioon: PIT-API package. Implements all functionality that is required to use PIT.

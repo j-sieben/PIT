@@ -257,8 +257,8 @@ as
       g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
     end if;
       
-    if l_settings != coalesce(g_ctx.settings, 'Foo') then
-      utl_context.set_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, p_settings, g_client_id);
+    if l_settings != coalesce(g_ctx.settings, 'FOO') then
+      utl_context.set_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, l_settings, g_client_id);
       case when g_ctx.broadcast_context_switch 
         then l_raise_focus := C_EVENT_FOCUS_ALL;
         else l_raise_focus := C_EVENT_FOCUS_ACTIVE;
