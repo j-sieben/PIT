@@ -15885,7 +15885,7 @@ wwv_flow_api.create_page_button(
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(16936853378003532)
-,p_button_image_alt=>unistr('Meldung \00FCbersetzen')
+,p_button_image_alt=>unistr('Begriffe \00FCbersetzen')
 ,p_button_position=>'BELOW_BOX'
 ,p_grid_new_grid=>false
 );
@@ -15898,7 +15898,7 @@ wwv_flow_api.create_page_button(
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(16936853378003532)
-,p_button_image_alt=>'Meldungen exportieren'
+,p_button_image_alt=>'Begriffe exportieren'
 ,p_button_position=>'BELOW_BOX'
 ,p_grid_new_grid=>false
 );

@@ -13346,7 +13346,7 @@ wwv_flow_api.create_page_button(
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(14734925509194086)
-,p_button_image_alt=>'Meldung übersetzen'
+,p_button_image_alt=>'Begriffe übersetzen'
 ,p_button_position=>'BELOW_BOX'
 );
 wwv_flow_api.create_page_button(
@@ -13358,7 +13358,7 @@ wwv_flow_api.create_page_button(
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(14734925509194086)
-,p_button_image_alt=>'Meldungen exportieren'
+,p_button_image_alt=>'Begriffe exportieren'
 ,p_button_position=>'BELOW_BOX'
 );
 wwv_flow_api.create_page_button(

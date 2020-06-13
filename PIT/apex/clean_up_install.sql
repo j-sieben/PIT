@@ -64,7 +64,9 @@ prompt &h3.Revoke OBJECT privileges and drop synonyms if necessary
 @tools/revoke_access.sql select PIT_MESSAGE
 @tools/revoke_access.sql select PIT_MESSAGE_GROUP
 @tools/revoke_access.sql select PIT_MESSAGE_LANGUAGE
+@tools/revoke_access.sql select PIT_MESSAGE_LANGUAGE_V
 @tools/revoke_access.sql select PIT_MESSAGE_SEVERITY
+@tools/revoke_access.sql select PIT_MESSAGE_SEVERITY_V
 @tools/revoke_access.sql select PIT_TRACE_LEVEL
 @tools/revoke_access.sql select PARAMETER_VW
 @tools/revoke_access.sql select PIT_MESSAGE_LANGUAGE_V

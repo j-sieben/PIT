@@ -680,24 +680,32 @@ as
     case utl_apex.get_request
       when 'TRANSLATE_PMS' then
         translate_groups(
-          pit_admin.C_TARGET_PMS,
-          g_export_row.pms_pml_name,
-          g_export_row.pms_pmg_list);
+          p_target => pit_admin.C_TARGET_PMS,
+          p_target_language => g_export_row.pms_pml_name,
+          p_pmg_list => g_export_row.pms_pmg_list);
       when 'IMPORT_PMS' then
-        import_translation(pit_admin.C_TARGET_PMS);
+        import_translation(
+          p_target => pit_admin.C_TARGET_PMS);
       when 'EXPORT_PMS' then
-        export_groups(pit_admin.C_TARGET_PMS, g_export_row.pms_pmg_list);
+        export_groups(
+          p_target => pit_admin.C_TARGET_PMS, 
+          p_pmg_list => g_export_row.pms_pmg_list);
       when 'TRANSLATE_PTI' then
         translate_groups(
-          pit_admin.C_TARGET_PTI,
-          g_export_row.pti_pml_name,
-          g_export_row.pti_pmg_list);
+          p_target => pit_admin.C_TARGET_PTI,
+          p_target_language => g_export_row.pti_pml_name,
+          p_pmg_list => g_export_row.pti_pmg_list);
       when 'IMPORT_PTI' then
-        import_translation(pit_admin.C_TARGET_PTI);
+        import_translation(
+          p_target => pit_admin.C_TARGET_PTI);
       when 'EXPORT_PTI' then
-        export_groups(pit_admin.C_TARGET_PTI, g_export_row.pti_pmg_list);
+        export_groups(
+          p_target => pit_admin.C_TARGET_PTI, 
+          p_pmg_list => g_export_row.pti_pmg_list);
       when 'EXPORT_PAR' then
-        export_groups(pit_admin.C_TARGET_PAR, g_export_row.par_pgr_list);
+        export_groups(
+          p_target => pit_admin.C_TARGET_PAR, 
+          p_pmg_list => g_export_row.par_pgr_list);
       when 'EXPORT_LOCAL_PAR' then
         export_local_parameters;
       else

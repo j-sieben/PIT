@@ -15,7 +15,7 @@ prompt &s1.Create PIT_MAIL parameters
 @&mail_dir.scripts/ParameterGroup_PIT.sql
 
 prompt &s1.Create PIT_MAIL messages
-@&mail_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT_MAIL.sql
+@&mail_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql
 
 prompt &s1.Create type PIT_mail
 @&mail_dir.types/pit_mail.tps

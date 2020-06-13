@@ -52,5 +52,5 @@ select m.row_id,
     on m.pms_pmg_name = g.pmg_name
   join pit_message_language pml
     on m.pms_pml_name = pml.pml_name
-  join pit_message_severity pse
+  join pit_message_severity_v pse
     on m.pms_pse_id = pse.pse_id;

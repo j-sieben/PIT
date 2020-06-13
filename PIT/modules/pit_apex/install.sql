@@ -18,7 +18,7 @@ prompt &s1.Create type pit_apex_adapter
 show errors
 
 prompt &s1.Merge messages for PIT_APEX
-@&msg_dir/create_messages.sql
+@&msg_dir/MessageGroup_PIT.sql
 
 prompt &s1.Create parameter for PIT_APEX
 @&apex_dir.scripts/ParameterGroup_PIT.sql

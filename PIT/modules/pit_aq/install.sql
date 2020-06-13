@@ -38,5 +38,5 @@ show errors
 
 prompt &h2.Create PIT_TEST parameters and messages
 @&test_dir.scripts/create_parameters.sql
-@&test_dir.messages/&DEFAULT_LANGUAGE./create_messages.sql
+@&test_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql
 @&test_dir.scripts/create_test_results.sql

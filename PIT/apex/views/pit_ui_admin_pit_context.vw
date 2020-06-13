@@ -17,5 +17,5 @@ select p.row_id, p.par_id, p.context_name, p.context_description,
        'Timing: ' || p.timing_on || '<br>' ||
        'Module: ' || p.output_modules || '<br>' context_setting
   from params p
-  join pit_message_severity pse on p.pse_id = pse.pse_id
-  join pit_trace_level ptl on p.ptl_id = ptl.ptl_id;
+  join pit_message_severity_v pse on p.pse_id = pse.pse_id
+  join pit_trace_level_v ptl on p.ptl_id = ptl.ptl_id;

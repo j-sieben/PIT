@@ -28,11 +28,6 @@ prompt &s1.Create sequence PIT_TRANSLATABLE_ITEM_SEQ
 @&core_dir.sequences/pit_translatable_item_seq.seq
 
 prompt &h2.Create tables
-prompt &s1.Create table PIT_MESSAGE_SEVERITY
-@&core_dir.tables/pit_message_severity.tbl
-
-prompt &s1.Create table PIT_TRACE_LEVEL
-@&core_dir.tables/pit_trace_level.tbl
 
 prompt &s1.Create table PIT_MESSAGE_LANGUAGE
 @&core_dir.tables/pit_message_language.tbl
@@ -40,24 +35,37 @@ prompt &s1.Create table PIT_MESSAGE_LANGUAGE
 prompt &s1.Create table PIT_MESSAGE_GROUP
 @&core_dir.tables/pit_message_group.tbl
 
-prompt &s1.Create view PIT_MESSAGE_LANGUAGE_V
-@&core_dir.views/pit_message_language_v.vw
+prompt &s1.Create table PIT_TRANSLATABLE_ITEM
+@&core_dir.tables/pit_translatable_item.tbl
+
+prompt &s1.Create table PIT_MESSAGE_SEVERITY
+@&core_dir.tables/pit_message_severity.tbl
+
+prompt &s1.Create table PIT_TRACE_LEVEL
+@&core_dir.tables/pit_trace_level.tbl
 
 prompt &s1.Create table PIT_MESSAGE
 @&core_dir.tables/pit_message.tbl
 
-prompt &s1.Create table PIT_TRANSLATABLE_ITEM
-@&core_dir.tables/pit_translatable_item.tbl
-
 prompt &h2.Merge initial data
-@&core_dir.scripts/merge_initial_data.sql
+@&core_dir.scripts/merge_languages.sql
 
 prompt &h2.Create views
+
+prompt &s1.Create view PIT_MESSAGE_LANGUAGE_V
+@&core_dir.views/pit_message_language_v.vw
+
 prompt &s1.Create view PIT_MESSAGE_V
 @&core_dir.views/pit_message_v.vw
 
 prompt &s1.Create view PIT_TRANSLATABLE_ITEM_V
 @&core_dir.views/pit_translatable_item_v.vw
+
+prompt &s1.Create view PIT_MESSAGE_SEVERITY_V
+@&core_dir.views/pit_message_severity_v.vw
+
+prompt &s1.Create view PIT_TRACE_LEVEL_V
+@&core_dir.views/pit_trace_level_v.vw
 
 prompt &h2.Create type declarations
 prompt &s1.Create type ARGS
@@ -139,6 +147,12 @@ show errors
 prompt &s1.Create default parameters
 @&core_dir.scripts/ParameterGroup_PIT.sql
 @&core_dir.scripts/ParameterGroup_CONTEXT.sql
+
+prompt &s1.Create translatable items
+@&core_dir.messages/&DEFAULT_LANGUAGE./TranslatableItemsGroup_PIT.sql
+
+prompt &s1.Merge trace levels and message severities
+@&core_dir.scripts/merge_levels_and_severities.sql
 
 prompt &s1.Create internal messages
 @&core_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql

@@ -17,7 +17,9 @@ prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 @tools/grant_access.sql select PIT_MESSAGE_GROUP
 @tools/grant_access.sql select PIT_MESSAGE_LANGUAGE
 @tools/grant_access.sql select PIT_MESSAGE_SEVERITY
+@tools/grant_access.sql select PIT_MESSAGE_SEVERITY_V
 @tools/grant_access.sql select PIT_TRACE_LEVEL
+@tools/grant_access.sql select PIT_TRACE_LEVEL_V
 @tools/grant_access.sql select PIT_MESSAGE_LANGUAGE_V
 @tools/grant_access.sql select PIT_MESSAGE_V
 

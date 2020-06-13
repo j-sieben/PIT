@@ -295,5 +295,14 @@ as
     p_pml_name in pit_message_language.pml_name%TYPE,
     p_target in varchar2);
     
+    
+  /* Method to register a translated message, if not yet registered
+   * @param  p_pml_name Oracle language name of the translation to register
+   * @param  Is called when loading a translation. The translation message is set to one of the available langauges
+   */
+  procedure register_translation(
+    p_pml_name in pit_message_language.pml_name%TYPE);
+    
+    
 end pit_admin;
 /

@@ -2,7 +2,7 @@ begin
 
   pit_admin.merge_message_group(
     p_pmg_name => 'PIT',
-    p_pmg_description => q'^Core PIT messages^');
+    p_pmg_description => q'^Core PIT messages and translatable items^');
 
   pit_admin.merge_message(
     p_pms_name => 'ASSERTION_FAILED',

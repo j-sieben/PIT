@@ -40,7 +40,8 @@ as
                from all_source a
               where (owner in ('SYS') or owner like 'APEX%')
                 and upper(text) like '%PRAGMA EXCEPTION_INIT%'
-                and name not in ('PIT_ADMIN', 'PIT_UTIL'))
+                    -- Next to internal PIT packages, some packages don't adhere to Oracles error strategy. Filter them out!
+                and name not in ('PIT_ADMIN', 'PIT_UTIL', 'DBMS_BDSQL'))
       select source_type, owner, package_name,
              -- don't convert to numbers here as it's possible that conversion errors occur
              to_number(trim(replace(substr(init, instr(init, ',') + 1), '''', '')), '99999') error_number,
@@ -260,7 +261,7 @@ end;
 /~';
     C_PTI_TEMPLATE constant varchar2(300) := q'~
   pit_admin.merge_translatable_item(
-    p_pti_id => #PTI_ID#,
+    p_pti_id => '#PTI_ID#',
     p_pti_pml_name => q'^#PTI_PML_NAME#^',
     p_pti_pmg_name => q'^#PTI_PMG_NAME#^',
     p_pti_name => q'^#PTI_NAME#^',
@@ -1098,6 +1099,19 @@ end;
         null;
     end case;
   end delete_translation;
+  
+  
+  procedure register_translation(
+    p_pml_name in pit_message_language.pml_name%TYPE)
+  as
+  begin
+    update pit_message_language
+       set pml_default_order = 50
+     where pml_name = p_pml_name
+       and pml_default_order = 0;
+    
+  end register_translation;
+  
   
 begin
   initialize;
