@@ -112,6 +112,8 @@ More information on contexts can be found [here](https://github.com/j-sieben/PIT
 
 With PIT, it's possible to create a white or black list of code units which toggle logging on or off. Imagine a predefined context `CONTEXT_ALL` which defines complete logging (`70|50|Y|PIT_CONSOLE:PIT_FILE`). As per default, logging is set to no logging at all, as you are in production environment. Then you can create a parameter called `TOGGLE_<Name>` with a value of `MY_PACKAGE|MY_OTHER_PACKAGE:CONTEXT_ALL`. If you enter one of these packages, PIT will set the context to `CONTEXT_ALL`, tracing anything from now on. Once you leave these packages, context will be switched back to defaut settings.
 
+This will create a white list. By switching to a to be defined context `CONTEXT_OFF` you can realize a black list, preventing logging for certain package even if default logging is switched on.
+
 You may have as many toggle parameters as you like. Plus, PIT offers a set of methods in the `pit_admin` package to create toggles for your code to avoid having to manually format the parameters accordingly.
 
 ### Collect messages and exceptions and handle them in bulk
