@@ -30,9 +30,34 @@ As a consequence of this, the possible error codes the validation logic may thro
 
 But there is another problem we need to solve. As the validation logic is part of the data schema, it should not have any knowledge about the details of the UI which is on a higher level. This means that the validation logic does not know any name or id of an input field where the information it validated came from. On the opposite, the UI logic should not have any knowledge about the implementation of the validation logic. So this boils down to the problem of how to match the messages which come back as a result of the validation to the input fields to show the right message at the right input field.
 
-The easiest way that came to mind is to provide a mapping table between the error codes returned from the validation logic and the UI field names on the UI level. On the UI side, this should be encapsulated into a helper method. This method expects an instance of type `PIT_MESSAGE_TABLE` (the return type of `PIT.get_message_collection` as you may remember) and an instance of type `CHAR_TABLE` containt a pair-wise mapping of the error code and the name of the input field the error code belongs to. The helper method can then match the error codes from the validation logic with the UI field names and show the validation errors next to those fields. 
+The easiest way that came to mind is to provide a mapping table between the error codes returned from the validation logic and the UI field names on the UI level. On the UI side, this should be encapsulated into a helper method. This method expects an instance of type `CHAR_TABLE` containing a pair-wise mapping of the error code and the name of the input field the error code belongs to. The helper method can retrieves the message collection from `PIT` and matches the error codes from the validation logic with the UI field names and show the validation errors next to those fields. 
 
-Neither the validation logic nor the UI logic crosses any permitted boundaries, the knowledge stays where it belongs. The possible error codes are part of the validation method interface and it is therefore acceptable to expect that the calling logic knows about this list of possible exceptions.
+Neither the validation logic nor the UI logic crosses any permitted boundaries, the knowledge stays where it belongs. The possible error codes are part of the validation methods interface and it is therefore acceptable to expect that the calling logic knows about this list of possible exceptions.
+
+## Example
+
+The validation logic for a use case throws three possible error codes: `ATTR_A_MISSING`, `ATTR_B_MISSING`, `INVALID_VALUE`.
+From the documentation of the validation method, you know that `ATTR_A_MISSING` belongs to page item `P10_ITEM_A`, whereas the two other error codes belong to `P10_ITEM_B`. You then call the validation logic using the following pattern:
+
+```
+begin
+  pit.start_message_collection;
+  xapi_pkg.validate_use_case(<params>);
+  pit.stop_message_collection;
+exception
+  when msg.PIT_BULK_ERROR_ERR or msg.PIT_FATAL_ERROR_ERR then
+    my_ui_helper.handle_bulk_error(char_table(
+      'ATTR_A_MISSING', 'P10_ITEM_A',
+      'ATTR_B_MISSING', 'P10_ITEM_B',
+      'INVALID_VALUE', 'P10_ITEM_B'));
+end;
+```
+
+The helper method `my_ui_helper.handle_bulk_error` serves two purposes:
+- it grabs the message collection by calling `pit.get_message_collection;`. This is a table of `MESSAGE_TYPE`instances. 
+- it loops over this collection, reads and maps the error codes of any message within the collection to the `CHAR_TABLE` instance passed in as a parameter. 
+
+If found, it shows the message text next to the page item. If not found, the helper method should show the message without reference to a page item.
 
 ## Wrap up: How do you work with collect mode?
 
@@ -41,6 +66,8 @@ To wrap things up, I'd like to describe the proper use of the `PIT` collect mode
 1.  Implement your validation logic in a separate method within the XAPI (A transaction API). Implement your validation logic using `PIT.assert...` methods or by raising exceptions using the `PIT.error/fatal` methods.
 2.  In your XAPI, prior to saving the data to database tables, call your validation logic in normal mode.
 3.  In your UI package dealing with the user data entries, enrich missing data, harmonize spelling issues, provide missing default values and the like and then call the validation logic in collect mode by wrapping the call of the validation logic with calls to `PIT.start_message_collection` and `PIT.stop_message_collection`. If validation errors occur, this will throw an exception you can catch.
-4.  Handle exception `msg.PIT_BULK_FATAL_ERR` and `msg.PIT_BULK_ERROR_ERR` (exception pre- or postfix is based on your parameterization) and call your internal helper method to pass the result of `PIT.get_message_collection` along with a list of matching »error code to UI field« mappings.
+4.  Handle exception `msg.PIT_BULK_FATAL_ERR` and `msg.PIT_BULK_ERROR_ERR` (exception pre- or postfix is based on your parameterization) and call your internal helper method to encapsulate the call to `PIT.get_message_collection` and map it to a list of matching »error codes to UI field«.
+
+An example of such a helper method can be found at my `UTL_APEX` helper package [here](https://github.com/j-sieben/UTL_APEX).
 
 This way you don't need to duplicate your validation logic but make it reusable in a user friendly manner.
