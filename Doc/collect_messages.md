@@ -53,8 +53,11 @@ exception
 end;
 ```
 
-The helper method `my_ui_helper.handle_bulk_error` serves tow tasks:
-- it grabs the message collection by calling `pit.get_message_collection;`. This is a table of `MESSAGE_TYPE`instances. The second task is to koop over this collection, get the error codes of any message within the collection and map it to the `CHAR_TABLE` instance passed in as a parameter. If found, it shows the message text next to the page item. If yan error code is not assigned to a page item, the helper method should show the message it without reference to a page item.
+The helper method `my_ui_helper.handle_bulk_error` serves two purposes:
+- it grabs the message collection by calling `pit.get_message_collection;`. This is a table of `MESSAGE_TYPE`instances. 
+- it loops over this collection, reads and maps the error codes of any message within the collection to the `CHAR_TABLE` instance passed in as a parameter. 
+
+If found, it shows the message text next to the page item. If not found, the helper method should show the message without reference to a page item.
 
 ## Wrap up: How do you work with collect mode?
 
