@@ -30,9 +30,31 @@ As a consequence of this, the possible error codes the validation logic may thro
 
 But there is another problem we need to solve. As the validation logic is part of the data schema, it should not have any knowledge about the details of the UI which is on a higher level. This means that the validation logic does not know any name or id of an input field where the information it validated came from. On the opposite, the UI logic should not have any knowledge about the implementation of the validation logic. So this boils down to the problem of how to match the messages which come back as a result of the validation to the input fields to show the right message at the right input field.
 
-The easiest way that came to mind is to provide a mapping table between the error codes returned from the validation logic and the UI field names on the UI level. On the UI side, this should be encapsulated into a helper method. This method expects an instance of type `PIT_MESSAGE_TABLE` (the return type of `PIT.get_message_collection` as you may remember) and an instance of type `CHAR_TABLE` containt a pair-wise mapping of the error code and the name of the input field the error code belongs to. The helper method can then match the error codes from the validation logic with the UI field names and show the validation errors next to those fields. 
+The easiest way that came to mind is to provide a mapping table between the error codes returned from the validation logic and the UI field names on the UI level. On the UI side, this should be encapsulated into a helper method. This method expects an instance of type `CHAR_TABLE` containing a pair-wise mapping of the error code and the name of the input field the error code belongs to. The helper method can retrieves the message collection from `PIT` and matches the error codes from the validation logic with the UI field names and show the validation errors next to those fields. 
 
-Neither the validation logic nor the UI logic crosses any permitted boundaries, the knowledge stays where it belongs. The possible error codes are part of the validation method interface and it is therefore acceptable to expect that the calling logic knows about this list of possible exceptions.
+Neither the validation logic nor the UI logic crosses any permitted boundaries, the knowledge stays where it belongs. The possible error codes are part of the validation methods interface and it is therefore acceptable to expect that the calling logic knows about this list of possible exceptions.
+
+## Example
+
+The validation logic for a use case throws three possible error codes: `ATTR_A_MISSING`, `ATTR_B_MISSING`, `INVALID_VALUE`.
+From the documentation of the validation method, you know that `ATTR_A_MISSING` belongs to page item `P10_ITEM_A`, whereas the two other error codes belong to `P10_ITEM_B`. You then call the validation logic using the following pattern:
+
+```
+begin
+  pit.start_message_collection;
+  xapi_pkg.validate_use_case(<params>);
+  pit.stop_message_collection;
+exception
+  when msg.PIT_BULK_ERROR_ERR or msg.PIT_FATAL_ERROR_ERR then
+    my_ui_helper.handle_bulk_error(char_table(
+      'ATTR_A_MISSING', 'P10_ITEM_A',
+      'ATTR_B_MISSING', 'P10_ITEM_B',
+      'INCALID_VALUE', 'P10_ITEM_B'));
+end;
+```
+
+The helper method `my_ui_helper.handle_bulk_error` serves tow tasks:
+- it grabs the message collection by calling `pit.get_message_collection;`. This is a table of `MESSAGE_TYPE`instances. The second task is to koop over this collection, get the error codes of any message within the collection and map it to the `CHAR_TABLE` instance passed in as a parameter. If found, it shows the message text next to the page item. If yan error code is not assigned to a page item, the helper method should show the message it without reference to a page item.
 
 ## Wrap up: How do you work with collect mode?
 
