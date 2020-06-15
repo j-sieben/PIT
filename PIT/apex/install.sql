@@ -11,6 +11,7 @@ prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 @tools/grant_access.sql execute PIT_FILE_PKG
 @tools/grant_access.sql execute PIT_MAIL_PKG
 @tools/grant_access.sql execute PIT_TABLE_PKG
+@tools/grant_access.sql execute PIT_MODULE_META
 
 -- Tables and Views
 @tools/grant_access.sql select PIT_MESSAGE

@@ -11,6 +11,7 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute CHAR_TABLE
 @tools/grant_access.sql execute CLOB_TABLE
 @tools/grant_access.sql execute MESSAGE_TYPE
+@tools/grant_access.sql execute PIT_MESSAGE_TABLE
 @tools/grant_access.sql execute MSG
 @tools/grant_access.sql execute MSG_ARGS
 @tools/grant_access.sql execute MSG_PARAM

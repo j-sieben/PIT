@@ -817,7 +817,7 @@ end;
 
     l_sql_text clob := 'create or replace package ' || C_PACKAGE_NAME || ' as' || C_R;
     l_constant_template varchar2(200) :=
-      q'~  #CONSTANT# constant varchar2(30) := '#CONSTANT#';~' || C_R;
+      q'~  #CONSTANT# constant pit_util.ora_name_type := '#CONSTANT#';~' || C_R;
     l_exception_template varchar2(200) :=
       '  #ERROR_NAME# exception;' || C_R;
     l_pragma_template varchar2(200) :=

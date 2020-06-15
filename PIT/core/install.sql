@@ -1,6 +1,5 @@
 define core_dir=core/
 
-
 prompt
 prompt &h1.Installing parameter framework
 @&core_dir.parameters/install.sql
