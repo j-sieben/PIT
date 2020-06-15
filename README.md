@@ -65,7 +65,7 @@ The messages are accessible through a package called MSG that holds them as cons
 ```plsql
 package MSG
 as
-  CHILD_RECORD_FOUND constant varchar2(30) := 'CHILD_RECORD_FOUND';
+  CHILD_RECORD_FOUND constant pit_util.ora_name_type := 'CHILD_RECORD_FOUND';
   CHILD_RECORD_FOUND_ERR exception;
   pragma exception_init(CHILD_RECORD_FOUND_ERR, -2292);
 ...
