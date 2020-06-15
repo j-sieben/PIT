@@ -49,7 +49,7 @@ exception
     my_ui_helper.handle_bulk_error(char_table(
       'ATTR_A_MISSING', 'P10_ITEM_A',
       'ATTR_B_MISSING', 'P10_ITEM_B',
-      'INCALID_VALUE', 'P10_ITEM_B'));
+      'INVALID_VALUE', 'P10_ITEM_B'));
 end;
 ```
 
