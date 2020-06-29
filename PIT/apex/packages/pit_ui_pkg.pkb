@@ -327,6 +327,10 @@ as
       p_file_name => l_zip_file_name);
     
     pit.leave_mandatory;
+  exception
+    when others then
+      pit.sql_exception(msg.SQL_ERROR);
+      raise;
   end export_groups;
   
   

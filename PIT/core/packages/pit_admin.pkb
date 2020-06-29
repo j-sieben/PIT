@@ -983,6 +983,9 @@ end;
       null;
     end case;
       
+  exception
+    when others then 
+      pit.sql_exception(msg.SQL_ERROR);
   end create_installation_script;
   
   

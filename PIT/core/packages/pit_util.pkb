@@ -162,14 +162,12 @@ as
     p_clob in out nocopy clob,
     p_chunk in clob)
   as
-    l_length binary_integer;
   begin
-    l_length := dbms_lob.getlength(p_chunk);
-    if l_length > 0 then
+    if p_chunk is not null then
       if p_clob is null then
         dbms_lob.createtemporary(p_clob, false, dbms_lob.call);
       end if;
-      dbms_lob.writeappend(p_clob, l_length, p_chunk);
+      dbms_lob.append(p_clob, p_chunk);
     end if;
   end clob_append;
   
