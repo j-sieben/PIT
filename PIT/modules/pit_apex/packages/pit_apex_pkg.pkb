@@ -35,7 +35,7 @@ as
     g_apex_triggered_context.log_level := param.get_integer(C_TRG_FIRE_THRESHOLD, C_PARAM_GROUP);
     g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
     g_apex_triggered_context.trace_timing := param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP);
-    g_apex_triggered_context.log_modules := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
+    g_apex_triggered_context.module_list := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
     g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
   end initialize;
 

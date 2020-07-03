@@ -40,14 +40,14 @@ as
    * @param  p_severity      Log-level. Allows to decide whether PIT should log or not.
    *                         If 0, the message gets logged anyway, regardless of log settings
    * @param  p_message_name  Name of the message to log
-   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_msg_args      List of replacement values for the message
    * @param  p_affected_id   Optional ID of an item a log entry relates to
    * @param  p_error_code    Additional error code, used in external applications
    */
   procedure log_event(
     p_severity in binary_integer,
     p_message_name in pit_util.ora_name_type default null,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
     p_error_code in varchar2 default null);
   
@@ -61,7 +61,7 @@ as
    * @param  p_message_name   Name of the message to log
    * @param  p_affected_id    Optional ID of an item a log entry relates to
    * @param  p_error_code     Additional error code, used in external applications
-   * @param  p_arg_list       List of replacement values for the message
+   * @param  p_msg_args       List of replacement values for the message
    * @param  p_log_threshold  Threshold that is taken as a comparison to the message
    *                          severity to decide whether a message should be logged
    * @param  p_log_modules    List of output modules to log to. This list is taken
@@ -72,7 +72,7 @@ as
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
     p_log_modules in pit_util.max_sql_char);
     
@@ -147,23 +147,23 @@ as
   
   /** Prints a message to the output modules. Used to pass user information to the view layer
    * @param  p_message_name  Name of the message to log
-   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_msg_args      List of replacement values for the message
    * @usage  This procedure is called from PIT. It takes the message_name and
    *         constructs an instance of MESSAGE_TYPE for it. It then calls any
    *         print procedure of all active output modules and passes the message.
    */
   procedure print(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list msg_args);
+    p_msg_args in msg_args);
   
 
   /** Notify output modules
    * @param  p_message_name   Name of the message to log
    * @param  p_affected_id    Optional ID of an item a log entry relates to
-   * @param  p_arg_list       List of replacement values for the message
+   * @param  p_msg_args       List of replacement values for the message
    * @param  p_log_threshold  Threshold that is taken as a comparison to the message
    *                          severity to decide whether a message should be logged
-   * @param  p_module_list    List of output modules to log to. This list is taken
+   * @param  p_log_modules    List of output modules to log to. This list is taken
    *                          for this single call only. It does not affected the overall
    *                          log module settings for the active or default context
    * @usage  This procedure is called from PIT. It takes the message_name and
@@ -174,15 +174,15 @@ as
   procedure notify(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
-    p_module_list in pit_util.max_sql_char);
+    p_log_modules in pit_util.max_sql_char);
   
   
   /** Raises an error
    * @param  p_severity      Severity of the message to raise (FATAL|ERROR)
    * @param  p_message_name  Name of the message to raise 
-   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_msg_args      List of replacement values for the message
    * @param  p_affected_id   ID of an object that is affected by this message
    * @param  p_error_code    Additional error code, used in external applications
    * @usage  This procedure is called from PIT. It takes the message_name and
@@ -193,8 +193,8 @@ as
    */
   procedure raise_error(
     p_severity in binary_integer,
-    p_message_name pit_util.ora_name_type default null,
-    p_arg_list in msg_args default null,
+    p_message_name in pit_util.ora_name_type default null,
+    p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
     p_error_code in varchar2 default null);
   
@@ -202,7 +202,7 @@ as
   /** Handels an error
    * @param  p_severity      Severity of the message to log (FATAL|ERROR)
    * @param  p_message_name  Name of the message to log
-   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_msg_args      List of replacement values for the message
    * @param  p_affected_id   ID of an object that is affected by this message
    * @param  p_error_code    Additional error code, used in external applications
    * @param  p_params        Instance of <code>msg_params</code> with a list of
@@ -215,8 +215,8 @@ as
    */
   procedure handle_error(
     p_severity in binary_integer,
-    p_message_name pit_util.ora_name_type default null,
-    p_arg_list in msg_args default null,
+    p_message_name in pit_util.ora_name_type default null,
+    p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
@@ -224,7 +224,7 @@ as
   
   /** Returns an instance of type MESSAGE_TYPE.
    * @param  p_message_name  Name of the message to log
-   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_msg_args      List of replacement values for the message
    * @param  p_affected_id   ID of an object that is affected by this message
    * @param  p_error_code    Optional error code, usable by external applications
    * @return Instance of the requested message.
@@ -233,7 +233,7 @@ as
    */
   function get_message(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2)
     return message_type;
@@ -248,21 +248,21 @@ as
     
   /** Returns the text of a message
    * @param  p_message_name  Name of the message to log
-   * @param  p_arg_list      List of replacement values for the message
+   * @param  p_msg_args      List of replacement values for the message
    * @return Messagetext of the requested message.
    * @usage  This procedure is called from PIT. It takes the message_name ,
    *         constructs an instance of MESSAGE_TYPE and returns the message text.
    */
   function get_message_text(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list in msg_args)
+    p_msg_args in msg_args)
     return clob;
     
 
   /** Function to retrieve a PIT translatable item (PTI)
    * @param  p_pti_pmg_name  Name of the message group the PTI belongs to
    * @param  p_pti_id        ID of the item to retreive translations for
-   * @param  p_arg_list      MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI
+   * @param  p_msg_args      MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI
    * @param  p_pti_pml_name  Oracle language reference
    * %return Record of type PIT_UTIL.TRANSLATABLE_ITEM_REC with access to PTI_NAME, PTI_DISPLAY_NAME and PTI_DESCRIPTION
    * @usage  method to get access to a translated item.
@@ -270,7 +270,7 @@ as
   function get_trans_item(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
     p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args,
+    p_msg_args msg_args,
     p_pti_pml_name in pit_message_language.pml_name%type)
     return pit_util.translatable_item_rec;
     
@@ -286,26 +286,12 @@ as
     
     
   /** Procedure to change the settings in the global PIT_CONTEXT
-   * @param  p_log_level     New log level.
-   * @param  p_trace_level   New trace level
-   * @param  p_trace_timing  Flag to switch timing on or off
-   * @param  p_module_list   Colon-separated list of output modules used
-   * @param  p_focus         Indicates whether changes are made for the active session 
-   *                         only (ACTIVE) or as a new default setting (DEFAULT). Defaults to ACTIVE
+   * @param  p_context  Instance of PIT_UTIL.context_type
    * @usage  This procedure is used when log settings shall be changed dynamically
    *         Normal usage is to overwrite log settings as defined in the parameters
    *         for a given session.
    */
-  procedure set_context(
-    p_log_level in binary_integer,
-    p_trace_level in binary_integer,
-    p_trace_timing in boolean,
-    p_module_list in pit_util.max_sql_char);
-    
   
-  /** Overloaded version that takes an instance of CONTEXT_TYPE-record as input parameter
-   * @param  p_context  Instance of CONTEXT_TYPE-record with the actually valid context settings
-   */
   procedure set_context(
     p_context in pit_util.context_type);
     

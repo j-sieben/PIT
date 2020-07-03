@@ -14,7 +14,7 @@ as
     p_message in message_type)
   as
   begin
-    pit_ut_pkg.log(p_message);
+    pit_ut_pkg.print(p_message);
   end print;
   
   
@@ -22,7 +22,7 @@ as
     p_message in message_type)
   as
   begin
-    pit_ut_pkg.log(p_message);
+    pit_ut_pkg.notify(p_message);
   end notify;
   
   

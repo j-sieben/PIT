@@ -2,37 +2,37 @@ create or replace package body utl_context
 as
   /* PACKAGE CONSTANTS */
   -- Global Constants
-  c_package_name constant varchar2(30 byte) := $$PLSQL_UNIT;
-  c_true constant &FLAG_TYPE. := &C_TRUE.;
-  c_false constant &FLAG_TYPE. := &C_FALSE.;
+  C_PACKAGE_NAME constant ora_name_type := $$PLSQL_UNIT;
+  C_TRUE constant flag_type := &C_TRUE.;
+  C_FALSE constant flag_type := &C_FALSE.;
 
   -- Parameter Maintenance
-  c_parameter_group_id constant varchar2(10) := 'CONTEXT';
-  c_parameter_postfix constant varchar2(5) := '_TYPE';
-  c_parameter_type constant varchar2(10) := 'STRING';
-  c_validation_string constant varchar2(200) :=
+  C_PARAMETER_GROUP_ID constant ora_name_type := 'CONTEXT';
+  C_PARAMETER_POSTFIX constant ora_name_type := '_TYPE';
+  C_PARAMETER_TYPE constant ora_name_type := 'STRING';
+  C_VALIDATION_STRING constant small_char :=
     q'[string_value in (
        'GLOBAL', 'FORCE_USER','FORCE_CLIENT_ID',
        'FORCE_USER_CLIENT_ID', 'PREFER_CLIENT_ID',
        'PREFER_USER_CLIENT_ID', 'SESSION')]';
 
   -- USERENV constants
-  c_env constant varchar2(20) := 'USERENV';
-  c_client_id constant varchar2(20) := 'CLIENT_IDENTIFIER';
-  c_session_id constant varchar2(10) := 'SESSIONID';
+  C_ENV constant ora_name_type := 'USERENV';
+  C_CLIENT_ID constant ora_name_type := 'CLIENT_IDENTIFIER';
+  C_SESSION_ID constant ora_name_type := 'SESSIONID';
 
   $IF $$PIT_INSTALLED $THEN
   $ELSE
   -- Exception Handling
-  c_context constant varchar2(20) := '#CONTEXT#';
-  c_no_context_msg constant varchar2(200) :=
+  C_CONTEXT constant ora_name_type := '#CONTEXT#';
+  C_NO_CONTEXT_MSG constant small_char :=
    'Context cannot be null.
     Please provide a valid context name.';
-  c_invalid_context_msg constant varchar2(200) :=
+  C_INVALID_CONTEXT_MSG constant small_char :=
        ': Context '
-    || c_context
+    || C_CONTEXT
     || ' does not exist. Please provide a valid context name that is controlled by '
-    || c_package_name
+    || C_PACKAGE_NAME
     || '.';
   $END
 
@@ -46,15 +46,15 @@ as
   );
 
   type context_settings_tab is table of context_setting_rec
-    index by varchar2(30);
+    index by ora_name_type;
 
   g_context_settings context_settings_tab;
   g_context_setting context_setting_rec;
-  g_user varchar2(30);
+  g_user ora_name_type;
 
   /* Helper to check whether a context is maintained by this package
-   * @param p_context Name of the context to check
-   * @usage Is called internally to assert that a context is maintained by this package
+   * @param  p_context  Name of the context to check
+   * @usage  Is called internally to assert that a context is maintained by this package
    */
   procedure check_param(
     p_context in varchar2)
@@ -64,7 +64,7 @@ as
       $IF $$PIT_INSTALLED $THEN
       pit.error(msg.CTX_NO_CONTEXT);
       $ELSE
-      raise_application_error(-20999, c_no_context_msg);
+      raise_application_error(-20999, C_NO_CONTEXT_MSG);
       $END
     elsif not g_context_settings.exists(p_context) then
       $IF $$PIT_INSTALLED $THEN
@@ -72,16 +72,15 @@ as
       $ELSE
       raise_application_error(-20998,
         replace(
-          c_invalid_context_msg, c_context, p_context));
+          C_INVALID_CONTEXT_MSG, C_CONTEXT, p_context));
       $END
     end if;
   end check_param;
 
 
   /* Helper to read metadata for a maintained context
-   * @param p_context Name of the context to read
-   * @usage Is called internally to read metadata according to type context_setting_rec
-   *        for a given context
+   * @param  p_context  Name of the context to read
+   * @usage  Is called internally to read metadata according to type context_setting_rec for a given context
    */
   procedure read_settings(
     p_context in varchar2)
@@ -93,7 +92,8 @@ as
 
 
   /* Helper function to wrap a call to user according to the settings of the context
-   * @usage If a context requires a username, it is provided, otherwise null is returned.
+   * @usage  If a context requires a username, it is provided, otherwise null is returned.
+   * @return content of method USER
    */
   function get_user_name
     return varchar2
@@ -108,14 +108,16 @@ as
 
 
   /* Helper function to wrap a call to sys_contexrt('USERENV', 'CLIENT_IDENTIFIER')
-   * @usage if the settings for a given context require a client id, this
-   *        function returns its value, otherwise null.
-   *        If the context requires a client_id, this function returns
-   *        - the client id
-   *        - the client_identifier
-   *        - constant c_no_value
-   *        whatever is not null, in this order
-   *        If the context requires a session_id, it will be returned
+   * @param [p_client_id] Optional client identifier
+   * @return If the context requires a client_id, this function returns
+   *         - the client id
+   *         - the client_identifier
+   *         - constant c_no_value
+   *         whatever is not null, in this order
+   *         If the context requires a session_id, it will be returned
+   * @usage  if the settings for a given context require a client id, this
+   *         function returns its value, otherwise null.
+   *         
    */
   function get_client_id(
     p_client_id varchar2 default null)
@@ -124,9 +126,9 @@ as
   begin
     case
     when g_context_setting.with_client_id then
-      return replace(coalesce(p_client_id, sys_context(c_env, c_client_id)), c_no_value);
+      return replace(coalesce(p_client_id, sys_context(C_ENV, C_CLIENT_ID)), c_no_value);
     when g_context_setting.with_session_id then
-      return sys_context(c_env, c_session_id);
+      return sys_context(C_ENV, C_SESSION_ID);
     else
       return null;
     end case;
@@ -139,35 +141,35 @@ as
     cursor ctx_cur is
       select namespace,
              case when type in ('ACCESSED GLOBALLY')
-                  then c_true else c_false
+                  then C_TRUE else C_FALSE
                   end is_global
         from dba_context
-       where package = c_package_name
+       where package = C_PACKAGE_NAME
          and schema = '&INSTALL_USER.';
-    l_dummy &ORA_NAME_TYPE.;
-    l_context_type &ORA_NAME_TYPE.;
-    l_parameter_id &ORA_NAME_TYPE.;
+    l_dummy ora_name_type;
+    l_context_type ora_name_type;
+    l_parameter_id ora_name_type;
     l_empty_ctx_setting context_setting_rec;
   begin
     g_user := user;
     for ctx in ctx_cur loop
       g_context_setting := l_empty_ctx_setting;
       g_context_setting.is_global := case ctx.is_global
-        when c_true then true else false end;
+        when C_TRUE then true else false end;
       if g_context_setting.is_global then
-        l_parameter_id := replace(ctx.namespace, '_APEX_BUCH') || c_parameter_postfix;
+        l_parameter_id := replace(ctx.namespace, '_APEX_BUCH') || C_PARAMETER_POSTFIX;
         begin
-          l_context_type := to_char(param.get_string(l_parameter_id, c_parameter_group_id));
+          l_context_type := to_char(param.get_string(l_parameter_id, C_PARAMETER_GROUP_ID));
         exception
           when no_data_found then
             l_context_type := c_global;
             param_admin.edit_parameter(
               p_par_id => l_parameter_id,
-              p_par_pgr_id => c_parameter_group_id,
+              p_par_pgr_id => C_PARAMETER_GROUP_ID,
               p_par_description => 'Type of context ' || l_parameter_id,
               p_par_string_value => l_context_type,
-              p_par_pat_id => c_parameter_type,
-              p_par_validation_string => c_validation_string);
+              p_par_pat_id => C_PARAMETER_TYPE,
+              p_par_validation_string => C_VALIDATION_STRING);
         end;
         case l_context_type
         when c_global then
@@ -222,12 +224,12 @@ as
     p_client_id in varchar2)
     return varchar2
   as
-    l_value varchar2(4000 byte);
+    l_value sql_char;
     l_client_identifier varchar2(64 byte);
   begin
-    l_client_identifier := sys_context(c_env, c_client_id);
+    l_client_identifier := sys_context(C_ENV, C_CLIENT_ID);
     dbms_session.set_identifier(p_client_id);
-    l_value := sys_context(p_context, p_attribute);
+    l_value := substr(sys_context(p_context, p_attribute), 1, 64);
     dbms_session.set_identifier(l_client_identifier);
     return l_value;
   end get_with_client_id;
@@ -239,7 +241,7 @@ as
     p_client_id varchar2 default null)
     return varchar2
   as
-    l_value varchar2(4000 byte);
+    l_value sql_char;
   begin
     read_settings(p_context);
     l_value := sys_context(p_context, p_attribute);
@@ -252,7 +254,7 @@ as
     then -- Lese sessionspezifischen Parameter
       l_value := get_with_client_id(
                    p_context, p_attribute,
-                   nvl(p_client_id, sys_context(c_env, c_session_id)));
+                   nvl(p_client_id, sys_context(C_ENV, C_SESSION_ID)));
     else
       null;
     end case;
@@ -279,8 +281,7 @@ as
     p_client_id varchar2 default null)
     return varchar2
   as
-    l_value varchar2(4000 byte);
-    c_name_delimiter char(1 byte) := '@';
+    l_value sql_char;
   begin
     read_settings(p_context);
     for i in p_attribute_list.first .. p_attribute_list.last loop
@@ -295,7 +296,7 @@ as
       then -- Lese sessionspezifischen Parameter
         l_value := get_with_client_id(
                      p_context, p_attribute_list(i),
-                     nvl(p_client_id, sys_context(c_env, c_session_id)));
+                     nvl(p_client_id, sys_context(C_ENV, C_SESSION_ID)));
       else
         null;
       end case;

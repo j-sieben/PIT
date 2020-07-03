@@ -135,31 +135,31 @@ as
   /****************************** LOGGING AND DEBUGGING *********************************/
   procedure log(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null,
     p_log_threshold in number default null,
-    p_module_list in varchar2 default null)
+    p_log_modules in varchar2 default null)
   as
   begin
     pit_pkg.log_specific(
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
       p_error_code => p_error_code,
-      p_arg_list => p_arg_list,
+      p_msg_args => p_msg_args,
       p_log_threshold => coalesce(p_log_threshold, pit.level_all),
-      p_log_modules => p_module_list);
+      p_log_modules => p_log_modules);
   end log;
   
     
   procedure verbose(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null)
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log_event(level_all, p_message_name, p_arg_list, p_affected_id, null);
+    pit_pkg.log_event(level_all, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -168,12 +168,12 @@ as
 
   procedure debug(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null)
   as
   begin
     $IF pit_admin.c_level_le_debug $THEN
-    pit_pkg.log_event(level_debug, p_message_name, p_arg_list, p_affected_id, null);
+    pit_pkg.log_event(level_debug, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -182,12 +182,12 @@ as
 
   procedure info(
     p_message_name in varchar2,
-    p_arg_list msg_args default null,
+    p_msg_args msg_args default null,
     p_affected_id in varchar2 default null)
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log_event(level_info, p_message_name, p_arg_list, p_affected_id, null);
+    pit_pkg.log_event(level_info, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -196,12 +196,12 @@ as
 
   procedure warn(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null)
   as
   begin
     $IF pit_admin.c_level_le_warn $THEN
-    pit_pkg.log_event(level_warn, p_message_name, p_arg_list, p_affected_id, null);
+    pit_pkg.log_event(level_warn, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     null;
     $END
@@ -210,48 +210,48 @@ as
 
   procedure error(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
-    pit_pkg.raise_error(level_error, p_message_name, p_arg_list, p_affected_id, p_error_code);
+    pit_pkg.raise_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code);
   end error;
 
 
   procedure fatal(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
-    pit_pkg.raise_error(level_fatal, p_message_name, p_arg_list, p_affected_id, p_error_code);
+    pit_pkg.raise_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code);
   end fatal;
   
 
   procedure sql_exception(
     p_message_name in varchar2 default null,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null)
   as
   begin
-    pit_pkg.handle_error(level_error, p_message_name, p_arg_list, p_affected_id, p_error_code, p_params);
+    pit_pkg.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
     leave;
   end sql_exception;
 
 
   procedure stop(
     p_message_name in varchar2 default null,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null)
   as
   begin
-    pit_pkg.handle_error(level_fatal, p_message_name, p_arg_list, p_affected_id, p_error_code, p_params);
+    pit_pkg.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
   end stop;
   
   
@@ -407,49 +407,49 @@ as
   
   procedure print(
     p_message_name in varchar2,
-    p_arg_list msg_args default null)
+    p_msg_args msg_args default null)
   as
   begin
-    pit_pkg.print(p_message_name, p_arg_list);
+    pit_pkg.print(p_message_name, p_msg_args);
   end print;
   
 
   procedure notify(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_log_threshold in number default null,
-    p_module_list in varchar2 default null)
+    p_log_modules in varchar2 default null)
   as
   begin
     pit_pkg.notify(
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
-      p_arg_list => p_arg_list,
+      p_msg_args => p_msg_args,
       p_log_threshold => p_log_threshold,
-      p_module_list => p_module_list);
+      p_log_modules => p_log_modules);
   end notify;
   
   
   function get_message_text(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null)
+    p_msg_args in msg_args default null)
   return clob
   as
   begin
-    return pit_pkg.get_message_text(p_message_name, p_arg_list);
+    return pit_pkg.get_message_text(p_message_name, p_msg_args);
   end get_message_text;
   
   
   function get_message(
     p_message_name in varchar2,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   return message_type
   as
   begin
-    return pit_pkg.get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
+    return pit_pkg.get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
   end get_message;
   
   
@@ -465,13 +465,13 @@ as
   procedure assert(
     p_condition in boolean,
     p_message_name in varchar2 default msg.ASSERT_TRUE,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if not p_condition or p_condition is null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert;
   
@@ -479,13 +479,13 @@ as
   procedure assert_is_null(
     p_condition in varchar2,
     p_message_name in varchar2 default msg.ASSERT_IS_NULL,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if p_condition is not null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_is_null;
   
@@ -493,13 +493,13 @@ as
   procedure assert_is_null(
     p_condition in number,
     p_message_name in varchar2 default msg.ASSERT_IS_NULL,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if p_condition is not null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_is_null;
   
@@ -507,13 +507,13 @@ as
   procedure assert_is_null(
     p_condition in date,
     p_message_name in varchar2 default msg.ASSERT_IS_NULL,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if p_condition is not null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_is_null;
   
@@ -521,13 +521,13 @@ as
   procedure assert_not_null(
     p_condition in varchar2,
     p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if p_condition is null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_not_null;
   
@@ -535,13 +535,13 @@ as
   procedure assert_not_null(
     p_condition in number,
     p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if p_condition is null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_not_null;
   
@@ -549,13 +549,13 @@ as
   procedure assert_not_null(
     p_condition in date,
     p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
   begin
     if p_condition is null then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_not_null;
   
@@ -563,7 +563,7 @@ as
   procedure assert_exists(
     p_stmt in varchar2,
     p_message_name in varchar2 default msg.ASSERT_EXISTS,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
@@ -574,7 +574,7 @@ as
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
     execute immediate l_stmt into l_count;
     if l_count = 0 then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+       pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_exists;
   
@@ -582,7 +582,7 @@ as
   procedure assert_exists(
     p_cursor in out nocopy sys_refcursor,
     p_message_name in varchar2 default msg.ASSERT_EXISTS,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
@@ -594,7 +594,7 @@ as
     dbms_sql.close_cursor(l_id);
  
     if l_cnt = 0 then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+       pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   exception
     when others then
@@ -605,7 +605,7 @@ as
   procedure assert_not_exists(
     p_stmt  in varchar2,
     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
@@ -616,7 +616,7 @@ as
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
     execute immediate l_stmt into l_count;
     if l_count = 1 then
-       pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+       pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   end assert_not_exists;
   
@@ -624,7 +624,7 @@ as
   procedure assert_not_exists(
     p_cursor in out nocopy sys_refcursor,
     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-    p_arg_list msg_args := null,
+    p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_error_code in varchar2 default null)
   as
@@ -636,7 +636,7 @@ as
     dbms_sql.close_cursor(l_id);
     
     if l_cnt > 0 then
-      pit.error(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      pit.error(p_message_name, p_msg_args, p_affected_id, p_error_code);
     end if;
   exception
     when others then
@@ -655,24 +655,24 @@ as
   function get_trans_item_name(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
     p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args default null,
+    p_msg_args msg_args default null,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
   return varchar2
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_name;
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name).pti_name;
   end get_trans_item_name; 
   
     
   function get_trans_item_display_name(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
     p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args default null,
+    p_msg_args msg_args default null,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
   return varchar2
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name).pti_display_name;
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name).pti_display_name;
   end get_trans_item_display_name; 
   
     
@@ -690,12 +690,12 @@ as
   function get_trans_item(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
     p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args default null,
+    p_msg_args msg_args default null,
     p_pti_pml_name in pit_message_language.pml_name%type := null)
   return pit_util.translatable_item_rec
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_arg_list, p_pti_pml_name);
+    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name);
   end get_trans_item; 
   
   
@@ -732,14 +732,15 @@ as
     p_log_level in integer,
     p_trace_level in integer,
     p_trace_timing in boolean,
-    p_module_list in varchar2)
+    p_log_modules in varchar2)
   as
+    l_context pit_util.context_type;
   begin
-    pit_pkg.set_context(
-      p_log_level,
-      p_trace_level,
-      p_trace_timing,
-      p_module_list);
+    l_context.log_level := p_log_level;
+    l_context.trace_level := p_trace_level;
+    l_context.trace_timing := p_trace_timing;
+    l_context.module_list := p_log_modules;
+    pit_pkg.set_context(l_context);
   end set_context;
   
   

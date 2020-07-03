@@ -7,7 +7,8 @@ as
   C_WRONG_PATTERN constant varchar2(2000) := '#WHAT# not correct. Please use a valid format as described in the documentation. Checked: #PATTERN#';
   
   C_PARAMETER_GROUP constant varchar2(5) := 'PIT';
-  C_NAME_SPELLING constant pit_util.ora_name_type := 'NAME_SPELLING';
+  C_NAME_SPELLING constant ora_name_type := 'NAME_SPELLING';
+  C_CTX_DEL constant char(1 byte) := '|';
     
   /**** GLOBAL VARS ****/
   g_user ora_name_type;
@@ -50,7 +51,7 @@ as
   end harmonize_name;
   
   
-  /** Helper to decide whether a subprogram has to be ignored due to parameter settings
+  /** Helper to decide whether a subprogram has to be ignored due to parameterctings
    * @param  p_subprogram  Method to check
    * @return Flag to indicate whether a subprogram has to be ignored (TRUE) or not (FALSE)
    */
@@ -133,10 +134,15 @@ as
     l_args args := args();
   begin
     if p_string_value is not null then
-      for i in 1 .. regexp_count(p_string_value, '\' || p_delimiter) + 1 loop
+      if instr(p_string_value, p_delimiter) > 0 then
+        for i in 1 .. regexp_count(p_string_value, '\' || p_delimiter) + 1 loop
+          l_args.extend;
+          l_args(i) := regexp_substr(p_string_value, '[^\' || p_delimiter || ']+', 1, i);
+        end loop;
+      else
         l_args.extend;
-        l_args(i) := regexp_substr(p_string_value, '[^\' || p_delimiter || ']+', 1, i);
-      end loop;
+        l_args(1) := p_string_value;
+      end if;
     end if;
     return l_args;
   end string_to_table;
@@ -301,7 +307,7 @@ as
     if not regexp_like(upper(p_settings), C_SETTING_REGEX) then
       raise_application_error(
         -20000, 
-        pit_util.bulk_replace(
+        bulk_replace(
           C_WRONG_PATTERN, char_table(
           '#WHAT#', 'Settings are',
           '#PATTERN#', p_settings)));
@@ -334,6 +340,54 @@ as
     when no_data_found then
       raise context_missing;
   end check_toggle_settings;
+    
+  
+  
+  procedure string_to_context_type(
+    p_context_values in varchar2,
+    p_context_settings in out nocopy context_type)
+  as
+    l_position binary_integer;
+    l_args args;
+    
+    function get_setting(p_settings args, p_idx number)
+      return varchar2
+    as
+      l_setting max_sql_char;
+    begin
+      if p_settings.exists(p_idx) then
+        l_setting := p_settings(p_idx);
+      end if;
+      return l_setting;
+    end get_setting;
+  begin
+    l_position := instr(p_context_values, utl_context.C_NAME_DELIMITER);
+    if l_position > 0 then
+      p_context_settings.settings := substr(p_context_values, 1, l_position - 1);
+      p_context_settings.context_name := substr(p_context_values, l_position + 1);
+    else
+      p_context_settings.settings := p_context_values;
+    end if;
+      
+    l_args := string_to_table(p_context_settings.settings, '|');    
+    p_context_settings.log_level := to_number(get_setting(l_args, 1));
+    p_context_settings.trace_level := to_number(get_setting(l_args, 2));
+    p_context_settings.trace_timing := to_bool(get_setting(l_args, 3));
+    p_context_settings.module_list := get_setting(l_args, 4);
+  end string_to_context_type;
+    
+    
+  function context_type_to_string(
+    p_settings in context_type)
+    return varchar2
+  as
+    l_trace_timing flag_type;
+    l_trace_settings max_sql_char;
+  begin
+    l_trace_timing := to_bool(p_settings.trace_timing);
+    l_trace_settings := concatenate(char_table(p_settings.log_level, p_settings.trace_level, l_trace_timing, p_settings.module_list), C_CTX_DEL);
+    return l_trace_settings;
+  end context_type_to_string;
   
   
   procedure recompile_invalid_objects
@@ -382,7 +436,7 @@ as
     for i in 1 .. C_MAX_COMPILE_RUNS loop
       dbms_output.put_line('compile Run ' || i);
       for obj in invalid_objects_cur loop
-        l_stmt := pit_util.bulk_replace(C_RECOMPILE_STMT, char_table(
+        l_stmt := bulk_replace(C_RECOMPILE_STMT, char_table(
                     '#OWNER#', obj.owner,
                     '#TYPE#', replace(obj.object_type, ' BODY'),
                     '#NAME#', obj.object_name,
@@ -393,7 +447,7 @@ as
           begin
             execute immediate l_stmt;
             dbms_output.put_line(
-              pit_util.bulk_replace(C_COMPILED, char_table(
+              bulk_replace(C_COMPILED, char_table(
                 '#TYPE#', obj.object_type,
                 '#OWNER#', obj.owner,
                 '#NAME#', obj.object_name)));
@@ -402,7 +456,7 @@ as
               null;
             when others then
               dbms_output.put_line(
-                pit_util.bulk_replace(C_COMPILE_ERROR, char_table(
+                bulk_replace(C_COMPILE_ERROR, char_table(
                   '#TYPE#', obj.object_type,
                   '#OWNER#', obj.owner,
                   '#NAME#', obj.object_name,
@@ -410,7 +464,7 @@ as
           end;
         else
           dbms_output.put_line(
-            pit_util.bulk_replace(C_INVALID_OBJECT, char_table(
+            bulk_replace(C_INVALID_OBJECT, char_table(
               '#TYPE#', obj.object_type,
               '#OWNER#', obj.owner,
               '#NAME#', obj.object_name)));

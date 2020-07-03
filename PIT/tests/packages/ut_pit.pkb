@@ -15,12 +15,14 @@ as
     
   g_result result_rec;
   
-  C_UT_OUT varchar2(128 byte) := 'PIT_UT';
-  C_AFFECTED_ID varchar2(128 byte) := '123456';
-  C_ERROR_CODE varchar2(128 byte) := '654321';
-  C_DUMMY_TEXT varchar2(128 Byte) := 'Hello World';
-  C_DUMMY_NUMBER number := 12345;
-  C_DUMMY_DATE date := date '2020-02-29';
+  C_UT_OUT constant varchar2(128 byte) := 'PIT_UT';
+  C_AFFECTED_ID constant varchar2(128 byte) := '123456';
+  C_ERROR_CODE constant varchar2(128 byte) := '654321';
+  C_DUMMY_TEXT constant varchar2(128 Byte) := 'Hello World';
+  C_DUMMY_NUMBER constant number := 12345;
+  C_DUMMY_DATE constant date := date '2020-02-29';
+  C_STMT_WITH_RESULT constant varchar2(4000 byte) := q'^select sysdate from dual^';
+  C_STMT_W_O_RESULT constant varchar2(4000 byte) := q'^select NULL from dual where null is not null^';
   
   function increment_counter(
     p_counter in out nocopy binary_integer)
@@ -83,7 +85,7 @@ as
   as
   begin
     pit.initialize;
-    pit.set_context(pit.LEVEL_ERROR, 10, false, C_UT_OUT);
+    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
   end before_all;
   
   
@@ -99,7 +101,7 @@ as
   as
   begin
     reset_result;
-    pit.set_context(pit.LEVEL_ERROR,10,false, C_UT_OUT);
+    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
   end before_each;
   
   
@@ -167,11 +169,11 @@ as
   begin
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_error_code => null,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.log_count).to_be_greater_than(0);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -186,11 +188,11 @@ as
     pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, 'PIT_CONSOLE');
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_error_code => null,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.log_count).to_equal(1);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -204,11 +206,11 @@ as
   begin
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_error_code => null,
       p_log_threshold => null,
-      p_module_list => 'PIT_CONSOLE:PIT_UT');
+      p_log_modules => 'PIT_CONSOLE:' || C_UT_OUT);
       
     ut.expect(g_result.log_count).to_equal(1);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -222,11 +224,11 @@ as
   begin
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_error_code => C_ERROR_CODE,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.error_code).to_equal(C_ERROR_CODE);
   end log_passes_error_code;
@@ -239,11 +241,11 @@ as
   begin
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_error_code => null,
       p_log_threshold => pit.LEVEL_DEBUG,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.message_name).to_be_null;
   end log_filters_threshold;
@@ -256,11 +258,11 @@ as
   begin
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_error_code => null,
       p_log_threshold => pit.LEVEL_ALL,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
   end log_passes_threshold;
@@ -273,11 +275,11 @@ as
   begin
     pit.log(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => C_AFFECTED_ID,
       p_error_code => null,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.affected_id).to_equal(C_AFFECTED_ID);
   end log_passes_affected_id;
@@ -714,7 +716,7 @@ as
     select 'Test_' || ora_hash(to_char(systimestamp))
       into l_test_case
       from dual;
-    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
+    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_MANDATORY, false, C_UT_OUT);
     pit.enter_mandatory;
     for i in 1 .. 10 loop
       pit.long_op(
@@ -743,7 +745,7 @@ as
     select 'Test_' || ora_hash(to_char(systimestamp))
       into l_test_case
       from dual;
-    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
+    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_MANDATORY, false, C_UT_OUT);
     pit.long_op(
       p_target => l_test_case,
       p_sofar => 100,
@@ -761,7 +763,7 @@ as
     select 'Test_' || ora_hash(to_char(systimestamp))
       into l_test_case
       from dual;
-    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
+    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_MANDATORY, false, C_UT_OUT);
     pit.enter_mandatory;
     for i in 1 .. 10 loop
       long_op_nested(l_test_case, i * 10);
@@ -786,7 +788,7 @@ as
     pit.set_context(pit.LEVEL_WARN, pit.TRACE_OFF, false, C_UT_OUT);
     pit.print(
       p_message_name => null,
-      p_arg_list => null);
+      p_msg_args => null);
       
     ut.expect(coalesce(g_result.print_count, 0)).to_equal(0);
     ut.expect(g_result.log_count).to_equal(1);
@@ -801,7 +803,7 @@ as
   begin
     pit.print(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT));
+      p_msg_args => msg_args(C_DUMMY_TEXT));
       
     ut.expect(g_result.print_count).to_be_greater_than(0);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -816,10 +818,10 @@ as
   begin
     pit.notify(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => null);
       
     ut.expect(g_result.notify_count).to_be_greater_than(0);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -831,13 +833,13 @@ as
   procedure notify_not_set_before 
   as
   begin
-    pit.set_context(pit.LEVEL_ERROR,10,false, 'PIT_CONSOLE');
+    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, 'PIT_CONSOLE');
     pit.notify(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.notify_count).to_equal(1);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -851,10 +853,10 @@ as
   begin
     pit.notify(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_log_threshold => null,
-      p_module_list => 'PIT_CONSOLE:PIT_UT');
+      p_log_modules => 'PIT_CONSOLE:PIT_UT');
       
     ut.expect(g_result.notify_count).to_equal(1);
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
@@ -868,10 +870,10 @@ as
   begin
     pit.notify(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_log_threshold => pit.LEVEL_DEBUG,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.message_name).to_be_null;
   end notify_filters_threshold;
@@ -884,10 +886,10 @@ as
   begin
     pit.notify(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => null,
       p_log_threshold => pit.LEVEL_ALL,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
   end notify_passes_threshold;
@@ -900,16 +902,16 @@ as
   begin
     pit.notify(
       p_message_name => msg.PIT_PASS_MESSAGE,
-      p_arg_list => msg_args(C_DUMMY_TEXT),
+      p_msg_args => msg_args(C_DUMMY_TEXT),
       p_affected_id => C_AFFECTED_ID,
       p_log_threshold => null,
-      p_module_list => C_UT_OUT);
+      p_log_modules => C_UT_OUT);
       
     ut.expect(g_result.message.affected_id).to_equal(C_AFFECTED_ID);
   end notify_passes_affected_id;
 
   --
-  -- test get_message_text: ...
+  -- test get_message_text: creates an instance of type MESSAGE_TYPE and extracts the message text
   --
   procedure get_message_text
   as
@@ -1080,177 +1082,8 @@ as
     pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
     pit.assert_not_null(to_char(null), msg.SQL_ERROR);
   end assert_not_null_with_error;
-
-  --
-  -- test assert_exists case 1: ...
-  --
-  procedure assert_exists1 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_exists1;
-
-  --
-  -- test assert_exists case 2: ...
-  --
-  procedure assert_exists2 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_exists2;
-
-  --
-  -- test assert_exists case 3: ...
-  --
-  procedure assert_exists3 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_exists3;
-
-  --
-  -- test assert_exists case 4: ...
-  --
-  procedure assert_exists4 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_exists4;
-
-  --
-  -- test assert_exists case 5: ...
-  --
-  procedure assert_exists5 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_exists5;
-
-  --
-  -- test assert_not_exists case 1: ...
-  --
-  procedure assert_not_exists1 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_not_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_not_exists1;
-
-  --
-  -- test assert_not_exists case 2: ...
-  --
-  procedure assert_not_exists2 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_not_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_not_exists2;
-
-  --
-  -- test assert_not_exists case 3: ...
-  --
-  procedure assert_not_exists3 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_not_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_not_exists3;
-
-  --
-  -- test assert_not_exists case 4: ...
-  --
-  procedure assert_not_exists4 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_not_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_not_exists4;
-
-  --
-  -- test assert_not_exists case 5: ...
-  --
-  procedure assert_not_exists5 is
-    l_actual   integer := 1;
-    l_expected integer := 1;
-  begin
-    -- populate actual
-    -- pit.assert_not_exists;
-
-    -- populate expected
-    -- ...
-
-    -- assert
-    ut.expect(l_actual).to_equal(l_expected);
-  end assert_not_exists5;
-
+  
+  
   --
   -- test get_trans_item_name case 1: ...
   --

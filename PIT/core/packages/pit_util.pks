@@ -24,16 +24,28 @@ as
   C_DEFAULT_CONTEXT constant ora_name_type := 'CONTEXT_DEFAULT';
   
   /** Record to store log and trace settings
-   * @param  log_level    Actually set log level. One of the C_LEVEL_... constants
-   * @param  trace_level  Actually set trace level. One of the C_TRACE_... constants
-   * @param  trace_timing Flag to indicate whether tracing should capture timing information
-   * @param  log_modules  Colon separated list of module names used as output modules
+   * @param  context_name              Name of the context, is used to identify a stored context
+   * @param  settings                  Condensed string with settings for log/trace level, flag_timing and module list
+   * @param  log_level                 On of the C_LEVEL constants, controls logging
+   * @param  trace_level               On of the C_TRACE constants, controls tracing
+   * @param  trace_timing              Flag to control whether timing information for methods are calculated
+   * @param  module_list               Colon separated list of output modules
+   * @param  context_type              Defines the type of the context, i.e. how to deal with context settings
+   * @param  allow_toggle              Flag to indicate whether logging can be switched on and off based on package names (toggles)
+   * @param  broadcast_context_switch  Flag to indicate whether a context switch should be broadcasted to all instantiated output modules
+   * @param  ctx_changed               Flag to indicate whether context has changed in comparison to actual context
    */
-  type context_type is record(
+  type context_type is record (
+    context_name pit_util.ora_name_type,
+    settings pit_util.max_sql_char,
     log_level binary_integer,
     trace_level binary_integer,
     trace_timing boolean,
-    log_modules max_sql_char);
+    module_list pit_util.max_sql_char,
+    context_type pit_util.ora_name_type,
+    allow_toggle boolean,
+    broadcast_context_switch boolean,
+    ctx_changed boolean);
     
   /** List of CONTEXT_TYPE indexed by ORA_NAME_TYPE
    */
@@ -199,6 +211,23 @@ as
     p_toggle_name in ora_name_type,
     p_module_list in varchar2,
     p_context_name in ora_name_type);
+    
+  
+  /** Method to cast a string to an instance of CONTEXT_TYPE
+   * @param  p_settings  pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST
+   * @return Instance of CONTEXT_TYPE, if P_SETTINGS could be validated
+   */
+  function string_to_context_type(
+    p_settings in varchar2)
+    return context_type;
+    
+    
+  /** Method to cast an instance of CONTEXT_TYPE to string
+   * @param  p_settings  Only enough attributes to allow for storage within the context are put together
+   * @return String with a pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST
+   */
+  function context_type_to_string(
+    p_settings in context_type)
 
 
   /** Procedure to recompile invalid objects

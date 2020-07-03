@@ -17,32 +17,11 @@ as
   /** List of all modules which are available for logging (meaning: status = msg.MODULE_INSTANTIATED) */
   g_available_modules module_list_type;
 
-  /** Debug and trace settings, stored within a context
-   * @param  context_name              Name of the context, is used to identify a stored context
-   * @param  settings                  Condensed string with settings for log/trace level, flag_timing and module list
-   * @param  log_level                 On of the C_LEVEL constants, controls logging
-   * @param  trace_level               On of the C_TRACE constants, controls tracing
-   * @param  trace_timing              Flag to control whether timing information for methods are calculated
-   * @param  active_log_modules        List of type <code>MODULE_LIST_TYPE</code> with instantiated output modules
-   * @param  module_list               Colon separated list of output modules
-   * @param  context_type              Defines the type of the context, i.e. how to deal with context settings
-   * @param  allow_toggle              Flag to indicate whether logging can be switched on and off based on package names (toggles)
-   * @param  broadcast_context_switch  Flag to indicate whether a context switch should be broadcasted to all instantiated output modules
-   */
-  type context_rec is record (
-    context_name pit_util.ora_name_type,
-    settings pit_util.max_sql_char,
-    log_level binary_integer,
-    trace_level binary_integer,
-    trace_timing boolean,
-    active_log_modules module_list_type,
-    module_list pit_util.max_sql_char,
-    context_type pit_util.ora_name_type,
-    allow_toggle boolean,
-    broadcast_context_switch boolean);
+  /** List of all modules which are available for logging (meaning: status = msg.MODULE_INSTANTIATED) */
+  g_active_modules module_list_type;
     
   /** Global variable for the actual context */
-  g_ctx context_rec;
+  g_context pit_util.context_type;
 
   /** Type to store a call stack */
   type call_stack_tab is table of call_stack_type index by binary_integer;
@@ -51,13 +30,13 @@ as
   g_call_stack call_stack_tab;
 
   /************************* PACKAGE VARIABLES ********************************/
-  /* parameter constants */
+  /** parameter constants */
   C_PACKAGE_OWNER constant pit_util.ora_name_type := $$PLSQL_UNIT_OWNER;
   C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
   C_BASE_MODULE constant pit_util.ora_name_type := 'PIT_MODULE';
   C_WARN_IF_UNUSABLE_MODULES constant pit_util.ora_name_type := 'WARN_IF_UNUSABLE_MODULES';
   
-  /* message constants */
+  /** message constants to avoid dependency from MSG package */
   C_MODULE_INSTANTIATED constant pit_util.ora_name_type := 'PIT_MODULE_INSTANTIATED';
   C_FAIL_MODULE_INIT constant pit_util.ora_name_type := 'PIT_FAIL_MODULE_INIT';
   C_FAIL_MESSAGE_CREATION constant pit_util.ora_name_type := 'PIT_FAIL_MESSAGE_CREATION';
@@ -69,7 +48,7 @@ as
   C_FAIL_READ_MODULE_LIST constant pit_util.ora_name_type := 'PIT_FAIL_READ_MODULE_LIST';
   C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
 
-  /* context constants */
+  /** context constants */
   C_GLOBAL_CONTEXT constant pit_util.ora_name_type := substr('PIT_CTX_' || C_PACKAGE_OWNER, 1, 30);
   C_CONTEXT_TYPE constant pit_util.ora_name_type := C_GLOBAL_CONTEXT || '_TYPE';
   C_CONTEXT_GROUP constant pit_util.ora_name_type := 'CONTEXT';
@@ -81,13 +60,12 @@ as
   C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
   C_CTX_DEL constant char(1 byte) := '|';
   C_LIST_DEL constant char(1 byte) := ':';
-  C_CTX_NAME_DEL constant char(1 byte) := '@';
 
-  /* adapter constants */
+  /** adapter constants */
   C_ADAPTER_PREFERENCE constant pit_util.ora_name_type := 'ADAPTER_PREFERENCE';
   C_ADAPTER_OK constant pit_util.flag_type := pit_util.C_TRUE;
 
-  /* "events" */
+  /** "events" */
   C_EVENT_FOCUS_ALL constant varchar2(10) := 'ALL';
   C_EVENT_FOCUS_ACTIVE constant varchar2(10) := 'ACTIVE';
 
@@ -99,7 +77,7 @@ as
   C_LEAVE_EVENT constant integer := 6;
   C_NOTIFY_EVENT constant integer := 7;
 
-  /* package vars */
+  /** package vars */
   g_warn_if_unusable_modules boolean;
   g_user_name pit_util.ora_name_type;
   g_client_id varchar2(64);
@@ -112,16 +90,19 @@ as
   procedure raise_event(
     p_event in binary_integer,
     p_event_focus in varchar2,
+    p_message in message_type default null,
     p_call_stack in call_stack_type default null,
+    p_context in pit_util.context_type default null,
     p_date_before in date default null,
     p_severity_lower_equal in binary_integer default null);
     
 
   /************************** MODULE MAINTENANCE ******************************/
-  /* Loads all output modules installed extending PIT_MODULE
-   * @usage  Loads and instantiates all output modules which are installed under PIT_MODULE and listed in parameter
-   *         and listed in parameter DEFAULT_LOG_MODULES.
-   *         After instantiation, all modules are made available in PL/SQL table MODULES
+  /** Loads all output modules installed extending type PIT_MODULE
+   * @usage  Loads and instantiates all output modules which are installed under PIT_MODULE
+   *         All modules are availabe in G_ALL_MODULES
+   *         All successfully instantiated modules are available in G_AVAILABLE_MODULES
+   *         An error is thrown if no module could be made available
    */
   procedure load_modules
   as
@@ -163,7 +144,7 @@ as
   end load_modules;
 
 
-  /* Reports all modules that have not been loaded succesfully
+  /** Reports all modules that have not been loaded succesfully if requested by parameter C_WARN_IF_UNUSABLE_MODULES
    * @usage  Is called after initialization of the output modules.
    *         Emits warnings for any module that has not been loaded succesfully if set to do so.
    */
@@ -185,7 +166,7 @@ as
   end report_module_status;
 
 
-  /* Copies all available output modules for a given context into a module list
+  /** Copies all requested and available output module instances into a module list
    * @usage  Copies available modules as requested by the actual context into a list of modules. 
    *         These modules will then be used to log to.
    * @param  p_requested_modules  Colon-separated list of requested output modules
@@ -216,78 +197,173 @@ as
   end get_modules_by_name;
 
 
-  /************************ CONTEXT MAINTENANCE ******************************/  
-  /** Helper to extract the settings from a settings string
-   * @param  p_settings  Settings string, including Context
-   * @return settings
-   */
-  procedure separate_settings(
-    p_settings in varchar2,
-    p_setting out varchar2,
-    p_context out varchar2)
-  as
-    l_position number;
-  begin
-    l_position := instr(p_settings, C_CTX_NAME_DEL);
-    if l_position != 0 then
-      p_setting := substr(p_settings, 1, l_position - 1);
-      p_context := substr(p_settings, l_position + 1);
-    else
-      p_setting := p_settings;
-    end if;
-  end separate_settings;
-  
-  
-  /* Sets new context settings for PIT
+  /************************ CONTEXT MAINTENANCE ******************************/
+  /** Sets new context settings for PIT
    * @usage  Is called from <code>pit.SET_CONTEXT</code> to actually persist
    *         the required settings in the global context and raise a context switch event
    * @param  p_settings  New context settings
+   * @usage  This method examins whether a context change has happened by comparing 
+   *         the context settings with the latest stored settings from G_CONTEXT.
+   *         If a change has occurred, it stores the new values
+   *         - at the globally accessed context to propagate the settings to other sessions
+   *         - within global variable G_CONTEXT to allow for a comparison later
+   *         It also loads the active output modules. This is repeated at LOAD_CONTEXT_VALUES
+   *         because it is possible that a change is enforced by a setting in another session
    */
-  procedure set_active_context(
-    p_settings in varchar2,
+  procedure set_context_values(
+    p_context in out nocopy pit_util.context_type,
     p_validate in boolean default true)
   as
     l_raise_focus pit_util.ora_name_type;
     l_required_context pit_util.ora_name_type;
-    l_settings pit_util.max_sql_char;
-    l_context_name pit_util.ora_name_type;
   begin
-    separate_settings(p_settings, l_settings, l_context_name);
     if p_validate then
       g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
     end if;
-      
-    if l_settings != coalesce(g_ctx.settings, 'FOO') then
-      utl_context.set_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, l_settings, g_client_id);
-      case when g_ctx.broadcast_context_switch 
-        then l_raise_focus := C_EVENT_FOCUS_ALL;
-        else l_raise_focus := C_EVENT_FOCUS_ACTIVE;
+    
+    p_context.settings := pit_util.context_type_to_string(p_context);
+    
+    if p_context.settings != coalesce(g_context.settings, 'FOO') then
+      utl_context.set_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, p_context.settings, g_client_id);
+      g_context.settings := p_context.settings;
+      g_active_modules := get_modules_by_name(p_context.module_list);
+      case 
+        when g_context.broadcast_context_switch then
+          l_raise_focus := C_EVENT_FOCUS_ALL;
+        else 
+          l_raise_focus := C_EVENT_FOCUS_ACTIVE;
       end case;
-      raise_event(C_CONTEXT_EVENT, l_raise_focus);
+      raise_event(C_CONTEXT_EVENT, l_raise_focus, p_context => p_context);
     end if;
-  end set_active_context;
+  end set_context_values;
+  
+  
+  /** Reads actual context settings
+   * @param [p_context_name] Optional context name. 
+   * @usage  Is called to read the log settings from the globally accessed context.
+   *         If P_CONTEXT_NAME is not null, it reads the default setting for this context from the
+   *         globally accessed context, otherwise it tries to read the active log settings. If no
+   *         active log settings exist, it falls back to the default log settings
+   * @return Named context if requested, active context if available, default context otherwise.
+   */
+  function get_context_values(
+    p_context_name in varchar2 default null)
+    return pit_util.context_type
+  as
+    l_args args;
+    l_context_vals pit_util.max_sql_char;
+    l_context pit_util.context_type;
+    l_required_context pit_util.ora_name_type;
+  begin
+    -- start by reading the actual session details 
+    g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
+    
+    -- If session adapter mandates for a context, this has precedence over local settings
+    if l_required_context is not null then
+      set_context(l_required_context, false);
+    end if;
+    
+    -- decide if a named context or the actively used context is required
+    if p_context_name is not null then
+      l_args := args(p_context_name);
+    else
+      l_args := args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
+    end if;
+    
+    l_context_vals := utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id);
+    if l_context_vals is not null then
+      pit_util.string_to_context_type(l_context_vals, l_context);
+      g_active_modules := get_modules_by_name(l_context.module_list);
+    else
+      handle_error(C_LEVEL_FATAL, C_UNKNOWN_NAMED_CONTEXT, msg_args(p_context_name));
+    end if;
+    
+    return l_context;
+  end get_context_values;
+  
+  
+  /** Helper to persist existings context settings in P_OLD_CONTEXT and set the active context according to the settings
+   * @param  p_old_context    Instance of PIT_UTIL.context_type to hold the existing context settings and a flag on whether
+   *                          the context was changed by this method
+   * @param  p_log_threshold  New log threshold for the context settings. If the message severity is lower or equal than this
+   *                          setting, the message gets delivered and the context is changed.
+   * @param  p_log_modules    Optional list of output modules to use for this logging.
+   * @usage  Is used if for a single log activity a new context setting is required, such as with LOG_SPECIFIC or NOTIFY.
+   */
+  procedure set_context_temporarily(
+    p_old_context out nocopy pit_util.context_type,
+    p_log_threshold in pit_message.pms_pse_id%type,
+    p_log_modules in pit_util.max_sql_char)
+  as
+    l_new_context pit_util.context_type;
+  begin
+    -- initialize
+    p_old_context := get_context_values;
+    l_new_context := p_old_context;
+    l_new_context.context_name := C_CONTEXT_ACTIVE;
+    
+    -- Switch to log modules passed in if necessary
+    if p_log_modules is not null then
+      l_new_context.module_list := p_log_modules;
+      p_old_context.ctx_changed := true;
+    end if;
+    
+    -- Set differing log_threshold if necessary
+    if p_log_threshold is not null then
+      l_new_context.log_level := p_log_threshold;
+      p_old_context.ctx_changed := true;
+    end if;
+    
+    -- persist changes
+    if p_old_context.ctx_changed then
+      set_context_values(l_new_context);
+    end if;
+
+  end set_context_temporarily;
+  
+  
+  /** Method to reset a temporarlily set context back to its original settings
+   * @param  p_context  Context settings of the context before the temporarily shift
+   * @usage  Is used to reset a temporarily context switch back. Used in conjunction with SET_CONTEXT_TEMPORARILY
+   */
+  procedure reset_temporarily_set_context(
+    p_context in pit_util.context_type)
+  as
+  begin
+    -- clean up after setting changes
+    if p_context.ctx_changed then
+      if p_context.context_name = C_CONTEXT_DEFAULT then
+        reset_context;
+      else
+        set_context(p_context);
+      end if;
+    end if;
+  end reset_temporarily_set_context;
 
 
-  /* Checks whether a toggle for a given package/method exists
-   * @usage  A toggle controls whether PIT shoul log or not. Therefore it must be checked whether a toggle was defined for
+  /** Checks whether a toggle for a given package/method exists
+   * @usage  A toggle controls whether PIT should log or not. Therefore it must be checked whether a toggle was defined for
    *         the actual package/method the call stack is at.
-   * @return Settings for the package/method
+   * @return Settings record for the package/method
    */
   function get_toggle_context(
     p_module in pit_util.ora_name_type,
     p_method in pit_util.ora_name_type)
-    return varchar2
+    return pit_util.context_type
   as
     l_args args;
-    l_settings pit_util.max_char;
+    l_context pit_util.context_type;
   begin
     -- Check whether toggle for package/method exists.
     l_args := args(
-                substr(upper(C_TOGGLE_PREFIX || p_module || '.' ||  p_method), 1, 30),
+                substr(upper(C_TOGGLE_PREFIX || p_module || '.' ||  p_method), 1, pit_util.c_max_length + 1),
                 upper(C_TOGGLE_PREFIX || p_module),
                 C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
-    l_settings := utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id);
-    return l_settings;
+    pit_util.string_to_context_type(
+      p_context_values => utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id),
+      p_context_settings => l_context);
+    
+    return l_context;
   end get_toggle_context;
 
 
@@ -298,71 +374,25 @@ as
   procedure reset_toggle_context(
     p_settings in varchar2)
   as
+    l_context pit_util.context_type;
   begin
-    if g_ctx.allow_toggle then
+    if g_context.allow_toggle then
       -- after raised event, check whether toggle context requires context switch
-      case
-      when instr(p_settings, utl_context.get_value(C_GLOBAL_CONTEXT, C_CONTEXT_DEFAULT)) > 0 then
-        reset_active_context;
-      when p_settings is not null then
-        set_active_context(p_settings);
-      else
-        null;
-      end case;
+      if p_settings is not null then
+        pit_util.string_to_context_type(p_settings, l_context);
+        if l_context.context_name = C_CONTEXT_DEFAULT then
+          reset_active_context;
+        else
+          set_context_values(l_context);
+        end if;
+      end if;
     end if;
   end reset_toggle_context;
 
 
-  /* Reads actual context settings
-   * @usage  Is called to read the actual context from the globally accessed context.
-   * @return Active context if available, default context else.
-   */
-  procedure get_context_values
-  as
-    l_args args;
-    l_settings pit_util.max_sql_char;
-    l_setting_args args;
-    l_required_context pit_util.ora_name_type;
-    
-    function get_setting(p_settings args, p_idx number)
-      return varchar2
-    as
-      l_settings pit_util.max_char;
-    begin
-      if p_settings.exists(p_idx) then
-        l_settings := p_settings(p_idx);
-      end if;
-      return l_settings;
-    end get_setting;
-  begin
-    g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
-    l_args := args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
-    
-    if l_required_context is not null then
-      -- If session adapter mandates for a context, this has precedence over local settings
-      set_context(l_required_context, false);
-    end if;
-    
-    l_settings := utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id);
-        
-    if l_settings is not null then
-      separate_settings(l_settings, g_ctx.settings, g_ctx.context_name);
-      
-      l_setting_args := pit_util.string_to_table(g_ctx.settings, '|');
-      
-      g_ctx.log_level := to_number(get_setting(l_setting_args, 1));
-      g_ctx.trace_level := to_number(get_setting(l_setting_args, 2));
-      g_ctx.trace_timing := pit_util.to_bool(get_setting(l_setting_args, 3));
-      g_ctx.module_list := get_setting(l_setting_args, 4);
-      g_ctx.active_log_modules := get_modules_by_name(g_ctx.module_list);
-    end if;
-  end get_context_values;
-
-
-  /* Reads all predefined context and toggles and stores it in global context
-   * @usage Method is called upon package initialization to serve two purposes:
-   *        1. persist the settings globally for harmonized access over the sessions
-   *        2. retrieve actual log settings
+  /** Reads all predefined context and toggles from parameters and stores it in globally accessed context
+   * @usage  Method is invoked during initialization to copy parameter settings 
+   *         to the globally accessed context for access across sessions.
    */
   procedure get_context_list
   as
@@ -390,28 +420,22 @@ as
       select ctx_name, string_value
         from contexts
        where ctx_name != C_CONTEXT_ACTIVE;
-    l_ctx args;
+    l_context args;
   begin
-
-    -- By default, extend visibility of parameters according to the type of CONTEXT
-    -- by setting user_name and/or client_id to a predefined UTL_CONTEXT.C_NO_VALUE
-    -- Available Types: utl_contxt.c_...
-    --   GLOBAL | FORCE_USER | ORCE_CLIENT_ID | FORCE_USER_CLIENT_ID |
-    --   PREFER_CLIENT_ID | PREFER_USER_CLIENT_ID | SESSION
-    g_ctx.context_type := param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP);
-    if g_ctx.context_type not in (
-                utl_context.c_session,
-                utl_context.c_force_client_id,
-                utl_context.c_force_user_client_id)
+    -- store information as a default setting without reference to a client id, unless context type requires to do so
+    if param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP) not in (
+         utl_context.c_session,
+         utl_context.c_force_client_id,
+         utl_context.c_force_user_client_id)
     then g_client_id := utl_context.c_no_value;
     end if;
 
     for ctx in context_cur loop
       -- Switch between Toggles and Contextes
       if ctx.name like C_TOGGLE_PREFIX || '%' then
-        l_ctx := pit_util.string_to_table(ctx.name, ':');
-        for i in 1 .. l_ctx.count loop
-          utl_context.set_value(C_GLOBAL_CONTEXT, l_ctx(i), ctx.setting, g_client_id);
+        l_context := pit_util.string_to_table(ctx.name, ':');
+        for i in 1 .. l_context.count loop
+          utl_context.set_value(C_GLOBAL_CONTEXT, l_context(i), ctx.setting, g_client_id);
         end loop;
       else
         utl_context.set_value(C_GLOBAL_CONTEXT, ctx.name, ctx.setting, g_client_id);
@@ -421,7 +445,7 @@ as
 
 
   /************************* ADATPER MAINTENANCE ******************************/
-  /* Loads and instantiates an adapter to read client information
+  /** Loads and instantiates an adapter to read client information
    * @usage  procedure loads and instantiates adapters which are created
    *         under <code>PIT_DEFAULT_ADAPTER</code> plus <code>PIT_DEFAULT_ADAPTER</code> itself.<br>
    *         Which modules are instantiated depends on parameter <code>ADAPTER_PREFERENCE</code>
@@ -473,29 +497,29 @@ as
   function check_context_toggle(
     p_trace_settings in varchar2,
     p_last_entry in binary_integer)
-    return varchar2
+    return pit_util.context_type
   as
-    l_trace_settings pit_util.max_sql_char;
+    l_context pit_util.context_type;
   begin
-    if g_ctx.allow_toggle then
+    if g_context.allow_toggle then
       if p_last_entry = 0 then
         -- first entry on stack
         if p_trace_settings is not null then
-          l_trace_settings := p_trace_settings;
-          set_active_context(l_trace_settings);
+          pit_util.string_to_context_type(p_trace_settings, l_context);
+          set_context_values(l_context);
         end if;
       else
         -- get last trace settings from stack
-        l_trace_settings := g_call_stack(p_last_entry).trace_settings;
+          pit_util.string_to_context_type(g_call_stack(p_last_entry).trace_settings, l_context);
         -- If a toggle is found, check whether trace settings differs from current setting
-        if p_trace_settings != coalesce(l_trace_settings, 'FOO') then
+        if p_trace_settings != coalesce(l_context.settings, 'FOO') then
           -- Switch settings and persist new trace settings
-          l_trace_settings := p_trace_settings;
-          set_active_context(l_trace_settings);
+          pit_util.string_to_context_type(p_trace_settings, l_context);
+          set_context_values(l_context);
         end if;
       end if;
     end if;
-    return l_trace_settings;
+    return l_context;
   end check_context_toggle;
   
   
@@ -517,7 +541,7 @@ as
   end maintain_application_info;
   
   
-  /** Method to add a call to the call stack
+  /** Method to push an entrie to the call stack
    * @usage  Called from the ENTER method
    * @param  p_module              Module that was called
    * @param  p_action              Method of the module that was called
@@ -547,7 +571,7 @@ as
     -- maintain timing
     if l_last_entry > 0 then
       l_call_stack_entry := g_call_stack(l_last_entry);
-      if g_ctx.trace_timing then
+      if g_context.trace_timing then
         l_call_stack_entry.pause();
       end if;
     end if;
@@ -576,14 +600,14 @@ as
         p_params => p_params,
         p_call_level => l_next_entry,
         p_trace_level => p_trace_level,
-        p_trace_timing => pit_util.to_bool(g_ctx.trace_timing),
-        p_trace_settings => check_context_toggle(p_trace_settings, l_last_entry));
+        p_trace_timing => pit_util.to_bool(g_context.trace_timing),
+        p_trace_settings => pit_util.context_type_to_string(check_context_toggle(p_trace_settings, l_last_entry)));
     g_call_stack(l_next_entry) := l_call_stack_entry;
     
   end push_stack;
 
 
-  /* Method to remove an entry from the call stack
+  /** Method to pop an entry from the call stack
    * @usage  Called from LEAVE-method.
    * @param  p_params              Parameter list of parameters passed to the method
    * @param  p_call_stack          Instance of call_stack_type to pop to the stack
@@ -606,7 +630,7 @@ as
       p_call_stack.params := p_params;
 
       -- maintain timing for call stack entries
-      if g_ctx.trace_timing then
+      if g_context.trace_timing then
         p_call_stack.leave;
       end if;
 
@@ -636,9 +660,9 @@ as
   end pop_stack;
   
   
-  /* Helper method to clean stack after a fatal error has ocurred.
-   * @usage Called from method HANDLE_ERROR if level is C_LEVEL_FATAL.
-   *        Pops all call stack entries
+  /** Helper method to clean stack after a fatal error has ocurred.
+   * @param  p_params  Instance of msg_params, used to add output parameters to the leave message
+   * @usage Called from method HANDLE_ERROR if level is C_LEVEL_FATAL. Pops all call stack entries
    */
   procedure clean_stack(
     p_params msg_params)
@@ -671,7 +695,7 @@ as
 
 
   /************************** CENTRAL FUNCTIONALITY **************************/
-  /* Central method to distribute any message to all actively parameterized output modules
+  /** Central method to distribute any message to all actively parameterized output modules
    * @usage  Called internally as a generic helper to throw messages to output modules
    * @param  p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
    * @param  p_event_focus Flag to indicate whether the message is to be broadcasted to all
@@ -683,13 +707,15 @@ as
   procedure raise_event(
     p_event in binary_integer,
     p_event_focus in varchar2,
+    p_message in message_type default null,
     p_call_stack in call_stack_type default null,
+    p_context in pit_util.context_type default null,
     p_date_before in date default null,
     p_severity_lower_equal in binary_integer default null)
   as
     pragma autonomous_transaction;
     l_idx pit_util.ora_name_type;
-    l_ctx pit_context;
+    l_context pit_context;
     l_modules module_list_type;
     l_trace_timing pit_util.flag_type;
   begin
@@ -698,7 +724,7 @@ as
       when C_EVENT_FOCUS_ALL then
         l_modules := g_available_modules;
       when C_EVENT_FOCUS_ACTIVE then
-        l_modules := g_ctx.active_log_modules;
+        l_modules := g_active_modules;
       else
         null;
     end case;
@@ -708,17 +734,17 @@ as
     while l_idx is not null loop
       case p_event
         when C_CONTEXT_EVENT then
-          l_trace_timing := pit_util.to_bool(g_ctx.trace_timing);
-          l_ctx := pit_context(g_ctx.log_level, g_ctx.trace_level, l_trace_timing, g_ctx.module_list);
-          l_modules(l_idx).context_changed(l_ctx);
+          l_trace_timing := pit_util.to_bool(p_context.trace_timing);
+          l_context := pit_context(p_context.log_level, p_context.trace_level, l_trace_timing, p_context.module_list);
+          l_modules(l_idx).context_changed(l_context);
         when C_LOG_EVENT then
-          l_modules(l_idx).log(g_active_message);
+          l_modules(l_idx).log(p_message);
         when C_PURGE_EVENT then
           l_modules(l_idx).purge(p_date_before, p_severity_lower_equal);
         when C_PRINT_EVENT then
-          l_modules(l_idx).print(g_active_message);
+          l_modules(l_idx).print(p_message);
         when C_NOTIFY_EVENT then
-          l_modules(l_idx).notify(g_active_message);
+          l_modules(l_idx).notify(p_message);
         when C_ENTER_EVENT then
           l_modules(l_idx).enter(p_call_stack);
         when C_LEAVE_EVENT then
@@ -733,7 +759,7 @@ as
   end raise_event;
 
 
-  /* Deciders whether a message has to be logged.
+  /** Deciders whether a message has to be logged.
    * @usage  Is called during logging to decide whether the actual settings allow for logging.<br>
    *         The decision is based on the requested log level as well as on settings in the global context
    * @param  p_severity  log_level for which a decision is requested
@@ -743,16 +769,17 @@ as
     p_severity in pit_message.pms_pse_id%type)
     return boolean
   as
+    l_context pit_util.context_type;
   begin
-    get_context_values;
-    return p_severity <= greatest(g_ctx.log_level, C_LEVEL_ERROR);
+    l_context := get_context_values;
+    return p_severity <= greatest(l_context.log_level, C_LEVEL_ERROR);
   exception
     when no_data_found then
       return false;
   end log_me;
 
 
-  /* Decides whether an entry or leave event has to be traced.
+  /** Decides whether an entry or leave event has to be traced.
    * @usage  Is called during tracing to decide whether the actual settings allow for tracing.<br>
    *         The decision is based on the requested trace level as well as on settings in the global context
    * @param  p_severity  trace_level for which a decision is requested
@@ -762,9 +789,10 @@ as
     p_trace_level in integer)
     return boolean
   as
+    l_context pit_util.context_type;
   begin
-    get_context_values;
-    return p_trace_level <= g_ctx.trace_level;
+    l_context := get_context_values;
+    return p_trace_level <= l_context.trace_level;
   end trace_me;
   
   
@@ -788,9 +816,8 @@ as
   as
   begin
     -- Read static parameters
-    g_ctx.context_type := param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP);
-    g_ctx.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, C_PARAM_GROUP);
-    g_ctx.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, C_PARAM_GROUP);
+    g_context.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, C_PARAM_GROUP);
+    g_context.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, C_PARAM_GROUP);
     g_warn_if_unusable_modules := param.get_boolean(C_WARN_IF_UNUSABLE_MODULES, C_PARAM_GROUP);
     g_collect_mode := false;
     
@@ -807,40 +834,43 @@ as
   end initialize;
   
 
-  /* CORE */
+  /** CORE */
   procedure log_event(
     p_severity in binary_integer,
     p_message_name in pit_util.ora_name_type default null,
-    p_arg_list in msg_args default null,
+    p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
     p_error_code in varchar2 default null)
   as
+    l_message message_type;
   begin
     if log_me(p_severity) then
       case when p_message_name is not null then
         -- instantiate message
-        g_active_message := get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
+        l_message := get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
         -- Persist severity of calling environment with message
-        g_active_message.severity := p_severity;
+        l_message.severity := p_severity;
       when g_active_message is not null then
+        l_message := g_active_message;
         -- message has been raised as an error before, use g_active_message
         -- call stack is filled only after an error has been raised, so get it again
-        g_active_message.stack := pit_util.get_call_stack;
-        g_active_message.backtrace := pit_util.get_error_stack;
+        l_message.stack := pit_util.get_call_stack;
+        l_message.backtrace := pit_util.get_error_stack;
       when p_severity <= C_LEVEL_FATAL then
         -- fallback, is used if a SQL exception was raised outside of PIT
-        g_active_message := get_message('SQL_ERROR', p_arg_list, p_affected_id, p_error_code);
+        l_message := get_message('SQL_ERROR', p_msg_args, p_affected_id, p_error_code);
       else 
         -- if used with SQL_EXCEPTION, code may re raise the exception explicitly
         null;
       end case;
 
       if g_collect_mode then
-        push_message(g_active_message);
+        push_message(l_message);
       else
         raise_event(
           p_event => C_LOG_EVENT,
-          p_event_focus => C_EVENT_FOCUS_ACTIVE);
+          p_event_focus => C_EVENT_FOCUS_ACTIVE,
+          p_message => l_message);
       end if;
     end if;
   end log_event;
@@ -850,55 +880,28 @@ as
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
     p_log_modules in pit_util.max_sql_char)
   as
-    l_ctx_old pit_util.context_type;
-    l_ctx_new pit_util.context_type;
-    l_context_name pit_util.ora_name_type;
-    l_ctx_change boolean := false;
+    l_old_context pit_util.context_type;
+    l_message message_type;
   begin
     -- initialize
-    get_context_values;
-    l_ctx_old.log_level := g_ctx.log_level;
-    l_ctx_old.trace_level := g_ctx.trace_level;
-    l_ctx_old.trace_timing := g_ctx.trace_timing;
-    l_ctx_old.log_modules := g_ctx.module_list;
-    l_ctx_new := l_ctx_old;
-    l_context_name := g_ctx.context_name;
-    g_active_message := get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
+    l_message := get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
 
-    if g_active_message.severity <= coalesce(p_log_threshold, g_ctx.log_level) then
-      -- Switch to log modules passed in if necessary
-      if p_log_modules is not null then
-        l_ctx_new.log_modules := p_log_modules;
-        l_ctx_change := true;
-      end if;
-      
-      -- Set differing log_threshold if necessary
-      if p_log_threshold is not null then
-        l_ctx_new.log_level := p_log_threshold;
-        l_ctx_change := true;
-      end if;
-      
-      -- persist changes
-      if l_ctx_change then
-        set_context(l_ctx_new);
-      end if;
-
+    if l_message.severity <= p_log_threshold then
+      set_context_temporarily(
+        p_old_context => l_old_context,
+        p_log_threshold => p_log_threshold,
+        p_log_modules => p_log_modules);
+        
       raise_event(
         p_event => C_LOG_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE);
-
-      -- clean up after setting changes
-      if l_ctx_change then
-        if l_context_name = c_context_default then
-          reset_context;
-        else
-          set_context(l_ctx_old);
-        end if;
-      end if;
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
+        p_message => l_message);
+        
+      reset_temporarily_set_context(l_old_context);
     end if;
   end log_specific;
 
@@ -913,17 +916,20 @@ as
     l_module pit_util.ora_name_type;
     l_action pit_util.ora_name_type;
     l_trace_me boolean;
+    l_context pit_util.context_type;
   begin
     l_trace_me := trace_me(p_trace_level);
     -- reset active message to null, as this is a "normal" PL/SQL call that requires resetting any exception
     g_active_message := null;
     
     -- Do minimal tracing if context toggle is active
-    if g_ctx.allow_toggle or l_trace_me then
+    if g_context.allow_toggle or l_trace_me then
       pit_util.get_module_and_action(
         p_module => l_module,
         p_action => l_action);
 
+      l_context := get_toggle_context(l_module, l_action);
+      
       push_stack(
         p_module => l_module,
         p_action => l_action,
@@ -932,7 +938,7 @@ as
         p_client_info => p_client_info,
         p_params => p_params,
         p_trace_level => p_trace_level,
-        p_trace_settings => get_toggle_context(l_module, l_action));
+        p_trace_settings => l_context.settings);
     end if;
 
     if l_trace_me then
@@ -962,7 +968,7 @@ as
     l_trace_me := trace_me(p_trace_level);
     
     -- Do minimal tracing if context toggle is active
-    if (g_ctx.allow_toggle or l_trace_me) and g_call_stack.last > 0 then
+    if (g_context.allow_toggle or l_trace_me) and g_call_stack.last > 0 then
       $IF dbms_db_version.ver_le_11 $THEN
       l_found_entry := g_call_stack.last;
       $ELSE
@@ -993,7 +999,7 @@ as
             p_call_stack => l_call_stack);
         end if;
     
-        if g_ctx.allow_toggle then
+        if g_context.allow_toggle then
           -- toggle may have set a new trace level, Check and set accordingly for higher entries on stack
           l_trace_me := trace_me(p_trace_level); 
         end if;
@@ -1022,7 +1028,7 @@ as
       raise_error(
         p_severity => 30,
         p_message_name => 'LONG_OP_WO_TRACE',
-        p_arg_list => null,
+        p_msg_args => null,
         p_affected_id => null,
         p_error_code => null);
     end if;
@@ -1052,14 +1058,16 @@ as
 
   procedure print(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list msg_args)
+    p_msg_args msg_args)
   as
+    l_message message_type;
   begin
     if p_message_name is not null then
-      g_active_message := get_message(p_message_name, p_arg_list, null, null);
+      l_message := get_message(p_message_name, p_msg_args, null, null);
       raise_event(
          p_event => C_PRINT_EVENT,
-         p_event_focus => C_EVENT_FOCUS_ACTIVE);
+         p_event_focus => C_EVENT_FOCUS_ACTIVE,
+         p_message => l_message);
     else
       log_event(C_LEVEL_WARN, C_FAIL_MESSAGE_CREATION, msg_args('NULL'));
     end if;
@@ -1072,52 +1080,29 @@ as
   procedure notify(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
-    p_module_list in pit_util.max_sql_char)
+    p_log_modules in pit_util.max_sql_char)
   as
-    l_ctx_old pit_util.context_type;
-    l_ctx_new pit_util.context_type;
-    l_context_name pit_util.ora_name_type;
-    l_ctx_change boolean := false;
+    l_old_context pit_util.context_type;
+    l_message message_type;
   begin
-    get_context_values;
-    l_ctx_old.log_level := g_ctx.log_level;
-    l_ctx_old.trace_level := g_ctx.trace_level;
-    l_ctx_old.trace_timing := g_ctx.trace_timing;
-    l_ctx_old.log_modules := g_ctx.module_list;
-    l_ctx_new := l_ctx_old;
-    l_context_name := coalesce(g_ctx.context_name, C_CONTEXT_DEFAULT);
-    g_active_message := get_message(p_message_name, p_arg_list, p_affected_id, null);
+    -- initialize
+    l_message := get_message(p_message_name, p_msg_args, p_affected_id, null);
 
-    if g_active_message.severity <= coalesce(p_log_threshold, C_LEVEL_ALL) then
-      -- Switch to log modules passed in if necessary
-      if p_module_list is not null then
-        l_ctx_new.log_modules := p_module_list;
-        l_ctx_change := true;
-      end if;
-      -- Set differing log_threshold if necessary
-      if p_log_threshold is not null then
-        l_ctx_new.log_level := p_log_threshold;
-        l_ctx_change := true;
-      end if;
-      -- persist changes
-      if l_ctx_change then
-        set_context(l_ctx_new);
-      end if;
+    if l_message.severity <= coalesce(p_log_threshold, C_LEVEL_ALL) then
+    
+      set_context_temporarily(
+        p_old_context => l_old_context,
+        p_log_threshold => p_log_threshold,
+        p_log_modules => p_log_modules);
 
       raise_event(
         p_event => C_NOTIFY_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE);
-
-      -- clean up after setting changes
-      if l_ctx_change then
-        if l_context_name = c_context_default then
-          reset_context;
-        else
-          set_context(l_ctx_old);
-        end if;
-      end if;
+        p_event_focus => C_EVENT_FOCUS_ACTIVE,
+        p_message => l_message);
+        
+      reset_temporarily_set_context(l_old_context);
     end if;
   end notify;
 
@@ -1125,14 +1110,14 @@ as
   procedure raise_error(
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2)
   as
   begin
     -- P_MESSAGE_NAME could be NULL, we use G_ACTIVE_MESSAGE then
     if p_message_name is not null then
-      g_active_message := get_message(p_message_name, p_arg_list, p_affected_id, p_error_code);
+      g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
       g_active_message.severity := p_severity;
       g_active_message.error_number := coalesce(g_active_message.error_number, -20000);
     end if;
@@ -1150,17 +1135,17 @@ as
   procedure handle_error(
     p_severity in binary_integer,
     p_message_name pit_util.ora_name_type,
-    p_arg_list in msg_args,
+    p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2,
     p_params in msg_params)
   as
   begin
-    log_event(p_severity, p_message_name, p_arg_list, p_affected_id, p_error_code);
+    log_event(p_severity, p_message_name, p_msg_args, p_affected_id, p_error_code);
     
     if p_severity = C_LEVEL_FATAL then
       clean_stack(p_params);
-      raise_error(C_LEVEL_FATAL, p_message_name, p_arg_list, p_affected_id, p_error_code);
+      raise_error(C_LEVEL_FATAL, p_message_name, p_msg_args, p_affected_id, p_error_code);
     else
       leave(C_TRACE_MANDATORY, p_params);
       g_active_message := null;
@@ -1184,22 +1169,24 @@ as
   end purge_log;
 
 
+  /** MESSAGE related methods */
   function get_message(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list msg_args,
+    p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2)
    return message_type
   as
   begin
-    return message_type(
-             p_message_name => p_message_name,
-             p_message_language => get_language,
-             p_affected_id => p_affected_id,
-             p_error_code => p_error_code,
-             p_session_id => g_client_id,
-             p_user_name => g_user_name,
-             p_arg_list => p_arg_list);
+    g_active_message := message_type(
+                          p_message_name => p_message_name,
+                          p_message_language => get_language,
+                          p_affected_id => p_affected_id,
+                          p_error_code => p_error_code,
+                          p_session_id => g_client_id,
+                          p_user_name => g_user_name,
+                          p_arg_list => p_msg_args);
+    return g_active_message;
   exception
     when NO_DATA_FOUND then
       handle_error(C_LEVEL_FATAL, C_MSG_NOT_EXISTING, msg_args(p_message_name));
@@ -1217,18 +1204,19 @@ as
 
   function get_message_text(
     p_message_name in pit_util.ora_name_type,
-    p_arg_list in msg_args)
+    p_msg_args in msg_args)
     return clob
   as
   begin
-    return get_message(p_message_name, p_arg_list, null, null).message_text;
+    return get_message(p_message_name, p_msg_args, null, null).message_text;
   end get_message_text;
   
   
+  /** TRNALSATION ITEM methods */
   function get_trans_item(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
     p_pti_id in pit_translatable_item.pti_id%type,
-    p_arg_list msg_args,
+    p_msg_args msg_args,
     p_pti_pml_name in pit_message_language.pml_name%type)
     return pit_util.translatable_item_rec
   as
@@ -1250,10 +1238,10 @@ as
                and (pml_name = l_pml_name or pml_default_order = 10))
      where ranking = 1;
     
-    if p_arg_list is not null then
-      for i in p_arg_list.first .. p_arg_list.last loop
-        l_pti_rec.pti_name := replace(l_pti_rec.pti_name, '#' || i || '#', p_arg_list(i));
-        l_pti_rec.pti_display_name := replace(l_pti_rec.pti_display_name, '#' || i || '#', p_arg_list(i));
+    if p_msg_args is not null then
+      for i in p_msg_args.first .. p_msg_args.last loop
+        l_pti_rec.pti_name := replace(l_pti_rec.pti_name, '#' || i || '#', p_msg_args(i));
+        l_pti_rec.pti_display_name := replace(l_pti_rec.pti_display_name, '#' || i || '#', p_msg_args(i));
       end loop;
     end if;
     
@@ -1261,47 +1249,22 @@ as
   end get_trans_item;
 
 
-  /* CONTEXT MAINTENANCE */
+  /** CONTEXT MAINTENANCE */
   function get_context
     return pit_util.context_type
   is
-    l_context pit_util.context_type;
   begin
-    get_context_values;
-    l_context.log_level := g_ctx.log_level;
-    l_context.trace_level := g_ctx.trace_level;
-    l_context.trace_timing := g_ctx.trace_timing;
-    l_context.log_modules := g_ctx.module_list;
-    return l_context;
+    return get_context_values;
   end get_context;
-
-
-  procedure set_context(
-    p_log_level in binary_integer,
-    p_trace_level in binary_integer,
-    p_trace_timing in boolean,
-    p_module_list in pit_util.max_sql_char)
-  as
-    l_trace_timing pit_util.flag_type;
-    l_trace_settings pit_util.max_sql_char;
-  begin
-    l_trace_timing := pit_util.to_bool(p_trace_timing);
-    l_trace_settings := pit_util.concatenate(char_table(p_log_level, p_trace_level, l_trace_timing, p_module_list), C_CTX_DEL);
-    pit_util.check_context_settings(C_CONTEXT_ACTIVE, l_trace_settings);
-    
-    set_active_context(l_trace_settings || C_CTX_NAME_DEL || C_CONTEXT_ACTIVE);
-  end set_context;
 
 
   procedure set_context(
     p_context in pit_util.context_type)
   as
+    l_context pit_util.context_type;
   begin
-    set_context(
-      p_log_level => p_context.log_level,
-      p_trace_level => p_context.trace_level,
-      p_trace_timing => p_context.trace_timing,
-      p_module_list => p_context.log_modules);
+    l_context := p_context;
+    set_context_values(l_context);
   end set_context;
 
 
@@ -1309,20 +1272,15 @@ as
     p_context_name in pit_util.ora_name_type,
     p_validate in boolean default true)
   as
+    l_context pit_util.context_type;
     l_context_name pit_util.ora_name_type;
-    l_settings pit_util.max_sql_char;
   begin
     l_context_name := pit_util.harmonize_name(C_CONTEXT_PREFIX, p_context_name);
     if l_context_name = C_CONTEXT_DEFAULT then
       reset_active_context(p_validate);
     else
-      l_settings := utl_context.get_value(C_GLOBAL_CONTEXT, l_context_name);
-      
-      if l_settings is not null then
-        set_active_context(l_settings, p_validate);
-      else
-        raise_error(C_LEVEL_FATAL, C_UNKNOWN_NAMED_CONTEXT, msg_args(p_context_name));
-      end if;
+      l_context := get_context_values(l_context_name);
+      set_context_values(l_context, p_validate);
     end if;
   exception
     when others then
@@ -1340,9 +1298,9 @@ as
 
     utl_context.clear_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, g_client_id);
     if p_validate then
-      get_context_values;
+      g_context := get_context_values;
     end if;
-    l_raise_focus := case when g_ctx.broadcast_context_switch then C_EVENT_FOCUS_ALL else C_EVENT_FOCUS_ACTIVE end;
+    l_raise_focus := case when g_context.broadcast_context_switch then C_EVENT_FOCUS_ALL else C_EVENT_FOCUS_ACTIVE end;
     raise_event(C_CONTEXT_EVENT, l_raise_focus);
   end reset_active_context;
 
@@ -1355,12 +1313,16 @@ as
   end reset_context;
   
   
+  /** COLLECT MODE methods */
   procedure set_collect_mode(
     p_mode in boolean)
   as
-    l_min_severity C_LEVEL_ALL%type := C_LEVEL_ALL;
+    l_min_severity C_LEVEL_ALL%type;
   begin
+    -- initialize
     g_collect_mode := p_mode;
+    l_min_severity := C_LEVEL_ALL;
+    
     if g_collect_mode then
       g_message_stack.delete;
     else
@@ -1375,14 +1337,14 @@ as
           raise_error(
             p_severity => C_LEVEL_ERROR,
             p_message_name => C_BULK_ERROR,
-            p_arg_list => null,
+            p_msg_args => null,
             p_affected_id => null,
             p_error_code => null);
         when C_LEVEL_FATAL then
           raise_error(
             p_severity => C_LEVEL_FATAL,
             p_message_name => C_BULK_FATAL,
-            p_arg_list => null,
+            p_msg_args => null,
             p_affected_id => null,
             p_error_code => null);
         else
@@ -1421,7 +1383,7 @@ as
   end get_actual_call_stack_depth;
   
 
-  /* MODULE MAINTENANCE */
+  /** MODULE MAINTENANCE */
   function get_modules
     return pit_module_list
     pipelined
@@ -1434,12 +1396,12 @@ as
   begin
     if g_all_modules.count > 0 then
       -- initialize
-      get_context_values;
+      g_context := get_context_values;
       l_idx := g_all_modules.first;
       
       while l_idx is not null loop
         l_available := pit_util.to_bool(g_available_modules.exists(l_idx));
-        l_active := pit_util.to_bool(g_ctx.active_log_modules.exists(l_idx));
+        l_active := pit_util.to_bool(g_active_modules.exists(l_idx));
         if pit_util.to_bool(l_available) then
           l_stack := 'OK';
         else
@@ -1462,12 +1424,12 @@ as
     l_idx pit_util.ora_name_type;
   begin
     -- initialize
-    get_context_values;
-    l_idx := g_ctx.active_log_modules.first;
+    g_context := get_context_values;
+    l_idx := g_active_modules.first;
     
     while l_idx is not null loop
       pipe row(l_idx);
-      l_idx := g_ctx.active_log_modules.next(l_idx);
+      l_idx := g_active_modules.next(l_idx);
     end loop;
     
     return;
@@ -1487,7 +1449,7 @@ as
     l_idx pit_util.ora_name_type;
   begin
     -- initialize
-    get_context_values;
+    g_context := get_context_values;
     l_idx := g_available_modules.first;
     
     while l_idx is not null loop
