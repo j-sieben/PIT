@@ -10,6 +10,8 @@ as
   -- As extended char length is stored as a length delimited CLOB,
   -- MAX_SQL_CHAR is still set to 4000 byte. Use CLOB otherwise
   subtype max_sql_char is varchar2(4000 byte);
+  subtype small_char is varchar2(255 byte);
+  subtype sign_type is char(1 byte);
   
   /** EXCEPTIONS **/
   -- Don't use PIT messages here as PIT may not be initialized yet.
@@ -23,14 +25,13 @@ as
   C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
   C_DEFAULT_CONTEXT constant ora_name_type := 'CONTEXT_DEFAULT';
   
-  /** Record to store log and trace settings
+ /** Record to store log and trace settings
    * @param  context_name              Name of the context, is used to identify a stored context
    * @param  settings                  Condensed string with settings for log/trace level, flag_timing and module list
    * @param  log_level                 On of the C_LEVEL constants, controls logging
    * @param  trace_level               On of the C_TRACE constants, controls tracing
    * @param  trace_timing              Flag to control whether timing information for methods are calculated
    * @param  module_list               Colon separated list of output modules
-   * @param  context_type              Defines the type of the context, i.e. how to deal with context settings
    * @param  allow_toggle              Flag to indicate whether logging can be switched on and off based on package names (toggles)
    * @param  broadcast_context_switch  Flag to indicate whether a context switch should be broadcasted to all instantiated output modules
    * @param  ctx_changed               Flag to indicate whether context has changed in comparison to actual context
@@ -42,7 +43,6 @@ as
     trace_level binary_integer,
     trace_timing boolean,
     module_list pit_util.max_sql_char,
-    context_type pit_util.ora_name_type,
     allow_toggle boolean,
     broadcast_context_switch boolean,
     ctx_changed boolean);
@@ -213,13 +213,13 @@ as
     p_context_name in ora_name_type);
     
   
-  /** Method to cast a string to an instance of CONTEXT_TYPE
-   * @param  p_settings  pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST
-   * @return Instance of CONTEXT_TYPE, if P_SETTINGS could be validated
+  /** Method to cast a context value read from the globally accessed context to a context type record
+   * @param  p_context_values  String as read from UTL_CONTEXT.get_first_match or from call stack
+   * @param  p_context         Instance of CONTEXT_TYPE
    */
-  function string_to_context_type(
-    p_settings in varchar2)
-    return context_type;
+  procedure string_to_context_type(
+    p_context_values in varchar2,
+    p_context in out nocopy context_type);
     
     
   /** Method to cast an instance of CONTEXT_TYPE to string
@@ -228,6 +228,7 @@ as
    */
   function context_type_to_string(
     p_settings in context_type)
+    return varchar2;
 
 
   /** Procedure to recompile invalid objects

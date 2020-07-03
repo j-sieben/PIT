@@ -342,10 +342,9 @@ as
   end check_toggle_settings;
     
   
-  
   procedure string_to_context_type(
     p_context_values in varchar2,
-    p_context_settings in out nocopy context_type)
+    p_context in out nocopy context_type)
   as
     l_position binary_integer;
     l_args args;
@@ -363,17 +362,17 @@ as
   begin
     l_position := instr(p_context_values, utl_context.C_NAME_DELIMITER);
     if l_position > 0 then
-      p_context_settings.settings := substr(p_context_values, 1, l_position - 1);
-      p_context_settings.context_name := substr(p_context_values, l_position + 1);
+      p_context.settings := substr(p_context_values, 1, l_position - 1);
+      p_context.context_name := substr(p_context_values, l_position + 1);
     else
-      p_context_settings.settings := p_context_values;
+      p_context.settings := p_context_values;
     end if;
       
-    l_args := string_to_table(p_context_settings.settings, '|');    
-    p_context_settings.log_level := to_number(get_setting(l_args, 1));
-    p_context_settings.trace_level := to_number(get_setting(l_args, 2));
-    p_context_settings.trace_timing := to_bool(get_setting(l_args, 3));
-    p_context_settings.module_list := get_setting(l_args, 4);
+    l_args := string_to_table(p_context.settings, '|');    
+    p_context.log_level := to_number(get_setting(l_args, 1));
+    p_context.trace_level := to_number(get_setting(l_args, 2));
+    p_context.trace_timing := to_bool(get_setting(l_args, 3));
+    p_context.module_list := get_setting(l_args, 4);
   end string_to_context_type;
     
     

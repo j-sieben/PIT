@@ -28,6 +28,10 @@ as
   
   /** Global variable to store the call stack */
   g_call_stack call_stack_tab;
+  
+  subtype client_info_t is varchar2(64 byte);
+  subtype client_module_t is varchar2(48 byte);
+  subtype client_action_t is varchar2(32 byte);
 
   /************************* PACKAGE VARIABLES ********************************/
   /** parameter constants */
@@ -46,7 +50,6 @@ as
   C_BULK_ERROR constant pit_util.ora_name_type := 'PIT_BULK_ERROR';
   C_BULK_FATAL constant pit_util.ora_name_type := 'PIT_BULK_FATAL';
   C_FAIL_READ_MODULE_LIST constant pit_util.ora_name_type := 'PIT_FAIL_READ_MODULE_LIST';
-  C_PASS_MESSAGE constant pit_util.ora_name_type := 'PIT_PASS_MESSAGE';
 
   /** context constants */
   C_GLOBAL_CONTEXT constant pit_util.ora_name_type := substr('PIT_CTX_' || C_PACKAGE_OWNER, 1, 30);
@@ -55,19 +58,19 @@ as
   C_CONTEXT_PREFIX constant pit_util.ora_name_type := C_CONTEXT_GROUP || '_';
   C_CONTEXT_DEFAULT constant pit_util.ora_name_type := C_CONTEXT_PREFIX || 'DEFAULT';
   C_CONTEXT_ACTIVE constant pit_util.ora_name_type := C_CONTEXT_PREFIX || 'ACTIVE';
-  C_TOGGLE_PREFIX constant varchar2(20) := 'TOGGLE_';
+  C_TOGGLE_PREFIX constant pit_util.ora_name_type := 'TOGGLE_';
   C_ALLOW_TOGGLE constant pit_util.ora_name_type := 'ALLOW_TOGGLE';
   C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
-  C_CTX_DEL constant char(1 byte) := '|';
-  C_LIST_DEL constant char(1 byte) := ':';
+  C_CTX_DEL constant pit_util.sign_type := '|';
+  C_LIST_DEL constant pit_util.sign_type := ':';
 
   /** adapter constants */
   C_ADAPTER_PREFERENCE constant pit_util.ora_name_type := 'ADAPTER_PREFERENCE';
   C_ADAPTER_OK constant pit_util.flag_type := pit_util.C_TRUE;
 
   /** "events" */
-  C_EVENT_FOCUS_ALL constant varchar2(10) := 'ALL';
-  C_EVENT_FOCUS_ACTIVE constant varchar2(10) := 'ACTIVE';
+  C_EVENT_FOCUS_ALL constant pit_util.ora_name_type := 'ALL';
+  C_EVENT_FOCUS_ACTIVE constant pit_util.ora_name_type := 'ACTIVE';
 
   C_CONTEXT_EVENT constant integer := 1;
   C_LOG_EVENT constant integer := 2;
@@ -80,7 +83,7 @@ as
   /** package vars */
   g_warn_if_unusable_modules boolean;
   g_user_name pit_util.ora_name_type;
-  g_client_id varchar2(64);
+  g_client_id client_info_t;
   g_active_adapter pit_default_adapter;
   g_active_message message_type;
   g_collect_mode boolean;
@@ -111,8 +114,8 @@ as
         from all_types
        where supertype_name = C_BASE_MODULE
          and owner = C_PACKAGE_OWNER;
-    C_STMT_TEMPLATE constant varchar2(100) := 'begin :i := new #MODULE#(); end;';
-    l_stmt varchar2(200);
+    C_STMT_TEMPLATE constant pit_util.small_char := 'begin :i := new #MODULE#(); end;';
+    l_stmt pit_util.small_char;
     l_module_instance pit_module;
   begin
     g_all_modules.delete;
@@ -218,13 +221,20 @@ as
     l_required_context pit_util.ora_name_type;
   begin
     if p_validate then
-      g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
+      g_active_adapter.get_session_details(
+        p_user_name => g_user_name, 
+        p_session_id => g_client_id, 
+        p_required_context => l_required_context);
     end if;
     
     p_context.settings := pit_util.context_type_to_string(p_context);
     
     if p_context.settings != coalesce(g_context.settings, 'FOO') then
-      utl_context.set_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, p_context.settings, g_client_id);
+      utl_context.set_value(
+        p_context => C_GLOBAL_CONTEXT, 
+        p_attribute => C_CONTEXT_ACTIVE, 
+        p_value => p_context.settings, 
+        p_client_id => g_client_id);
       g_context.settings := p_context.settings;
       g_active_modules := get_modules_by_name(p_context.module_list);
       case 
@@ -251,12 +261,15 @@ as
     return pit_util.context_type
   as
     l_args args;
-    l_context_vals pit_util.max_sql_char;
+    l_context_values pit_util.max_sql_char;
     l_context pit_util.context_type;
     l_required_context pit_util.ora_name_type;
   begin
     -- start by reading the actual session details 
-    g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
+    g_active_adapter.get_session_details(
+      p_user_name => g_user_name, 
+      p_session_id => g_client_id, 
+      p_required_context => l_required_context);
     
     -- If session adapter mandates for a context, this has precedence over local settings
     if l_required_context is not null then
@@ -270,9 +283,15 @@ as
       l_args := args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
     end if;
     
-    l_context_vals := utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id);
-    if l_context_vals is not null then
-      pit_util.string_to_context_type(l_context_vals, l_context);
+    l_context_values := utl_context.get_first_match(
+      p_context => C_GLOBAL_CONTEXT, 
+      p_attribute_list => l_args, 
+      p_with_name => true, 
+      p_client_id => g_client_id);
+    if l_context_values is not null then
+      pit_util.string_to_context_type(
+        p_context_values => l_context_values, 
+        p_context => l_context);
       g_active_modules := get_modules_by_name(l_context.module_list);
     else
       handle_error(C_LEVEL_FATAL, C_UNKNOWN_NAMED_CONTEXT, msg_args(p_context_name));
@@ -360,8 +379,12 @@ as
                 upper(C_TOGGLE_PREFIX || p_module),
                 C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);
     pit_util.string_to_context_type(
-      p_context_values => utl_context.get_first_match(C_GLOBAL_CONTEXT, l_args, true, g_client_id),
-      p_context_settings => l_context);
+      p_context_values => utl_context.get_first_match(
+                            p_context => C_GLOBAL_CONTEXT, 
+                            p_attribute_list => l_args, 
+                            p_with_name => true, 
+                            p_client_id => g_client_id),
+      p_context => l_context);
     
     return l_context;
   end get_toggle_context;
@@ -379,7 +402,9 @@ as
     if g_context.allow_toggle then
       -- after raised event, check whether toggle context requires context switch
       if p_settings is not null then
-        pit_util.string_to_context_type(p_settings, l_context);
+        pit_util.string_to_context_type(
+          p_context_values => p_settings, 
+          p_context => l_context);
         if l_context.context_name = C_CONTEXT_DEFAULT then
           reset_active_context;
         else
@@ -423,7 +448,9 @@ as
     l_context args;
   begin
     -- store information as a default setting without reference to a client id, unless context type requires to do so
-    if param.get_string(C_CONTEXT_TYPE, C_CONTEXT_GROUP) not in (
+    if param.get_string(
+         p_par_id => C_CONTEXT_TYPE, 
+         p_pgr_id => C_CONTEXT_GROUP) not in (
          utl_context.c_session,
          utl_context.c_force_client_id,
          utl_context.c_force_user_client_id)
@@ -433,12 +460,22 @@ as
     for ctx in context_cur loop
       -- Switch between Toggles and Contextes
       if ctx.name like C_TOGGLE_PREFIX || '%' then
-        l_context := pit_util.string_to_table(ctx.name, ':');
+        l_context := pit_util.string_to_table(
+                       p_string_value => ctx.name, 
+                       p_delimiter => ':');
         for i in 1 .. l_context.count loop
-          utl_context.set_value(C_GLOBAL_CONTEXT, l_context(i), ctx.setting, g_client_id);
+          utl_context.set_value(
+            p_context => C_GLOBAL_CONTEXT, 
+            p_attribute => l_context(i), 
+            p_value => ctx.setting, 
+            p_client_id => g_client_id);
         end loop;
       else
-        utl_context.set_value(C_GLOBAL_CONTEXT, ctx.name, ctx.setting, g_client_id);
+        utl_context.set_value(
+          p_context => C_GLOBAL_CONTEXT, 
+          p_attribute => ctx.name, 
+          p_value => ctx.setting, 
+          p_client_id => g_client_id);
       end if;
     end loop;
   end get_context_list;
@@ -461,7 +498,10 @@ as
     C_STMT_TEMPLATE constant varchar2(200) := 'begin :a := new #ADAPTER#(); end;';
     l_stmt varchar2(200);
   begin
-    l_adapter_list := pit_util.string_to_table(param.get_string(C_ADAPTER_PREFERENCE, C_PARAM_GROUP));
+    l_adapter_list := pit_util.string_to_table(
+                        p_string_value => param.get_string(
+                                            p_par_id => C_ADAPTER_PREFERENCE, 
+                                            p_pgr_id => C_PARAM_GROUP));
     
     l_idx := l_adapter_list.first;
     
@@ -505,16 +545,22 @@ as
       if p_last_entry = 0 then
         -- first entry on stack
         if p_trace_settings is not null then
-          pit_util.string_to_context_type(p_trace_settings, l_context);
+          pit_util.string_to_context_type(
+            p_context_values => p_trace_settings, 
+            p_context => l_context);
           set_context_values(l_context);
         end if;
       else
         -- get last trace settings from stack
-          pit_util.string_to_context_type(g_call_stack(p_last_entry).trace_settings, l_context);
+          pit_util.string_to_context_type(
+            p_context_values => g_call_stack(p_last_entry).trace_settings, 
+            p_context => l_context);
         -- If a toggle is found, check whether trace settings differs from current setting
         if p_trace_settings != coalesce(l_context.settings, 'FOO') then
           -- Switch settings and persist new trace settings
-          pit_util.string_to_context_type(p_trace_settings, l_context);
+          pit_util.string_to_context_type(
+            p_context_values => p_trace_settings, 
+            p_context => l_context);
           set_context_values(l_context);
         end if;
       end if;
@@ -558,9 +604,9 @@ as
     p_trace_level in binary_integer,
     p_trace_settings in varchar2)
   as
-    l_app_module varchar2(48 byte);
-    l_app_action varchar2(32 byte);
-    l_client_info varchar2(64 byte);
+    l_app_module client_module_t;
+    l_app_action client_action_t;
+    l_client_info client_info_t;
     l_last_entry binary_integer;
     l_next_entry binary_integer;
     l_call_stack_entry call_stack_type;
@@ -577,7 +623,7 @@ as
     end if;
     
     -- maintain application info
-    case when p_trace_level = C_TRACE_MANDATORY then
+    if p_trace_level = C_TRACE_MANDATORY then
       l_app_module := substr(coalesce(p_app_module, p_module), 1, 48);
       l_app_action := substr(coalesce(p_app_action, p_action), 1, 32);
       l_client_info := substr(p_client_info, 1, 64); 
@@ -585,7 +631,7 @@ as
       l_app_module := substr(coalesce(p_app_module, l_call_stack_entry.app_module), 1, 48);
       l_app_action := substr(coalesce(p_app_action, l_call_stack_entry.app_action), 1, 32);
       l_client_info := substr(coalesce(p_client_info, l_call_stack_entry.client_info), 1, 64);
-    end case;
+    end if;
     maintain_application_info(l_app_module, l_app_action, l_client_info);
 
     l_call_stack_entry := 
@@ -665,7 +711,7 @@ as
    * @usage Called from method HANDLE_ERROR if level is C_LEVEL_FATAL. Pops all call stack entries
    */
   procedure clean_stack(
-    p_params msg_params)
+    p_params in msg_params)
   as
   begin                                                                    
     for i in reverse 1 .. g_call_stack.count loop
@@ -720,14 +766,11 @@ as
     l_trace_timing pit_util.flag_type;
   begin
 
-    case p_event_focus
-      when C_EVENT_FOCUS_ALL then
-        l_modules := g_available_modules;
-      when C_EVENT_FOCUS_ACTIVE then
-        l_modules := g_active_modules;
-      else
-        null;
-    end case;
+    if p_event_focus = C_EVENT_FOCUS_ALL then
+      l_modules := g_available_modules;
+    else
+      l_modules := g_active_modules;
+    end if;
 
     -- propagate event to output modules
     l_idx := l_modules.first;
@@ -816,9 +859,15 @@ as
   as
   begin
     -- Read static parameters
-    g_context.allow_toggle := param.get_boolean(C_ALLOW_TOGGLE, C_PARAM_GROUP);
-    g_context.broadcast_context_switch := param.get_boolean(C_BROADCAST_CONTEXT_SWITCH, C_PARAM_GROUP);
-    g_warn_if_unusable_modules := param.get_boolean(C_WARN_IF_UNUSABLE_MODULES, C_PARAM_GROUP);
+    g_context.allow_toggle := param.get_boolean(
+                                p_par_id => C_ALLOW_TOGGLE, 
+                                p_pgr_id => C_PARAM_GROUP);
+    g_context.broadcast_context_switch := param.get_boolean(
+                                            p_par_id => C_BROADCAST_CONTEXT_SWITCH, 
+                                            p_pgr_id => C_PARAM_GROUP);
+    g_warn_if_unusable_modules := param.get_boolean(
+                                    p_par_id => C_WARN_IF_UNUSABLE_MODULES, 
+                                    p_pgr_id => C_PARAM_GROUP);
     g_collect_mode := false;
     
     -- Empty collections
@@ -1208,7 +1257,11 @@ as
     return clob
   as
   begin
-    return get_message(p_message_name, p_msg_args, null, null).message_text;
+    return get_message(
+             p_message_name => p_message_name, 
+             p_msg_args => p_msg_args, 
+             p_affected_id => null, 
+             p_error_code => null).message_text;
   end get_message_text;
   
   
@@ -1221,7 +1274,7 @@ as
     return pit_util.translatable_item_rec
   as
     l_pti_rec pit_util.translatable_item_rec;
-    l_pml_name varchar2(100 byte);
+    l_pml_name pit_util.small_char;
   begin
     -- P_PTI_PML_NAME takes precedence over SYS_CONTEXT.LANGUAGE over default language of PIT
     l_pml_name := coalesce(p_pti_pml_name, get_language);
@@ -1391,7 +1444,7 @@ as
     l_idx pit_util.ora_name_type;
     l_available pit_util.flag_type;
     l_active pit_util.flag_type;
-    l_stack varchar2(2000 byte);
+    l_stack pit_util.max_sql_char;
     l_module pit_module;
   begin
     if g_all_modules.count > 0 then
@@ -1471,14 +1524,16 @@ as
     return args pipelined
   as
     l_idx pit_util.ora_name_type;
-    C_MESSAGE_TEMPLATE constant pit_util.max_sql_char := q'^Status of #IDX#: #STATUS#, Threshold: #THRESHOLD#^';
+    C_MESSAGE_TEMPLATE constant pit_util.max_sql_char := q'|Status of #IDX#: #STATUS#, Threshold: #THRESHOLD#|';
     l_message pit_util.max_sql_char;
   begin
     -- initialize
     l_idx := g_all_modules.first;
     
     while l_idx is not null loop
-      l_message := pit_util.bulk_replace(C_MESSAGE_TEMPLATE, char_table(
+      l_message := pit_util.bulk_replace(
+                     p_string => C_MESSAGE_TEMPLATE, 
+                     p_chunks => char_table(
         '#IDX#', l_idx,
         '#STATUS#', g_all_modules(l_idx).status,
         '#THRESHOLD#', g_all_modules(l_idx).fire_threshold));
