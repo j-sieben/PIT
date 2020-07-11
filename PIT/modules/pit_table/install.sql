@@ -9,13 +9,13 @@ prompt &h2.Clean up existing installation
 prompt &h2.Install module PIT_TABLE
 
 prompt &s1.Create table PIT_LOG
-@&table_dir.tables/pit_log.tbl
-
-prompt &s1.Create sequence PIT_LOG_SEQ
-@&table_dir.sequences/pit_log_seq.seq
+@&table_dir.tables/pit_table_log.tbl
 
 prompt &s1.Create table pit_call_stack
-@&table_dir.tables/pit_call_stack.tbl
+@&table_dir.tables/pit_table_call_stack.tbl
+
+prompt &s1.Create table pit_call_params
+@&table_dir.tables/pit_table_call_params.tbl
 
 prompt &s1.Create type PIT_TABLE
 @&table_dir.types/pit_table.tps

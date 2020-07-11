@@ -1,4 +1,4 @@
-create or replace package pit_ui_pkg
+create or replace package pit_ui
   authid definer
 as 
 
@@ -121,15 +121,6 @@ as
    */
   procedure set_language_settings(
     p_pml_list in pit_util.max_sql_char);
-  
-  
-  /* Funktion prueft, ob uebergebene Zahl eine Ganzzahl ist
-   * @param p_value Zahl, die gepueft werden soll
-   * @usage Wird verwendet, um Ganzzahlparameter zu validieren
-   */
-  function validate_is_integer(
-    p_value in varchar2)
-    return varchar2;
    
-end pit_ui_pkg;
+end pit_ui;
 /

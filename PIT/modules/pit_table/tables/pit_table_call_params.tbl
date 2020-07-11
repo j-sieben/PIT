@@ -1,0 +1,13 @@
+create table pit_table_call_params (
+  clp_cls_id number,
+  clp_param_name &ORA_NAME_TYPE.,
+  clp_param_value varchar2(4000 byte), 
+	constraint pk_pit_table_call_params primary key (clp_cls_id, clp_param_name) enable,
+  constraint fk_clp_cls_id foreign key(clp_cls_id)
+    references pit_table_call_stack(cls_id) on delete cascade
+);
+
+comment on table pit_table_call_params is 'table for trace and time information';
+comment on column pit_table_call_params.clp_cls_id is 'Primary key, reference to PIT_TABLE_CALL_STACK';
+comment on column pit_table_call_params.clp_param_name is 'Name of the parameter';
+comment on column pit_table_call_params.clp_param_value is 'Parameter value, limited to 4000 byte';

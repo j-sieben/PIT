@@ -59,6 +59,15 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
+    p_pms_name => 'ASSERT_DATATYPE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^#1# is not of data type #2#.^',
+    p_pms_description => q'^An unsuccessful attempt was made to convert a value to the specified data type. Check the value.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
     p_pms_name => 'CASE_NOT_FOUND',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1# not found when executing CASE statement^',

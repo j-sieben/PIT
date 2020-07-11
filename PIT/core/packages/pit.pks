@@ -57,6 +57,20 @@ as
    * @usage  Getter function for trace level ALL
    */
   function trace_all return number deterministic;
+    
+    
+  /** Contants TYPE_...
+   * @usage  Getter for data type assertion function
+   */
+  function type_integer return varchar2 deterministic;
+  
+  function type_number return varchar2 deterministic;
+    
+  function type_date return varchar2 deterministic;
+    
+  function type_timestamp return varchar2 deterministic;
+  
+  function type_xml return varchar2 deterministic;
   
   
   /****************************** LOGGING AND DEBUGGING *********************************/
@@ -700,7 +714,7 @@ as
     
     
   /** Asserts that <code>P_CURSOR</code> returns no rows. Ovlerload for cursor expressions.
-   * @usage  Pass aopened cursor that is expected to return no rows.
+   * @usage  Pass an opened cursor that is expected to return no rows.
    *         If the cursor does not return a row, it will silently quit, otherwise
    *         it will throw a client specific error message. If this
    *         parameter is not set, a default message <code>msg.ASSERT_NOT_EXISTS</code>
@@ -714,6 +728,26 @@ as
    procedure assert_not_exists(
      p_cursor in out nocopy sys_refcursor,
      p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+     p_msg_args msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null);
+    
+    
+  /** Asserts that <code>P_VALUE</code> is of type <code>P_TYPE</code>. 
+   * @usage  Pass a value as string and a datatype as defined at constants <code>TYPE_...</code>
+   * @param  p_value         Value to check
+   * @param  p_value         Expected data type. One of TYPE_... function values of this package
+   * @param [p_format_mask]  Optional format mask to convert P_VALUE. If NULL, session default formats are used.
+   * @param [p_message_name] Name of the message. Reference to package MSG
+   * @param [p_msg_args]     Optional list of replacement information
+   * @param [p_affected_id]  Optional id of an item a message relates to
+   * @param [p_error_code]   Optional error code, usable by external applications
+   */
+   procedure assert_datatype(
+     p_value in varchar2,
+     p_type in varchar2,
+     p_format_mask in varchar2 default null,
+     p_message_name in varchar2 default msg.ASSERT_DATATYPE,
      p_msg_args msg_args := null,
      p_affected_id in varchar2 default null,
      p_error_code in varchar2 default null);

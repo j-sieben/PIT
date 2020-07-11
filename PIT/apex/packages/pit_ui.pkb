@@ -1,4 +1,4 @@
-create or replace package body pit_ui_pkg 
+create or replace package body pit_ui 
 as
   /** UI Package for the PIT APEX maintenance application */
   
@@ -567,9 +567,32 @@ as
     
     g_edit_par_row.par_id := check_name(g_edit_par_row.par_id, 'PGR_ID', 'EDIT_PAR');
     
-    utl_apex.assert_not_null(
-      p_condition => g_edit_par_row.par_pgr_id,
-      p_page_item => 'PAR_PGR_ID');
+    utl_apex.assert_datatype(
+      p_value => g_edit_par_row.par_integer_value, 
+      p_type => pit.type_integer,
+      p_page_item => 'PAR_INTEGER_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_par_row.par_integer_value, 
+      p_type => pit.type_number,
+      p_page_item => 'PAR_FLOAT_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_par_row.par_date_value, 
+      p_type => pit.type_date,
+      p_page_item => 'PAR_DATE_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_par_row.par_timestamp_value, 
+      p_type => pit.type_timestamp,
+      p_page_item => 'PAR_TIMESTAMP_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_par_row.par_xml_value, 
+      p_type => pit.type_xml,
+      p_page_item => 'PAR_XML_VALUE');
+    
+    utl_apex.assert_not_null(g_edit_par_row.par_pgr_id, 'PAR_PGR_ID');
       
     pit.leave_mandatory;
     return true;
@@ -729,8 +752,27 @@ as
   begin
     pit.enter_mandatory;
     
-    -- copy_edit_module;
-    -- validation logic goes here. If it exists, uncomment COPY function
+    copy_edit_module;
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_module_row.par_integer_value, 
+      p_type => pit.type_integer,
+      p_page_item => 'PAR_INTEGER_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_module_row.par_integer_value, 
+      p_type => pit.type_number,
+      p_page_item => 'PAR_FLOAT_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_module_row.par_date_value, 
+      p_type => pit.type_date,
+      p_page_item => 'PAR_DATE_VALUE');
+    
+    utl_apex.assert_datatype(
+      p_value => g_edit_module_row.par_timestamp_value, 
+      p_type => pit.type_timestamp,
+      p_page_item => 'PAR_TIMESTAMP_VALUE');
     
     pit.leave_mandatory;
     return true;
@@ -877,28 +919,5 @@ as
     pit.leave_mandatory;
   end set_language_settings;
   
-
-  /* PARAMETER */
-  function validate_is_integer(
-    p_value in varchar2)
-    return varchar2
-  as
-    l_number number(38,0);
-  begin
-    pit.enter_mandatory(
-      p_params => msg_params(msg_param('p_value', p_value)));
-      
-    if regexp_instr(p_value, '(,\.)', 1) > 0 then
-      return pit.get_message_text(msg.PIT_INVALID_INTEGER, msg_args(p_value));
-    end if;
-    l_number := to_number(p_value, 'fm999999999999999990');
-    
-    pit.leave_mandatory;
-    return null;
-  exception
-    when others then
-      return pit.get_message_text(msg.PIT_INVALID_INTEGER, msg_args(p_value));
-  end validate_is_integer;
-  
-end pit_ui_pkg;
+end pit_ui;
 /

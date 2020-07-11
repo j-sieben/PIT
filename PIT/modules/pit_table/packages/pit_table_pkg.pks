@@ -3,7 +3,8 @@ as
   /* Implementation package for type PIT_TABLE */
   
   
-  procedure log(p_message in message_type);
+  procedure log(
+    p_message in message_type);
   
   procedure purge(
     p_date_until in date,

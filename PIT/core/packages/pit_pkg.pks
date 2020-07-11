@@ -9,20 +9,25 @@ as
    */    
   
   /** CONSTANTS */
-  C_LEVEL_OFF constant number := 10;
-  C_LEVEL_FATAL constant number := 20;
-  C_LEVEL_ERROR constant number := 30;
-  C_LEVEL_WARN constant number := 40;
-  C_LEVEL_INFO constant number := 50;
-  C_LEVEL_DEBUG constant number := 60;
-  C_LEVEL_ALL constant number := 70;
+  C_LEVEL_OFF constant binary_integer := 10;
+  C_LEVEL_FATAL constant binary_integer := 20;
+  C_LEVEL_ERROR constant binary_integer := 30;
+  C_LEVEL_WARN constant binary_integer := 40;
+  C_LEVEL_INFO constant binary_integer := 50;
+  C_LEVEL_DEBUG constant binary_integer := 60;
+  C_LEVEL_ALL constant binary_integer := 70;
   
-  C_TRACE_OFF constant number := 10;
-  C_TRACE_MANDATORY constant number := 20;
-  C_TRACE_OPTIONAL constant number := 30;
-  C_TRACE_DETAILED constant number := 40;
-  C_TRACE_ALL constant number := 50;
+  C_TRACE_OFF constant binary_integer := 10;
+  C_TRACE_MANDATORY constant binary_integer := 20;
+  C_TRACE_OPTIONAL constant binary_integer := 30;
+  C_TRACE_DETAILED constant binary_integer := 40;
+  C_TRACE_ALL constant binary_integer := 50;
     
+  C_TYPE_INTEGER constant pit_util.ora_name_type := 'INTEGER';
+  C_TYPE_NUMBER constant pit_util.ora_name_type := 'NUMBER';
+  C_TYPE_DATE constant pit_util.ora_name_type := 'DATE';
+  C_TYPE_TIMESTAMP constant pit_util.ora_name_type := 'TIMESTAMP';
+  C_TYPE_XML constant pit_util.ora_name_type := 'XML';
 
   /** Initialization procedure
    * @usage  Made public to allow for any session to re-initialize PIT.
@@ -244,6 +249,21 @@ as
    */
   function get_active_message
     return message_type;
+    
+    
+  /** Implements a data type check for a given varchar2 value
+   * @param  p_value        Value to check
+   * @param  p_type         Expected data type. One of the C_TYPE_... constants
+   * @param  p_format_mask  Format mask to convert a string to the target value. May be NULL.
+   * @return Flag to indicate whether the varchar2 string is of the expected type (TRUE) or not (FALSE)
+   * @usage  Is used to implement assert_datatype method
+   */
+  function check_datatype(
+    p_value in varchar2,
+    p_type in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+   
     
     
   /** Returns the text of a message

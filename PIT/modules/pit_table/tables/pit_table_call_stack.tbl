@@ -1,0 +1,32 @@
+create table pit_table_call_stack (
+  cls_id number,
+	cls_log_date timestamp, 
+  cls_call_level number,
+  cls_action varchar2(5),
+	cls_session_id varchar2(64 char), 
+	cls_user_name &ORA_NAME_TYPE., 
+	cls_module_name &ORA_NAME_TYPE.,
+	cls_method_name &ORA_NAME_TYPE.,  
+	cls_elapsed number, 
+	cls_elapsed_cpu number, 
+	cls_total_time interval day to second, 
+	cls_total_time_cpu number, 
+	constraint pk_pit_table_call_stack primary key (cls_id) enable,
+  constraint chk_pit_action check (cls_action in ('ENTER', 'LEAVE'))
+) organization index;
+
+comment on table pit_table_call_stack is 'table for trace and time information';
+comment on column pit_table_call_stack.cls_id is 'Primary key, deliverd with the log message.';
+comment on column pit_table_call_stack.cls_log_date is 'Time at which the entry was created. Required for PIT_TABLE.purge method';
+comment on column pit_table_call_stack.cls_session_id is 'Session-Id, required to attach log messages to sessions';
+comment on column pit_table_call_stack.cls_user_name is 'Connected database user';
+comment on column pit_table_call_stack.cls_call_level is 'Increment for each step of the call stack';
+comment on column pit_table_call_stack.cls_action is 'Activity of the current step: method name, line-number or user defined action';
+comment on column pit_table_call_stack.cls_module_name is 'Package name';
+comment on column pit_table_call_stack.cls_method_name is 'Method name of the package';
+comment on column pit_table_call_stack.cls_elapsed is 'Time consumed by the procedure (w/o time spent in called procedures)';
+comment on column pit_table_call_stack.cls_elapsed_cpu is 'CPU-time consumed by the procedure (w/o time spent in called procedures)';
+comment on column pit_table_call_stack.cls_total_time is 'Time consumed by the procedure (including time spent in called procedures)';
+comment on column pit_table_call_stack.cls_total_time_cpu is 'CPU-time consumed by the procedure (including time spent in called procedures)';
+
+create index idx_pit_table_call_stack_ses_user on pit_table_call_stack (cls_session_id, cls_user_name);

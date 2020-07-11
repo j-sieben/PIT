@@ -59,6 +59,15 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
+    p_pms_name => 'ASSERT_DATATYPE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^#1# ist nicht vom Datentyp #2#.^',
+    p_pms_description => q'^Es wurde erfolglos versucht, einen Wert in den angegebenen Datentyp zu konvertieren. Prüfen Sie den Wert.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
     p_pms_name => 'CASE_NOT_FOUND',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1# bei Ausführung von CASE-Anweisung nicht gefunden.^',

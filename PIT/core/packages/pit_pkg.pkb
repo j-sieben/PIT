@@ -1249,6 +1249,68 @@ as
   begin
     return g_active_message;
   end get_active_message;
+  
+  
+  function check_datatype(
+    p_value in varchar2,
+    p_type in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    C_INTEGER_REGEXP constant pit_util.ora_name_type := '^[0-9]+$';
+    l_result boolean := true;
+    l_format_mask pit_util.ora_name_type;
+    l_number number;
+    l_date date;
+    l_timestamp timestamp with time zone;
+    l_xml xmltype;
+  begin
+    l_format_mask := p_format_mask;
+    
+    case p_type
+    when C_TYPE_INTEGER then
+      l_result := regexp_like(p_value, C_INTEGER_REGEXP);
+    when C_TYPE_NUMBER then
+      begin
+        l_format_mask := coalesce(l_format_mask, '999999999999999999D999999999');
+        l_number := to_number(p_value, l_format_mask);
+      exception
+        when others then
+          l_result := false;
+      end;
+    when C_TYPE_DATE then
+      begin
+        l_format_mask := coalesce(l_format_mask, sys_context('USERENV', 'NLS_DATE_FORMAT'));
+        l_date := to_date(p_value, p_format_mask);
+      exception
+        when others then
+          l_result := false;
+      end;
+    when C_TYPE_TIMESTAMP then
+      begin
+        if l_format_mask is null then
+          select value
+            into l_format_mask
+            from v$nls_parameters
+           where parameter = 'NLS_TIMESTAMP_FORMAT';
+        end if;
+        l_timestamp := to_timestamp(p_value, l_format_mask);
+      exception
+        when others then
+          l_result := false;
+      end;
+    when C_TYPE_XML then
+      begin
+        l_xml := xmltype(p_value);
+      exception
+        when others then
+          l_result := false;
+      end;
+    else
+      null;
+    end case;
+    return l_result;
+  end check_datatype;
 
 
   function get_message_text(

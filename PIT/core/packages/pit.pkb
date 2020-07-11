@@ -132,6 +132,46 @@ as
   end trace_all;
   
   
+    
+    
+  /** Getter for package constants to enable their usage in SQL
+   */
+  function type_integer
+    return varchar2
+  as
+  begin
+    return pit_pkg.C_TYPE_INTEGER;
+  end type_integer;  
+  
+  function type_number
+    return varchar2
+  as
+  begin
+    return pit_pkg.C_TYPE_NUMBER;
+  end type_number;  
+    
+  function type_date
+    return varchar2
+  as
+  begin
+    return pit_pkg.C_TYPE_DATE;
+  end type_date;  
+    
+  function type_timestamp
+    return varchar2
+  as
+  begin
+    return pit_pkg.C_TYPE_TIMESTAMP;
+  end type_timestamp;  
+  
+  function type_xml
+    return varchar2
+  as
+  begin
+    return pit_pkg.C_TYPE_XML;
+  end type_xml;  
+  
+  
   /****************************** LOGGING AND DEBUGGING *********************************/
   procedure log(
     p_message_name in varchar2,
@@ -642,6 +682,33 @@ as
     when others then
       dbms_sql.close_cursor(l_id);
   end assert_not_exists;
+  
+  
+  procedure assert_datatype(
+     p_value in varchar2,
+     p_type  in varchar2,
+     p_format_mask in varchar2 default null,
+     p_message_name in varchar2 default msg.ASSERT_DATATYPE,
+     p_msg_args msg_args := null,
+     p_affected_id in varchar2 default null,
+     p_error_code in varchar2 default null)
+  as
+    l_msg_args msg_args;
+  begin
+    if p_message_name = msg.ASSERT_DATATYPE then 
+      l_msg_args := msg_args(p_value, p_type);
+    else 
+      l_msg_args := p_msg_args;
+    end if;
+    
+    assert(
+      p_condition => pit_pkg.check_datatype(p_value, p_type, p_format_mask),
+      p_message_name => p_message_name,
+      p_msg_args => l_msg_args,
+      p_affected_id => p_affected_id,
+      p_error_code => p_error_code);
+  end assert_datatype;
+  
   
   /****************************** INTERNATIONALIZATION *********************************/
   function get_default_language
