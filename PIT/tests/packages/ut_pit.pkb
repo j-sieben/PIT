@@ -100,6 +100,7 @@ as
   procedure before_each
   as
   begin
+    --pit.initialize;
     reset_result;
     pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
   end before_each;
@@ -704,6 +705,34 @@ as
     ut.expect(sys_context('USERENV', 'MODULE')).to_be_null;
     ut.expect(sys_context('USERENV', 'ACTION')).to_be_null;
   end leave_resets_module_action;
+
+  --
+  -- test leave_get_timing: Method LEAVE captures timing information if required to do so
+  --
+  procedure leave_get_timing
+  as
+    l_result number;
+  begin
+    pit.set_context(pit.LEVEL_OFF, pit.TRACE_ALL, true, C_UT_OUT);
+    pit.enter_mandatory;
+    l_result := a(1);
+    pit.leave_mandatory;
+    ut.expect(g_result.call_stack.wall_clock).to_be_not_null;
+  end leave_get_timing;
+
+  --
+  -- test leave_dont_get_timing: Does not capture timing information if not requested to do so
+  --
+  procedure leave_dont_get_timing
+  as
+    l_result number;
+  begin
+    pit.set_context(pit.LEVEL_OFF, pit.TRACE_ALL, false, C_UT_OUT);
+    pit.enter_mandatory;
+    l_result := a(1);
+    pit.leave_mandatory;
+    ut.expect(g_result.call_stack.wall_clock).to_be_null;
+  end leave_dont_get_timing;
 
   --
   -- test long_op_opname: This wrapper around DBMS_APPLICAITON_LONGOPS takes OP_NAME from call stack

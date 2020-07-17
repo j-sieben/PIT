@@ -419,6 +419,15 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
+    p_pms_name => 'PIT_NO_CONTEXT_SETTINGS',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Es konnten keine Einstellungen für das Logging gefunden werden.^',
+    p_pms_description => q'^Es wurde versucht, Werte für das Logging aus dem gloablen Kontext zu lesen. Das misslang aber. Prüfen Sie, ob PIT korrekt initialisiert ist.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
     p_pms_name => 'SQL_ERROR',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Ein SQL-Fehler ist aufgetreten: #SQLERRM#^',

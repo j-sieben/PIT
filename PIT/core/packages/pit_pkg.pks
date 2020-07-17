@@ -321,24 +321,18 @@ as
    *                         with predefined debug settings in the format 
    *                         [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
    *                         fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
-   * @param  p_validate      Optional flag to indicate that session data (user, client-id)
-   *                         has to be fetched dynamically. Leave this untouched.
    * @usage  This method is used to adjust the debug settings during execution of the code.
    */
   procedure set_context(
-    p_context_name in pit_util.ora_name_type,
-    p_validate in boolean default true);
+    p_context_name in pit_util.ora_name_type);
   
   
   /** Procedure to reset log settings to the default settings
-   * @param  p_validate      Optional flag to indicate that session data (user, client-id)
-   *                         has to be fetched dynamically. Leave this untouched.
    * @usage  If settings for a session were changed, calling this procedure
    *         resets these settings to the default settings as defined by the 
    *         parameters
    */
-  procedure reset_active_context(
-    p_validate in boolean default true);
+  procedure reset_active_context;
   
   
   /** Procedure to reset the complete context to default settings

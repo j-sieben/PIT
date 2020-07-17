@@ -132,8 +132,6 @@ as
   end trace_all;
   
   
-    
-    
   /** Getter for package constants to enable their usage in SQL
    */
   function type_integer
@@ -201,6 +199,7 @@ as
     $IF pit_admin.c_level_le_info $THEN
     pit_pkg.log_event(level_all, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
+    -- Logging disallowed by conditional compilation
     null;
     $END
   end verbose;
@@ -215,6 +214,7 @@ as
     $IF pit_admin.c_level_le_debug $THEN
     pit_pkg.log_event(level_debug, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
+    -- Logging disallowed by conditional compilation
     null;
     $END
   end debug;
@@ -229,6 +229,7 @@ as
     $IF pit_admin.c_level_le_info $THEN
     pit_pkg.log_event(level_info, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
+    -- Logging disallowed by conditional compilation
     null;
     $END
   end info;
@@ -243,6 +244,7 @@ as
     $IF pit_admin.c_level_le_warn $THEN
     pit_pkg.log_event(level_warn, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
+    -- Logging disallowed by conditional compilation
     null;
     $END
   end warn;
@@ -307,6 +309,7 @@ as
     $IF pit_admin.c_trace_le_mandatory $THEN
     enter(p_action, p_module, p_params, trace_mandatory, p_client_info);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end enter_mandatory;
@@ -322,6 +325,7 @@ as
     $IF pit_admin.c_trace_le_optional $THEN
     enter(p_action, p_module, p_params, trace_optional, p_client_info);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end enter_optional;
@@ -337,6 +341,7 @@ as
     $IF pit_admin.c_trace_le_detailed $THEN
     enter(p_action, p_module, p_params, trace_detailed, p_client_info);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end enter_detailed;
@@ -352,7 +357,7 @@ as
   begin
     $IF pit_admin.c_trace_le_all $THEN
     $IF dbms_db_version.ver_le_11 $THEN
-    -- Nicht zu PIT_PKG verschieben, um korrekten Namen zu erhalten
+    -- Do not move to PIT_PKG to get correct name
     if p_action is not null then
       g_action := p_action;
       g_module := p_module;
@@ -385,6 +390,7 @@ as
     $IF pit_admin.c_trace_le_mandatory $THEN
     leave(trace_mandatory, p_params);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end leave_mandatory;
@@ -397,6 +403,7 @@ as
     $IF pit_admin.c_trace_le_optional $THEN
     leave(trace_optional, p_params);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end leave_optional;
@@ -409,6 +416,7 @@ as
     $IF pit_admin.c_trace_le_detailed $THEN
     leave(trace_detailed, p_params);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end leave_detailed;
@@ -422,6 +430,7 @@ as
     $IF pit_admin.c_trace_le_all $THEN
     pit_pkg.leave(p_trace_level, p_params);
     $ELSE
+    -- Tracing disallowed by conditional compilation
     null;
     $END
   end leave;
@@ -478,6 +487,20 @@ as
   as
   begin
     return pit_pkg.get_message_text(p_message_name, p_msg_args);
+  end get_message_text;
+    
+    
+  function get_message_text(
+    p_message_name in varchar2,
+    p_msg_args in msg_args_char)
+    return clob
+  as
+    l_msg_args msg_args;
+  begin
+    l_msg_args := pit_util.cast_to_msg_args(p_msg_args);
+    return get_message_text(
+      p_message_name => p_message_name,
+      p_msg_args => l_msg_args);
   end get_message_text;
   
   

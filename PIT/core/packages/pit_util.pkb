@@ -276,20 +276,37 @@ as
   end get_error_name;
 
 
-  function cast_to_char_list(
+  function cast_to_msg_args_char(
     p_msg_args msg_args)
     return msg_args_char
   as
-    l_msg_args msg_args_char := msg_args_char();
+    l_msg_args msg_args_char;
   begin
     if p_msg_args is not null then
+      l_msg_args := msg_args_char();
       for i in p_msg_args.first .. p_msg_args.last loop
         l_msg_args.extend;
         l_msg_args(i) := dbms_lob.substr(p_msg_args(i), 4000, 1);
       end loop;
     end if;
     return l_msg_args;
-  end cast_to_char_list;
+  end cast_to_msg_args_char;
+    
+  function cast_to_msg_args(
+    p_msg_args msg_args_char)
+    return msg_args
+  as
+    l_msg_args msg_args;
+  begin
+    if p_msg_args is not null then
+      l_msg_args := msg_args();
+      for i in p_msg_args.first .. p_msg_args.last loop
+        l_msg_args.extend;
+        l_msg_args(i) := p_msg_args(i);
+      end loop;
+    end if;
+    return l_msg_args;
+  end cast_to_msg_args;
   
   
   /**** VALIDATION ****/

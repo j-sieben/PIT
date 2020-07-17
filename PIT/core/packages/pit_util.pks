@@ -165,16 +165,20 @@ as
     return boolean;
 
 
-  /** Method to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR
+  /** Methods to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR and vice versa
    * @param  p_msg_args  Instance of type MSG_ARGS
    * @return Instance of MSG_ARGS_CHAR with the content of MSG_ARGS (abbreviated
    *         to max 4000 byte per entry)
    * @usage  is called to allow to store MSG_ARGS-instances in tables (which is
    *         not supported for VARRAY(CLOB)).
    */
-  function cast_to_char_list(
+  function cast_to_msg_args_char(
     p_msg_args msg_args)
     return msg_args_char;
+    
+  function cast_to_msg_args(
+    p_msg_args msg_args_char)
+    return msg_args;
 
 
   /**** VALIDATION HELPER ****/

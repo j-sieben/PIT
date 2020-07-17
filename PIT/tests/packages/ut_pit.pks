@@ -33,199 +33,205 @@ as
 
   --%context(Method LOG)
 
-  --%test(logs regardless of log settings)
+  --%test(... logs regardless of log settings)
   procedure log_normal_execution;
 
-  --%test(logs even if module was not set before)
+  --%test(... logs even if module was not set before)
   procedure log_not_set_before;
 
-  --%test(logs as second module)
+  --%test(... logs as second module)
   procedure log_as_second_module;
 
-  --%test(passes error_code if set)
+  --%test(... passes error_code if set)
   procedure log_passes_error_code;
 
-  --%test(does not log if threshold is set higher than message severity)
+  --%test(... does not log if threshold is set higher than message severity)
   procedure log_filters_threshold;
 
-  --%test(logs if threshold is set equal to message severity)
+  --%test(... logs if threshold is set equal to message severity)
   procedure log_passes_threshold;
 
-  --%test(passes affected_id if set)
+  --%test(... passes affected_id if set)
   procedure log_passes_affected_id;
 
   --%endcontext
 
   --%context(Method SQL_EXCEPTION)
 
-  --%test(captures an error)
+  --%test(... captures an error)
   procedure sql_exception_captures_error;
 
-  --%test(passes a predefined message)
+  --%test(... passes a predefined message)
   procedure sql_exception_passes_message;
 
-  --%test(passes error_code if set)
+  --%test(... passes error_code if set)
   procedure sql_exception_passes_error_code;
 
-  --%test(passes affected_id if set)
+  --%test(... passes affected_id if set)
   procedure sql_exception_passes_affected_id;
 
-  --%test(closes any ENTER-calls)
+  --%test(... closes any ENTER-calls)
   procedure sql_exception_closes_stack;
 
   --%endcontext
 
   --%context(Method STOP)
 
-  --%test(throws an error)
+  --%test(... throws an error)
   --%throws(msg.SQL_ERROR_ERR)
   procedure stop_throws_error;
 
-  --%test(passes a predefined message)
+  --%test(... passes a predefined message)
   procedure stop_passes_message;
 
-  --%test(passes error_code if set)
+  --%test(... passes error_code if set)
   procedure stop_passes_error_code;
 
-  --%test(passes affected_id if set)
+  --%test(... passes affected_id if set)
   procedure stop_passes_affected_id;
 
-  --%test(closes any ENTER-calls)
+  --%test(... closes any ENTER-calls)
   procedure stop_closes_stack;
 
-  --%test(closes all ENTER-calls)
+  --%test(... closes all ENTER-calls)
   procedure stop_closes_stack_completely;
 
   --%endcontext
   --%context(Method ENTER)
 
-  --%test(raises ENTER event on output modules)
+  --%test(... raises ENTER event on output modules)
   procedure enter_normally;
 
-  --%test(Methods ENTER_... raise ENTER events on output modules only if parameterized)
+  --%test(... raise ENTER events on output modules only if parameterized)
   procedure enter_level;
 
-  --%test(passes parameters to output modules)
+  --%test(... passes parameters to output modules)
   procedure enter_passes_parameters;
 
-  --%test(_MANDATORY sets client_info column)
+  --%test(... ENTER_MANDATORY sets client_info column)
   procedure enter_mandatory_sets_client_info;
 
-  --%test(Methods ENTER_... set module and action automatically)
+  --%test(... set module and action automatically)
   procedure enter_sets_module_action;
 
   --%endcontext
 
   --%context(Method LEAVE)
 
-  --%test(raises LEAVE event on output modules)
+  --%test(... raises LEAVE event on output modules)
   procedure leave_normally;
 
-  --%test(Methods LEAVE_... raise LEAVE events on output modules only if parameterized)
+  --%test(... raises LEAVE events on output modules only if parameterized)
   procedure leave_level;
 
-  --%test(passes parameters to output modules)
+  --%test(... passes parameters to output modules)
   procedure leave_passes_parameters;
 
-  --%test(Methods LEAVE_... resets module and action automatically)
+  --%test(... resets module and action automatically)
   procedure leave_resets_module_action;
+
+  --%test(... delivers time information if requested)
+  procedure leave_get_timing;
+
+  --%test(... does not capture time information if not requested)
+  procedure leave_dont_get_timing;
 
   --%endcontext
 
   --%context(Method LONG_OP)
 
-  --%test(derives OP_NAME from call stack
+  --%test(... derives OP_NAME from call stack)
   procedure long_op_opname;
 
-  --%test(may be used only after having called PIT.ENTER)
+  --%test(... may be used only after having called PIT.ENTER)
   --%throws(msg.LONG_OP_WO_TRACE_ERR)
   procedure long_op_requires_enter;
 
-  --%test(works even if PIT.ENTER was used in a wrapping method)
+  --%test(... works even if PIT.ENTER was used in a wrapping method)
   procedure long_op_nested;
 
   --%endcontext
 
   --%context(Method PRINT)
 
-  --%test(passes any message to the output modules)
+  --%test(... passes any message to the output modules)
   procedure print_normal_execution;
 
-  --%test(emits a warning if no message name is passed in)
+  --%test(... emits a warning if no message name is passed in)
   procedure print_null_message;
 
   --%endcontext
 
   --%context(Method NOTIFY)
 
-  --%test(passes notfication regardless of log settings)
+  --%test(... passes notfication regardless of log settings)
   procedure notify_normal_execution;
 
-  --%test(passes notfication even if module was not set before)
+  --%test(... passes notfication even if module was not set before)
   procedure notify_not_set_before;
 
-  --%test(passes notfication as second module)
+  --%test(... passes notfication as second module)
   procedure notify_as_second_module;
 
-  --%test(does not pass notfication if threshold is set higher than message severity)
+  --%test(... does not pass notfication if threshold is set higher than message severity)
   procedure notify_filters_threshold;
 
-  --%test(passes notfication if threshold is set equal to message severity)
+  --%test(... passes notfication if threshold is set equal to message severity)
   procedure notify_passes_threshold;
 
-  --%test(passes affected_id if set)
+  --%test(... passes affected_id if set)
   procedure notify_passes_affected_id;
 
   --%endcontext
 
   --%context(Getter Methods)
 
-  --%test(get_message_text returns a message text)
+  --%test(... get_message_text returns a message text)
   procedure get_message_text;
 
-  --%test(get_message returns an instance of type MESSAGE_TYPE)
+  --%test(... get_message returns an instance of type MESSAGE_TYPE)
   procedure get_message;
   
-  --%test(get_active_message returns the lastly created instance of type MESSAGE_TYPE)
+  --%test(... get_active_message returns the lastly created instance of type MESSAGE_TYPE)
   procedure get_active_message;
 
   --%endcontext
 
   --%context(Method ASSERT)
 
-  --%test(does not throw an error if condition is met)
+  --%test(... does not throw an error if condition is met)
   procedure assert_no_error;
 
-  --%test(throws the exception passed in if the condition is not met)
+  --%test(... throws the exception passed in if the condition is not met)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_with_error;
 
-  --%test(throws an error if the condition entered is NULL)
+  --%test(... throws an error if the condition entered is NULL)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_null_throws_error;
 
-  --%test(delivers the affected id passed in if the condition is not met)
+  --%test(... delivers the affected id passed in if the condition is not met)
   procedure assert_passes_affected_id;
 
-  --%test(delivers the error code passed in if the condition is not met)
+  --%test(... delivers the error code passed in if the condition is not met)
   procedure assert_passes_error_code;
 
   --%endcontext
 
   --%context(Method ASSERT_IS_NULL)
 
-  --%test(does nothing if the value passed in is NULL)
+  --%test(... does nothing if the value passed in is NULL)
   procedure assert_is_null_no_error;
 
-  --%test(throws an error if a non NULL string is passed in)
+  --%test(... throws an error if a non NULL string is passed in)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_is_null_char_with_error;
 
-  --%test(throws an error if a non NULL number is passed in)
+  --%test(... throws an error if a non NULL number is passed in)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_is_null_number_with_error;
 
-  --%test(throws an error if a non NULL date is passed in)
+  --%test(... throws an error if a non NULL date is passed in)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_is_null_date_with_error;
 
@@ -233,97 +239,20 @@ as
 
   --%context(Method ASSERT_NOT_NULL)
 
-  --%test(does nothing if a non NULL string is passed in)
+  --%test(... does nothing if a non NULL string is passed in)
   procedure assert_not_null_char_no_error;
 
-  --%test(does nothing if a non NULL number is passed in)
+  --%test(... does nothing if a non NULL number is passed in)
   procedure assert_not_null_number_no_error;
 
-  --%test(does nothing if a non NULL date is passed in)
+  --%test(... does nothing if a non NULL date is passed in)
   procedure assert_not_null_date_no_error;
 
-  --%test(throws an error if NULL is passed in)
+  --%test(... throws an error if NULL is passed in)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_not_null_with_error;
 
-  --%endcontext
   /*
-  --%context(get_trans_item_name)
-
-  --%test
-  procedure get_trans_item_name1;
-
-  --%test
-  procedure get_trans_item_name2;
-
-  --%test
-  procedure get_trans_item_name3;
-
-  --%test
-  procedure get_trans_item_name4;
-
-  --%test
-  procedure get_trans_item_name5;
-
-  --%endcontext
-
-  --%context(get_trans_item_display_name)
-
-  --%test
-  procedure get_trans_item_display_name1;
-
-  --%test
-  procedure get_trans_item_display_name2;
-
-  --%test
-  procedure get_trans_item_display_name3;
-
-  --%test
-  procedure get_trans_item_display_name4;
-
-  --%test
-  procedure get_trans_item_display_name5;
-
-  --%endcontext
-
-  --%context(get_trans_item_description)
-
-  --%test
-  procedure get_trans_item_description1;
-
-  --%test
-  procedure get_trans_item_description2;
-
-  --%test
-  procedure get_trans_item_description3;
-
-  --%test
-  procedure get_trans_item_description4;
-
-  --%test
-  procedure get_trans_item_description5;
-
-  --%endcontext
-
-  --%context(get_trans_item)
-
-  --%test
-  procedure get_trans_item1;
-
-  --%test
-  procedure get_trans_item2;
-
-  --%test
-  procedure get_trans_item3;
-
-  --%test
-  procedure get_trans_item4;
-
-  --%test
-  procedure get_trans_item5;
-
-  --%endcontext
-
   --%context(purge_log)
 
   --%test

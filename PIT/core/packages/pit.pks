@@ -469,6 +469,7 @@ as
    *         This function is a convenience function for you if you need to
    *         compose more complex content for the application that includes
    *         translated messages.
+   *         Overloaded version with MSG_ARGS_CHAR to translate stored messages
    * @param  p_message_name  Name of the message. Reference to package MSG
    * @param [p_msg_args]     Optional list of replacement information
    * %return Translated and parameterized message text as CLOB
@@ -476,6 +477,11 @@ as
   function get_message_text(
     p_message_name in varchar2,
     p_msg_args in msg_args default null)
+    return clob;
+    
+  function get_message_text(
+    p_message_name in varchar2,
+    p_msg_args in msg_args_char)
     return clob;
     
   
