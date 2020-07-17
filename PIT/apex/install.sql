@@ -117,12 +117,12 @@ prompt &h3.Create UI-MESSAGES
 
 
 prompt &h3.Create UI-PACKAGES
-prompt &s1.Package PIT_UI_PKG
-@&apex_dir.packages/pit_ui_pkg.pks
+prompt &s1.Package PIT_UI
+@&apex_dir.packages/pit_ui.pks
 show errors
 
-prompt &s1.Package body PIT_UI_PKG
-@&apex_dir.packages/pit_ui_pkg.pkb
+prompt &s1.Package body PIT_UI
+@&apex_dir.packages/pit_ui.pkb
 show errors
 
 

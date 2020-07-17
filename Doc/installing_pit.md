@@ -137,7 +137,7 @@ SQL> @utl_apex_install PIT_USER AMERICAN
 
 That's it, you're now prepared to install the `PIT` application. Obviously, the steps above are required only once for all your APEX applications of that workspace that want to make use of those libraries.
 
-If you want to see how `UTL_APEX`can make your live easier as an APEX developer, have a look a the controller package `PIT_UI_PKG`. This package interacts with the pages based on their page alias, so for each page there is a matching method that reads the user entered data and controls how to write those to the `XAPI` layer owned by the `PIT` owner. Also note that no code is placed on the APEX pages directly other than calls to this package.
+If you want to see how `UTL_APEX`can make your live easier as an APEX developer, have a look a the controller package `pit_ui`. This package interacts with the pages based on their page alias, so for each page there is a matching method that reads the user entered data and controls how to write those to the `XAPI` layer owned by the `PIT` owner. Also note that no code is placed on the APEX pages directly other than calls to this package.
 
 ### Install the `PIT` maintenace application
 

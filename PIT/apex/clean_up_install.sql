@@ -12,7 +12,7 @@ declare
             from all_objects
            where object_name in (
                  '', -- Typen
-                 'PIT_UI_PKG', -- Packages
+                 'PIT_UI', -- Packages
                  'PIT_MESSAGE', 'PIT_MESSAGE_GROUP', 'PIT_MESSAGE_LANGUAGE', 'PIT_MESSAGE_SEVERITY', 'PIT_TRACE_LEVEL', -- Data Layer
                  'PIT_UI_ADMIN_PAR', 'PIT_UI_ADMIN_PIT_CONTEXT', 'PIT_UI_ADMIN_PIT_MODULE', 'PIT_UI_ADMIN_PIT_TOGGLE', 
                  'PIT_UI_ADMIN_PMS', 'PIT_UI_EDIT_CONTEXT', 'PIT_UI_EDIT_MESSAGE_TRANS', 'PIT_UI_EDIT_MODULE',

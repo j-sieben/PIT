@@ -62,7 +62,7 @@ as
     l_ignore boolean := false;
   begin
     if g_omit_pit_in_stack then
-      l_ignore := p_subprogram like 'PIT%' and p_subprogram != 'PIT_UI_PKG';
+      l_ignore := p_subprogram like 'PIT%' and p_subprogram != 'PIT_UI';
     end if;
     return l_ignore;
   end ignore_subprogram;

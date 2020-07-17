@@ -9398,7 +9398,7 @@ wwv_flow_api.create_page_item(
 ,p_item_sequence=>40
 ,p_item_plug_id=>wwv_flow_api.id(14748349057407053)
 ,p_use_cache_before_default=>'NO'
-,p_item_default=>'return pit_ui_pkg.get_default_language;'
+,p_item_default=>'return pit_ui.get_default_language;'
 ,p_item_default_type=>'PLSQL_FUNCTION_BODY'
 ,p_prompt=>'Sprache'
 ,p_source=>'PMS_PML_NAME'
@@ -9509,7 +9509,7 @@ wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(7206496986736263)
 ,p_validation_name=>'Validate EDIT_PMS'
 ,p_validation_sequence=>10
-,p_validation=>'return pit_ui_pkg.validate_edit_pms;'
+,p_validation=>'return pit_ui.validate_edit_pms;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -9614,7 +9614,7 @@ wwv_flow_api.create_page_da_action(
 ,p_action_sequence=>10
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
-,p_attribute_01=>'pit_ui_pkg.harmonize_sql_name(''P3_PMS_NAME'');'
+,p_attribute_01=>'pit_ui.harmonize_sql_name(''P3_PMS_NAME'');'
 ,p_attribute_02=>'P3_PMS_NAME'
 ,p_attribute_03=>'P3_PMS_NAME'
 ,p_attribute_04=>'Y'
@@ -9656,7 +9656,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Process EDIT_PMG'
-,p_process_sql_clob=>'pit_ui_pkg.process_edit_pms;'
+,p_process_sql_clob=>'pit_ui.process_edit_pms;'
 ,p_process_error_message=>'Fehler beim Speichern der Meldung:<br>#SQLERRM#'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_success_message=>'Meldung wurde gespeichert.'
@@ -9970,7 +9970,7 @@ wwv_flow_api.create_page_validation(
 ,p_tabular_form_region_id=>wwv_flow_api.id(4710567423573965)
 ,p_validation_name=>'Validate EDIT_PMG'
 ,p_validation_sequence=>10
-,p_validation=>'return pit_ui_pkg.validate_edit_pmg;'
+,p_validation=>'return pit_ui.validate_edit_pmg;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'FOO'
 ,p_always_execute=>'N'
@@ -10011,7 +10011,7 @@ wwv_flow_api.create_page_da_action(
 ,p_action_sequence=>10
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
-,p_attribute_01=>'pit_ui_pkg.harmonize_sql_name(''PMG_NAME'');'
+,p_attribute_01=>'pit_ui.harmonize_sql_name(''PMG_NAME'');'
 ,p_attribute_02=>'PMG_NAME'
 ,p_attribute_03=>'PMG_NAME'
 ,p_attribute_04=>'Y'
@@ -10026,7 +10026,7 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_IG_DML'
 ,p_process_name=>'Process EDIT_PMG'
 ,p_attribute_01=>'PLSQL_CODE'
-,p_attribute_04=>'pit_ui_pkg.process_edit_pmg;'
+,p_attribute_04=>'pit_ui.process_edit_pmg;'
 ,p_attribute_05=>'N'
 ,p_attribute_06=>'N'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
@@ -10947,7 +10947,7 @@ wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(16326842881170773)
 ,p_validation_name=>'P7_INTEGER_VALUE must be an integer'
 ,p_validation_sequence=>110
-,p_validation=>'return pit_ui_pkg.validate_is_integer(:P7_PAR_INTEGER_VALUE);'
+,p_validation=>'return pit_ui.validate_is_integer(:P7_PAR_INTEGER_VALUE);'
 ,p_validation_type=>'FUNC_BODY_RETURNING_ERR_TEXT'
 ,p_always_execute=>'N'
 ,p_associated_item=>wwv_flow_api.id(16309003113045539)
@@ -10957,7 +10957,7 @@ wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(4225131503687333)
 ,p_validation_name=>'Validate EDIT_PAR'
 ,p_validation_sequence=>120
-,p_validation=>'return pit_ui_pkg.validate_edit_par;'
+,p_validation=>'return pit_ui.validate_edit_par;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -10998,7 +10998,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Process EDIT_PAR'
-,p_process_sql_clob=>'pit_ui_pkg.process_edit_par;'
+,p_process_sql_clob=>'pit_ui.process_edit_par;'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_success_message=>'Aktion wurde verarbeitet.'
 );
@@ -11334,7 +11334,7 @@ wwv_flow_api.create_page_validation(
 ,p_tabular_form_region_id=>wwv_flow_api.id(16479054237677942)
 ,p_validation_name=>'Validate EDIT_PGR'
 ,p_validation_sequence=>10
-,p_validation=>'return pit_ui_pkg.validate_edit_pgr;'
+,p_validation=>'return pit_ui.validate_edit_pgr;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -11375,7 +11375,7 @@ wwv_flow_api.create_page_da_action(
 ,p_action_sequence=>10
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
-,p_attribute_01=>'pit_ui_pkg.harmonize_sql_name(''PGR_ID'');'
+,p_attribute_01=>'pit_ui.harmonize_sql_name(''PGR_ID'');'
 ,p_attribute_02=>'PGR_ID'
 ,p_attribute_03=>'PGR_ID'
 ,p_attribute_04=>'Y'
@@ -11390,7 +11390,7 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_IG_DML'
 ,p_process_name=>'Process EDIT_PGR'
 ,p_attribute_01=>'PLSQL_CODE'
-,p_attribute_04=>'pit_ui_pkg.process_edit_pgr;'
+,p_attribute_04=>'pit_ui.process_edit_pgr;'
 ,p_attribute_05=>'N'
 ,p_attribute_06=>'N'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
@@ -11792,7 +11792,7 @@ wwv_flow_api.create_page_item(
 ,p_item_sequence=>10
 ,p_item_plug_id=>wwv_flow_api.id(16470289582451691)
 ,p_use_cache_before_default=>'NO'
-,p_item_default=>'pit_ui_pkg.allows_toggles'
+,p_item_default=>'pit_ui.allows_toggles'
 ,p_item_default_type=>'PLSQL_EXPRESSION'
 ,p_prompt=>'Toggles verwenden'
 ,p_display_as=>'NATIVE_YES_NO'
@@ -11907,7 +11907,7 @@ wwv_flow_api.create_page_da_action(
 ,p_action_sequence=>30
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
-,p_attribute_01=>'pit_ui_pkg.set_allow_toggles;'
+,p_attribute_01=>'pit_ui.set_allow_toggles;'
 ,p_attribute_02=>'P9_ALLOW_TOGGLE'
 ,p_stop_execution_on_error=>'Y'
 ,p_wait_for_result=>'Y'
@@ -11919,7 +11919,7 @@ wwv_flow_api.create_page_da_action(
 ,p_action_sequence=>30
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
-,p_attribute_01=>'pit_ui_pkg.set_allow_toggles;'
+,p_attribute_01=>'pit_ui.set_allow_toggles;'
 ,p_attribute_02=>'P9_ALLOW_TOGGLE'
 ,p_stop_execution_on_error=>'Y'
 ,p_wait_for_result=>'Y'
@@ -12011,7 +12011,7 @@ wwv_flow_api.create_page_button(
 ,p_button_position=>'REGION_TEMPLATE_DELETE'
 ,p_button_redirect_url=>'javascript:apex.confirm(htmldb_delete_message,''DELETE'');'
 ,p_button_execute_validations=>'N'
-,p_button_condition=>'not pit_ui_pkg.is_default_context'
+,p_button_condition=>'not pit_ui.is_default_context'
 ,p_button_condition_type=>'PLSQL_EXPRESSION'
 ,p_database_action=>'DELETE'
 );
@@ -12167,7 +12167,7 @@ wwv_flow_api.create_page_item(
 ,p_display_as=>'NATIVE_TEXT_FIELD'
 ,p_cSize=>32
 ,p_cMaxlength=>120
-,p_read_only_when=>'pit_ui_pkg.is_default_context'
+,p_read_only_when=>'pit_ui.is_default_context'
 ,p_read_only_when_type=>'PLSQL_EXPRESSION'
 ,p_field_template=>wwv_flow_api.id(14734643971194084)
 ,p_item_template_options=>'#DEFAULT#'
@@ -12222,7 +12222,7 @@ wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(4553027645823210)
 ,p_validation_name=>'Validate EDIT_CONTEXT'
 ,p_validation_sequence=>10
-,p_validation=>'return pit_ui_pkg.validate_edit_context;'
+,p_validation=>'return pit_ui.validate_edit_context;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -12263,7 +12263,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Process EDIT_CONTEXT'
-,p_process_sql_clob=>'pit_ui_pkg.process_edit_context;'
+,p_process_sql_clob=>'pit_ui.process_edit_context;'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 );
 wwv_flow_api.create_page_process(
@@ -12887,7 +12887,7 @@ wwv_flow_api.create_page_validation(
 ,p_tabular_form_region_id=>wwv_flow_api.id(4470785146382368)
 ,p_validation_name=>'Validate EDIT_MODULE'
 ,p_validation_sequence=>110
-,p_validation=>'return pit_ui_pkg.validate_edit_module;'
+,p_validation=>'return pit_ui.validate_edit_module;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -12919,7 +12919,7 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_IG_DML'
 ,p_process_name=>'Process EDIT_MODULE'
 ,p_attribute_01=>'PLSQL_CODE'
-,p_attribute_04=>'pit_ui_pkg.process_edit_module;'
+,p_attribute_04=>'pit_ui.process_edit_module;'
 ,p_attribute_05=>'N'
 ,p_attribute_06=>'N'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
@@ -13140,7 +13140,7 @@ wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(4552632809823206)
 ,p_validation_name=>'Validate EDIT_TOGGLE'
 ,p_validation_sequence=>10
-,p_validation=>'return pit_ui_pkg.validate_edit_toggle;'
+,p_validation=>'return pit_ui.validate_edit_toggle;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -13170,7 +13170,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Process EDIT_TOGGLE'
-,p_process_sql_clob=>'pit_ui_pkg.process_edit_toggle;'
+,p_process_sql_clob=>'pit_ui.process_edit_toggle;'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 );
 wwv_flow_api.create_page_process(
@@ -13244,7 +13244,7 @@ wwv_flow_api.create_page_plug(
 ,p_plug_display_point=>'BODY'
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 ,p_plug_display_condition_type=>'PLSQL_EXPRESSION'
-,p_plug_display_when_condition=>'pit_ui_pkg.has_translatable_items'
+,p_plug_display_when_condition=>'pit_ui.has_translatable_items'
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'HTML'
 );
@@ -13384,7 +13384,7 @@ wwv_flow_api.create_page_button(
 ,p_button_template_id=>wwv_flow_api.id(14734925509194086)
 ,p_button_image_alt=>'Lokale Parameter exportieren'
 ,p_button_position=>'REGION_TEMPLATE_CREATE'
-,p_button_condition=>'pit_ui_pkg.has_local_parameters'
+,p_button_condition=>'pit_ui.has_local_parameters'
 ,p_button_condition_type=>'PLSQL_EXPRESSION'
 );
 wwv_flow_api.create_page_button(
@@ -13569,7 +13569,7 @@ wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(4225840770687340)
 ,p_validation_name=>'Validate EXPORT'
 ,p_validation_sequence=>10
-,p_validation=>'return pit_ui_pkg.validate_export;'
+,p_validation=>'return pit_ui.validate_export;'
 ,p_validation_type=>'FUNC_BODY_RETURNING_BOOLEAN'
 ,p_error_message=>'Foo'
 ,p_always_execute=>'N'
@@ -13661,7 +13661,7 @@ wwv_flow_api.create_page_process(
 ,p_process_point=>'AFTER_SUBMIT'
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Process EXPORT'
-,p_process_sql_clob=>'pit_ui_pkg.process_export;'
+,p_process_sql_clob=>'pit_ui.process_export;'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 );
 end;
