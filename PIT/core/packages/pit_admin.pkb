@@ -787,7 +787,7 @@ end;
   procedure set_language_settings(
     p_pml_list in pit_util.max_sql_char)
   as
-    l_pml_list wwv_flow_global.vc_arr2;
+    l_pml_list args;
     l_pml_default_order pit_message_language.pml_default_order%TYPE;
   begin
 
@@ -796,7 +796,7 @@ end;
      where pml_default_order != C_DEFAULT_LANGUAGE;
 
     if p_pml_list is not null then
-      l_pml_list := apex_util.string_to_table(p_pml_list);
+      l_pml_list := pit_util.string_to_table(p_pml_list);
       l_pml_default_order := (l_pml_list.count + 1) * 10;
       for i in l_pml_list.first .. l_pml_list.last loop
         update pit_message_language

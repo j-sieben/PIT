@@ -14,6 +14,7 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute PIT_MESSAGE_TABLE
 @tools/grant_access.sql execute MSG
 @tools/grant_access.sql execute MSG_ARGS
+@tools/grant_access.sql execute MSG_ARGS_CHAR
 @tools/grant_access.sql execute MSG_PARAM
 @tools/grant_access.sql execute MSG_PARAMS
 @tools/grant_access.sql execute PIT
@@ -25,7 +26,7 @@ prompt &h3.Grant rights and create synonyms
 -- Tables and Views
 @tools/grant_access.sql select PIT_CALL_STACK
 @tools/grant_access.sql select PIT_LOG
-@tools/grant_access.sql select PIT_MESSAGE
+@tools/grant_access.sql "select, references" PIT_MESSAGE
 @tools/grant_access.sql select PIT_MESSAGE_LANGUAGE
 @tools/grant_access.sql select PIT_MESSAGE_LANGUAGE_V
 @tools/grant_access.sql "select, references" PIT_TRANSLATABLE_ITEM
