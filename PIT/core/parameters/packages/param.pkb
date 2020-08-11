@@ -131,8 +131,7 @@ as
     if g_param.validation_string is not null then
       -- Erzeuge Validierungsanweisung
       l_stmt := g_param.validation_string;
-      l_stmt := replace(l_stmt, '#STRING#', p_par_string_value);
-      l_stmt := replace(l_stmt, '#DATE#', 'timestamp ''' || to_char(p_par_date_value, 'yyyy-mm-dd hh24:mi:ss') || '''');
+      l_stmt := replace(l_stmt, '#STRING#', p_par_string_value); 
       l_stmt := replace(l_stmt, '#FLOAT#', p_par_float_value);
       l_stmt := replace(l_stmt, '#INTEGER#', p_par_integer_value);
       l_stmt := replace(l_stmt, '#BOOLEAN#', case when p_par_boolean_value then dbms_assert.enquote_literal(C_TRUE) else dbms_assert.enquote_literal(C_FALSE) end);
