@@ -1059,33 +1059,39 @@ as
   as
     l_idx binary_integer;
     l_op_name client_info_t;
+    l_sno pls_integer;
   begin
     $IF pit_admin.c_trace_le_all $THEN
-    if g_call_stack.count = 0 then
-      raise_error(
-        p_severity => 30,
-        p_message_name => 'LONG_OP_WO_TRACE',
-        p_msg_args => null,
-        p_affected_id => null,
-        p_error_code => null);
+    if g_call_stack.count > 0 then
+      -- Tracing active, take details from there
+    
+      -- initialize
+      l_op_name := substr(
+                     coalesce(p_op_name, 
+                              g_call_stack(g_call_stack.last).app_module || '.' || g_call_stack(g_call_stack.last).app_action
+                     ), 1, 64);
+      l_idx := coalesce(g_call_stack(g_call_stack.last).long_op_idx, dbms_application_info.set_session_longops_nohint);
+      
+      dbms_application_info.set_session_longops(
+        rindex => l_idx,
+        slno => g_call_stack(g_call_stack.last).long_op_sno,
+        op_name => l_op_name,
+        sofar => p_sofar,
+        totalwork => p_total,
+        target_desc => substr(p_target, 1, 32),
+        units => substr(coalesce(p_units, 'iterations'), 1, 32)); 
+      g_call_stack(g_call_stack.last).long_op_idx := l_idx;
+    else
+      -- if tracing is not active, call session_longops just like normal
+      dbms_application_info.set_session_longops(
+        rindex => l_idx,
+        slno => l_sno,
+        op_name => p_op_name,
+        sofar => p_sofar,
+        totalwork => p_total,
+        target_desc => substr(p_target, 1, 32),
+        units => substr(coalesce(p_units, 'iterations'), 1, 32)); 
     end if;
-    
-    -- initialize
-    l_op_name := substr(
-                   coalesce(p_op_name, 
-                            g_call_stack(g_call_stack.last).app_module || '.' || g_call_stack(g_call_stack.last).app_action
-                   ), 1, 64);
-    l_idx := coalesce(g_call_stack(g_call_stack.last).long_op_idx, dbms_application_info.set_session_longops_nohint);
-    
-    dbms_application_info.set_session_longops(
-      rindex => l_idx,
-      slno => g_call_stack(g_call_stack.last).long_op_sno,
-      op_name => l_op_name,
-      sofar => p_sofar,
-      totalwork => p_total,
-      target_desc => substr(p_target, 1, 32),
-      units => substr(coalesce(p_units, 'iterations'), 1, 32)); 
-    g_call_stack(g_call_stack.last).long_op_idx := l_idx;
     $ELSE
     -- Tracing disabled, no support for longops possible
     null;
