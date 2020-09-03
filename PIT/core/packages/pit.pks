@@ -243,8 +243,9 @@ as
    *         always should be traced (should tracing be switched on).<br>
    *         Normal usage is to call this procedure within the major procedures
    *         for a given use case.
-   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
-   * @deprecated            Will be removed in a future version
+   * @param [p_action]      Under normal conditions the method name is auto detected.
+   *                        It can be provided to enhance logging of inlined methods 
+   *                        which don't show their correct line number anymore
    * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
    * @deprecated            Will be removed in a future version
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
@@ -263,8 +264,9 @@ as
    *         optionally should be traced (should tracing be switched on).<br>
    *         Normal usage is to call this procedure within detail procedures
    *         for a given use case.
-   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
-   * @deprecated            Will be removed in a future version
+   * @param [p_action]      Under normal conditions the method name is auto detected.
+   *                        It can be provided to enhance logging of inlined methods 
+   *                        which don't show their correct line number anymore
    * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
    * @deprecated            Will be removed in a future version
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
@@ -285,8 +287,9 @@ as
    *         should be traced on development only (should tracing be switched on).<br>
    *         Normal usage is to call this procedure within the helper procedures
    *         to allow for detailled performance analysis.
-   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
-   * @deprecated            Will be removed in a future version
+   * @param [p_action]      Under normal conditions the method name is auto detected.
+   *                        It can be provided to enhance logging of inlined methods 
+   *                        which don't show their correct line number anymore
    * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
    * @deprecated            Will be removed in a future version
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
@@ -306,8 +309,9 @@ as
    * @usage  Call this procedure if you don't want to distinguish between
    *         trace levels or if you want to pass a trace level as a parameter
    *         from the environmental procedures.
-   * @param [p_action]      Deprecated. For stability reasons, the method name is auto detected
-   * @deprecated            Will be removed in a future version
+   * @param [p_action]      Under normal conditions the method name is auto detected.
+   *                        It can be provided to enhance logging of inlined methods 
+   *                        which don't show their correct line number anymore
    * @param [p_module]      Deprecated. For stability reasons, the package name is auto detected
    * @deprecated            Will be removed in a future version
    * @param [p_params]      Instance of <code>msg_params</code> with a list of
