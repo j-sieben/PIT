@@ -4,7 +4,7 @@ select '' "3"
   from dual 
  where rownum = 0;
  
-define grant_option= &3.
+define grant_option = &3.
 
 begin
   if '&INSTALL_USER.' != '&REMOTE_USER.' then

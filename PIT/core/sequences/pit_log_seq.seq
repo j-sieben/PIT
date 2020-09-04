@@ -2,4 +2,4 @@
  * to guarantee correct id creation in RAC environments
  * (although this will slow down logging a bit)
  */
-create sequence pit_log_seq order cache 10000;
+create sequence &INSTALL_USER.pit_log_seq order cache 10000;
