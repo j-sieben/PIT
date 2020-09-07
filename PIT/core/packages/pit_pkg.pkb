@@ -1388,7 +1388,7 @@ as
     select l_context_name
       into l_context_name
       from global_context
-     where namespace = 'PIT_CTX_UTILS'
+     where namespace = C_GLOBAL_CONTEXT
        and attribute = l_context_name;
     
     if l_context_name = C_CONTEXT_DEFAULT then
