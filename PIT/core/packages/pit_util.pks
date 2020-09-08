@@ -45,7 +45,7 @@ as
     module_list pit_util.max_sql_char,
     allow_toggle boolean,
     broadcast_context_switch boolean,
-    ctx_changed boolean);
+    ctx_changed boolean := true);
     
   /** List of CONTEXT_TYPE indexed by ORA_NAME_TYPE
    */

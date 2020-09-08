@@ -59,7 +59,7 @@ as
     l_message pit_util.max_char;
     l_postfix pit_util.max_char;
     l_param varchar2(1000);
-    c_etc constant char(1 char) := '…';
+    c_etc constant varchar2(10 char) := '...';
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;

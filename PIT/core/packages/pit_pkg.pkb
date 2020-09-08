@@ -218,7 +218,7 @@ as
   begin    
     p_context.settings := pit_util.context_type_to_string(p_context);
     
-    if p_context.settings != coalesce(g_context.settings, 'FOO') then
+    if g_context.ctx_changed then
       utl_context.set_value(
         p_context => C_GLOBAL_CONTEXT, 
         p_attribute => C_CONTEXT_ACTIVE, 
@@ -255,6 +255,7 @@ as
     l_context_name pit_util.ora_name_type;
     l_required_context pit_util.ora_name_type;
     l_context_values pit_util.max_sql_char;
+    l_actual_context_values pit_util.max_sql_char;
   begin
     -- initialization
     l_context_name := p_context_name;
@@ -283,10 +284,16 @@ as
                           p_client_id => g_client_id);
                           
     if l_context_values is not null then
+      l_actual_context_values := utl_context.get_first_match(
+                                   p_context => C_GLOBAL_CONTEXT, 
+                                   p_attribute_list => args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT), 
+                                   p_with_name => true, 
+                                   p_client_id => g_client_id);
       pit_util.string_to_context_type(
         p_context_values => l_context_values, 
         p_context => g_context);
       g_active_modules := get_modules_by_name(g_context.module_list);
+      g_context.ctx_changed := l_context_values != l_actual_context_values;
     else
       handle_error(C_LEVEL_ERROR, C_NO_CONTEXT_SETTINGS);
     end if;
@@ -961,11 +968,13 @@ as
     
     -- Do minimal tracing if context toggle is active
     if g_context.allow_toggle or l_trace_me then
-      pit_util.get_module_and_action(
-        p_module => l_module,
-        p_action => l_action);
+      if p_module is null or p_action is null then
+        pit_util.get_module_and_action(
+          p_module => l_module,
+          p_action => l_action);
+      end if;
 
-      l_context := get_toggle_context(l_module, l_action);
+      l_context := get_toggle_context(coalesce(p_module, l_module), coalesce(p_action, l_action));
       
       push_stack(
         p_module => l_module,
