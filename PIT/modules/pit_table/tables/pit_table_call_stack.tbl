@@ -29,4 +29,4 @@ comment on column pit_table_call_stack.cls_elapsed_cpu is 'CPU-time consumed by 
 comment on column pit_table_call_stack.cls_total_time is 'Time consumed by the procedure (including time spent in called procedures)';
 comment on column pit_table_call_stack.cls_total_time_cpu is 'CPU-time consumed by the procedure (including time spent in called procedures)';
 
-create index idx_pit_table_call_stack_ses_user on pit_table_call_stack (cls_session_id, cls_user_name);
+create index idx_pit_table_cs_ses_user on pit_table_call_stack (cls_session_id, cls_user_name);
