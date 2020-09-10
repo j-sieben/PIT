@@ -15,8 +15,6 @@ as
   type call_stack_tab is table of call_stack_type index by pls_integer;
   
   subtype client_info_t is varchar2(64 byte);
-  subtype client_module_t is varchar2(48 byte);
-  subtype client_action_t is varchar2(32 byte);
 
   /************************* PACKAGE VARIABLES ********************************/
   /** parameter constants */
@@ -234,6 +232,11 @@ as
     if l_context.settings is null then
       handle_error(C_LEVEL_FATAL, C_UNKNOWN_NAMED_CONTEXT, msg_args(l_context.context_name));
     end if;
+    
+    -- copy global context settings
+    l_context.allow_toggle := g_context.allow_toggle;
+    l_context.broadcast_context_switch := g_context.broadcast_context_switch;
+    
     return l_context;
   end read_best_matching_context;
   
@@ -582,35 +585,33 @@ as
   as
   begin
     -- Administer application info
-    dbms_application_info.set_module(p_module, p_action);
-    dbms_application_info.set_client_info(p_client_info);
+    dbms_application_info.set_module(substr(p_module, 1, 48), substr(p_action, 1, 32));
+    dbms_application_info.set_client_info(substr(p_client_info, 1, 64));
   end maintain_application_info;
   
   
   /** Method to push an entrie to the call stack
    * @usage  Called from the ENTER method
-   * @param  p_module              Module that was called
-   * @param  p_action              Method of the module that was called
-   * @param  p_params              Parameter list of parameters passed to the method
-   * @param  p_new_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
+   * @param  p_module          Module that was called
+   * @param  p_action          Method of the module that was called
+   * @param  p_client_info     Optional client info passed in as a pararameter to ENTER
+   * @param  p_params          Parameter list of parameters passed to the method
+   * @param  p_trace_level     Trace level of the entry
+   * @param  p_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
    */
   procedure push_stack(
     p_module in varchar2,
     p_action in varchar2,
-    p_app_module in varchar2,
-    p_app_action in varchar2,
     p_client_info in varchar2,
     p_params in msg_params,
     p_trace_level in pls_integer,
     p_trace_settings in varchar2)
   as
-    l_app_module client_module_t;
-    l_app_action client_action_t;
-    l_client_info client_info_t;
     l_last_entry pls_integer;
     l_next_entry pls_integer;
     l_call_stack_entry call_stack_type;
   begin
+    -- Initialize
     l_last_entry := g_call_stack.count;
     l_next_entry := l_last_entry + 1;
     copy_context_to_global;
@@ -623,17 +624,7 @@ as
       end if;
     end if;
     
-    -- maintain application info
-    if p_trace_level = C_TRACE_MANDATORY then
-      l_app_module := substr(coalesce(p_app_module, p_module), 1, 48);
-      l_app_action := substr(coalesce(p_app_action, p_action), 1, 32);
-      l_client_info := substr(p_client_info, 1, 64); 
-    else
-      l_app_module := substr(coalesce(p_app_module, l_call_stack_entry.app_module), 1, 48);
-      l_app_action := substr(coalesce(p_app_action, l_call_stack_entry.app_action), 1, 32);
-      l_client_info := substr(coalesce(p_client_info, l_call_stack_entry.client_info), 1, 64);
-    end if;
-    maintain_application_info(l_app_module, l_app_action, l_client_info);
+    maintain_application_info(p_module, p_action, p_client_info);
 
     l_call_stack_entry := 
       call_stack_type(
@@ -641,8 +632,8 @@ as
         p_user_name => g_user_name,
         p_module_name => p_module,
         p_method_name => p_action,
-        p_app_module => l_app_module,
-        p_app_action => l_app_action,
+        p_app_module => p_module,
+        p_app_action => p_action,
         p_client_info => p_client_info,
         p_params => p_params,
         p_call_level => l_next_entry,
@@ -694,16 +685,15 @@ as
         else
           null;
         end case;
+        
+        -- set application info to the predecessor
+        maintain_application_info(l_predecessor.app_module, l_predecessor.app_action, l_predecessor.client_info);
+      else
+        -- Last entry is going to be popped, reset application info
+        maintain_application_info(null, null, null);
       end if;
       
-      l_actual_entry := g_call_stack(l_last_entry);
-      maintain_application_info(l_actual_entry.app_module, l_actual_entry.app_action, l_actual_entry.client_info);
-      
       g_call_stack.delete(l_last_entry);
-    end if;
-    
-    if g_call_stack.count = 0 then
-      maintain_application_info(null, null, null);
     end if;
   end pop_stack;
   
@@ -963,7 +953,10 @@ as
     l_trace_me boolean;
     l_context pit_util.context_type;
   begin
+    
+    -- Initialize
     l_trace_me := trace_me(p_trace_level);
+    
     -- reset active message to null, as this is a "normal" PL/SQL call that requires resetting any exception
     g_active_message := null;
     
@@ -974,14 +967,16 @@ as
           p_module => l_module,
           p_action => l_action);
       end if;
-
-      l_context := get_toggle_context(coalesce(p_module, l_module), coalesce(p_action, l_action));
+      
+      l_module := coalesce(p_module, l_module);
+      l_action := coalesce(p_action, l_action);
+      l_context := get_toggle_context(
+                    p_module => l_module, 
+                    p_method => l_action);
       
       push_stack(
         p_module => l_module,
         p_action => l_action,
-        p_app_module => p_module,
-        p_app_action => p_action,
         p_client_info => p_client_info,
         p_params => p_params,
         p_trace_level => p_trace_level,

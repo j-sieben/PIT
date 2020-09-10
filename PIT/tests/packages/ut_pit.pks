@@ -97,6 +97,7 @@ as
   procedure stop_closes_stack_completely;
 
   --%endcontext
+  
   --%context(Method ENTER)
 
   --%test(... raises ENTER event on output modules)
@@ -142,10 +143,6 @@ as
 
   --%test(... derives OP_NAME from call stack)
   procedure long_op_opname;
-
-  --%test(... may be used only after having called PIT.ENTER)
-  --%throws(msg.LONG_OP_WO_TRACE_ERR)
-  procedure long_op_requires_enter;
 
   --%test(... works even if PIT.ENTER was used in a wrapping method)
   procedure long_op_nested;
@@ -251,6 +248,8 @@ as
   --%test(... throws an error if NULL is passed in)
   --%throws(msg.SQL_ERROR_ERR)
   procedure assert_not_null_with_error;
+  
+  --%endcontext
 
   /*
   --%context(purge_log)

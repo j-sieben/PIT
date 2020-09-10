@@ -510,12 +510,15 @@ as
           exit;
         end if;
       end loop;
-      -- Get actual unit name and try to find it in stack. If found, pop all entries including this one
+      
+      -- Set action and module to the first non excluded entry
       begin
         p_action := harmonize_name(utl_call_stack.subprogram(l_depth)(2));
         p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
       exception
         when others then
+          dbms_output.put_line(sqlerrm);
+          -- when called from an anonymous block, not all values may have entries
           p_action := harmonize_name(null, utl_call_stack.subprogram(l_depth)(1));
       end;
     end if;

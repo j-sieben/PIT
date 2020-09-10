@@ -92,7 +92,7 @@ as
   procedure after_all
   as
   begin
-    pit.reset_context;
+    pit.initialize;
     reset_result;
   end after_all;
   
@@ -100,7 +100,7 @@ as
   procedure before_each
   as
   begin
-    --pit.initialize;
+    pit.initialize;
     reset_result;
     pit.set_context(pit.LEVEL_ERROR, pit.TRACE_OFF, false, C_UT_OUT);
   end before_each;
@@ -124,7 +124,7 @@ as
   as
     l_value number;
   begin
-    pit.enter_detailed(
+    pit.enter_detailed('B',
       p_params => msg_params(msg_param('p_value', to_char(p_value))));
     
     l_value := 1 / p_value;
@@ -141,7 +141,7 @@ as
   as
     l_value number;
   begin
-    pit.enter_optional(
+    pit.enter_optional('A',
       p_params => msg_params(msg_param('p_value', to_char(p_value))));
     
     l_value := b(p_value);
@@ -357,7 +357,7 @@ as
     when ZERO_DIVIDE then
       pit.sql_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_affected_id => C_AFFECTED_ID);
       ut.expect(g_result.enter_count).to_equal(3);
-      ut.expect(g_result.enter_count).to_equal(g_result.leave_count);
+      ut.expect(g_result.leave_count).to_equal(g_result.enter_count);
   end sql_exception_closes_stack;
 
 
@@ -763,23 +763,6 @@ as
          and opname = 'ut_pit.long_op_opname';
     ut.expect(l_cur).to_have_count(1);
   end long_op_opname;
-
-  --
-  -- test long_op_requires_enter: As LONG_OP takes the name from the call stack, it has to be filled
-  --
-  procedure long_op_requires_enter
-  as
-    l_test_case varchar2(32);
-  begin
-    select 'Test_' || ora_hash(to_char(systimestamp))
-      into l_test_case
-      from dual;
-    pit.set_context(pit.LEVEL_ERROR, pit.TRACE_MANDATORY, false, C_UT_OUT);
-    pit.long_op(
-      p_target => l_test_case,
-      p_sofar => 100,
-      p_total => 100);
-  end long_op_requires_enter;
 
   --
   -- test long_op_nested: Long op works if PIT was set on outer method
