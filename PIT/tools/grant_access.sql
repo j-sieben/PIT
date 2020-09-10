@@ -1,15 +1,8 @@
-COLUMN 3 NEW_VALUE 3
-
-select '' "3" 
-  from dual 
- where rownum = 0;
- 
-define grant_option = &3.
 
 begin
   if '&INSTALL_USER.' != '&REMOTE_USER.' then
-    dbms_output.put_line('&s1.Granting &1. &GRANT_OPTION. on &2. to &REMOTE_USER.');
-    execute immediate 'grant &1. on &INSTALL_USER..&2. to &REMOTE_USER. &GRANT_OPTION.';
+    dbms_output.put_line('&s1.Granting &1. on &2. to &REMOTE_USER.');
+    execute immediate 'grant &1. on &INSTALL_USER..&2. to &REMOTE_USER.';
   end if;
 exception
   when others then

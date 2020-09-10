@@ -24,6 +24,7 @@ as
   C_FALSE constant flag_type := &C_FALSE.;
   C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
   C_DEFAULT_CONTEXT constant ora_name_type := 'CONTEXT_DEFAULT';
+  C_ACTIVE_CONTEXT constant ora_name_type := 'CONTEXT_ACTIVE';
   
  /** Record to store log and trace settings
    * @param  context_name              Name of the context, is used to identify a stored context

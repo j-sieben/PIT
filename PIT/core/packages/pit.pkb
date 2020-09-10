@@ -837,8 +837,10 @@ as
   procedure set_context(
     p_context_name in varchar2)
   as
+    l_context pit_util.context_type;
   begin
-    pit_pkg.set_context(p_context_name);
+    l_context.context_name := p_context_name;
+    pit_pkg.set_context(l_context);
   end set_context;
   
   

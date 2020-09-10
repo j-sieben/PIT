@@ -9,19 +9,19 @@ as
    */    
   
   /** CONSTANTS */
-  C_LEVEL_OFF constant binary_integer := 10;
-  C_LEVEL_FATAL constant binary_integer := 20;
-  C_LEVEL_ERROR constant binary_integer := 30;
-  C_LEVEL_WARN constant binary_integer := 40;
-  C_LEVEL_INFO constant binary_integer := 50;
-  C_LEVEL_DEBUG constant binary_integer := 60;
-  C_LEVEL_ALL constant binary_integer := 70;
+  C_LEVEL_OFF constant pls_integer := 10;
+  C_LEVEL_FATAL constant pls_integer := 20;
+  C_LEVEL_ERROR constant pls_integer := 30;
+  C_LEVEL_WARN constant pls_integer := 40;
+  C_LEVEL_INFO constant pls_integer := 50;
+  C_LEVEL_DEBUG constant pls_integer := 60;
+  C_LEVEL_ALL constant pls_integer := 70;
   
-  C_TRACE_OFF constant binary_integer := 10;
-  C_TRACE_MANDATORY constant binary_integer := 20;
-  C_TRACE_OPTIONAL constant binary_integer := 30;
-  C_TRACE_DETAILED constant binary_integer := 40;
-  C_TRACE_ALL constant binary_integer := 50;
+  C_TRACE_OFF constant pls_integer := 10;
+  C_TRACE_MANDATORY constant pls_integer := 20;
+  C_TRACE_OPTIONAL constant pls_integer := 30;
+  C_TRACE_DETAILED constant pls_integer := 40;
+  C_TRACE_ALL constant pls_integer := 50;
     
   C_TYPE_INTEGER constant pit_util.ora_name_type := 'INTEGER';
   C_TYPE_NUMBER constant pit_util.ora_name_type := 'NUMBER';
@@ -50,7 +50,7 @@ as
    * @param  p_error_code    Additional error code, used in external applications
    */
   procedure log_event(
-    p_severity in binary_integer,
+    p_severity in pls_integer,
     p_message_name in pit_util.ora_name_type default null,
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
@@ -99,7 +99,7 @@ as
     p_action in pit_util.ora_name_type,
     p_module in pit_util.ora_name_type,
     p_params in msg_params,
-    p_trace_level in binary_integer,
+    p_trace_level in pls_integer,
     p_client_info in varchar2);
 
   
@@ -111,7 +111,7 @@ as
    *                        key-value pairs representing parameter name and -value.
    */
   procedure leave(
-    p_trace_level in binary_integer,
+    p_trace_level in pls_integer,
     p_params in msg_params);  
   
   
@@ -147,7 +147,7 @@ as
    */
   procedure purge_log(
     p_date_before in date,
-    p_severity_lower_equal in binary_integer);
+    p_severity_lower_equal in pls_integer);
   
   
   /** Prints a message to the output modules. Used to pass user information to the view layer
@@ -197,7 +197,7 @@ as
    *         called <MESSAGE_NAME>_ERR that can be used to capture the error.
    */
   procedure raise_error(
-    p_severity in binary_integer,
+    p_severity in pls_integer,
     p_message_name in pit_util.ora_name_type default null,
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
@@ -219,7 +219,7 @@ as
    *         called <MESSAGE_NAME>_ERR that can be used to capture the error.
    */
   procedure handle_error(
-    p_severity in binary_integer,
+    p_severity in pls_integer,
     p_message_name in pit_util.ora_name_type default null,
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
@@ -307,24 +307,13 @@ as
     
   /** Procedure to change the settings in the global PIT_CONTEXT
    * @param  p_context  Instance of PIT_UTIL.context_type
-   * @usage  This procedure is used when log settings shall be changed dynamically
+   * @usage  This procedure is used if log settings have to be changed dynamically
    *         Normal usage is to overwrite log settings as defined in the parameters
    *         for a given session.
    */
   
   procedure set_context(
     p_context in pit_util.context_type);
-    
-  
-  /** Overloaded version that expects the name of a named context as defined in the parameters
-   * @param  p_context_name  Name of a context. Reuqires a matching parameter named CONTEXT_<Name>
-   *                         with predefined debug settings in the format 
-   *                         [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
-   *                         fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
-   * @usage  This method is used to adjust the debug settings during execution of the code.
-   */
-  procedure set_context(
-    p_context_name in pit_util.ora_name_type);
   
   
   /** Procedure to reset log settings to the default settings
@@ -375,7 +364,7 @@ as
    * @return Actual stack depth
    */
   function get_actual_call_stack_depth
-    return binary_integer;
+    return pls_integer;
     
   
   /** MODULE MAINTENANCE */
