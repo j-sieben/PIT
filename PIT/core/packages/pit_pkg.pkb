@@ -224,14 +224,14 @@ as
                     p_attribute_list => l_args, 
                     p_with_name => true, 
                     p_client_id => g_client_id);
+      
+    if l_settings is null then
+      raise_application_error(-20000, 'No context settings found for context ' || C_CONTEXT_DEFAULT);
+    end if;
                     
     pit_util.string_to_context_type(
       p_context_values => l_settings, 
       p_context => l_context);
-      
-    if l_context.settings is null then
-      handle_error(C_LEVEL_FATAL, C_UNKNOWN_NAMED_CONTEXT, msg_args(l_context.context_name));
-    end if;
     
     -- copy global context settings
     l_context.allow_toggle := g_context.allow_toggle;
