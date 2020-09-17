@@ -207,8 +207,7 @@ as
     l_settings pit_util.max_sql_char;
     l_context pit_util.context_type;
   begin
-    -- Initialisierung
-    l_args := args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT);    
+    -- Initialisierung   
     if p_args is not null then
       l_args := p_args;
       l_args.extend();
