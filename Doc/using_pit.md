@@ -23,6 +23,8 @@ end;
 
 which is rather ugly. Starting with 12c, this is not necessary anymore. Simply throw the error and catch it where you require it and PIT will clean the call stack up to the actual method that caught the exception.
 
+There is one caveat though: If you set your environment to optimize level 2 and above, the compiler may decide to inline methods rather than keeping them as separate methods. In this case, `utl_call_stack` does not give you the right information anymore but the name of the method surrounding the inlined code. To circumvent this, you may add the method name as the first parameter. If a method name is present, it will take precedence over the result of `utl_call_stack`, maintaining a clean calls stack.
+
 ### Passing parameters to trace-methods
 
 If you want to include parameters passed to a method in your tracing, this can be achieved by providing the methods with an instance of `MSG_PARAMS`. This type is a nested table of `MSG_PARAM` objects, which in turn is a simple key value object. A key name may be as long as `30 byte` (`128 byte` starting with Oracle 12c) and the param value up to `4000 byte` of `varchar2`. You create an instance of `MSG_PARAM`by calling its constructor function:
@@ -41,16 +43,19 @@ function my_func(
   return varchar2
 as
 begin
-  pit.enter('my_func', c_pkg, msg_params(
-    msg_param('p_id', to_char(p_id)),
-    msg_param('p_date', to_char(p_date, 'yyyy-mm-dd')),
-    msg_param('p_string', p_string)));
+  pit.enter('my_func', 
+    p_oparams => msg_params(
+                   msg_param('p_id', to_char(p_id)),
+                   msg_param('p_date', to_char(p_date, 'yyyy-mm-dd')),
+                   msg_param('p_string', p_string)));
     ...
   pit.leave;
 end my_func;
 ```
 
 Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in handy if a method calculates values and you want to log the results. As it is also important to log the outcome of parameters in case of an exception, you may pass instances of `MSG_PARAMS` to the error handlers `pit.sql_exception` and `pit.stop` as well.
+
+As an extension, there is a method called `pit.log_state` that expects an instance of `msg_params` as described above. This method allows for easy and flexible logging of variable values within a method without the requirement to create a distinct message for it. With this method, you may pass whatever amount of information to the logging mechanism.
 
 ### Adjusting trace level
 Method `pit.enter` provides different levels of tracing. These levels are:
