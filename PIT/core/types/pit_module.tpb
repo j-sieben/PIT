@@ -14,6 +14,13 @@ as
     null;
   end log;
   
+  member procedure log (
+    p_params in msg_params)
+  as
+  begin
+    null;
+  end log;
+  
   member procedure print (
     p_message in message_type)
   as

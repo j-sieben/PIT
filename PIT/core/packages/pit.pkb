@@ -189,6 +189,15 @@ as
       p_log_modules => p_log_modules);
   end log;
   
+  
+  procedure log_state(
+    p_params msg_params)
+  as
+  begin
+    pit_pkg.log_state(
+      p_params => p_params);
+  end log_state;
+  
     
   procedure verbose(
     p_message_name in varchar2,

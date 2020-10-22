@@ -63,6 +63,7 @@ as
   C_ENTER_EVENT constant integer := 5;
   C_LEAVE_EVENT constant integer := 6;
   C_NOTIFY_EVENT constant integer := 7;
+  C_LOG_STATE_EVENT constant integer := 8;
 
   /** package vars */
   /** List of all output modules that are installed */
@@ -745,6 +746,7 @@ as
     p_event in pls_integer,
     p_event_focus in varchar2,
     p_call_stack in call_stack_type default null,
+    p_params in msg_params default null,
     p_context in pit_util.context_type default null,
     p_date_before in date default null,
     p_severity_lower_equal in pls_integer default null)
@@ -782,6 +784,8 @@ as
           l_modules(l_idx).enter(p_call_stack);
         when C_LEAVE_EVENT then
           l_modules(l_idx).leave(p_call_stack);
+        when C_LOG_STATE_EVENT then
+          l_modules(l_idx).log(p_params);
         else
           null;
       end case;
@@ -908,6 +912,18 @@ as
       end if;
     end if;
   end log_event;
+  
+  
+  procedure log_state(
+    p_params in msg_params,
+    p_affected_id in pit_util.max_sql_char default null)
+  as
+  begin
+    raise_event(
+      p_event => C_LOG_STATE_EVENT,
+      p_params => p_params,
+      p_event_focus => C_EVENT_FOCUS_ACTIVE);
+  end log_state;
 
 
   procedure log_specific(

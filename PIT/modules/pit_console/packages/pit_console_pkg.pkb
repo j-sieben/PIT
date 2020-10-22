@@ -112,6 +112,21 @@ as
       print(p_message.backtrace);
     end if;
   end log;
+  
+  
+  procedure log(
+    p_params msg_params)
+  as
+  begin
+    if p_params.count > 0 then
+      dbms_output.put_line('-> State');
+      for i in 1 .. p_params.count loop
+        dbms_output.put_line('...' || p_params(i).p_param || ': ' || p_params(i).p_value);
+      end loop;
+      dbms_output.put_line('<- State');
+    end if;
+  end log;
+  
 
   procedure enter(
     p_call_stack in call_stack_type)

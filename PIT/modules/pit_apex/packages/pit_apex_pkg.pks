@@ -1,15 +1,21 @@
 create or replace package pit_apex_pkg
   authid definer
 as
-  /* Implementation package for type PIT_APEX */
+  /** Implementation package for type PIT_APEX
+   *  Notify functionality is based on the work of Daniel Hochleitner
+   *  https://github.com/Dani3lSun/apex-websocket-notify-bundle
+   */
   function get_apex_triggered_context
     return varchar2;
   
-  procedure log(p_message in message_type);
+  procedure log(
+    p_message in message_type);
   
-  procedure print(p_message in message_type);
+  procedure print(
+    p_message in message_type);
   
-  procedure notify(p_message in message_type);
+  procedure notify(
+    p_message in message_type);
   
   procedure enter(
     p_call_stack in call_stack_type);

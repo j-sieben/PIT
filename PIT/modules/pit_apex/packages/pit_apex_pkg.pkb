@@ -1,14 +1,5 @@
 create or replace package body pit_apex_pkg
 as
-  /**
-    Author       : $Author: juergen $
-    Created      : 03.05.2010
-    Last Changed : $LastChangedDate: 2014-05-04 18:39:38 +0200 (So, 04 Mai 2014) $
-    Revision     : $Revision: 1008 $
-    HeadURL      : $HeadURL: svn+ssh://juergen@176.9.99.236/home/svn/repos/src/kismon/plsql/param_admin.pks $
-    ID           : $Id: param_admin.pks 1008 2014-05-04 16:39:38Z juergen $
-    Purpose      : PIT-Modul zur Ausgabe innerhalb von APEX-Anwendungen
-  */
 
   /* CONSTANTS AND VARIABLES */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
@@ -38,6 +29,31 @@ as
     g_apex_triggered_context.module_list := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
     g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
   end initialize;
+  
+  
+  procedure set_http_header(
+    p_title in varchar2,
+    p_message in clob)
+  as
+    l_user_agent pit_util.ora_name_type;
+    l_server pit_util.ora_name_type;
+  begin
+    -- Clients Envs
+    l_user_agent := 'Mozilla/5.0';
+    l_server     := g_websocket_server;
+    -- Host
+    apex_web_service.g_request_headers(1).name := 'Host';
+    apex_web_service.g_request_headers(1).value := l_server;
+    -- User-Agent
+    apex_web_service.g_request_headers(2).name := 'User-Agent';
+    apex_web_service.g_request_headers(2).value := l_user_agent;
+    -- Title
+    apex_web_service.g_request_headers(3).name := 'notify-title';
+    apex_web_service.g_request_headers(3).value := p_title;
+    -- Message
+    apex_web_service.g_request_headers(4).name := 'notify-message';
+    apex_web_service.g_request_headers(4).value := p_message;
+  end set_http_header;
 
 
   /* valid_environment checks whether module is called within a valid APEX

@@ -7,6 +7,8 @@ create or replace type pit_module as object(
   member procedure context_changed,
   member procedure log(
     p_message in message_type),
+  member procedure log(
+    p_params in msg_params),
   member procedure print(
     p_message in message_type),
   member procedure notify(

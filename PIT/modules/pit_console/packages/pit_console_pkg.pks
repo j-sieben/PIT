@@ -5,6 +5,9 @@ as
     
   procedure log (
     p_message in message_type);
+    
+  procedure log (
+    p_params msg_params);
 
   procedure enter(
     p_call_stack in call_stack_type);

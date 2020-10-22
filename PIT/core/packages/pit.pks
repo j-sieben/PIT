@@ -190,7 +190,17 @@ as
     p_log_threshold in number default null,
     p_log_modules in varchar2 default null); 
     
-  
+    
+  /** Log method to log the state of variables without relation to ENTER or LEAVE
+   * @usage  This method is useful if you want to log the state of several variables within a method.
+   *         This way, you can report the status of variables without the requirement to create
+   *         distinct messages for those. This adds flexibility and reduces administrative workload.
+   * @param  p_params  Instance of MSG_PARAMS, containing the variable names and values to log
+   */
+  procedure log_state(
+    p_params msg_params);
+    
+    
   /** Exception handler that handles an error and calls leave
    * @usage  Call this procedure in EXCEPTION handlers of your code.<br>
    *         <code>sql_exception</code> not only reports the error but handles it as well.

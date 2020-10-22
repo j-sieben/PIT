@@ -55,6 +55,17 @@ as
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
     p_error_code in varchar2 default null);
+    
+    
+  /** Logs parameters
+   * @usage  This method is called from PIT. It expects an instance of MSG_PARAMS, containing
+   *         variable names and their actual value. Useful if you want to log the state of
+   *         variables without the context of a method call, fi to debug state within a loop.
+   *         Optionally, you may add an ID to reference an item.
+   * @param  p_params       List of replacement values for the message
+   */
+  procedure log_state(
+    p_params in msg_params);
   
 
   /** Logs messages regardless of log settings
