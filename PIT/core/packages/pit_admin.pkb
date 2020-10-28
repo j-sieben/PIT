@@ -629,6 +629,9 @@ end;
     if p_force then
       delete from pit_message
        where pms_pmg_name = p_pmg_name;
+       
+      delete from pit_translatable_item
+       where pti_pmg_name = p_pmg_name;
     end if;
     
     delete from pit_message_group

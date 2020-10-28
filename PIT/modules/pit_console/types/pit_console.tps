@@ -1,6 +1,8 @@
-create or replace type pit_console under pit_module(
+create or replace type pit_console force under pit_module(
   overriding member procedure log(
     p_message in message_type),
+  overriding member procedure log(
+    p_params in msg_params),
   overriding member procedure print(
     p_message in message_type),
   overriding member procedure notify(

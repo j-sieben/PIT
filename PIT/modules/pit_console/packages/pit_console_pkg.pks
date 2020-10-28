@@ -7,7 +7,7 @@ as
     p_message in message_type);
     
   procedure log (
-    p_params msg_params);
+    p_params in msg_params);
 
   procedure enter(
     p_call_stack in call_stack_type);

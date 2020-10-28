@@ -22,6 +22,7 @@ as
   C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
   C_BASE_MODULE constant pit_util.ora_name_type := 'PIT_MODULE';
   C_WARN_IF_UNUSABLE_MODULES constant pit_util.ora_name_type := 'WARN_IF_UNUSABLE_MODULES';
+  C_LOG_STATE_THRESHOLD constant pit_util.ora_name_type := 'LOG_STATE_THRESHOLD';
   
   /** message constants to avoid dependency from MSG package */
   C_MODULE_INSTANTIATED constant pit_util.ora_name_type := 'PIT_MODULE_INSTANTIATED';
@@ -86,12 +87,16 @@ as
   /** Variables to store data in collect mode */
   g_collect_mode boolean;
   g_message_stack pit_message_table;
+  /** Other globals */
+  g_log_state_threshold pls_integer;
+
 
   /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
     p_event in pls_integer,
     p_event_focus in varchar2,
     p_call_stack in call_stack_type default null,
+    p_params in msg_params default null,
     p_context in pit_util.context_type default null,
     p_date_before in date default null,
     p_severity_lower_equal in pls_integer default null);
@@ -860,6 +865,10 @@ as
     g_warn_if_unusable_modules := param.get_boolean(
                                     p_par_id => C_WARN_IF_UNUSABLE_MODULES, 
                                     p_pgr_id => C_PARAM_GROUP);
+                                    
+    g_log_state_threshold := param.get_integer(
+                               p_par_id => C_LOG_STATE_THRESHOLD,
+                               p_pgr_id => C_PARAM_GROUP);
     g_collect_mode := false;
     
     -- Empty collections
@@ -915,14 +924,15 @@ as
   
   
   procedure log_state(
-    p_params in msg_params,
-    p_affected_id in pit_util.max_sql_char default null)
+    p_params in msg_params)
   as
   begin
-    raise_event(
-      p_event => C_LOG_STATE_EVENT,
-      p_params => p_params,
-      p_event_focus => C_EVENT_FOCUS_ACTIVE);
+    if log_me(g_log_state_threshold) then
+      raise_event(
+        p_event => C_LOG_STATE_EVENT,
+        p_params => p_params,
+        p_event_focus => C_EVENT_FOCUS_ACTIVE);
+    end if;
   end log_state;
 
 

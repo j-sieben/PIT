@@ -80,6 +80,14 @@ begin
   );
 
   param_admin.edit_parameter(
+    p_par_id => 'LOG_STATE_THRESHOLD'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Severity of LOG_STATE messages, controls at which level this method starts to emit log information.'
+   ,p_par_integer_value => 50 -- Level INFO
+   ,p_par_is_modifiable => null
+  );
+
+  param_admin.edit_parameter(
     p_par_id => 'NAME_SPELLING'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Default spelling for database object names'

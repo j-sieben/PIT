@@ -115,7 +115,7 @@ as
   
   
   procedure log(
-    p_params msg_params)
+    p_params in msg_params)
   as
   begin
     if p_params.count > 0 then

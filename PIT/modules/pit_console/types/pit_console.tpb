@@ -10,6 +10,14 @@ as
   end log;
   
   
+  overriding member procedure log(
+    p_params in msg_params)
+  as
+  begin
+    pit_console_pkg.log(p_params);
+  end log;
+  
+  
   overriding member procedure print(
     p_message in message_type)
   as
