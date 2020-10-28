@@ -257,8 +257,8 @@ as
     
   
   /** Method to create an installation script for the locally defined parameters
-   * @return CLOB instance containing a script with all locally overwritten or defined parameters
-   * @usage  Is used to export local settings. Defined here and not at PARAM_ADMIN as this package runs with
+   * %return CLOB instance containing a script with all locally overwritten or defined parameters
+   * %usage  Is used to export local settings. Defined here and not at PARAM_ADMIN as this package runs with
    *         current user settings and has therefore access to the locally defined PARAMETER_LOCAL
    */
   function get_parameters

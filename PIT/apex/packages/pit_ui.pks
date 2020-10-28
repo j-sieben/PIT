@@ -10,16 +10,16 @@ as
    */
    
   /** Getter method to retrieve the default PIT language. This language is defined upon installation of PIT and cannot be changed.
-   * @return Default language
+   * %return Default language
    */
   function get_default_language
     return varchar2;
     
   
   /** Wrapper around PIT_UTIL.harmonize_sql_name
-   * @param  p_item_name  Name of the page item containing the SQL name
-   * @param [p_prefix]    Optional prefix for the resulting name
-   * @usage  Is used to format an entered alphanumerical key according to the naming conventions of PIT
+   * %param  p_item_name  Name of the page item containing the SQL name
+   * %param [p_prefix]    Optional prefix for the resulting name
+   * %usage  Is used to format an entered alphanumerical key according to the naming conventions of PIT
    */
   procedure harmonize_sql_name(
     p_item_name in varchar2,
@@ -27,35 +27,35 @@ as
     
   
   /** Method to check whether translatable items are present.
-   * @usage  Is used to toggle the visibility of a region
+   * %usage  Is used to toggle the visibility of a region
    */
   function has_translatable_items
     return boolean;
     
   
   /** Method to check whether local parameters are present.
-   * @usage  Is used to toggle the visibility of a region
+   * %usage  Is used to toggle the visibility of a region
    */
   function has_local_parameters
     return boolean;
     
   
   /** Method to check whether toggle feature is switched on
-   * @usage  Is used to toggle the visibility of a region
+   * %usage  Is used to toggle the visibility of a region
    */
   function allows_toggles
     return utl_apex.flag_type;
     
   
   /** Method to set a new toggle value.
-   * @usage  Is called by the application via an AJAX call
+   * %usage  Is called by the application via an AJAX call
    */
   procedure set_allow_toggles;
   
   
   /** Method to check wether the actually selected context is the default context
-   * @return Flag to indicate that the context is the default context (TRUE) or not (FALSE)
-   * @usage  Is used to control the visibility and editability of page items
+   * %return Flag to indicate that the context is the default context (TRUE) or not (FALSE)
+   * %usage  Is used to control the visibility and editability of page items
    */
   function is_default_context
     return boolean;
@@ -113,8 +113,8 @@ as
    
    
   /* Prozedur zur Verwaltung der Standardsprachen
-   * @param p_pml_list Liste der Sprachen in der Reihenfolge ihrer Verwendung
-   * @usage Wird verwendet, um die Spracheinstellungen fuer PIT einzustellen.
+   * %param p_pml_list Liste der Sprachen in der Reihenfolge ihrer Verwendung
+   * %usage Wird verwendet, um die Spracheinstellungen fuer PIT einzustellen.
    *        Die Standardsprache kann hier nicht geaendert werden, die wurde bei 
    *        der Installation von PIT festgelegt. Hier kann nur definiert werden,
    *        Welce Uebersetzungen mit welchem Vorrang verwendet werden sollen.

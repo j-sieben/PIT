@@ -141,11 +141,11 @@ as
   
   
   /** Method to check whether a name conforms to the internal naming standards
-   * @param  p_name       Name to check
-   * @param  p_item_name  Name of the page item containing P_NAME
-   * @param  p_region_id  Static ID of the region
-   * @return Harmonized name if possible, entered name in case of error
-   * @usage  Is used as a wrapper to reduce code on various validate methods
+   * %param  p_name       Name to check
+   * %param  p_item_name  Name of the page item containing P_NAME
+   * %param  p_region_id  Static ID of the region
+   * %return Harmonized name if possible, entered name in case of error
+   * %usage  Is used as a wrapper to reduce code on various validate methods
    */
   function check_name(
     p_name in pit_util.ora_name_type,
@@ -184,10 +184,10 @@ as
   
   
   /** Method to download a zip with export files for all selected groups of type P_TARGET
-   * @param  p_target           Type of export items. One of PMS or PTI
-   * @param  p_target_language  target language (Oracle name), to translate the messages to
-   * @param  p_pmg_list         Colon separated list of message group names
-   * @usage  Is used to create an XLIFF compatible list of files to translate the select target type.
+   * %param  p_target           Type of export items. One of PMS or PTI
+   * %param  p_target_language  target language (Oracle name), to translate the messages to
+   * %param  p_pmg_list         Colon separated list of message group names
+   * %usage  Is used to create an XLIFF compatible list of files to translate the select target type.
    *         All selected groups are written to separate tranlsation files and downloaded as a zip file.
    */
   procedure translate_groups(
@@ -232,8 +232,8 @@ as
   
   
   /** Method to import a XLIFF translation file into the categorie defined by P_TARGET
-   * @param  p_target           Type of export items. One of PMS or PTI
-   * @usage  Is used to import an XLIFF compatible file into the database.
+   * %param  p_target           Type of export items. One of PMS or PTI
+   * %usage  Is used to import an XLIFF compatible file into the database.
    */
   procedure import_translation(
     p_target utl_apex.ora_name_type)
@@ -279,9 +279,9 @@ as
   
   
   /* Method to export groups
-   * @param  p_target    Type of export items. One of PMS, PAR or PTI
-   * @param  p_pmg_list  Colon separated list of translatable item group names.
-   * @usage  Is used to combine all translatable items into separate files per group, wrap them in a ZIP and download it.
+   * %param  p_target    Type of export items. One of PMS, PAR or PTI
+   * %param  p_pmg_list  Colon separated list of translatable item group names.
+   * %usage  Is used to combine all translatable items into separate files per group, wrap them in a ZIP and download it.
    */
   procedure export_groups(
     p_target pit_util.ora_name_type,
@@ -335,7 +335,7 @@ as
   
   
   /* Method to export local parameters
-   * @usage  Is used to export all locally overwritten or defined parameters.
+   * %usage  Is used to export all locally overwritten or defined parameters.
    */
   procedure export_local_parameters
   as

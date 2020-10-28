@@ -1,0 +1,1133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body pit_admin</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="pit_admin">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body pit_admin</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE_ERROR_LIST">initialize_error_list</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to collect all predefined <A HREF="pit.html#ERROR">error</A> names within the database
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CHECK_ERROR">check_error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to check whether a predefined Oracle <A HREF="pit.html#ERROR">error</A> is to be overwritten
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_EXPORT_GROUP_SCRIPT">get_export_group_script</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SCRIPT_MESSAGES">script_messages</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to generate a message install script
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SCRIPT_TRANSLATABLE_ITEMS">script_translatable_items</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to generate a translatable items install script
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ANALYZE_XLIFF">analyze_xliff</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to extract language and group from an XLIFF envelope
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRANSLATE_MESSAGES">translate_messages</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to extract XLIFF instance into PIT_MESSAGE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRANSLATE_TRANSLATABLE_ITEMS">translate_translatable_items</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to extract XLIFF instance into PIT_TRANSLATABLE_ITEM
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_PMS_XML">get_pms_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Help method to generate XLIFF compatible translation entries for messages
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_PTI_XML">get_pti_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Help method to generate XLIFF compatible translation entries for translatable items
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Initialization procedure
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MERGE_MESSAGE_GROUP">merge_message_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+INTERFACE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_MESSAGE_GROUP">delete_message_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MERGE_MESSAGE">merge_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_MESSAGE">delete_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+DUP_VAL_ON_INDEX may occur if a user tries to assign a custom <A HREF="pit.html#ERROR">error</A> number twice
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_ALL_MESSAGES">delete_all_messages</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MERGE_TRANSLATABLE_ITEM">merge_translatable_item</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_TRANSLATABLE_ITEM">delete_translatable_item</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE_TEXT">get_message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+SETTINGS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_LANGUAGE_SETTINGS">set_language_settings</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_MESSAGE_PACKAGE">create_message_package</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_NAMED_CONTEXT">create_named_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+create package code
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_NAMED_CONTEXT2">create_named_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#REMOVE_NAMED_CONTEXT">remove_named_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Create parameter
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_CONTEXT_TOGGLE">create_context_toggle</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_CONTEXT_TOGGLE">delete_context_toggle</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Create parameter
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_INSTALLATION_SCRIPT">create_installation_script</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+EXPORT
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRANSLATE_MESSAGE">translate_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+TRANSLATION
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_TRANSLATION_XML">create_translation_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#APPLY_TRANSLATION">apply_translation</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Wrap xml in XLIFF envelope
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_TRANSLATION">delete_translation</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#REGISTER_TRANSLATION">register_translation</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PREDEFINED_ERROR_REC">predefined_error_rec</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+TYPE DEFINITIONS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PREDEFINED_ERROR_T">predefined_error_t</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PREDEFINED_ERRORS">g_predefined_errors</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+PACKAGE VARIABLES
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_DEFAULT_LANGUAGE">g_default_language</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DEL">C_DEL</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PREDEFINED_ERROR">C_PREDEFINED_ERROR</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_CONTEXT_PREFIX">C_CONTEXT_PREFIX</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TOGGLE_PREFIX">C_TOGGLE_PREFIX</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_XLIFF_NS">C_XLIFF_NS</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MIN_ERROR">C_MIN_ERROR</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MAX_ERROR">C_MAX_ERROR</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DEFAULT_LANGUAGE">C_DEFAULT_LANGUAGE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_ERROR_ALREADY_ASSIGNED">C_ERROR_ALREADY_ASSIGNED</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+<A HREF="pit.html#ERROR">ERROR</A> messages
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MESSAGE_DOES_NOT_EXIST">C_MESSAGE_DOES_NOT_EXIST</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PREDEFINED_ERROR_REC"></A>
+<P CLASS="TYPE_TITLE">
+predefined_error_rec
+</P>
+<PRE CLASS="DECL_TEXT">
+type predefined_error_rec is record(
+  source_type <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+  owner <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+  package_name <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+  error_name <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>);
+</PRE>
+<P CLASS="DESC_TEXT">
+TYPE DEFINITIONS<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="PREDEFINED_ERROR_T"></A>
+<P CLASS="TYPE_TITLE">
+predefined_error_t
+</P>
+<PRE CLASS="DECL_TEXT">
+type predefined_error_t is table of <A HREF=#PREDEFINED_ERROR_REC>predefined_error_rec</A> index by binary_integer;
+</PRE>
+<HR>
+<A NAME="G_PREDEFINED_ERRORS"></A>
+<P CLASS="TYPE_TITLE">
+g_predefined_errors
+</P>
+<PRE CLASS="DECL_TEXT">
+g_predefined_errors predefined_error_t;
+</PRE>
+<P CLASS="DESC_TEXT">
+PACKAGE VARIABLES<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="G_DEFAULT_LANGUAGE"></A>
+<P CLASS="TYPE_TITLE">
+g_default_language
+</P>
+<PRE CLASS="DECL_TEXT">
+g_default_language pit_util.ora_name_type;
+</PRE>
+<HR>
+<A NAME="C_PREDEFINED_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+C_PREDEFINED_ERROR
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PREDEFINED_ERROR constant varchar2(5) := 'PIT';
+</PRE>
+<HR>
+<A NAME="C_CONTEXT_PREFIX"></A>
+<P CLASS="TYPE_TITLE">
+C_CONTEXT_PREFIX
+</P>
+<PRE CLASS="DECL_TEXT">
+C_CONTEXT_PREFIX constant varchar2(30) := 'CONTEXT_';
+</PRE>
+<HR>
+<A NAME="C_TOGGLE_PREFIX"></A>
+<P CLASS="TYPE_TITLE">
+C_TOGGLE_PREFIX
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TOGGLE_PREFIX constant varchar2(30) := 'TOGGLE_';
+</PRE>
+<HR>
+<A NAME="C_XLIFF_NS"></A>
+<P CLASS="TYPE_TITLE">
+C_XLIFF_NS
+</P>
+<PRE CLASS="DECL_TEXT">
+C_XLIFF_NS constant varchar2(100) := 'urn:oasis:names:tc:xliff:document:2.0';
+</PRE>
+<HR>
+<A NAME="C_DEL"></A>
+<P CLASS="TYPE_TITLE">
+C_DEL
+</P>
+<PRE CLASS="DECL_TEXT">
+C_DEL char(1 byte) := '|';
+</PRE>
+<HR>
+<A NAME="C_MIN_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+C_MIN_ERROR
+</P>
+<PRE CLASS="DECL_TEXT">
+C_MIN_ERROR constant number := -20999;
+</PRE>
+<HR>
+<A NAME="C_MAX_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+C_MAX_ERROR
+</P>
+<PRE CLASS="DECL_TEXT">
+C_MAX_ERROR constant number := -20000;
+</PRE>
+<HR>
+<A NAME="C_DEFAULT_LANGUAGE"></A>
+<P CLASS="TYPE_TITLE">
+C_DEFAULT_LANGUAGE
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_util.html#C_DEFAULT_LANGUAGE">C_DEFAULT_LANGUAGE</A> constant number := 10;
+</PRE>
+<HR>
+<A NAME="C_ERROR_ALREADY_ASSIGNED"></A>
+<P CLASS="TYPE_TITLE">
+C_ERROR_ALREADY_ASSIGNED
+</P>
+<PRE CLASS="DECL_TEXT">
+C_ERROR_ALREADY_ASSIGNED constant varchar2(200) := 'This Oracle <A HREF="pit.html#ERROR">error</A> number is already assigned to message #ERRNO#';
+</PRE>
+<P CLASS="DESC_TEXT">
+<A HREF="pit.html#ERROR">ERROR</A> messages<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="C_MESSAGE_DOES_NOT_EXIST"></A>
+<P CLASS="TYPE_TITLE">
+C_MESSAGE_DOES_NOT_EXIST
+</P>
+<PRE CLASS="DECL_TEXT">
+C_MESSAGE_DOES_NOT_EXIST constant varchar2(200) := 'Message #MESSAGE# does not exist.';
+</PRE>
+<HR>
+<A NAME="INITIALIZE_ERROR_LIST"></A>
+<P CLASS="TYPE_TITLE">
+initialize_error_list
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure initialize_error_list
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to collect all predefined <A HREF="pit.html#ERROR">error</A> names within the database<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="CHECK_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+check_error
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure check_error(p_pms_name         in pit_message.pms_name%TYPE,
+                      p_pms_custom_error in pit_message.pms_custom_error%TYPE)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to check whether a predefined Oracle <A HREF="pit.html#ERROR">error</A> is to be overwritten<br>
+%<A HREF="param.html">param</A>&nbsp; p_pms_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name of the message to check the <A HREF="pit.html#ERROR">error</A> for<br>
+%<A HREF="param.html">param</A>&nbsp; p_pms_custom_error&nbsp; <A HREF="pit.html#ERROR">Error</A> number for which a <A HREF="pit.html">PIT</A> message shall be created<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called whenever a new message is inserted into table MESSAGE with an Oracle <A HREF="pit.html#ERROR">error</A> number. The function checks whether the Oracle <A HREF="pit.html#ERROR">error</A> number is already a predefined <A HREF="pit.html#ERROR">error</A>, such as -1 and DUP_VAL_ON_INDEX. If so, the procedure throws an <A HREF="pit.html#ERROR">error</A>. Limitation: This procedure can only see Exceptions that are defined in packages from SYSTEM or SYS and only exceptions from non wrapped sources.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_EXPORT_GROUP_SCRIPT"></A>
+<P CLASS="TYPE_TITLE">
+get_export_group_script
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_export_group_script(p_pmg_name in pit_message_group.pmg_name%TYPE)
+  return varchar2
+
+</PRE>
+<HR>
+<A NAME="SCRIPT_MESSAGES"></A>
+<P CLASS="TYPE_TITLE">
+script_messages
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure script_messages(p_pmg_name  in pit_message_group.pmg_name%TYPE,
+                          p_file_name out nocopy <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+                          p_script    out nocopy clob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to generate a message install script<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called internally by <A HREF=#CREATE_INSTALLATION_SCRIPT>CREATE_INSTALLATION_SCRIPT</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message group to filter output<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_file_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Out parameter that provides the file name for the Script file<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_script&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Out parameter that contains the SQL script created<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SCRIPT_TRANSLATABLE_ITEMS"></A>
+<P CLASS="TYPE_TITLE">
+script_translatable_items
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure script_translatable_items(p_pmg_name  in pit_message_group.pmg_name%TYPE default null,
+                                    p_file_name out nocopy <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+                                    p_script    out nocopy clob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to generate a translatable items install script<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called internally by <A HREF=#CREATE_INSTALLATION_SCRIPT>CREATE_INSTALLATION_SCRIPT</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message group to filter output<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_file_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Out parameter that provides the file name for the Script file<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_script&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Out parameter that contains the SQL script created<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ANALYZE_XLIFF"></A>
+<P CLASS="TYPE_TITLE">
+analyze_xliff
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure analyze_xliff(p_xliff    xmltype,
+                        p_pml_name out nocopy pit_message_language.pml_name%TYPE,
+                        p_pmg_name out nocopy pit_message_group.pmg_name%TYPE)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to extract language and group from an XLIFF envelope<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to extract information from an XLIFF header.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_xliff&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XLIFF instance<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pml_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Language name converted to Oracle language name<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Group name<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRANSLATE_MESSAGES"></A>
+<P CLASS="TYPE_TITLE">
+translate_messages
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure translate_messages(p_xliff in xmltype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to extract XLIFF instance into PIT_MESSAGE<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called internally by APPLY_TRANSLATIONS<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_xliff&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XLIFF instance to apply<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRANSLATE_TRANSLATABLE_ITEMS"></A>
+<P CLASS="TYPE_TITLE">
+translate_translatable_items
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure translate_translatable_items(p_xliff in xmltype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to extract XLIFF instance into PIT_TRANSLATABLE_ITEM<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called internally by APPLY_TRANSLATIONS<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_xliff&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XLIFF instance to apply<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_PMS_XML"></A>
+<P CLASS="TYPE_TITLE">
+get_pms_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_pms_xml(p_target_language in pit_message_language.pml_name%TYPE,
+                     p_pmg_name        in pit_message_group.pmg_name%TYPE default null)
+  return xmltype
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Help method to generate XLIFF compatible translation entries for messages<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called internally by GET_TRANSLATION_XML to allow for different target types<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Language to translate the messages to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message group to tranlsate<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XML fragment to incorporate into an XLIFF envelope generated by GET_TRANSLATION_XML<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_PTI_XML"></A>
+<P CLASS="TYPE_TITLE">
+get_pti_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_pti_xml(p_target_language in pit_message_language.pml_name%TYPE,
+                     p_pmg_name        in pit_message_group.pmg_name%TYPE default null)
+  return xmltype
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Help method to generate XLIFF compatible translation entries for translatable items<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called internally by GET_TRANSLATION_XML to allow for different target types<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Language to translate the translatable items to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Translatable items group to tranlsate<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+XML fragment to incorporate into an XLIFF envelope generated by GET_TRANSLATION_XML<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Initialization procedure<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Called internally. It has the following functionality: <ul><li>Read all predefined oracle errors from the oracle packages</li> <li>Read default language</li></ul>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="MERGE_MESSAGE_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+merge_message_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#MERGE_MESSAGE_GROUP">merge_message_group</A>(p_pmg_name        in pit_message_group.pmg_name%TYPE,
+                              p_pmg_description in pit_message_group.pmg_description%TYPE default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+INTERFACE<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="DELETE_MESSAGE_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+delete_message_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#DELETE_MESSAGE_GROUP">delete_message_group</A>(p_pmg_name in pit_message_group.pmg_name%TYPE,
+                               p_force    in boolean default false)
+
+</PRE>
+<HR>
+<A NAME="MERGE_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+merge_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#MERGE_MESSAGE">merge_message</A>(p_pms_name        in pit_message.pms_name%TYPE,
+                        p_pms_text        in pit_message.pms_text%TYPE,
+                        p_pms_pse_id      in pit_message.pms_pse_id%TYPE,
+                        p_pms_description in pit_message.pms_description%TYPE default null,
+                        p_pms_pmg_name    in pit_message_group.pmg_name%TYPE default null,
+                        p_pms_pml_name    in pit_message_language.pml_name%TYPE default null,
+                        p_error_number    in pit_message.pms_custom_error%TYPE default null)
+
+</PRE>
+<HR>
+<A NAME="DELETE_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+delete_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#DELETE_MESSAGE">delete_message</A>(p_pms_name     in pit_message.pms_name%TYPE,
+                         p_pms_pml_name in pit_message_language.pml_name%TYPE)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+DUP_VAL_ON_INDEX may occur if a user tries to assign a custom <A HREF="pit.html#ERROR">error</A> number twice<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="DELETE_ALL_MESSAGES"></A>
+<P CLASS="TYPE_TITLE">
+delete_all_messages
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#DELETE_ALL_MESSAGES">delete_all_messages</A>(p_pmg_name in pit_message_group.pmg_name%TYPE default null)
+
+</PRE>
+<HR>
+<A NAME="MERGE_TRANSLATABLE_ITEM"></A>
+<P CLASS="TYPE_TITLE">
+merge_translatable_item
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#MERGE_TRANSLATABLE_ITEM">merge_translatable_item</A>(p_pti_id           in pit_translatable_item.pti_id%TYPE,
+                                  p_pti_pml_name     in pit_message_language.pml_name%TYPE,
+                                  p_pti_pmg_name     in pit_message_group.pmg_name%TYPE,
+                                  p_pti_name         in varchar2,
+                                  p_pti_display_name in varchar2 default null,
+                                  p_pti_description  in clob default null)
+
+</PRE>
+<HR>
+<A NAME="DELETE_TRANSLATABLE_ITEM"></A>
+<P CLASS="TYPE_TITLE">
+delete_translatable_item
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#DELETE_TRANSLATABLE_ITEM">delete_translatable_item</A>(p_pti_id in pit_translatable_item.pti_id%TYPE)
+
+</PRE>
+<HR>
+<A NAME="GET_MESSAGE_TEXT"></A>
+<P CLASS="TYPE_TITLE">
+get_message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_MESSAGE_TEXT">get_message_text</A>(p_pms_name     in pit_message.pms_name%TYPE,
+                          p_pms_pml_name in pit_message_language.pml_name%TYPE := null)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+SETTINGS<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="SET_LANGUAGE_SETTINGS"></A>
+<P CLASS="TYPE_TITLE">
+set_language_settings
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#SET_LANGUAGE_SETTINGS">set_language_settings</A>(p_pml_list in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>)
+
+</PRE>
+<HR>
+<A NAME="CREATE_MESSAGE_PACKAGE"></A>
+<P CLASS="TYPE_TITLE">
+create_message_package
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#CREATE_MESSAGE_PACKAGE">create_message_package</A>(p_directory varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="CREATE_NAMED_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+create_named_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#CREATE_NAMED_CONTEXT">create_named_context</A>(p_context_name in varchar2,
+                               p_log_level    in number,
+                               p_trace_level  in number,
+                               p_trace_timing in boolean,
+                               p_module_list  in varchar2,
+                               p_comment      in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+create package code<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="CREATE_NAMED_CONTEXT2"></A>
+<P CLASS="TYPE_TITLE">
+create_named_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#CREATE_NAMED_CONTEXT">create_named_context</A>(p_context_name in varchar2,
+                               p_settings     in varchar2,
+                               p_comment      in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="REMOVE_NAMED_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+remove_named_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#REMOVE_NAMED_CONTEXT">remove_named_context</A>(p_context_name in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Create parameter<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="CREATE_CONTEXT_TOGGLE"></A>
+<P CLASS="TYPE_TITLE">
+create_context_toggle
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#CREATE_CONTEXT_TOGGLE">create_context_toggle</A>(p_toggle_name  in varchar2,
+                                p_module_list  in varchar2,
+                                p_context_name in varchar2,
+                                p_comment      in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="DELETE_CONTEXT_TOGGLE"></A>
+<P CLASS="TYPE_TITLE">
+delete_context_toggle
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#DELETE_CONTEXT_TOGGLE">delete_context_toggle</A>(p_toggle_name in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Create parameter<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="CREATE_INSTALLATION_SCRIPT"></A>
+<P CLASS="TYPE_TITLE">
+create_installation_script
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#CREATE_INSTALLATION_SCRIPT">create_installation_script</A>(p_pmg_name  in pit_message_group.pmg_name%TYPE,
+                                     p_target    in varchar2,
+                                     p_file_name out nocopy <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+                                     p_script    out nocopy clob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+EXPORT<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="TRANSLATE_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+translate_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#TRANSLATE_MESSAGE">translate_message</A>(p_pms_name        in pit_message.pms_name%TYPE,
+                            p_pms_text        in pit_message.pms_text%TYPE,
+                            p_pms_pml_name    in pit_message_language.pml_name%TYPE,
+                            p_pms_description in pit_message.pms_description%TYPE default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+TRANSLATION<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="CREATE_TRANSLATION_XML"></A>
+<P CLASS="TYPE_TITLE">
+create_translation_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#CREATE_TRANSLATION_XML">create_translation_xml</A>(p_target_language in pit_message_language.pml_name%TYPE,
+                                 p_pmg_name        in pit_message_group.pmg_name%TYPE default null,
+                                 p_target          in varchar2,
+                                 p_file_name       out nocopy <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+                                 p_xliff           out nocopy xmltype)
+
+</PRE>
+<HR>
+<A NAME="APPLY_TRANSLATION"></A>
+<P CLASS="TYPE_TITLE">
+apply_translation
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#APPLY_TRANSLATION">apply_translation</A>(p_xliff in xmltype, p_target in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Wrap xml in XLIFF envelope<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="DELETE_TRANSLATION"></A>
+<P CLASS="TYPE_TITLE">
+delete_translation
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#DELETE_TRANSLATION">delete_translation</A>(p_pml_name in pit_message_language.pml_name%TYPE,
+                             p_target   in varchar2)
+
+</PRE>
+<HR>
+<A NAME="REGISTER_TRANSLATION"></A>
+<P CLASS="TYPE_TITLE">
+register_translation
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_admin.html#REGISTER_TRANSLATION">register_translation</A>(p_pml_name in pit_message_language.pml_name%TYPE)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

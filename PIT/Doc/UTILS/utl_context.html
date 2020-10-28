@@ -1,0 +1,557 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package utl_context</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="utl_context">
+ <META name="description" content="Generic maintenance of globally accessed contexts<br>">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package utl_context</P>
+Generic maintenance of globally accessed contexts<br>
+If a globally accessed context is created in such a way that this package has write privileges on it, access to the context is achieved by calling the methods within this helper package.<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_VALUE">set_value</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to set a value in one of the available contexts
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_VALUE">get_value</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to read a value from one of the available contexts
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CLEAR_VALUE">clear_value</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to clear a value in one of the available contexts
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_FIRST_MATCH">get_first_match</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Function to get a value based on a collection of context attributes
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#RESET_CONTEXT">reset_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to reset one of the available contexts
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ORA_NAME_TYPE">ora_name_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SQL_CHAR">sql_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SMALL_CHAR">small_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#FLAG_TYPE">flag_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_NO_VALUE">C_NO_VALUE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_NAME_DELIMITER">C_NAME_DELIMITER</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_GLOBAL">C_GLOBAL</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Context Type Constants: Context values are visible ...
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FORCE_USER">C_FORCE_USER</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FORCE_CLIENT_ID">C_FORCE_CLIENT_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FORCE_USER_CLIENT_ID">C_FORCE_USER_CLIENT_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PREFER_CLIENT_ID">C_PREFER_CLIENT_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PREFER_USER_CLIENT_ID">C_PREFER_USER_CLIENT_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_SESSION">C_SESSION</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ORA_NAME_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+ora_name_type
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A> is varchar2(128 byte);
+</PRE>
+<HR>
+<A NAME="SQL_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+sql_char
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype sql_char is varchar2(4000 byte);
+</PRE>
+<HR>
+<A NAME="SMALL_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+small_char
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype <A HREF="pit_util.html#SMALL_CHAR">small_char</A> is varchar2(255 byte);
+</PRE>
+<HR>
+<A NAME="FLAG_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+flag_type
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype <A HREF="pit_util.html#FLAG_TYPE">flag_type</A> is char(1 byte);
+</PRE>
+<HR>
+<A NAME="C_NO_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+C_NO_VALUE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_NO_VALUE varchar2(10) := 'NOVALUE';
+</PRE>
+<HR>
+<A NAME="C_NAME_DELIMITER"></A>
+<P CLASS="TYPE_TITLE">
+C_NAME_DELIMITER
+</P>
+<PRE CLASS="DECL_TEXT">
+C_NAME_DELIMITER char(1 byte) := '@';
+</PRE>
+<HR>
+<A NAME="C_GLOBAL"></A>
+<P CLASS="TYPE_TITLE">
+C_GLOBAL
+</P>
+<PRE CLASS="DECL_TEXT">
+C_GLOBAL constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'GLOBAL';
+</PRE>
+<P CLASS="DESC_TEXT">
+Context Type Constants: Context values are visible ...<br>
+global: ... for any user and any session force_user: ... only if user matches force_client_id: ... only if client_identifier matches force_user_client_id: ... only if user AND client_identifier matches prefer_client_id: ... if a matching value for that client_identifier exists,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; it is visible, otherwise a default value is provided<br>
+prefer_user_client_id: ... if a matching value for that user AND client_identifier exists,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; it is visible, otherwise a default value is provided<br>
+session: ... only within the session that set the value (pseduo local context)<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="C_FORCE_USER"></A>
+<P CLASS="TYPE_TITLE">
+C_FORCE_USER
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FORCE_USER constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'FORCE_USER';
+</PRE>
+<HR>
+<A NAME="C_FORCE_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_FORCE_CLIENT_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FORCE_CLIENT_ID constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'FORCE_CLIENT_ID';
+</PRE>
+<HR>
+<A NAME="C_FORCE_USER_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_FORCE_USER_CLIENT_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FORCE_USER_CLIENT_ID constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'FORCE_USER_CLIENT_ID';
+</PRE>
+<HR>
+<A NAME="C_PREFER_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_PREFER_CLIENT_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PREFER_CLIENT_ID constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'PREFER_CLIENT_ID';
+</PRE>
+<HR>
+<A NAME="C_PREFER_USER_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_PREFER_USER_CLIENT_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PREFER_USER_CLIENT_ID constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'PREFER_USER_CLIENT_ID';
+</PRE>
+<HR>
+<A NAME="C_SESSION"></A>
+<P CLASS="TYPE_TITLE">
+C_SESSION
+</P>
+<PRE CLASS="DECL_TEXT">
+C_SESSION constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'SESSION';
+</PRE>
+<HR>
+<A NAME="SET_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+set_value
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_value(p_context   in varchar2,
+                    p_attribute in varchar2,
+                    p_value     in varchar2,
+                    p_client_id varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to set a value in one of the available contexts<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This procedure set a parameter value for a given parameter in the context requested. When using the p_client_id attribute, a parameter may be set for a given session only and be invisible to other sessions<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context to write a value to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attribute&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter for which a value shall be stored<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_value&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+varchar-value of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+client id as set at sys_context('USERENV', 'CLIENT_IDENTIFIER')<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+get_value
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_value(p_context   in varchar2,
+                   p_attribute in varchar2,
+                   p_client_id varchar2 default null) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to read a value from one of the available contexts<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This procedure gets a parameter value for a given parameter from the context requested. When using the p_client_id attribute, a parameter may be read that is private for a given session<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context to write a value to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attribute&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter for which a value shall be stored<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+optional client id as set at sys_context('USERENV', 'CLIENT_IDENTIFIER')<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Varchar-value of the parameter<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CLEAR_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+clear_value
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure clear_value(p_context   in varchar2,
+                      p_attribute in varchar2,
+                      p_client_id varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to clear a value in one of the available contexts<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This procedure clears a parameter value for a given parameter in the context requested. When using the p_client_id attribute, a parameter may be cleared that is private for a given session<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context to write a value to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attribute&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter for which a value shall be stored<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+optional client id as set at sys_context('USERENV', 'CLIENT_IDENTIFIER')<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_FIRST_MATCH"></A>
+<P CLASS="TYPE_TITLE">
+get_first_match
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_first_match(p_context        in varchar2,
+                         p_attribute_list in args,
+                         p_with_name      in boolean default false,
+                         p_client_id      varchar2 default null)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Function to get a value based on a collection of context attributes<br>
+%<A HREF="param.html">param</A>&nbsp; p_context&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name of the context to write a value to<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Tries to find a value for each entered attribute name and returns the first NOT-NULL-value<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attribute_list&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+List of attributes for which a value shall be retrieved<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_with_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional flag that indicates whether the name of the context attribute should be appended (TRUE) or not (FALSE, default). If TRUE, the attribute name is separated by <A HREF=#C_NAME_DELIMITER>C_NAME_DELIMITER</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional client id as set at sys_context('USERENV', 'CLIENT_IDENTIFIER')<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Varchar-value of the parameter<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="RESET_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+reset_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#RESET_CONTEXT">reset_context</A>(p_context in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to reset one of the available contexts<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This procedure resets a context completely, removing any value in it. If private parameters for sessions exists, they will be cleared as well.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context to write a value to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

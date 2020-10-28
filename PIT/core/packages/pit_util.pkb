@@ -31,9 +31,9 @@ as
   
   
   /* Harmonizes the spelling of database names etc.
-   * @usage  Is used to harmonize the spelling of names. Conversion is based on parameter PIT.NAME_SPELLING
-   * @param  p_name  Name to harmonize
-   * @return Harmonized name
+   * %usage  Is used to harmonize the spelling of names. Conversion is based on parameter PIT.NAME_SPELLING
+   * %param  p_name  Name to harmonize
+   * %return Harmonized name
    */
   function harmonize_name(
     p_name in varchar2)
@@ -52,8 +52,8 @@ as
   
   
   /** Helper to decide whether a subprogram has to be ignored due to parameterctings
-   * @param  p_subprogram  Method to check
-   * @return Flag to indicate whether a subprogram has to be ignored (TRUE) or not (FALSE)
+   * %param  p_subprogram  Method to check
+   * %return Flag to indicate whether a subprogram has to be ignored (TRUE) or not (FALSE)
    */
   function ignore_subprogram(
     p_subprogram in varchar2)

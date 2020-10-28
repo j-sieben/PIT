@@ -104,7 +104,7 @@ as
 
   /************************** MODULE MAINTENANCE ******************************/
   /** Loads all output modules installed extending type PIT_MODULE
-   * @usage  Loads and instantiates all output modules which are installed under PIT_MODULE
+   * %usage  Loads and instantiates all output modules which are installed under PIT_MODULE
    *         All modules are availabe in G_ALL_MODULES
    *         All successfully instantiated modules are available in G_AVAILABLE_MODULES
    *         An error is thrown if no module could be made available
@@ -150,7 +150,7 @@ as
 
 
   /** Reports all modules that have not been loaded succesfully if requested by parameter C_WARN_IF_UNUSABLE_MODULES
-   * @usage  Is called after initialization of the output modules.
+   * %usage  Is called after initialization of the output modules.
    *         Emits warnings for any module that has not been loaded succesfully if set to do so.
    */
   procedure report_module_status
@@ -172,10 +172,10 @@ as
 
 
   /** Copies all requested and available output module instances into a module list
-   * @usage  Copies available modules as requested by the actual context into a list of modules. 
+   * %usage  Copies available modules as requested by the actual context into a list of modules. 
    *         These modules will then be used to log to.
-   * @param  p_requested_modules  Colon-separated list of requested output modules
-   * @return Collection of available and requested module instances
+   * %param  p_requested_modules  Colon-separated list of requested output modules
+   * %return Collection of available and requested module instances
    */
   function get_modules_by_name(
     p_requested_modules in varchar2)
@@ -202,7 +202,7 @@ as
 
   /************************ CONTEXT MAINTENANCE ******************************/
   /** Method to read the actually chosen context from the global context
-   * @usage  Is used to read the actual settings, as they may have
+   * %usage  Is used to read the actual settings, as they may have
    *         changed based on settings in other sessions
    */
   function read_best_matching_context(
@@ -247,12 +247,12 @@ as
   
   
   /** Reads actual context settings into G_CONTEXT and decide whether a change in the settings has occurred
-   * @param [p_context_name] Optional context name. 
-   * @usage  Is called to read the log settings from the globally accessed context.
+   * %param [p_context_name] Optional context name. 
+   * %usage  Is called to read the log settings from the globally accessed context.
    *         It tries to read the context in the following order: CONTEXT_FROM SESSION_ADAPTER, P_CONTEXT_NAME, C_ACTIVE_CONTEXT, C_DEFAULT_CONTEXT
    *         After having read the actual settings, it compares them to the settings known so far. If they differ,
    *         CTX_CHANGED is set to TRUE and to FALSE otherwise.
-   * @return Session context, if required, named context if requested, active context if available, default context otherwise.
+   * %return Session context, if required, named context if requested, active context if available, default context otherwise.
    */
   procedure copy_context_to_global(
     p_context_name in varchar2 default null)
@@ -280,10 +280,10 @@ as
   
   
   /** Sets new context settings for PIT at the context and raises CONTEXT_CHANGED event
-   * @usage  Is called from <code>pit.SET_CONTEXT</code> to actually persist
+   * %usage  Is called from <code>pit.SET_CONTEXT</code> to actually persist
    *         the required settings in the global context and raise a context switch event
-   * @param  p_context   New context settings, instance of pit_util.context_type
-   * @usage  This method examins whether a context change has happened by comparing 
+   * %param  p_context   New context settings, instance of pit_util.context_type
+   * %usage  This method examins whether a context change has happened by comparing 
    *         the context settings with the latest stored settings from G_CONTEXT.
    *         If a change has occurred, it stores the new values
    *         - at the globally accessed context to propagate the settings to other sessions
@@ -328,10 +328,10 @@ as
   
   
   /** Helper to persist existings context settings in P_OLD_CONTEXT and set the active context according to the settings
-   * @param  p_old_context    Instance of PIT_UTIL.context_type to hold the existing context settings and a flag on whether
+   * %param  p_old_context    Instance of PIT_UTIL.context_type to hold the existing context settings and a flag on whether
    *                          the context was changed by this method
-   * @param  p_new_context    partly filled new context (log_level and module_list may be filled)
-   * @usage  Is used if for a single log activity a new context setting is required, such as with LOG_SPECIFIC or NOTIFY.
+   * %param  p_new_context    partly filled new context (log_level and module_list may be filled)
+   * %usage  Is used if for a single log activity a new context setting is required, such as with LOG_SPECIFIC or NOTIFY.
    *         In this environment, only output modules and log threshold can be changed, therefore all other settings are
    *         copied from the actually active context.
    */
@@ -357,8 +357,8 @@ as
   
   
   /** Method to reset a temporarlily set context back to its original settings
-   * @param  p_context  Context settings of the context before the temporarily shift
-   * @usage  Is used to reset a temporarily context switch back. Used in conjunction with SET_CONTEXT_TEMPORARILY
+   * %param  p_context  Context settings of the context before the temporarily shift
+   * %usage  Is used to reset a temporarily context switch back. Used in conjunction with SET_CONTEXT_TEMPORARILY
    */
   procedure reset_temporarily_set_context(
     p_context in pit_util.context_type)
@@ -374,11 +374,11 @@ as
 
 
   /** Checks whether a toggle for a given package/method exists
-   * @usage  A toggle controls whether PIT should log or not. Therefore it must be checked whether a toggle was defined for
+   * %usage  A toggle controls whether PIT should log or not. Therefore it must be checked whether a toggle was defined for
    *         the actual package/method the call stack is at.
    *         If a setting is present, this method will set the new environment and return the settings at the same time
    *         to store them in the call stack. This is necessary to reset it if the call stack entry is popped.
-   * @return Context with settings for PACKAGE.METHOD, PACKAGE, ACTIVE or DEFAULT CONTEXT
+   * %return Context with settings for PACKAGE.METHOD, PACKAGE, ACTIVE or DEFAULT CONTEXT
    */
   function get_toggle_context(
     p_module in pit_util.ora_name_type,
@@ -403,8 +403,8 @@ as
 
 
   /** Resets toggle context settings
-   * @usage  If a toggle was found and the call stack pops that entry, the log settings outside the toggle must be restored.
-   * @param  p_settings  Context settings to set the context to
+   * %usage  If a toggle was found and the call stack pops that entry, the log settings outside the toggle must be restored.
+   * %param  p_settings  Context settings to set the context to
    */
   procedure reset_toggle_context(
     p_settings in varchar2)
@@ -424,7 +424,7 @@ as
 
 
   /** Reads all predefined context and toggles from parameters and stores it in globally accessed context
-   * @usage  Method is invoked during initialization to copy parameter settings 
+   * %usage  Method is invoked during initialization to copy parameter settings 
    *         to the globally accessed context for access across sessions.
    */
   procedure get_context_list
@@ -491,7 +491,7 @@ as
 
   /************************* ADATPER MAINTENANCE ******************************/
   /** Loads and instantiates an adapter to read client information
-   * @usage  procedure loads and instantiates adapters which are created
+   * %usage  procedure loads and instantiates adapters which are created
    *         under <code>PIT_DEFAULT_ADAPTER</code> plus <code>PIT_DEFAULT_ADAPTER</code> itself.<br>
    *         Which modules are instantiated depends on parameter <code>ADAPTER_PREFERENCE</code>
    *         <code>LOAD_ADAPTER</code> tries to instantiate the adpaters
@@ -539,8 +539,8 @@ as
 
   /************************** CALL STACK MAINTENANCE **************************/
   /** Checks whether log settings have to be changed due to toggle settings
-   * @param  p_trace_settings  Potentially new settings if a toggle exists
-   * @param  p_last_entry      Reference to the last call stack entry from which the context settings are copied
+   * %param  p_trace_settings  Potentially new settings if a toggle exists
+   * %param  p_last_entry      Reference to the last call stack entry from which the context settings are copied
    */
   function check_context_toggle(
     p_trace_settings in varchar2,
@@ -578,10 +578,10 @@ as
   
   
   /** Helper to maintain Application Info
-   * @usage  Called from PUSH-/POP_STACK methods
-   * @param  p_module       Module that was called
-   * @param  p_action       Method of the module that was called
-   * @param  p_client_info  Client info passed in as optional parameter
+   * %usage  Called from PUSH-/POP_STACK methods
+   * %param  p_module       Module that was called
+   * %param  p_action       Method of the module that was called
+   * %param  p_client_info  Client info passed in as optional parameter
    */
   procedure maintain_application_info(
     p_module in varchar2,
@@ -596,13 +596,13 @@ as
   
   
   /** Method to push an entrie to the call stack
-   * @usage  Called from the ENTER method
-   * @param  p_module          Module that was called
-   * @param  p_action          Method of the module that was called
-   * @param  p_client_info     Optional client info passed in as a pararameter to ENTER
-   * @param  p_params          Parameter list of parameters passed to the method
-   * @param  p_trace_level     Trace level of the entry
-   * @param  p_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
+   * %usage  Called from the ENTER method
+   * %param  p_module          Module that was called
+   * %param  p_action          Method of the module that was called
+   * %param  p_client_info     Optional client info passed in as a pararameter to ENTER
+   * %param  p_params          Parameter list of parameters passed to the method
+   * %param  p_trace_level     Trace level of the entry
+   * %param  p_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
    */
   procedure push_stack(
     p_module in varchar2,
@@ -651,11 +651,11 @@ as
 
 
   /** Method to pop an entry from the call stack
-   * @usage  Called from LEAVE-method.
-   * @param  p_params              Parameter list of parameters passed to the method
-   * @param  p_call_stack          Instance of call_stack_type to pop to the stack
-   * @param  p_new_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
-   * @return Last entry found on the call stack. Used to maintain timing etc.
+   * %usage  Called from LEAVE-method.
+   * %param  p_params              Parameter list of parameters passed to the method
+   * %param  p_call_stack          Instance of call_stack_type to pop to the stack
+   * %param  p_new_trace_settings  In case of toggles trace settings may change. The new settings are passed in here
+   * %return Last entry found on the call stack. Used to maintain timing etc.
    */
   procedure pop_stack(
     p_params in msg_params,
@@ -704,8 +704,8 @@ as
   
   
   /** Helper method to clean stack after a fatal error has ocurred.
-   * @param  p_params  Instance of msg_params, used to add output parameters to the leave message
-   * @usage Called from method HANDLE_ERROR if level is C_LEVEL_FATAL. Pops all call stack entries
+   * %param  p_params  Instance of msg_params, used to add output parameters to the leave message
+   * %usage Called from method HANDLE_ERROR if level is C_LEVEL_FATAL. Pops all call stack entries
    */
   procedure clean_stack(
     p_params in msg_params)
@@ -725,7 +725,7 @@ as
   
   /************************* GENERIC HELPER METHODS *************************/
   /** Pushes a method on the message stack if in message collection mode
-   * @param  p_message  Message to push onto the stack
+   * %param  p_message  Message to push onto the stack
    */
   procedure push_message(
     p_message in out nocopy message_type)
@@ -739,13 +739,13 @@ as
 
   /************************** CENTRAL FUNCTIONALITY **************************/
   /** Central method to distribute any message to all actively parameterized output modules
-   * @usage  Called internally as a generic helper to throw messages to output modules
-   * @param  p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
-   * @param  p_event_focus Flag to indicate whether the message is to be broadcasted to all
+   * %usage  Called internally as a generic helper to throw messages to output modules
+   * %param  p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
+   * %param  p_event_focus Flag to indicate whether the message is to be broadcasted to all
    *         available modules or only to active ones.
-   * @param  p_call_stack Instance of the actual call stack in the event of ENTER|LEAVE
-   * @param  p_date_before Date indicating the point in time, up to when the log is to be purged
-   * @param  p_message Instance of the message to raise
+   * %param  p_call_stack Instance of the actual call stack in the event of ENTER|LEAVE
+   * %param  p_date_before Date indicating the point in time, up to when the log is to be purged
+   * %param  p_message Instance of the message to raise
    */
   procedure raise_event(
     p_event in pls_integer,
@@ -802,10 +802,10 @@ as
 
 
   /** Deciders whether a message has to be logged.
-   * @usage  Is called during logging to decide whether the actual settings allow for logging.<br>
+   * %usage  Is called during logging to decide whether the actual settings allow for logging.<br>
    *         The decision is based on the requested log level as well as on settings in the global context
-   * @param  p_severity  log_level for which a decision is requested
-   * @return flag that indicates whether settings allow for logging.
+   * %param  p_severity  log_level for which a decision is requested
+   * %return flag that indicates whether settings allow for logging.
    */
   function log_me(
     p_severity in pit_message.pms_pse_id%type)
@@ -821,10 +821,10 @@ as
 
 
   /** Decides whether an entry or leave event has to be traced.
-   * @usage  Is called during tracing to decide whether the actual settings allow for tracing.<br>
+   * %usage  Is called during tracing to decide whether the actual settings allow for tracing.<br>
    *         The decision is based on the requested trace level as well as on settings in the global context
-   * @param  p_severity  trace_level for which a decision is requested
-   * @return flag that indicates whether settings allow for tracing.
+   * %param  p_severity  trace_level for which a decision is requested
+   * %return flag that indicates whether settings allow for tracing.
    */
   function trace_me(
     p_trace_level in integer)
@@ -837,7 +837,7 @@ as
   
   
   /** Helper method to retrieve the actual session language
-   * @return Language string as per oracle convention: AMERICAN|GERMN etc.
+   * %return Language string as per oracle convention: AMERICAN|GERMN etc.
    */
   function get_language
     return varchar2

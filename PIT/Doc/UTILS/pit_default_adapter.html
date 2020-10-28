@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Type pit_default_adapter</TITLE>
+ <META name="object" content="TYPE">
+ <META name="name" content="pit_default_adapter">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Type pit_default_adapter</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Attributes"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Attributes
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENVIRONMENT">environment</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STATUS">status</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_SESSION_DETAILS">get_session_details</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PIT_DEFAULT_ADAPTER">pit_default_adapter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENVIRONMENT"></A>
+<P CLASS="TYPE_TITLE">
+environment
+</P>
+<PRE CLASS="DECL_TEXT">
+environment varchar2(128 byte)
+</PRE>
+<HR>
+<A NAME="STATUS"></A>
+<P CLASS="TYPE_TITLE">
+status
+</P>
+<PRE CLASS="DECL_TEXT">
+status char(1 byte)
+</PRE>
+<HR>
+<A NAME="GET_SESSION_DETAILS"></A>
+<P CLASS="TYPE_TITLE">
+get_session_details
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_apex_adapter.html#GET_SESSION_DETAILS">get_session_details</A>(self               in out nocopy <A HREF=#PIT_DEFAULT_ADAPTER>pit_default_adapter</A>,
+                              p_user_name        out nocopy varchar2,
+                              p_session_id       out nocopy varchar2,
+                              p_required_context out nocopy varchar2)
+
+</PRE>
+<HR>
+<A NAME="PIT_DEFAULT_ADAPTER"></A>
+<P CLASS="TYPE_TITLE">
+pit_default_adapter
+</P>
+<PRE CLASS="DECL_TEXT">
+Function pit_default_adapter(self in out nocopy pit_default_adapter)
+  return self as result
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Type body pit_apex_adapter</TITLE>
+ <META name="object" content="TYPE BODY">
+ <META name="name" content="pit_apex_adapter">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Type body pit_apex_adapter</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_SESSION_DETAILS">get_session_details</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PIT_APEX_ADAPTER">pit_apex_adapter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+If APEX is set to logging, adjust context to predefined <A HREF="pit.html#LOG">log</A> settings defined in <A HREF="pit_apex.html#PIT_APEX">PIT_APEX</A> <A HREF="call_stack_type.html#PARAMS">params</A>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_SESSION_DETAILS"></A>
+<P CLASS="TYPE_TITLE">
+get_session_details
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_apex_adapter.html#GET_SESSION_DETAILS">get_session_details</A>(p_user_name        out varchar2,
+                              p_session_id       out varchar2,
+                              p_required_context out nocopy varchar2)
+
+</PRE>
+<HR>
+<A NAME="PIT_APEX_ADAPTER"></A>
+<P CLASS="TYPE_TITLE">
+pit_apex_adapter
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit_apex_adapter.html#PIT_APEX_ADAPTER">pit_apex_adapter</A>(self in out nocopy <A HREF="pit_apex_adapter.html#PIT_APEX_ADAPTER">pit_apex_adapter</A>)
+  return self as result
+
+</PRE>
+<P CLASS="DESC_TEXT">
+If APEX is set to logging, adjust context to predefined <A HREF="pit.html#LOG">log</A> settings defined in <A HREF="pit_apex.html#PIT_APEX">PIT_APEX</A> <A HREF="call_stack_type.html#PARAMS">params</A>
+
+<BR>
+</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

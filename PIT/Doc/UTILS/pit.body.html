@@ -1,0 +1,1213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body pit</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="pit">
+ <META name="description" content="Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (www.github.com/j-sieben/PIT) Descriptioon: PIT-API package body.">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body pit</P>
+Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="pit.html">PIT</A> (<A HREF="www.github.com/j-sieben/PIT">www.github.com/j-sieben/PIT</A>) Descriptioon: PIT-API package body. Implements all functionality that is required to use <A HREF="pit.html">PIT</A>.<br>
+@headcom<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+INTERFACE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_OFF">level_off</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_FATAL">level_fatal</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_ERROR">level_error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_WARN">level_warn</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_INFO">level_info</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_DEBUG">level_debug</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_ALL">level_all</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_OFF">trace_off</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_MANDATORY">trace_mandatory</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_OPTIONAL">trace_optional</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_DETAILED">trace_detailed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_ALL">trace_all</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_INTEGER">type_integer</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter for package constants to enable their usage in SQL
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_NUMBER">type_number</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_DATE">type_date</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_TIMESTAMP">type_timestamp</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_XML">type_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+LOGGING AND DEBUGGING
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG_STATE">log_state</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VERBOSE">verbose</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DEBUG">debug</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INFO">info</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WARN">warn</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ERROR">error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#FATAL">fatal</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SQL_EXCEPTION">sql_exception</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STOP">stop</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER_MANDATORY">enter_mandatory</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+TRACING
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER_OPTIONAL">enter_optional</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER_DETAILED">enter_detailed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER">enter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE_MANDATORY">leave_mandatory</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE_OPTIONAL">leave_optional</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE_DETAILED">leave_detailed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LONG_OP">long_op</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+$END
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PRINT">print</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+NOTIFICATION AND MESSAGES
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE_TEXT">get_message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE">get_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_ACTIVE_MESSAGE">get_active_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT">assert</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ASSERTIONS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_IS_NULL">assert_is_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_NULL">assert_not_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_EXISTS">assert_exists</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_EXISTS">assert_not_exists</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_DATATYPE">assert_datatype</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_DEFAULT_LANGUAGE">get_default_language</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+INTERNATIONALIZATION
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM_NAME">get_trans_item_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM_DISPLAY_NAME">get_trans_item_display_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM_DESCRIPTION">get_trans_item_description</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM">get_trans_item</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE_LOG">purge_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ADMINISTRATION AND CONTROL
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE_LOG2">purge_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE_SESSION_LOG">purge_session_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_CONTEXT">set_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+TODO: IMPLEMENTATION
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_CONTEXT2">set_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#RESET_CONTEXT">reset_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#START_MESSAGE_COLLECTION">start_message_collection</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STOP_MESSAGE_COLLECTION">stop_message_collection</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE_COLLECTION">get_message_collection</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MODULES">get_modules</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_AVAILABLE_MODULES">get_available_modules</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_ACTIVE_MODULES">get_active_modules</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_MODULE">g_module</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+PACKAGE VARIABLES
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_OWNER">g_owner</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_ACTION">g_action</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_LINENO">g_lineno</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="G_MODULE"></A>
+<P CLASS="TYPE_TITLE">
+g_module
+</P>
+<PRE CLASS="DECL_TEXT">
+g_module pit_util.ora_name_type;
+</PRE>
+<P CLASS="DESC_TEXT">
+PACKAGE VARIABLES<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="G_OWNER"></A>
+<P CLASS="TYPE_TITLE">
+g_owner
+</P>
+<PRE CLASS="DECL_TEXT">
+g_owner pit_util.ora_name_type;
+</PRE>
+<HR>
+<A NAME="G_ACTION"></A>
+<P CLASS="TYPE_TITLE">
+g_action
+</P>
+<PRE CLASS="DECL_TEXT">
+g_action pit_util.ora_name_type;
+</PRE>
+<HR>
+<A NAME="G_LINENO"></A>
+<P CLASS="TYPE_TITLE">
+g_lineno
+</P>
+<PRE CLASS="DECL_TEXT">
+g_lineno binary_integer;
+</PRE>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+INTERFACE<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LEVEL_OFF"></A>
+<P CLASS="TYPE_TITLE">
+level_off
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_OFF">level_off</A> return number
+
+</PRE>
+<HR>
+<A NAME="LEVEL_FATAL"></A>
+<P CLASS="TYPE_TITLE">
+level_fatal
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_FATAL">level_fatal</A> return number
+
+</PRE>
+<HR>
+<A NAME="LEVEL_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+level_error
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_ERROR">level_error</A> return number
+
+</PRE>
+<HR>
+<A NAME="LEVEL_WARN"></A>
+<P CLASS="TYPE_TITLE">
+level_warn
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_WARN">level_warn</A> return number
+
+</PRE>
+<HR>
+<A NAME="LEVEL_INFO"></A>
+<P CLASS="TYPE_TITLE">
+level_info
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_INFO">level_info</A> return number
+
+</PRE>
+<HR>
+<A NAME="LEVEL_DEBUG"></A>
+<P CLASS="TYPE_TITLE">
+level_debug
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_DEBUG">level_debug</A> return number
+
+</PRE>
+<HR>
+<A NAME="LEVEL_ALL"></A>
+<P CLASS="TYPE_TITLE">
+level_all
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#LEVEL_ALL">level_all</A> return number
+
+</PRE>
+<HR>
+<A NAME="TRACE_OFF"></A>
+<P CLASS="TYPE_TITLE">
+trace_off
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TRACE_OFF">trace_off</A> return number
+
+</PRE>
+<HR>
+<A NAME="TRACE_MANDATORY"></A>
+<P CLASS="TYPE_TITLE">
+trace_mandatory
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TRACE_MANDATORY">trace_mandatory</A> return number
+
+</PRE>
+<HR>
+<A NAME="TRACE_OPTIONAL"></A>
+<P CLASS="TYPE_TITLE">
+trace_optional
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TRACE_OPTIONAL">trace_optional</A> return number
+
+</PRE>
+<HR>
+<A NAME="TRACE_DETAILED"></A>
+<P CLASS="TYPE_TITLE">
+trace_detailed
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TRACE_DETAILED">trace_detailed</A> return number
+
+</PRE>
+<HR>
+<A NAME="TRACE_ALL"></A>
+<P CLASS="TYPE_TITLE">
+trace_all
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TRACE_ALL">trace_all</A> return number
+
+</PRE>
+<HR>
+<A NAME="TYPE_INTEGER"></A>
+<P CLASS="TYPE_TITLE">
+type_integer
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TYPE_INTEGER">type_integer</A> return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Getter for package constants to enable their usage in SQL<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="TYPE_NUMBER"></A>
+<P CLASS="TYPE_TITLE">
+type_number
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TYPE_NUMBER">type_number</A> return varchar2
+
+</PRE>
+<HR>
+<A NAME="TYPE_DATE"></A>
+<P CLASS="TYPE_TITLE">
+type_date
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TYPE_DATE">type_date</A> return varchar2
+
+</PRE>
+<HR>
+<A NAME="TYPE_TIMESTAMP"></A>
+<P CLASS="TYPE_TITLE">
+type_timestamp
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TYPE_TIMESTAMP">type_timestamp</A> return varchar2
+
+</PRE>
+<HR>
+<A NAME="TYPE_XML"></A>
+<P CLASS="TYPE_TITLE">
+type_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#TYPE_XML">type_xml</A> return varchar2
+
+</PRE>
+<HR>
+<A NAME="LOG"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LOG">log</A>(p_message_name  in varchar2,
+              p_msg_args      in msg_args default null,
+              p_affected_id   in varchar2 default null,
+              p_error_code    in varchar2 default null,
+              p_log_threshold in number default null,
+              p_log_modules   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+LOGGING AND DEBUGGING<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LOG_STATE"></A>
+<P CLASS="TYPE_TITLE">
+log_state
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LOG_STATE">log_state</A>(p_params msg_params)
+
+</PRE>
+<HR>
+<A NAME="VERBOSE"></A>
+<P CLASS="TYPE_TITLE">
+verbose
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#VERBOSE">verbose</A>(p_message_name in varchar2,
+                  p_msg_args     in msg_args default null,
+                  p_affected_id  in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="DEBUG"></A>
+<P CLASS="TYPE_TITLE">
+debug
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#DEBUG">debug</A>(p_message_name in varchar2,
+                p_msg_args     in msg_args default null,
+                p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="INFO"></A>
+<P CLASS="TYPE_TITLE">
+info
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#INFO">info</A>(p_message_name in varchar2,
+               p_msg_args     msg_args default null,
+               p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="WARN"></A>
+<P CLASS="TYPE_TITLE">
+warn
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#WARN">warn</A>(p_message_name in varchar2,
+               p_msg_args     in msg_args default null,
+               p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="ERROR"></A>
+<P CLASS="TYPE_TITLE">
+error
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ERROR">error</A>(p_message_name in varchar2,
+                p_msg_args     in msg_args default null,
+                p_affected_id  in varchar2 default null,
+                p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="FATAL"></A>
+<P CLASS="TYPE_TITLE">
+fatal
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#FATAL">fatal</A>(p_message_name in varchar2,
+                p_msg_args     in msg_args default null,
+                p_affected_id  in varchar2 default null,
+                p_error_code   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="SQL_EXCEPTION"></A>
+<P CLASS="TYPE_TITLE">
+sql_exception
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#SQL_EXCEPTION">sql_exception</A>(p_message_name in varchar2 default null,
+                        p_msg_args     in msg_args default null,
+                        p_affected_id  in varchar2 default null,
+                        p_error_code   in varchar2 default null,
+                        p_params       in msg_params default null)
+
+</PRE>
+<HR>
+<A NAME="STOP"></A>
+<P CLASS="TYPE_TITLE">
+stop
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#STOP">stop</A>(p_message_name in varchar2 default null,
+               p_msg_args     in msg_args default null,
+               p_affected_id  in varchar2 default null,
+               p_error_code   in varchar2 default null,
+               p_params       in msg_params default null)
+
+</PRE>
+<HR>
+<A NAME="ENTER_MANDATORY"></A>
+<P CLASS="TYPE_TITLE">
+enter_mandatory
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ENTER_MANDATORY">enter_mandatory</A>(p_action      in varchar2 default null,
+                          p_module      in varchar2 default null,
+                          p_params      in msg_params default null,
+                          p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+TRACING<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="ENTER_OPTIONAL"></A>
+<P CLASS="TYPE_TITLE">
+enter_optional
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ENTER_OPTIONAL">enter_optional</A>(p_action      in varchar2 default null,
+                         p_module      in varchar2 default null,
+                         p_params      in msg_params default null,
+                         p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="ENTER_DETAILED"></A>
+<P CLASS="TYPE_TITLE">
+enter_detailed
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ENTER_DETAILED">enter_detailed</A>(p_action      in varchar2 default null,
+                         p_module      in varchar2 default null,
+                         p_params      in msg_params default null,
+                         p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="ENTER"></A>
+<P CLASS="TYPE_TITLE">
+enter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ENTER">enter</A>(p_action      in varchar2 default null,
+                p_module      in varchar2 default null,
+                p_params      in msg_params default null,
+                p_trace_level in number default <A HREF=#TRACE_ALL>pit.trace_all</A>,
+                p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LEAVE_MANDATORY"></A>
+<P CLASS="TYPE_TITLE">
+leave_mandatory
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LEAVE_MANDATORY">leave_mandatory</A>(p_params in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LEAVE_OPTIONAL"></A>
+<P CLASS="TYPE_TITLE">
+leave_optional
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LEAVE_OPTIONAL">leave_optional</A>(p_params in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LEAVE_DETAILED"></A>
+<P CLASS="TYPE_TITLE">
+leave_detailed
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LEAVE_DETAILED">leave_detailed</A>(p_params in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LEAVE"></A>
+<P CLASS="TYPE_TITLE">
+leave
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LEAVE">leave</A>(p_trace_level in number default <A HREF=#TRACE_ALL>pit.trace_all</A>,
+                p_params      in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LONG_OP"></A>
+<P CLASS="TYPE_TITLE">
+long_op
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LONG_OP">long_op</A>(p_target  in varchar2,
+                  p_sofar   in number,
+                  p_total   in number default 100,
+                  p_units   in varchar2 default null,
+                  p_op_name in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+$END<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="PRINT"></A>
+<P CLASS="TYPE_TITLE">
+print
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#PRINT">print</A>(p_message_name in varchar2,
+                p_msg_args     msg_args default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+NOTIFICATION AND MESSAGES<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="NOTIFY"></A>
+<P CLASS="TYPE_TITLE">
+notify
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message_name  in varchar2,
+                 p_msg_args      in msg_args default null,
+                 p_affected_id   in varchar2 default null,
+                 p_log_threshold in number default null,
+                 p_log_modules   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="GET_MESSAGE_TEXT"></A>
+<P CLASS="TYPE_TITLE">
+get_message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_MESSAGE_TEXT">get_message_text</A>(p_message_name in varchar2,
+                          p_msg_args     in msg_args_char) return clob
+
+</PRE>
+<HR>
+<A NAME="GET_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+get_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_MESSAGE">get_message</A>(p_message_name in varchar2,
+                     p_msg_args     in msg_args default null,
+                     p_affected_id  in varchar2 default null,
+                     p_error_code   in varchar2 default null)
+  return message_type
+
+</PRE>
+<HR>
+<A NAME="GET_ACTIVE_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+get_active_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_ACTIVE_MESSAGE">get_active_message</A> return message_type
+
+</PRE>
+<HR>
+<A NAME="ASSERT"></A>
+<P CLASS="TYPE_TITLE">
+assert
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ASSERT">assert</A>(p_condition    in boolean,
+                 p_message_name in varchar2 default <A HREF="msg.html#ASSERT_TRUE">msg.ASSERT_TRUE</A>,
+                 p_msg_args     msg_args := null,
+                 p_affected_id  in varchar2 default null,
+                 p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+ASSERTIONS<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="ASSERT_IS_NULL"></A>
+<P CLASS="TYPE_TITLE">
+assert_is_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in date,
+                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+                         p_msg_args     msg_args := null,
+                         p_affected_id  in varchar2 default null,
+                         p_error_code   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="ASSERT_NOT_NULL"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ASSERT_NOT_NULL">assert_not_null</A>(p_condition    in date,
+                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_msg_args     msg_args := null,
+                          p_affected_id  in varchar2 default null,
+                          p_error_code   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="ASSERT_EXISTS"></A>
+<P CLASS="TYPE_TITLE">
+assert_exists
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_EXISTS">assert_exists</A>(p_cursor       in out nocopy sys_refcursor,
+                        p_message_name in varchar2 default <A HREF="msg.html#ASSERT_EXISTS">msg.ASSERT_EXISTS</A>,
+                        p_msg_args     msg_args := null,
+                        p_affected_id  in varchar2 default null,
+                        p_error_code   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="ASSERT_NOT_EXISTS"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_exists
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_NOT_EXISTS">assert_not_exists</A>(p_cursor       in out nocopy sys_refcursor,
+                            p_message_name in varchar2 default <A HREF="msg.html#ASSERT_NOT_EXISTS">msg.ASSERT_NOT_EXISTS</A>,
+                            p_msg_args     msg_args := null,
+                            p_affected_id  in varchar2 default null,
+                            p_error_code   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="ASSERT_DATATYPE"></A>
+<P CLASS="TYPE_TITLE">
+assert_datatype
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_DATATYPE">assert_datatype</A>(p_value        in varchar2,
+                          p_type         in varchar2,
+                          p_format_mask  in varchar2 default null,
+                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_DATATYPE">msg.ASSERT_DATATYPE</A>,
+                          p_msg_args     msg_args := null,
+                          p_affected_id  in varchar2 default null,
+                          p_error_code   in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="GET_DEFAULT_LANGUAGE"></A>
+<P CLASS="TYPE_TITLE">
+get_default_language
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_DEFAULT_LANGUAGE">get_default_language</A> return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+INTERNATIONALIZATION<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="GET_TRANS_ITEM_NAME"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_TRANS_ITEM_NAME">get_trans_item_name</A>(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                             p_pti_id       in pit_translatable_item.pti_id%type,
+                             p_msg_args     msg_args default null,
+                             p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return varchar2
+
+</PRE>
+<HR>
+<A NAME="GET_TRANS_ITEM_DISPLAY_NAME"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item_display_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_TRANS_ITEM_DISPLAY_NAME">get_trans_item_display_name</A>(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                                     p_pti_id       in pit_translatable_item.pti_id%type,
+                                     p_msg_args     msg_args default null,
+                                     p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return varchar2
+
+</PRE>
+<HR>
+<A NAME="GET_TRANS_ITEM_DESCRIPTION"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item_description
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_TRANS_ITEM_DESCRIPTION">get_trans_item_description</A>(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                                    p_pti_id       in pit_translatable_item.pti_id%type,
+                                    p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return clob
+
+</PRE>
+<HR>
+<A NAME="GET_TRANS_ITEM"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_TRANS_ITEM">get_trans_item</A>(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                        p_pti_id       in pit_translatable_item.pti_id%type,
+                        p_msg_args     msg_args default null,
+                        p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return <A HREF="pit_util.html#TRANSLATABLE_ITEM_REC">pit_util.translatable_item_rec</A>
+
+</PRE>
+<HR>
+<A NAME="PURGE_LOG"></A>
+<P CLASS="TYPE_TITLE">
+purge_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#PURGE_LOG">purge_log</A>(p_date_before          in date,
+                    p_severity_lower_equal in number default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+ADMINISTRATION AND CONTROL<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="PURGE_LOG2"></A>
+<P CLASS="TYPE_TITLE">
+purge_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#PURGE_LOG">purge_log</A>(p_days_before          in number,
+                    p_severity_lower_equal in number default null)
+
+</PRE>
+<HR>
+<A NAME="PURGE_SESSION_LOG"></A>
+<P CLASS="TYPE_TITLE">
+purge_session_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#PURGE_SESSION_LOG">purge_session_log</A>(p_session_id in varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="SET_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+set_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#SET_CONTEXT">set_context</A>(p_log_level    in integer,
+                      p_trace_level  in integer,
+                      p_trace_timing in boolean,
+                      p_log_modules  in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+TODO: IMPLEMENTATION<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="SET_CONTEXT2"></A>
+<P CLASS="TYPE_TITLE">
+set_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#SET_CONTEXT">set_context</A>(p_context_name in varchar2)
+
+</PRE>
+<HR>
+<A NAME="RESET_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+reset_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#RESET_CONTEXT">reset_context</A>(p_active_session_only in boolean default true)
+
+</PRE>
+<HR>
+<A NAME="START_MESSAGE_COLLECTION"></A>
+<P CLASS="TYPE_TITLE">
+start_message_collection
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#START_MESSAGE_COLLECTION">start_message_collection</A>
+
+</PRE>
+<HR>
+<A NAME="STOP_MESSAGE_COLLECTION"></A>
+<P CLASS="TYPE_TITLE">
+stop_message_collection
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#STOP_MESSAGE_COLLECTION">stop_message_collection</A>
+
+</PRE>
+<HR>
+<A NAME="GET_MESSAGE_COLLECTION"></A>
+<P CLASS="TYPE_TITLE">
+get_message_collection
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_MESSAGE_COLLECTION">get_message_collection</A> return pit_message_table
+
+</PRE>
+<HR>
+<A NAME="GET_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+get_modules
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_MODULES">get_modules</A> return pit_module_list
+
+</PRE>
+<HR>
+<A NAME="GET_AVAILABLE_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+get_available_modules
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_AVAILABLE_MODULES">get_available_modules</A> return args
+
+</PRE>
+<HR>
+<A NAME="GET_ACTIVE_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+get_active_modules
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit.html#GET_ACTIVE_MODULES">get_active_modules</A> return args
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

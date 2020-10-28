@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Type message_type</TITLE>
+ <META name="object" content="TYPE">
+ <META name="name" content="message_type">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Type message_type</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Attributes"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Attributes
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ID">id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MESSAGE_NAME">message_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AFFECTED_ID">affected_id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ERROR_CODE">error_code</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SESSION_ID">session_id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#USER_NAME">user_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MESSAGE_TEXT">message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MESSAGE_DESCRIPTION">message_description</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEVERITY">severity</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STACK">stack</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#BACKTRACE">backtrace</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ERROR_NUMBER">error_number</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MESSAGE_ARGS">message_args</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MESSAGE_TYPE">message_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ID"></A>
+<P CLASS="TYPE_TITLE">
+id
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="call_stack_type.html#ID">id</A> number
+</PRE>
+<HR>
+<A NAME="MESSAGE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+message_name
+</P>
+<PRE CLASS="DECL_TEXT">
+message_name varchar2(128 byte)
+</PRE>
+<HR>
+<A NAME="AFFECTED_ID"></A>
+<P CLASS="TYPE_TITLE">
+affected_id
+</P>
+<PRE CLASS="DECL_TEXT">
+affected_id varchar2(50 char)
+</PRE>
+<HR>
+<A NAME="ERROR_CODE"></A>
+<P CLASS="TYPE_TITLE">
+error_code
+</P>
+<PRE CLASS="DECL_TEXT">
+error_code varchar2(30 char)
+</PRE>
+<HR>
+<A NAME="SESSION_ID"></A>
+<P CLASS="TYPE_TITLE">
+session_id
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="call_stack_type.html#SESSION_ID">session_id</A> varchar2(64 byte)
+</PRE>
+<HR>
+<A NAME="USER_NAME"></A>
+<P CLASS="TYPE_TITLE">
+user_name
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="call_stack_type.html#USER_NAME">user_name</A> varchar2(128 byte)
+</PRE>
+<HR>
+<A NAME="MESSAGE_TEXT"></A>
+<P CLASS="TYPE_TITLE">
+message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+message_text clob
+</PRE>
+<HR>
+<A NAME="MESSAGE_DESCRIPTION"></A>
+<P CLASS="TYPE_TITLE">
+message_description
+</P>
+<PRE CLASS="DECL_TEXT">
+message_description clob
+</PRE>
+<HR>
+<A NAME="SEVERITY"></A>
+<P CLASS="TYPE_TITLE">
+severity
+</P>
+<PRE CLASS="DECL_TEXT">
+severity number(2,0)
+</PRE>
+<HR>
+<A NAME="STACK"></A>
+<P CLASS="TYPE_TITLE">
+stack
+</P>
+<PRE CLASS="DECL_TEXT">
+stack varchar2(2000 byte)
+</PRE>
+<HR>
+<A NAME="BACKTRACE"></A>
+<P CLASS="TYPE_TITLE">
+backtrace
+</P>
+<PRE CLASS="DECL_TEXT">
+backtrace varchar2(2000 byte)
+</PRE>
+<HR>
+<A NAME="ERROR_NUMBER"></A>
+<P CLASS="TYPE_TITLE">
+error_number
+</P>
+<PRE CLASS="DECL_TEXT">
+error_number number (5,0)
+</PRE>
+<HR>
+<A NAME="MESSAGE_ARGS"></A>
+<P CLASS="TYPE_TITLE">
+message_args
+</P>
+<PRE CLASS="DECL_TEXT">
+message_args msg_args
+</PRE>
+<HR>
+<A NAME="MESSAGE_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+message_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Function message_type(self               in out nocopy message_type,
+                      p_message_name     in varchar2,
+                      p_message_language in varchar2,
+                      p_affected_id      in varchar2,
+                      p_error_code       in varchar2,
+                      p_session_id       in varchar2,
+                      p_user_name        in varchar2,
+                      p_arg_list         msg_args) return self as result
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

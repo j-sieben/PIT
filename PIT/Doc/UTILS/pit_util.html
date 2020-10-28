@@ -1,0 +1,1338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package pit_util</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="pit_util">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package pit_util</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRUE">get_true</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter for SYS.STANDARD.USER to avoid environment changes to SQL
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_FALSE">get_false</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_USER">get_user</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STRING_TO_TABLE">string_to_table</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
++ Helper to convert a string with a given separator into an instance of type ARGS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#BULK_REPLACE">bulk_replace</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to bulk-replace chunks in a text
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CLOB_APPEND">clob_append</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to append CLOB.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONCATENATE">concatenate</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to concatenate text
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#HARMONIZE_SQL_NAME">harmonize_sql_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper function to convert a SQL primary key name according to the naming convention
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#HARMONIZE_NAME">harmonize_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper function to harmonize a given name
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TO_BOOL">to_bool</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to convert a boolean to a bool flag of type <A HREF=#FLAG_TYPE>FLAG_TYPE</A> and vice versa
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TO_BOOL2">to_bool</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CAST_TO_MSG_ARGS_CHAR">cast_to_msg_args_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Methods to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR and vice versa
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CAST_TO_MSG_ARGS">cast_to_msg_args</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_ERROR_NAME">get_error_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to create the name for an exception constant in package <A HREF="msg.html">MSG</A>.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CHECK_CONTEXT_SETTINGS">check_context_settings</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to validate named context settings
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CHECK_TOGGLE_SETTINGS">check_toggle_settings</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to validate toggle settings
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STRING_TO_CONTEXT_TYPE">string_to_context_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to cast a context value read from the globally accessed context to a context type record
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONTEXT_TYPE_TO_STRING">context_type_to_string</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to cast an instance of <A HREF=#CONTEXT_TYPE>CONTEXT_TYPE</A> to string
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#RECOMPILE_INVALID_OBJECTS">recompile_invalid_objects</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to recompile invalid objects
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MODULE_AND_ACTION">get_module_and_action</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reads module and action from UTL_CALL_STACK
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_CALL_STACK">get_call_stack</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to get the call/error stack
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_ERROR_STACK">get_error_stack</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Exceptions"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Exceptions
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INVALID_SQL_NAME">invalid_sql_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Don't use <A HREF="pit.html">PIT</A> messages here as <A HREF="pit.html">PIT</A> may not be initialized yet.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONTEXT_MISSING">context_missing</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#NAME_TOO_LONG">name_too_long</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ORA_NAME_TYPE">ora_name_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#FLAG_TYPE">flag_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MAX_CHAR">max_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MAX_SQL_CHAR">max_sql_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+As extended char length is stored as a length delimited CLOB, MAX_SQL_CHAR is still set to 4000 byte.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SMALL_CHAR">small_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SIGN_TYPE">sign_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONTEXT_TYPE">context_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Record to store <A HREF="pit.html#LOG">log</A> and trace settings
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#NAMED_CTX_LIST_TAB">named_ctx_list_tab</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+List of <A HREF=#CONTEXT_TYPE>CONTEXT_TYPE</A> indexed by <A HREF=#ORA_NAME_TYPE>ORA_NAME_TYPE</A>
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRANSLATABLE_ITEM_REC">translatable_item_rec</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Record to grant access to a translatable item
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MAX_LENGTH">c_max_length</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+TYPE DECLARATIONS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRUE">C_TRUE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+GLOBAL CONSTANTS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FALSE">C_FALSE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DEFAULT_LANGUAGE">C_DEFAULT_LANGUAGE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DEFAULT_CONTEXT">C_DEFAULT_CONTEXT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_ACTIVE_CONTEXT">C_ACTIVE_CONTEXT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="C_MAX_LENGTH"></A>
+<P CLASS="TYPE_TITLE">
+c_max_length
+</P>
+<PRE CLASS="DECL_TEXT">
+c_max_length constant binary_integer :=        128;
+</PRE>
+<P CLASS="DESC_TEXT">
+TYPE DECLARATIONS<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="ORA_NAME_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+ora_name_type
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype ora_name_type is varchar2(128 byte);
+</PRE>
+<HR>
+<A NAME="FLAG_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+flag_type
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype flag_type is char(1 byte);
+</PRE>
+<HR>
+<A NAME="MAX_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+max_char
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype max_char is varchar2(32767 byte);
+</PRE>
+<HR>
+<A NAME="MAX_SQL_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+max_sql_char
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype max_sql_char is varchar2(4000 byte);
+</PRE>
+<P CLASS="DESC_TEXT">
+As extended char length is stored as a length delimited CLOB, MAX_SQL_CHAR is still set to 4000 byte. Use CLOB otherwise<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="SMALL_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+small_char
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype small_char is varchar2(255 byte);
+</PRE>
+<HR>
+<A NAME="SIGN_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+sign_type
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype sign_type is char(1 byte);
+</PRE>
+<HR>
+<A NAME="INVALID_SQL_NAME"></A>
+<P CLASS="TYPE_TITLE">
+invalid_sql_name
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="msg.html#INVALID_SQL_NAME">invalid_sql_name</A> exception;
+</PRE>
+<P CLASS="DESC_TEXT">
+Don't use <A HREF="pit.html">PIT</A> messages here as <A HREF="pit.html">PIT</A> may not be initialized yet.<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="CONTEXT_MISSING"></A>
+<P CLASS="TYPE_TITLE">
+context_missing
+</P>
+<PRE CLASS="DECL_TEXT">
+context_missing exception;
+</PRE>
+<HR>
+<A NAME="NAME_TOO_LONG"></A>
+<P CLASS="TYPE_TITLE">
+name_too_long
+</P>
+<PRE CLASS="DECL_TEXT">
+name_too_long exception;
+</PRE>
+<HR>
+<A NAME="C_TRUE"></A>
+<P CLASS="TYPE_TITLE">
+C_TRUE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TRUE constant <A HREF=#FLAG_TYPE>flag_type</A> := 'Y';
+</PRE>
+<P CLASS="DESC_TEXT">
+GLOBAL CONSTANTS<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="C_FALSE"></A>
+<P CLASS="TYPE_TITLE">
+C_FALSE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FALSE constant <A HREF=#FLAG_TYPE>flag_type</A> := 'N';
+</PRE>
+<HR>
+<A NAME="C_DEFAULT_LANGUAGE"></A>
+<P CLASS="TYPE_TITLE">
+C_DEFAULT_LANGUAGE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_DEFAULT_LANGUAGE constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'GERMAN';
+</PRE>
+<HR>
+<A NAME="C_DEFAULT_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+C_DEFAULT_CONTEXT
+</P>
+<PRE CLASS="DECL_TEXT">
+C_DEFAULT_CONTEXT constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'CONTEXT_DEFAULT';
+</PRE>
+<HR>
+<A NAME="C_ACTIVE_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+C_ACTIVE_CONTEXT
+</P>
+<PRE CLASS="DECL_TEXT">
+C_ACTIVE_CONTEXT constant <A HREF=#ORA_NAME_TYPE>ora_name_type</A> := 'CONTEXT_ACTIVE';
+</PRE>
+<HR>
+<A NAME="CONTEXT_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+context_type
+</P>
+<PRE CLASS="DECL_TEXT">
+type context_type is record (
+  context_name <A HREF=#ORA_NAME_TYPE>pit_util.ora_name_type</A>,
+  settings <A HREF=#MAX_SQL_CHAR>pit_util.max_sql_char</A>,
+  log_level binary_integer,
+  trace_level binary_integer,
+  trace_timing boolean,
+  module_list <A HREF=#MAX_SQL_CHAR>pit_util.max_sql_char</A>,
+  allow_toggle boolean,
+  broadcast_context_switch boolean,
+  <A HREF="msg.html#CTX_CHANGED">ctx_changed</A> boolean := true);
+</PRE>
+<P CLASS="DESC_TEXT">
+Record to store <A HREF="pit.html#LOG">log</A> and trace settings<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+context_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context, is used to identify a stored context<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+settings&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Condensed string with settings for log/trace level, flag_timing and module list<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+log_level&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+On of the C_LEVEL constants, controls logging<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+trace_level&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+On of the C_TRACE constants, controls tracing<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+trace_timing&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to control whether timing information for methods are calculated<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+module_list&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Colon separated list of output modules<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+allow_toggle&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether logging can be switched on and off based on package names (toggles)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+broadcast_context_switch&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether a context switch should be broadcasted to all instantiated output modules<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+<A HREF="msg.html#CTX_CHANGED">ctx_changed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether context has changed in comparison to actual context<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="NAMED_CTX_LIST_TAB"></A>
+<P CLASS="TYPE_TITLE">
+named_ctx_list_tab
+</P>
+<PRE CLASS="DECL_TEXT">
+type named_ctx_list_tab is table of <A HREF=#CONTEXT_TYPE>context_type</A> index by ora_name_type;
+</PRE>
+<P CLASS="DESC_TEXT">
+List of <A HREF=#CONTEXT_TYPE>CONTEXT_TYPE</A> indexed by <A HREF=#ORA_NAME_TYPE>ORA_NAME_TYPE</A>
+
+<BR>
+</P>
+<HR>
+<A NAME="TRANSLATABLE_ITEM_REC"></A>
+<P CLASS="TYPE_TITLE">
+translatable_item_rec
+</P>
+<PRE CLASS="DECL_TEXT">
+type translatable_item_rec is record(
+  pti_name pit_translatable_item.pti_name%type,
+  pti_display_name pit_translatable_item.pti_display_name%type,
+  pti_description pit_translatable_item.pti_description%type);
+</PRE>
+<P CLASS="DESC_TEXT">
+Record to grant access to a translatable item<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+pti_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Technical or internal name<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+pti_display_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+more descriptive name, used for UI purposes<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+pti_description&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Additional description or help text<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_TRUE"></A>
+<P CLASS="TYPE_TITLE">
+get_true
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_true return <A HREF=#FLAG_TYPE>flag_type</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Getter for SYS.STANDARD.USER to avoid environment changes to SQL<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="GET_FALSE"></A>
+<P CLASS="TYPE_TITLE">
+get_false
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_false return <A HREF=#FLAG_TYPE>flag_type</A>
+
+</PRE>
+<HR>
+<A NAME="GET_USER"></A>
+<P CLASS="TYPE_TITLE">
+get_user
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_user return <A HREF=#ORA_NAME_TYPE>ora_name_type</A>
+
+</PRE>
+<HR>
+<A NAME="STRING_TO_TABLE"></A>
+<P CLASS="TYPE_TITLE">
+string_to_table
+</P>
+<PRE CLASS="DECL_TEXT">
+Function string_to_table(p_string_value in varchar2,
+                         p_delimiter    in varchar2 := ':') return args
+
+</PRE>
+<P CLASS="DESC_TEXT">
++ Helper to convert a string with a given separator into an instance of type ARGS<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+internal helper to split a string into an array of chars.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_string_value&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+List of items to be split<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_delimiter]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+character that separates the items in <code>p_string_value</code> Default: colon (:)<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Array of items (up to 50) of <code>varchar2(50)</code>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="BULK_REPLACE"></A>
+<P CLASS="TYPE_TITLE">
+bulk_replace
+</P>
+<PRE CLASS="DECL_TEXT">
+Function bulk_replace(p_string in varchar2, p_chunks in char_table)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to bulk-replace chunks in a text<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to replace more replacement anchors at once<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_string&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Text with replacement anchors<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_chunks&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+List of chars for replacement<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+p_string with replacements<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CLOB_APPEND"></A>
+<P CLASS="TYPE_TITLE">
+clob_append
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure clob_append(p_clob in out nocopy clob, p_chunk in clob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to append CLOB.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Wrapper for DBMS_LOB.APPEND that takes care to instantiate P_CLOB if it's not yet there and append only if P_CHUNK is not null<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_clob&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CLOB instance to append P_CHUNK to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_chunk&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CLOB instance to append to P_CLOB<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CONCATENATE"></A>
+<P CLASS="TYPE_TITLE">
+concatenate
+</P>
+<PRE CLASS="DECL_TEXT">
+Function concatenate(p_chunk_list char_table,
+                     p_delimiter  varchar2,
+                     p_keep_null  boolean default true) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to concatenate text<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_text_list&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CHAR_TABLE instance with the text chunks to concatenate<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_delimiter&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Delimiter to separate the chunks<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_keep_null&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether NULL values are kept (ie as delimiter is inserted (default) or not<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="HARMONIZE_SQL_NAME"></A>
+<P CLASS="TYPE_TITLE">
+harmonize_sql_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function harmonize_sql_name(p_name       in varchar2,
+                            p_prefix     in varchar2 default null,
+                            p_max_length number default null)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper function to convert a SQL primary key name according to the naming convention<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to harmonize the naming of alphanumeric primary key items<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name to harmonize<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_prefix]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional prefix for the resulting name<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_max_length]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional length limitation. If ommitted, the name will be cropped to fit into <A HREF=#C_MAX_LENGTH>C_MAX_LENGTH</A> limit<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Converted name. The following rules apply: - length limit C_MAX_LEGNTH byte - upper case - no whitespace, only underscores - must be a DBMS_ASSERT.ASSERT_SIMPLE_SQL_NAME<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="HARMONIZE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+harmonize_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function harmonize_name(p_prefix in varchar2, p_name in varchar2)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper function to harmonize a given name<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+P_NAME will be uppercased and P_PREFIX prefixes P_NAME<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name to harmonize<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_prefix&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Prefix that should exist once before the name<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+harmonized name<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TO_BOOL"></A>
+<P CLASS="TYPE_TITLE">
+to_bool
+</P>
+<PRE CLASS="DECL_TEXT">
+Function to_bool(p_boolean in boolean) return <A HREF=#FLAG_TYPE>flag_type</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to convert a boolean to a bool flag of type <A HREF=#FLAG_TYPE>FLAG_TYPE</A> and vice versa<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="TO_BOOL2"></A>
+<P CLASS="TYPE_TITLE">
+to_bool
+</P>
+<PRE CLASS="DECL_TEXT">
+Function to_bool(p_boolean in <A HREF=#FLAG_TYPE>flag_type</A>) return boolean
+
+</PRE>
+<HR>
+<A NAME="CAST_TO_MSG_ARGS_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+cast_to_msg_args_char
+</P>
+<PRE CLASS="DECL_TEXT">
+Function cast_to_msg_args_char(p_msg_args msg_args) return msg_args_char
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Methods to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR and vice versa<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+is called to allow to store MSG_ARGS-instances in tables (which is not supported for VARRAY(CLOB)).<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_msg_args&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of type MSG_ARGS<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of MSG_ARGS_CHAR with the content of MSG_ARGS (abbreviated to max 4000 byte per entry)<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CAST_TO_MSG_ARGS"></A>
+<P CLASS="TYPE_TITLE">
+cast_to_msg_args
+</P>
+<PRE CLASS="DECL_TEXT">
+Function cast_to_msg_args(p_msg_args msg_args_char) return msg_args
+
+</PRE>
+<HR>
+<A NAME="GET_ERROR_NAME"></A>
+<P CLASS="TYPE_TITLE">
+get_error_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_error_name(p_pms_name in pit_message.pms_name%type)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to create the name for an exception constant in package <A HREF="msg.html">MSG</A>.<br>
+Name is formed on the basis of params ERROR_PREFIX and ERROR_POSTFIX<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pms_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message to create the exception name for<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Exception name<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CHECK_CONTEXT_SETTINGS"></A>
+<P CLASS="TYPE_TITLE">
+check_context_settings
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure check_context_settings(p_context_name in <A HREF=#ORA_NAME_TYPE>ora_name_type</A>,
+                                 p_settings     in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to validate named context settings<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to verify that entered settings are correct.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context to check<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_settings&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Settings for the named context<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CHECK_TOGGLE_SETTINGS"></A>
+<P CLASS="TYPE_TITLE">
+check_toggle_settings
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure check_toggle_settings(p_toggle_name  in <A HREF=#ORA_NAME_TYPE>ora_name_type</A>,
+                                p_module_list  in varchar2,
+                                p_context_name in <A HREF=#ORA_NAME_TYPE>ora_name_type</A>)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to validate toggle settings<br>
+@throws <A HREF=#INVALID_SQL_NAME>pit_util.invalid_sql_name</A>&nbsp; Toggle name must adhere to the SQL naming conventions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=#CONTEXT_MISSING>pit_util.context_missing</A>&nbsp;&nbsp; Referenced context does not exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=#NAME_TOO_LONG>pit_util.name_too_long</A>&nbsp;&nbsp;&nbsp;&nbsp; The maximum length of a toggle name was exceeded<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called from <A HREF="pit_admin.html#CREATE_CONTEXT_TOGGLE">PIT_ADMIN.CREATE_CONTEXT_TOGGLE</A> to validate settings<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_toggle_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the toggle to check<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_module_list&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+List of code blocks which toggle context settings<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the named context to toggle to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="STRING_TO_CONTEXT_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+string_to_context_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure string_to_context_type(p_context_values in varchar2,
+                                 p_context        in out nocopy <A HREF=#CONTEXT_TYPE>context_type</A>)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to cast a context value read from the globally accessed context to a context type record<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context_values&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+String as read from UTL_CONTEXT.get_first_match or from call stack<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <A HREF=#CONTEXT_TYPE>CONTEXT_TYPE</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CONTEXT_TYPE_TO_STRING"></A>
+<P CLASS="TYPE_TITLE">
+context_type_to_string
+</P>
+<PRE CLASS="DECL_TEXT">
+Function context_type_to_string(p_settings in <A HREF=#CONTEXT_TYPE>context_type</A>) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to cast an instance of <A HREF=#CONTEXT_TYPE>CONTEXT_TYPE</A> to string<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_settings&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Only enough attributes to allow for storage within the context are put together<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+String with a pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="RECOMPILE_INVALID_OBJECTS"></A>
+<P CLASS="TYPE_TITLE">
+recompile_invalid_objects
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure recompile_invalid_objects
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to recompile invalid objects<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Called internally when recreating <A HREF="msg.html">MSG</A> package to recompile packages with dependencies on <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_MODULE_AND_ACTION"></A>
+<P CLASS="TYPE_TITLE">
+get_module_and_action
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure get_module_and_action(p_module in out nocopy varchar2,
+                                p_action in out nocopy varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Reads module and action from UTL_CALL_STACK<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used only from Oracle 12c onwards. Should p_module and/or p_action be null, UTL_CALL_STACK is called to get the respective information<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_trace_level&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Controls the recursive level needed by UTL_CALL_STACK<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_module&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Module that was called<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_action&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method with module that was called<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_CALL_STACK"></A>
+<P CLASS="TYPE_TITLE">
+get_call_stack
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_call_stack return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to get the call/error stack<br>
+
+<BR>
+</P>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+formatted call/error stack. Starting with version 12, utl_call_stack is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_ERROR_STACK"></A>
+<P CLASS="TYPE_TITLE">
+get_error_stack
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_error_stack return varchar2
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

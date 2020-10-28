@@ -27,15 +27,15 @@ as
   C_ACTIVE_CONTEXT constant ora_name_type := 'CONTEXT_ACTIVE';
   
  /** Record to store log and trace settings
-   * @param  context_name              Name of the context, is used to identify a stored context
-   * @param  settings                  Condensed string with settings for log/trace level, flag_timing and module list
-   * @param  log_level                 On of the C_LEVEL constants, controls logging
-   * @param  trace_level               On of the C_TRACE constants, controls tracing
-   * @param  trace_timing              Flag to control whether timing information for methods are calculated
-   * @param  module_list               Colon separated list of output modules
-   * @param  allow_toggle              Flag to indicate whether logging can be switched on and off based on package names (toggles)
-   * @param  broadcast_context_switch  Flag to indicate whether a context switch should be broadcasted to all instantiated output modules
-   * @param  ctx_changed               Flag to indicate whether context has changed in comparison to actual context
+   * %param  context_name              Name of the context, is used to identify a stored context
+   * %param  settings                  Condensed string with settings for log/trace level, flag_timing and module list
+   * %param  log_level                 On of the C_LEVEL constants, controls logging
+   * %param  trace_level               On of the C_TRACE constants, controls tracing
+   * %param  trace_timing              Flag to control whether timing information for methods are calculated
+   * %param  module_list               Colon separated list of output modules
+   * %param  allow_toggle              Flag to indicate whether logging can be switched on and off based on package names (toggles)
+   * %param  broadcast_context_switch  Flag to indicate whether a context switch should be broadcasted to all instantiated output modules
+   * %param  ctx_changed               Flag to indicate whether context has changed in comparison to actual context
    */
   type context_type is record (
     context_name pit_util.ora_name_type,
@@ -54,9 +54,9 @@ as
     
 
   /** Record to grant access to a translatable item
-   * @param  pti_name           Technical or internal name
-   * @param  pti_display_name   more descriptive name, used for UI purposes
-   * @param  pti_description    Additional description or help text
+   * %param  pti_name           Technical or internal name
+   * %param  pti_display_name   more descriptive name, used for UI purposes
+   * %param  pti_description    Additional description or help text
    */
   type translatable_item_rec is record(
     pti_name pit_translatable_item.pti_name%type,
@@ -77,11 +77,11 @@ as
 
   /**** TEXT HELPER ****/
   /*+ Helper to convert a string with a given separator into an instance of type ARGS
-   * @param  p_string_value  List of items to be split
-   * @param [p_delimiter]    character that separates the items in <code>p_string_value</code>
+   * %param  p_string_value  List of items to be split
+   * %param [p_delimiter]    character that separates the items in <code>p_string_value</code>
    *                         Default: colon (:)
-   * @return Array of items (up to 50) of <code>varchar2(50)</code>
-   * @usage  internal helper to split a string into an array of chars.
+   * %return Array of items (up to 50) of <code>varchar2(50)</code>
+   * %usage  internal helper to split a string into an array of chars.
    */
   function string_to_table(
     p_string_value in varchar2,
@@ -90,10 +90,10 @@ as
 
 
   /** Helper to bulk-replace chunks in a text
-   * @param  p_string  Text with replacement anchors
-   * @param  p_chunks  List of chars for replacement
-   * @return p_string with replacements
-   * @usage  Is called to replace more replacement anchors at once
+   * %param  p_string  Text with replacement anchors
+   * %param  p_chunks  List of chars for replacement
+   * %return p_string with replacements
+   * %usage  Is called to replace more replacement anchors at once
    */
   function bulk_replace(
     p_string in varchar2,
@@ -102,9 +102,9 @@ as
 
 
   /** Helper to append CLOB.
-   * @param  p_clob   CLOB instance to append P_CHUNK to
-   * @param  p_chunk  CLOB instance to append to P_CLOB
-   * @usage  Wrapper for DBMS_LOB.APPEND that takes care to instantiate P_CLOB if
+   * %param  p_clob   CLOB instance to append P_CHUNK to
+   * %param  p_chunk  CLOB instance to append to P_CLOB
+   * %usage  Wrapper for DBMS_LOB.APPEND that takes care to instantiate P_CLOB if
    *         it's not yet there and append only if P_CHUNK is not null
    */
   procedure clob_append(
@@ -113,9 +113,9 @@ as
 
 
   /** Helper to concatenate text
-   * @param  p_text_list CHAR_TABLE instance with the text chunks to concatenate
-   * @param  p_delimiter Delimiter to separate the chunks
-   * @param  p_keep_null Flag to indicate whether NULL values are kept (ie as delimiter
+   * %param  p_text_list CHAR_TABLE instance with the text chunks to concatenate
+   * %param  p_delimiter Delimiter to separate the chunks
+   * %param  p_keep_null Flag to indicate whether NULL values are kept (ie as delimiter
    *                     is inserted (default) or not
    */
   function concatenate(
@@ -126,15 +126,15 @@ as
     
     
   /** Helper function to convert a SQL primary key name according to the naming convention
-   * @param  p_name        Name to harmonize
-   * @param [p_prefix]     Optional prefix for the resulting name
-   * @param [p_max_length] Optional length limitation. If ommitted, the name will be cropped to fit into C_MAX_LENGTH limit
-   * @return Converted name. The following rules apply:
+   * %param  p_name        Name to harmonize
+   * %param [p_prefix]     Optional prefix for the resulting name
+   * %param [p_max_length] Optional length limitation. If ommitted, the name will be cropped to fit into C_MAX_LENGTH limit
+   * %return Converted name. The following rules apply:
    *         - length limit C_MAX_LEGNTH byte
    *         - upper case
    *         - no whitespace, only underscores
    *         - must be a DBMS_ASSERT.ASSERT_SIMPLE_SQL_NAME
-   * @usage  Is called to harmonize the naming of alphanumeric primary key items
+   * %usage  Is called to harmonize the naming of alphanumeric primary key items
    */
   function harmonize_sql_name(
     p_name in varchar2,
@@ -144,10 +144,10 @@ as
 
 
   /** Helper function to harmonize a given name
-   * @param  p_name    Name to harmonize
-   * @param  p_prefix  Prefix that should exist once before the name
-   * @return harmonized name
-   * @usage  P_NAME will be uppercased and P_PREFIX prefixes P_NAME
+   * %param  p_name    Name to harmonize
+   * %param  p_prefix  Prefix that should exist once before the name
+   * %return harmonized name
+   * %usage  P_NAME will be uppercased and P_PREFIX prefixes P_NAME
    */
   function harmonize_name(
     p_prefix in varchar2,
@@ -167,10 +167,10 @@ as
 
 
   /** Methods to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR and vice versa
-   * @param  p_msg_args  Instance of type MSG_ARGS
-   * @return Instance of MSG_ARGS_CHAR with the content of MSG_ARGS (abbreviated
+   * %param  p_msg_args  Instance of type MSG_ARGS
+   * %return Instance of MSG_ARGS_CHAR with the content of MSG_ARGS (abbreviated
    *         to max 4000 byte per entry)
-   * @usage  is called to allow to store MSG_ARGS-instances in tables (which is
+   * %usage  is called to allow to store MSG_ARGS-instances in tables (which is
    *         not supported for VARRAY(CLOB)).
    */
   function cast_to_msg_args_char(
@@ -185,8 +185,8 @@ as
   /**** VALIDATION HELPER ****/
   /** Helper to create the name for an exception constant in package MSG.
    *  Name is formed on the basis of params ERROR_PREFIX and ERROR_POSTFIX
-   * @param  p_pms_name  Name of the message to create the exception name for
-   * @return Exception name
+   * %param  p_pms_name  Name of the message to create the exception name for
+   * %return Exception name
    */
   function get_error_name(
     p_pms_name in pit_message.pms_name%type)
@@ -194,9 +194,9 @@ as
 
 
   /** Helper to validate named context settings
-   * @param  p_context_name  Name of the context to check
-   * @param  p_settings      Settings for the named context
-   * @usage  Is called to verify that entered settings are correct.
+   * %param  p_context_name  Name of the context to check
+   * %param  p_settings      Settings for the named context
+   * %usage  Is called to verify that entered settings are correct.
    */
   procedure check_context_settings(
     p_context_name in ora_name_type,
@@ -204,11 +204,11 @@ as
 
 
   /** Helper to validate toggle settings
-   * @param  p_toggle_name Name of the toggle to check
-   * @param  p_module_list List of code blocks which toggle context settings
-   * @param  p_context_name Name of the named context to toggle to
-   * @usage  Is called from PIT_ADMIN.CREATE_CONTEXT_TOGGLE to validate settings
-   * @throws pit_util.invalid_sql_name  Toggle name must adhere to the SQL naming conventions
+   * %param  p_toggle_name Name of the toggle to check
+   * %param  p_module_list List of code blocks which toggle context settings
+   * %param  p_context_name Name of the named context to toggle to
+   * %usage  Is called from PIT_ADMIN.CREATE_CONTEXT_TOGGLE to validate settings
+   * %throws pit_util.invalid_sql_name  Toggle name must adhere to the SQL naming conventions
    *         pit_util.context_missing   Referenced context does not exist
    *         pit_util.name_too_long     The maximum length of a toggle name was exceeded
    */
@@ -219,8 +219,8 @@ as
     
   
   /** Method to cast a context value read from the globally accessed context to a context type record
-   * @param  p_context_values  String as read from UTL_CONTEXT.get_first_match or from call stack
-   * @param  p_context         Instance of CONTEXT_TYPE
+   * %param  p_context_values  String as read from UTL_CONTEXT.get_first_match or from call stack
+   * %param  p_context         Instance of CONTEXT_TYPE
    */
   procedure string_to_context_type(
     p_context_values in varchar2,
@@ -228,8 +228,8 @@ as
     
     
   /** Method to cast an instance of CONTEXT_TYPE to string
-   * @param  p_settings  Only enough attributes to allow for storage within the context are put together
-   * @return String with a pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST
+   * %param  p_settings  Only enough attributes to allow for storage within the context are put together
+   * %return String with a pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST
    */
   function context_type_to_string(
     p_settings in context_type)
@@ -237,24 +237,24 @@ as
 
 
   /** Procedure to recompile invalid objects
-   * @usage  Called internally when recreating MSG package to recompile packages with dependencies on MSG
+   * %usage  Called internally when recreating MSG package to recompile packages with dependencies on MSG
    */
   procedure recompile_invalid_objects;
   
   
   /* Reads module and action from UTL_CALL_STACK
-   * @usage  Is used only from Oracle 12c onwards. Should p_module and/or p_action
+   * %usage  Is used only from Oracle 12c onwards. Should p_module and/or p_action
    *         be null, UTL_CALL_STACK is called to get the respective information
-   * @param  p_trace_level  Controls the recursive level needed by UTL_CALL_STACK
-   * @param  p_module       Module that was called
-   * @param  p_action       Method with module that was called
+   * %param  p_trace_level  Controls the recursive level needed by UTL_CALL_STACK
+   * %param  p_module       Module that was called
+   * %param  p_action       Method with module that was called
    */
   procedure get_module_and_action(
     p_module in out nocopy varchar2,
     p_action in out nocopy varchar2);
 
   /** Helper to get the call/error stack 
-   * @return formatted call/error stack. Starting with version 12, utl_call_stack is used.
+   * %return formatted call/error stack. Starting with version 12, utl_call_stack is used.
    */
   function get_call_stack
     return varchar2;

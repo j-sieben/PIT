@@ -1,0 +1,592 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body pit_file_pkg</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="pit_file_pkg">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body pit_file_pkg</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Initialization
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#OPEN_FILE">open_file</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to open the <A HREF=#LOG>log</A> file.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CLOSE_FILE">close_file</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to close the <A HREF=#LOG>log</A> file.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_TO_FILE">write_to_file</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to write text to the <A HREF=#LOG>log</A> file
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_CALL_STACK">write_call_stack</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to format call stack entries to write them to the <A HREF=#LOG>log</A> file
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+INTERFACE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE">purge</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER">enter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE_MODULE">initialize_module</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PARAM_TAB">param_tab</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Konstanten und Variablen
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PARAM_LIST">g_param_list</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_DIR">g_dir</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_FILENAME">g_filename</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_TRC_FILE">g_trc_file</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_MESSAGE_TEMPLATE">g_message_template</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_ENTER_TEMPLATE">g_enter_template</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_LEAVE_TEMPLATE">g_leave_template</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_LEVEL_INDICATOR">g_level_indicator</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PARAM_GROUP">C_PARAM_GROUP</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PIT_FILE">C_PIT_FILE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_OUT_DIRECTORY">C_OUT_DIRECTORY</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FILE_NAME">C_FILE_NAME</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_ENTER_TEMPLATE">C_ENTER_TEMPLATE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_LEAVE_TEMPLATE">C_LEAVE_TEMPLATE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MESSAGE_TEMPLATE">C_MESSAGE_TEMPLATE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_LEVEL_INDICATOR">C_LEVEL_INDICATOR</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_WRITE_APPEND">C_WRITE_APPEND</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_WRITE_REPLACE">C_WRITE_REPLACE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_ENTER_FLAG">C_ENTER_FLAG</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_LEAVE_FLAG">C_LEAVE_FLAG</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_LEVEL_SIGN">C_LEVEL_SIGN</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PARAM_TAB"></A>
+<P CLASS="TYPE_TITLE">
+param_tab
+</P>
+<PRE CLASS="DECL_TEXT">
+type param_tab is table of <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>
+  index by pit_util.ora_name_type;
+</PRE>
+<P CLASS="DESC_TEXT">
+Konstanten und Variablen<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="G_PARAM_LIST"></A>
+<P CLASS="TYPE_TITLE">
+g_param_list
+</P>
+<PRE CLASS="DECL_TEXT">
+g_param_list param_tab;
+</PRE>
+<HR>
+<A NAME="C_PARAM_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+C_PARAM_GROUP
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_apex_pkg.body.html#C_PARAM_GROUP">C_PARAM_GROUP</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT';
+</PRE>
+<HR>
+<A NAME="C_PIT_FILE"></A>
+<P CLASS="TYPE_TITLE">
+C_PIT_FILE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PIT_FILE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_FILE';
+</PRE>
+<HR>
+<A NAME="C_FIRE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_FIRE_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_apex_pkg.body.html#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_FIRE_THRESHOLD';
+</PRE>
+<HR>
+<A NAME="C_OUT_DIRECTORY"></A>
+<P CLASS="TYPE_TITLE">
+C_OUT_DIRECTORY
+</P>
+<PRE CLASS="DECL_TEXT">
+C_OUT_DIRECTORY constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_DIRECTORY';
+</PRE>
+<HR>
+<A NAME="C_FILE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+C_FILE_NAME
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FILE_NAME constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_FILE_NAME';
+</PRE>
+<HR>
+<A NAME="C_ENTER_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+C_ENTER_TEMPLATE
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#C_ENTER_TEMPLATE">C_ENTER_TEMPLATE</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_ENTER_TEMPLATE';
+</PRE>
+<HR>
+<A NAME="C_LEAVE_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+C_LEAVE_TEMPLATE
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#C_LEAVE_TEMPLATE">C_LEAVE_TEMPLATE</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_LEAVE_TEMPLATE';
+</PRE>
+<HR>
+<A NAME="C_MESSAGE_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+C_MESSAGE_TEMPLATE
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#C_MESSAGE_TEMPLATE">C_MESSAGE_TEMPLATE</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_MSG_TEMPLATE';
+</PRE>
+<HR>
+<A NAME="C_LEVEL_INDICATOR"></A>
+<P CLASS="TYPE_TITLE">
+C_LEVEL_INDICATOR
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#C_LEVEL_INDICATOR">C_LEVEL_INDICATOR</A>  constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_PIT_FILE>C_PIT_FILE</A> || '_LEVEL_INDICATOR';
+</PRE>
+<HR>
+<A NAME="C_WRITE_APPEND"></A>
+<P CLASS="TYPE_TITLE">
+C_WRITE_APPEND
+</P>
+<PRE CLASS="DECL_TEXT">
+C_WRITE_APPEND constant <A HREF="pit_util.html#FLAG_TYPE">pit_util.flag_type</A> := 'A';
+</PRE>
+<HR>
+<A NAME="C_WRITE_REPLACE"></A>
+<P CLASS="TYPE_TITLE">
+C_WRITE_REPLACE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_WRITE_REPLACE constant <A HREF="pit_util.html#FLAG_TYPE">pit_util.flag_type</A> := 'W';
+</PRE>
+<HR>
+<A NAME="C_ENTER_FLAG"></A>
+<P CLASS="TYPE_TITLE">
+C_ENTER_FLAG
+</P>
+<PRE CLASS="DECL_TEXT">
+C_ENTER_FLAG constant varchar2(5) := '> ';
+</PRE>
+<HR>
+<A NAME="C_LEAVE_FLAG"></A>
+<P CLASS="TYPE_TITLE">
+C_LEAVE_FLAG
+</P>
+<PRE CLASS="DECL_TEXT">
+C_LEAVE_FLAG constant varchar2(5) := '< ';
+</PRE>
+<HR>
+<A NAME="C_LEVEL_SIGN"></A>
+<P CLASS="TYPE_TITLE">
+C_LEVEL_SIGN
+</P>
+<PRE CLASS="DECL_TEXT">
+C_LEVEL_SIGN constant char(1) := '.';
+</PRE>
+<HR>
+<A NAME="G_DIR"></A>
+<P CLASS="TYPE_TITLE">
+g_dir
+</P>
+<PRE CLASS="DECL_TEXT">
+g_dir varchar2(2000);
+</PRE>
+<HR>
+<A NAME="G_FILENAME"></A>
+<P CLASS="TYPE_TITLE">
+g_filename
+</P>
+<PRE CLASS="DECL_TEXT">
+g_filename varchar2(100);
+</PRE>
+<HR>
+<A NAME="G_TRC_FILE"></A>
+<P CLASS="TYPE_TITLE">
+g_trc_file
+</P>
+<PRE CLASS="DECL_TEXT">
+g_trc_file utl_file.file_type;
+</PRE>
+<HR>
+<A NAME="G_MESSAGE_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+g_message_template
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#G_MESSAGE_TEMPLATE">g_message_template</A> varchar2(2000);
+</PRE>
+<HR>
+<A NAME="G_ENTER_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+g_enter_template
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#G_ENTER_TEMPLATE">g_enter_template</A> varchar2(2000);
+</PRE>
+<HR>
+<A NAME="G_LEAVE_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+g_leave_template
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#G_LEAVE_TEMPLATE">g_leave_template</A> varchar2(2000);
+</PRE>
+<HR>
+<A NAME="G_LEVEL_INDICATOR"></A>
+<P CLASS="TYPE_TITLE">
+g_level_indicator
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_console_pkg.body.html#G_LEVEL_INDICATOR">g_level_indicator</A> varchar2(100);
+</PRE>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Initialization<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reads several parameters into global variables<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="OPEN_FILE"></A>
+<P CLASS="TYPE_TITLE">
+open_file
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure open_file(p_write_mode in char)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to open the <A HREF=#LOG>log</A> file.<br>
+%<A HREF="param.html">param</A> p_write_mode flag according to UTL_FILE to control how a file has to be opened<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to prepare the <A HREF=#LOG>log</A> file for writing.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CLOSE_FILE"></A>
+<P CLASS="TYPE_TITLE">
+close_file
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure close_file
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to close the <A HREF=#LOG>log</A> file.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to close the <A HREF=#LOG>log</A> file and release the resources<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_TO_FILE"></A>
+<P CLASS="TYPE_TITLE">
+write_to_file
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_to_file(p_text in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to write text to the <A HREF=#LOG>log</A> file<br>
+%<A HREF="param.html">param</A> p_text Text that is appended to the <A HREF=#LOG>log</A> file<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to append text to the <A HREF=#LOG>log</A> file<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_CALL_STACK"></A>
+<P CLASS="TYPE_TITLE">
+write_call_stack
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_call_stack(p_call_stack in call_stack_type,
+                           p_template   in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper to format call stack entries to write them to the <A HREF=#LOG>log</A> file<br>
+%<A HREF="param.html">param</A> p_call_stack Instance of call stack to be printed<br>
+%<A HREF="param.html">param</A> p_template Name of the template to be used to format the output.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Templates are defined as parameters and referenced here to control the formatting of the call stack. After formatting, procedure <A HREF=#WRITE_TO_FILE>WRITE_TO_FILE</A> is called to append the call stack to the <A HREF=#LOG>log</A> file.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LOG"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+INTERFACE<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="PURGE"></A>
+<P CLASS="TYPE_TITLE">
+purge
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>
+
+</PRE>
+<HR>
+<A NAME="ENTER"></A>
+<P CLASS="TYPE_TITLE">
+enter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
+
+</PRE>
+<HR>
+<A NAME="LEAVE"></A>
+<P CLASS="TYPE_TITLE">
+leave
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
+
+</PRE>
+<HR>
+<A NAME="INITIALIZE_MODULE"></A>
+<P CLASS="TYPE_TITLE">
+initialize_module
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_apex_pkg.html#INITIALIZE_MODULE">initialize_module</A>(self in out pit_file)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

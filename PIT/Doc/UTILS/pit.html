@@ -1,0 +1,3766 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package pit</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="pit">
+ <META name="description" content="Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (www.github.com/j-sieben/PIT) Descriptioon: PIT-API package.">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package pit</P>
+Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (<A HREF="www.github.com/j-sieben/PIT">www.github.com/j-sieben/PIT</A>) Descriptioon: PIT-API package. Implements all functionality that is required to use PIT.<br>
+@headcom<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_OFF">level_off</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_off
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_FATAL">level_fatal</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_fatal
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_ERROR">level_error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_error
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_WARN">level_warn</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_warn
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_INFO">level_info</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_info
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_DEBUG">level_debug</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_debug
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEVEL_ALL">level_all</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant level_all
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_OFF">trace_off</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant trace_off
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_MANDATORY">trace_mandatory</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant trace_mandatory
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_OPTIONAL">trace_optional</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant trace_optional
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_DETAILED">trace_detailed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant trace_detailed
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TRACE_ALL">trace_all</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Constant trace_all
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_INTEGER">type_integer</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Contants TYPE_...
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_NUMBER">type_number</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_DATE">type_date</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_TIMESTAMP">type_timestamp</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#TYPE_XML">type_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VERBOSE">verbose</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Captures <A HREF=#DEBUG>debug</A> information, level verbose
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DEBUG">debug</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Captures debug information, level debug
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INFO">info</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Captures <A HREF=#DEBUG>debug</A> information, level info
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WARN">warn</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Captures <A HREF=#DEBUG>debug</A> information, level warn
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ERROR">error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Captures <A HREF=#DEBUG>debug</A> information, level error
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#FATAL">fatal</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Captures <A HREF=#DEBUG>debug</A> information, level fatal
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Logs a message regardless of the actual log settings.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG_STATE">log_state</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+<A HREF=#LOG>Log</A> method to <A HREF=#LOG>log</A> the state of variables without relation to <A HREF=#ENTER>ENTER</A> or <A HREF=#LEAVE>LEAVE</A>
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SQL_EXCEPTION">sql_exception</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Exception handler that handles an <A HREF=#ERROR>error</A> and calls <A HREF=#LEAVE>leave</A>
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STOP">stop</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Exception handler that handles an <A HREF=#ERROR>error</A>, calls <A HREF=#LEAVE>leave</A> and re-raises the <A HREF=#ERROR>error</A>
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER_MANDATORY">enter_mandatory</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces entering a method, level mandatory
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER_OPTIONAL">enter_optional</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces entering a method, level optional
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER_DETAILED">enter_detailed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces entering a method, level detailed
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER">enter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces entering a method
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE_MANDATORY">leave_mandatory</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces leaving a method, level mandatory
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE_OPTIONAL">leave_optional</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces leaving a method, level optional
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE_DETAILED">leave_detailed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces leaving a method, level detailed
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Traces leaving a method, level variable
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LONG_OP">long_op</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Sets dbms_application_info.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PRINT">print</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Passes a message to the view layer.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Notifies output modules
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE_TEXT">get_message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves the text of a given message and msg_args list
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE_TEXT2">get_message_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE">get_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instantiates a <code>MESSAGE_TYPE</code> instance
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_ACTIVE_MESSAGE">get_active_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves the actually instantiated message instance
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT">assert</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is true
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_IS_NULL">assert_is_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is null.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_IS_NULL2">assert_is_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is null.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_IS_NULL3">assert_is_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is null.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_NULL">assert_not_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is not null.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_NULL2">assert_not_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is not null.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_NULL3">assert_not_null</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CONDITION</code> is not null.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_EXISTS">assert_exists</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_STMT</code> returns at least one row.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_EXISTS2">assert_exists</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CURSOR</code> returns at least one row.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_EXISTS">assert_not_exists</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_STMT</code> returns no rows.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_NOT_EXISTS2">assert_not_exists</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_CURSOR</code> returns no rows.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ASSERT_DATATYPE">assert_datatype</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Asserts that <code>P_VALUE</code> is of type <code>P_TYPE</code>.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_DEFAULT_LANGUAGE">get_default_language</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter to read the default language PIT is installed at
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM_NAME">get_trans_item_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves a PIT translatable item (PTI) name in the session language.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM_DISPLAY_NAME">get_trans_item_display_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves a PIT translatable item (PTI) display name in the session language.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM_DESCRIPTION">get_trans_item_description</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves a PIT translatable item (PTI) description in the session language.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANS_ITEM">get_trans_item</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves a PIT translatable item (PTI) record containing name, display name and description in the session language.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE_LOG">purge_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Purges the message <A HREF=#LOG>log</A>.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE_LOG2">purge_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Purges the message <A HREF=#LOG>log</A>.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE_SESSION_LOG">purge_session_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Purges session related message <A HREF=#LOG>log</A>.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_CONTEXT">set_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Sets the trace context for the active session.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_CONTEXT2">set_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Sets the trace context for the active session.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#RESET_CONTEXT">reset_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Resets the trace context for the active session to the default values
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#START_MESSAGE_COLLECTION">start_message_collection</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Switches PIT collection mode on
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STOP_MESSAGE_COLLECTION">stop_message_collection</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Switches PIT collection mode off
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MESSAGE_COLLECTION">get_message_collection</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Retrieves the collection of messages raised since setting PIT to collect mode
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MODULES">get_modules</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pipelined function to retrieve a list of all installed modules
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_AVAILABLE_MODULES">get_available_modules</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pipelined function to retrieve the list of available output modules
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_ACTIVE_MODULES">get_active_modules</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pipelined function to retrieve the list of active output modules
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Re-initializes PIT
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_OFF"></A>
+<P CLASS="TYPE_TITLE">
+level_off
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_off return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_off<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level OFF<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_FATAL"></A>
+<P CLASS="TYPE_TITLE">
+level_fatal
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_fatal return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_fatal<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level <A HREF=#FATAL>FATAL</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+level_error
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_error return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_error<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level <A HREF=#ERROR>ERROR</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_WARN"></A>
+<P CLASS="TYPE_TITLE">
+level_warn
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_warn return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_warn<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level <A HREF=#WARN>WARN</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_INFO"></A>
+<P CLASS="TYPE_TITLE">
+level_info
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_info return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_info<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level <A HREF=#INFO>INFO</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_DEBUG"></A>
+<P CLASS="TYPE_TITLE">
+level_debug
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_debug return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_debug<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level <A HREF=#DEBUG>DEBUG</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEVEL_ALL"></A>
+<P CLASS="TYPE_TITLE">
+level_all
+</P>
+<PRE CLASS="DECL_TEXT">
+Function level_all return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant level_all<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for <A HREF=#DEBUG>debug</A> level ALL<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRACE_OFF"></A>
+<P CLASS="TYPE_TITLE">
+trace_off
+</P>
+<PRE CLASS="DECL_TEXT">
+Function trace_off return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant trace_off<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for trace level OFF<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRACE_MANDATORY"></A>
+<P CLASS="TYPE_TITLE">
+trace_mandatory
+</P>
+<PRE CLASS="DECL_TEXT">
+Function trace_mandatory return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant trace_mandatory<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for trace level MANDATORY<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRACE_OPTIONAL"></A>
+<P CLASS="TYPE_TITLE">
+trace_optional
+</P>
+<PRE CLASS="DECL_TEXT">
+Function trace_optional return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant trace_optional<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for trace level OPTIONAL<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRACE_DETAILED"></A>
+<P CLASS="TYPE_TITLE">
+trace_detailed
+</P>
+<PRE CLASS="DECL_TEXT">
+Function trace_detailed return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant trace_detailed<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for trace level DETAILED<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TRACE_ALL"></A>
+<P CLASS="TYPE_TITLE">
+trace_all
+</P>
+<PRE CLASS="DECL_TEXT">
+Function trace_all return number
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Constant trace_all<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter function for trace level ALL<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TYPE_INTEGER"></A>
+<P CLASS="TYPE_TITLE">
+type_integer
+</P>
+<PRE CLASS="DECL_TEXT">
+Function type_integer return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Contants TYPE_...<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter for data type assertion function<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="TYPE_NUMBER"></A>
+<P CLASS="TYPE_TITLE">
+type_number
+</P>
+<PRE CLASS="DECL_TEXT">
+Function type_number return varchar2
+
+</PRE>
+<HR>
+<A NAME="TYPE_DATE"></A>
+<P CLASS="TYPE_TITLE">
+type_date
+</P>
+<PRE CLASS="DECL_TEXT">
+Function type_date return varchar2
+
+</PRE>
+<HR>
+<A NAME="TYPE_TIMESTAMP"></A>
+<P CLASS="TYPE_TITLE">
+type_timestamp
+</P>
+<PRE CLASS="DECL_TEXT">
+Function type_timestamp return varchar2
+
+</PRE>
+<HR>
+<A NAME="TYPE_XML"></A>
+<P CLASS="TYPE_TITLE">
+type_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Function type_xml return varchar2
+
+</PRE>
+<HR>
+<A NAME="VERBOSE"></A>
+<P CLASS="TYPE_TITLE">
+verbose
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure verbose(p_message_name in varchar2,
+                  p_msg_args     in msg_args default null,
+                  p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Captures <A HREF=#DEBUG>debug</A> information, level verbose<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit <A HREF=#DEBUG>debug</A> messages. Normal usage is to report verbose information that is useful for a detailled code insight on development and production systems.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="DEBUG"></A>
+<P CLASS="TYPE_TITLE">
+debug
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure debug(p_message_name in varchar2,
+                p_msg_args     in msg_args default null,
+                p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Captures debug information, level debug<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit debug messages. Normal usage is to report additional information that is useful in tracing a bug on development and production systems.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="INFO"></A>
+<P CLASS="TYPE_TITLE">
+info
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure info(p_message_name in varchar2,
+               p_msg_args     msg_args default null,
+               p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Captures <A HREF=#DEBUG>debug</A> information, level info<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit info messages. Normal usage is to report information that is useful in normal operation on development and production systems. In contrast to <A HREF=#WARN>Warn</A>, <A HREF=#ERROR>ERROR</A> and <A HREF=#FATAL>FATAL</A>, this information will be reported more frequently on production systems.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WARN"></A>
+<P CLASS="TYPE_TITLE">
+warn
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure warn(p_message_name in varchar2,
+               p_msg_args     in msg_args default null,
+               p_affected_id  in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Captures <A HREF=#DEBUG>debug</A> information, level warn<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit warning messages. Normal usage is to report uncommon behavior of the system which is not categorized as <A HREF=#ERROR>error</A>, such as warning thresholds reached etc.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ERROR"></A>
+<P CLASS="TYPE_TITLE">
+error
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure error(p_message_name in varchar2,
+                p_msg_args     in msg_args default null,
+                p_affected_id  in varchar2 default null,
+                p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Captures <A HREF=#DEBUG>debug</A> information, level error<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit error messages. Normal usage is to report errors which have occured but which are not seen as <A HREF=#FATAL>fatal</A> for the application.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional error code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="FATAL"></A>
+<P CLASS="TYPE_TITLE">
+fatal
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure fatal(p_message_name in varchar2,
+                p_msg_args     in msg_args default null,
+                p_affected_id  in varchar2 default null,
+                p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Captures <A HREF=#DEBUG>debug</A> information, level fatal<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit fatal <A HREF=#ERROR>error</A> messages. Normal usage is to report errors which cause the application to abort operation.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LOG"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure log(p_message_name  in varchar2,
+              p_msg_args      in msg_args default null,
+              p_affected_id   in varchar2 default null,
+              p_error_code    in varchar2 default null,
+              p_log_threshold in number default null,
+              p_log_modules   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Logs a message regardless of the actual log settings.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit <A HREF=#DEBUG>debug</A> messages regardless of log settings. Use this method if you want to emit a message anyway or if you decide to emit a log message or not in code outside PIT. Optionally, set a list of modules that will become active for this method only. Modules set her will not remain active after this method. The context remains unchanged.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_log_threshold]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional log level for the log process. Should the severity of the requested message be higher than this level, it won't get logged. If null, the message is logged if it's severity is higher than the actual log level defined.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_log_modules]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of module names, separated by semicolon that is used to log the message. If NULL, the list of actually set modules is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LOG_STATE"></A>
+<P CLASS="TYPE_TITLE">
+log_state
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure log_state(p_params msg_params)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+<A HREF=#LOG>Log</A> method to <A HREF=#LOG>log</A> the state of variables without relation to <A HREF=#ENTER>ENTER</A> or <A HREF=#LEAVE>LEAVE</A>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This method is useful if you want to <A HREF=#LOG>log</A> the state of several variables within a method. This way, you can report the status of variables without the requirement to create distinct messages for those. This adds flexibility and reduces administrative workload.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_params&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of MSG_PARAMS, containing the variable names and values to <A HREF=#LOG>log</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SQL_EXCEPTION"></A>
+<P CLASS="TYPE_TITLE">
+sql_exception
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure sql_exception(p_message_name in varchar2 default null,
+                        p_msg_args     in msg_args default null,
+                        p_affected_id  in varchar2 default null,
+                        p_error_code   in varchar2 default null,
+                        p_params       in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Exception handler that handles an <A HREF=#ERROR>error</A> and calls <A HREF=#LEAVE>leave</A>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure in EXCEPTION handlers of your code.<br> <code>sql_exception</code> not only reports the <A HREF=#ERROR>error</A> but handles it as well. This means that if you pass any <A HREF=#ERROR>error</A> that occurred to this procedure, the <A HREF=#ERROR>error</A> gets logged and handled.<br> <code>sql_exception</code> includes a call to <code>leave</code>, so there is no need to call <code>leave</code> explicitly.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="STOP"></A>
+<P CLASS="TYPE_TITLE">
+stop
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure stop(p_message_name in varchar2 default null,
+               p_msg_args     in msg_args default null,
+               p_affected_id  in varchar2 default null,
+               p_error_code   in varchar2 default null,
+               p_params       in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Exception handler that handles an <A HREF=#ERROR>error</A>, calls <A HREF=#LEAVE>leave</A> and re-raises the <A HREF=#ERROR>error</A>
+@throws P_MESSAGE_NAME exception to stop further processing<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure in EXCEPTION handlers of your code.<br> <code>stop</code> not only reports the <A HREF=#ERROR>error</A> but handles it as well. This means that if you pass any <A HREF=#ERROR>error</A> that occurred to this procedure, the <A HREF=#ERROR>error</A> gets logged and handled.<br> <code>stop</code> includes a call to <code>leave</code>, so there is no need to call <code>leave</code> explicitly.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENTER_MANDATORY"></A>
+<P CLASS="TYPE_TITLE">
+enter_mandatory
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure enter_mandatory(p_action      in varchar2 default null,
+                          p_module      in varchar2 default null,
+                          p_params      in msg_params default null,
+                          p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces entering a method, level mandatory<br>
+@deprecated&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Will be removed in a future version<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to indicate the entrance to a method that always should be traced (should tracing be switched on).<br> Normal usage is to call this procedure within the major procedures for a given use case.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_action]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Under normal conditions the method name is auto detected. It can be provided to enhance logging of inlined methods which don't show their correct line number anymore<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_module]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Deprecated. For stability reasons, the package name is auto detected<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_info]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional value for CLIENT_INFO column of V$SESSION.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENTER_OPTIONAL"></A>
+<P CLASS="TYPE_TITLE">
+enter_optional
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure enter_optional(p_action      in varchar2 default null,
+                         p_module      in varchar2 default null,
+                         p_params      in msg_params default null,
+                         p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces entering a method, level optional<br>
+@deprecated&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Will be removed in a future version<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to indicate the entrance to a method that optionally should be traced (should tracing be switched on).<br> Normal usage is to call this procedure within detail procedures for a given use case.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_action]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Under normal conditions the method name is auto detected. It can be provided to enhance logging of inlined methods which don't show their correct line number anymore<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_module]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Deprecated. For stability reasons, the package name is auto detected<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_info]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional value for CLIENT_INFO column of V$SESSION. This parameter exists in <A HREF=#ENTER_MANDATORY>ENTER_MANDATORY</A> only as this method automatically sets DBMS_APPLICATION_INFO with the respective values<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENTER_DETAILED"></A>
+<P CLASS="TYPE_TITLE">
+enter_detailed
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure enter_detailed(p_action      in varchar2 default null,
+                         p_module      in varchar2 default null,
+                         p_params      in msg_params default null,
+                         p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces entering a method, level detailed<br>
+@deprecated&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Will be removed in a future version<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to indicate the entrance to a method that should be traced on development only (should tracing be switched on).<br> Normal usage is to call this procedure within the helper procedures to allow for detailled performance analysis.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_action]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Under normal conditions the method name is auto detected. It can be provided to enhance logging of inlined methods which don't show their correct line number anymore<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_module]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Deprecated. For stability reasons, the package name is auto detected<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_info]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional value for CLIENT_INFO column of V$SESSION. This parameter exists in <A HREF=#ENTER_MANDATORY>ENTER_MANDATORY</A> only as this method automatically sets DBMS_APPLICATION_INFO with the respective values<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENTER"></A>
+<P CLASS="TYPE_TITLE">
+enter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure enter(p_action      in varchar2 default null,
+                p_module      in varchar2 default null,
+                p_params      in msg_params default null,
+                p_trace_level in number default <A HREF=#TRACE_ALL>pit.trace_all</A>,
+                p_client_info in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces entering a method<br>
+@deprecated&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Will be removed in a future version<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure if you don't want to distinguish between trace levels or if you want to pass a trace level as a parameter from the environmental procedures.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_action]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Under normal conditions the method name is auto detected. It can be provided to enhance logging of inlined methods which don't show their correct line number anymore<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_module]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Deprecated. For stability reasons, the package name is auto detected<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_trace_level]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional inidcation of the trace level this method should use. It's not recommended to use it, rather use the respective overloads. This option is useful if you decide on the level dynamically.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_client_info]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional value for CLIENT_INFO column of V$SESSION.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEAVE_MANDATORY"></A>
+<P CLASS="TYPE_TITLE">
+leave_mandatory
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure leave_mandatory(p_params in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces leaving a method, level mandatory<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure if you normally <A HREF=#LEAVE>leave</A> a method. It's important to make sure that any possible exit point of a method first calls this procedure to make sure that the call stack is correctly maintained.<br> Also, make sure that the stack level corresponds to the respective <code>enter_...</code> procedure to avoid call stack confusion if the trace level is set to a lower level.<br> No call to this procedure is required in <code>exception</code>-Blocks if you called <code>sql_exception</code> or <code>stop</code> within the exception block, as these procedures handle this call.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEAVE_OPTIONAL"></A>
+<P CLASS="TYPE_TITLE">
+leave_optional
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure leave_optional(p_params in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces leaving a method, level optional<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure if you normally <A HREF=#LEAVE>leave</A> a method. It's important to make sure that any possible exit point of a method first calls this procedure to make sure that the call stack is correctly maintained.<br> Also, make sure that the stack level corresponds to the respective <code>enter_...</code> procedure to avoid call stack confusion if the trace level is set to a lower level.<br> No call to this procedure is required in <code>exception</code>-Blocks if you called <code>sql_exception</code> or <code>stop</code> within the exception block, as these procedures handle this call.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEAVE_DETAILED"></A>
+<P CLASS="TYPE_TITLE">
+leave_detailed
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure leave_detailed(p_params in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces leaving a method, level detailed<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure if you normally <A HREF=#LEAVE>leave</A> a method. It's important to make sure that any possible exit point of a method first calls this procedure to make sure that the call stack is correctly maintained.<br> Also, make sure that the stack level corresponds to the respective <code>enter_...</code> procedure to avoid call stack confusion if the trace level is set to a lower level.<br> No call to this procedure is required in <code>exception</code>-Blocks if you called <code>sql_exception</code> or <code>stop</code> within the exception block, as these procedures handle this call.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LEAVE"></A>
+<P CLASS="TYPE_TITLE">
+leave
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure leave(p_trace_level in number default <A HREF=#TRACE_ALL>pit.trace_all</A>,
+                p_params      in msg_params default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Traces leaving a method, level variable<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure if you normally leave a method. It's important to make sure that any possible exit point of a method first calls this procedure to make sure that the call stack is correctly maintained.<br> No call to this procedure is required in <code>exception</code>-Blocks if you called <code>sql_exception</code> or <code>stop</code> within the exception block, as these procedures handle this call.<br> Call this procedure if you don't want to distinguish between trace levels or if you want to pass a trace level as a parameter from the environmental procedures.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_trace_level&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional trace level. References <code>trace_level</code><br> defaults to <code>trace_all</code>.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_params]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LONG_OP"></A>
+<P CLASS="TYPE_TITLE">
+long_op
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure long_op(p_target  in varchar2,
+                  p_sofar   in number,
+                  p_total   in number default 100,
+                  p_units   in varchar2 default null,
+                  p_op_name in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Sets dbms_application_info.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Use this procedure to pass information about long operations to the database. If this task is completed, call this procedure with <code>p_sofar = p_total (or p_sofar = 100)</code> to allow for proper state cleansing.<br> If you call <code>sql_exception</code> or <code>stop</code>, the state will be cleaned as well. This method will work only if tracing is enabled, as it takes op_name from the call stack and persists the actual index with the call stack.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Description of the operation. Max length is 32 byte.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_sofar&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Percentage of the task completed (0 .. 100 or individual scale)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_total]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Amount of work to be done. Defaults to 100 (percent)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_units]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Unit of work, eg. &quot;rows processed&quot; or similar. Defaults to &quot;iterations done&quot;<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_op_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional indication of the task that is performed. If NULL, the package.method name is used. Max length is 64 byte.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PRINT"></A>
+<P CLASS="TYPE_TITLE">
+print
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure print(p_message_name in varchar2,
+                p_msg_args     in msg_args default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Passes a message to the view layer.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to emit a message to the output modules.<br> Normal usage is to call the procedure if you want to display translated messages on the applications GUI. Therefore, this procedure needs to be implemented by the output module for your application environment.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="NOTIFY"></A>
+<P CLASS="TYPE_TITLE">
+notify
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure notify(p_message_name  in varchar2,
+                 p_msg_args      in msg_args default null,
+                 p_affected_id   in varchar2 default null,
+                 p_log_threshold in number default null,
+                 p_log_modules   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Notifies output modules<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Use this method to notify output modules. This method is supposed to be used for immediate logging purposes, such as progress messages and the like. If you don't need this immediate mechanism, <A HREF=#LOG>log</A> or <A HREF=#PRINT>print</A> may be alternatives.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_log_threshold&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#LOG>log</A> level for the <A HREF=#LOG>log</A> process. Should the severity of the requested message be higher than this level, it won't get logged. If null, the message is logged if it's severity is higher than the actual <A HREF=#LOG>log</A> level defined.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_log_modules&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of colon-separated <A HREF=#LOG>log</A> modules to be used for this <A HREF=#LOG>log</A>. If provided, the <A HREF=#LOG>log</A> message is broadcasted to this list of modules only. It won't affect the settings of the actual <A HREF=#LOG>log</A> context. If null, the settings of the <A HREF=#LOG>log</A> context apply<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_MESSAGE_TEXT"></A>
+<P CLASS="TYPE_TITLE">
+get_message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_message_text(p_message_name in varchar2,
+                          p_msg_args     in msg_args default null)
+  return clob
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves the text of a given message and msg_args list<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this function to get a translated message with replaced arguments for your usage within the code you write.<br> This function is a convenience function for you if you need to compose more complex content for the application that includes translated messages. Overloaded version with MSG_ARGS_CHAR to translate stored messages<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Translated and parameterized message text as CLOB<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_MESSAGE_TEXT2"></A>
+<P CLASS="TYPE_TITLE">
+get_message_text
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_message_text(p_message_name in varchar2,
+                          p_msg_args     in msg_args_char) return clob
+
+</PRE>
+<HR>
+<A NAME="GET_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+get_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_message(p_message_name in varchar2,
+                     p_msg_args     in msg_args default null,
+                     p_affected_id  in varchar2 default null,
+                     p_error_code   in varchar2 default null)
+  return message_type
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Instantiates a <code>MESSAGE_TYPE</code> instance<br>
+%<A HREF="param.html">param</A>&nbsp; p_message_name&nbsp; Name of the Message<br>
+%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional list of message parameters<br>
+%<A HREF="param.html">param</A> [p_affected_id]&nbsp; Optional reference to an object the message relates to<br>
+%<A HREF="param.html">param</A> [p_error_code]&nbsp;&nbsp; Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Required to explicitly build an instance of MESSAGE_TYPE without directly using the type's constructor<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of type MESSAGE_TYPE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_ACTIVE_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+get_active_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_active_message return message_type
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves the actually instantiated message instance<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+If a message was created, it is sometimes useful to get access to the actually created message, fi when building some logic on the error_code of the message. This method grants access to this message.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of type MESSAGE_TYPE that has been instantiated by PIT before<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT"></A>
+<P CLASS="TYPE_TITLE">
+assert
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure assert(p_condition    in boolean,
+                 p_message_name in varchar2 default <A HREF="msg.html#ASSERT_TRUE">msg.ASSERT_TRUE</A>,
+                 p_msg_args     msg_args := null,
+                 p_affected_id  in varchar2 default null,
+                 p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is true<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_TRUE</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Boolean expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_IS_NULL"></A>
+<P CLASS="TYPE_TITLE">
+assert_is_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in varchar2,
+                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+                         p_msg_args     msg_args := null,
+                         p_affected_id  in varchar2 default null,
+                         p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is null. Overload for text expressions.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_IS_NULL</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+String expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_IS_NULL2"></A>
+<P CLASS="TYPE_TITLE">
+assert_is_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in number,
+                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+                         p_msg_args     msg_args := null,
+                         p_affected_id  in varchar2 default null,
+                         p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is null. Overload for number expressions<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_IS_NULL</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Number expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_IS_NULL3"></A>
+<P CLASS="TYPE_TITLE">
+assert_is_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in date,
+                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+                         p_msg_args     msg_args := null,
+                         p_affected_id  in varchar2 default null,
+                         p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is null. Overload for date expressions<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Methods for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_IS_NULL</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Date expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_NOT_NULL"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure assert_not_null(p_condition    in varchar2,
+                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_msg_args     msg_args := null,
+                          p_affected_id  in varchar2 default null,
+                          p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is not null. Overload for text expressions<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Methods for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_NOT_NULL</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+String expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_NOT_NULL2"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure assert_not_null(p_condition    in number,
+                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_msg_args     msg_args := null,
+                          p_affected_id  in varchar2 default null,
+                          p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is not null. Overload for number expressions<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Methods for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_NOT_NULL</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Number expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_NOT_NULL3"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_null
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure assert_not_null(p_condition    in date,
+                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_msg_args     msg_args := null,
+                          p_affected_id  in varchar2 default null,
+                          p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CONDITION</code> is not null. Overload for date expression<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Methods for &lt;em&gt;Contract Driven Development&lt;/em&gt;<br> Use this procedure to check whether an expression evaluates to true. If the assertion fails, an <A HREF=#ERROR>error</A> is thrown.<br> You may choose to throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_NOT_NULL</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_condition&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Date expression to check.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_EXISTS"></A>
+<P CLASS="TYPE_TITLE">
+assert_exists
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_EXISTS">assert_exists</A>(p_stmt         in varchar2,
+                        p_message_name in varchar2 default <A HREF="msg.html#ASSERT_EXISTS">msg.ASSERT_EXISTS</A>,
+                        p_msg_args     msg_args := null,
+                        p_affected_id  in varchar2 default null,
+                        p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_STMT</code> returns at least one row. Overload for text statements.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pass a select statement that is expected to return a row. If the statement does return a row, it will silently quit, otherwise it will throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_EXISTS</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_stmt&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+SQL-statement that either returns rows or not.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_EXISTS2"></A>
+<P CLASS="TYPE_TITLE">
+assert_exists
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_EXISTS">assert_exists</A>(p_cursor       in out nocopy sys_refcursor,
+                        p_message_name in varchar2 default <A HREF="msg.html#ASSERT_EXISTS">msg.ASSERT_EXISTS</A>,
+                        p_msg_args     msg_args := null,
+                        p_affected_id  in varchar2 default null,
+                        p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CURSOR</code> returns at least one row. Overload for cursor expressions.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pass an opened cursor that is expected to return rows. If the cursor does return a row, it will silently quit, otherwise it will throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_EXISTS</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_cursor&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+opened SYS_REFCURSOR instance that either returns rows or not.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_NOT_EXISTS"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_exists
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_NOT_EXISTS">assert_not_exists</A>(p_stmt         in varchar2,
+                            p_message_name in varchar2 default <A HREF="msg.html#ASSERT_NOT_EXISTS">msg.ASSERT_NOT_EXISTS</A>,
+                            p_msg_args     msg_args := null,
+                            p_affected_id  in varchar2 default null,
+                            p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_STMT</code> returns no rows. Ovlerload for text statements.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pass a select statement that is expected to return no rows. If the statement does not return a row, it will silently quit, otherwise it will throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_NOT_EXISTS</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_stmt&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+SQL-statement that either returns rows or not.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_NOT_EXISTS2"></A>
+<P CLASS="TYPE_TITLE">
+assert_not_exists
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_NOT_EXISTS">assert_not_exists</A>(p_cursor       in out nocopy sys_refcursor,
+                            p_message_name in varchar2 default <A HREF="msg.html#ASSERT_NOT_EXISTS">msg.ASSERT_NOT_EXISTS</A>,
+                            p_msg_args     msg_args := null,
+                            p_affected_id  in varchar2 default null,
+                            p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_CURSOR</code> returns no rows. Ovlerload for cursor expressions.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pass an opened cursor that is expected to return no rows. If the cursor does not return a row, it will silently quit, otherwise it will throw a client specific <A HREF=#ERROR>error</A> message. If this parameter is not set, a default message <code>msg.ASSERT_NOT_EXISTS</code> is used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_cursor&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+opened SYS_REFCURSOR instance that either returns rows or not.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ASSERT_DATATYPE"></A>
+<P CLASS="TYPE_TITLE">
+assert_datatype
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="msg.html#ASSERT_DATATYPE">assert_datatype</A>(p_value        in varchar2,
+                          p_type         in varchar2,
+                          p_format_mask  in varchar2 default null,
+                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_DATATYPE">msg.ASSERT_DATATYPE</A>,
+                          p_msg_args     msg_args := null,
+                          p_affected_id  in varchar2 default null,
+                          p_error_code   in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Asserts that <code>P_VALUE</code> is of type <code>P_TYPE</code>.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Pass a value as string and a datatype as defined at constants <code>TYPE_...</code>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_value&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Value to check<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_value&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Expected data type. One of TYPE_... function values of this package<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_format_mask]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional format mask to convert P_VALUE. If NULL, session default formats are used.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_message_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of replacement information<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional id of an item a message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_DEFAULT_LANGUAGE"></A>
+<P CLASS="TYPE_TITLE">
+get_default_language
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_default_language return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Getter to read the default language PIT is installed at<br>
+
+<BR>
+</P>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle language name of the default language<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_TRANS_ITEM_NAME"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_trans_item_name(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                             p_pti_id       in pit_translatable_item.pti_id%type,
+                             p_msg_args     msg_args default null,
+                             p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves a PIT translatable item (PTI) name in the session language.<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
+%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Translated name of the PTI<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_TRANS_ITEM_DISPLAY_NAME"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item_display_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_trans_item_display_name(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                                     p_pti_id       in pit_translatable_item.pti_id%type,
+                                     p_msg_args     msg_args default null,
+                                     p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves a PIT translatable item (PTI) display name in the session language.<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
+%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Translated display name of the PTI<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_TRANS_ITEM_DESCRIPTION"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item_description
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_trans_item_description(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                                    p_pti_id       in pit_translatable_item.pti_id%type,
+                                    p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return CLOB
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves a PIT translatable item (PTI) description in the session language.<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
+%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Translated description of the PTI<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_TRANS_ITEM"></A>
+<P CLASS="TYPE_TITLE">
+get_trans_item
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_trans_item(p_pti_pmg_name in pit_message_group.pmg_name%type,
+                        p_pti_id       in pit_translatable_item.pti_id%type,
+                        p_msg_args     msg_args default null,
+                        p_pti_pml_name in pit_message_language.pml_name%type := null)
+  return pit_util.translatable_item_rec
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves a PIT translatable item (PTI) record containing name, display name and description in the session language.<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
+%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
+%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Record, containing name, display name and description of the PTI<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PURGE_LOG"></A>
+<P CLASS="TYPE_TITLE">
+purge_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure purge_log(p_date_before          in date,
+                    p_severity_lower_equal in number default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Purges the message <A HREF=#LOG>log</A>. Overload to define <code>P_DATE_BEFORE</code> as date.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to clean up logging information. Only useful if your output modules support purging of <A HREF=#LOG>log</A> information, such as <code>PIT_TABLE</code> output module.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_date_until&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Date to indicate up to when the <A HREF=#LOG>log</A> should be purged.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_severity_lower_equal]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional severity level that controls which severity of messages shall be purged. Includes an message with a severity passed in and greater<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PURGE_LOG2"></A>
+<P CLASS="TYPE_TITLE">
+purge_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure purge_log(p_days_before          in number,
+                    p_severity_lower_equal in number default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Purges the message <A HREF=#LOG>log</A>. Overload to define <code>P_DATE_SINCE</code> as an amount of days to be kept.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to clean up logging information. Only useful if your output modules support purging of <A HREF=#LOG>log</A> information, such as <code>PIT_TABLE</code> output module.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_days_since&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Number of days the logging should be kept.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_severity_lower_equal]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional severity level that controls which severity of messages shall be purged. Includes an message with a severity passed in and greater<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PURGE_SESSION_LOG"></A>
+<P CLASS="TYPE_TITLE">
+purge_session_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure purge_session_log(p_session_id in varchar2 default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Purges session related message <A HREF=#LOG>log</A>.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to clean up logging information. Only useful if your output modules support purging of <A HREF=#LOG>log</A> information, such as <code>PIT_TABLE</code> output module. NOT YET IMPLEMENTED<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_session_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional session_id. If null, the active session is purged.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SET_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+set_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_context(p_log_level    in integer,
+                      p_trace_level  in integer,
+                      p_trace_timing in boolean,
+                      p_log_modules  in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Sets the trace context for the active session. Overloaded to directly set the context components.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to dynamically change the <A HREF=#DEBUG>debug</A> settings to allow for dynamic debugging from within an application.<br> Normal usage is to specify that the active session only should be logged and/or traced. Set the options you wish and immediately these settings apply. To reset logging to the default call <code>reset_context</code>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_log_level&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Requested <A HREF=#LOG>log</A> level<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_trace_level&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Requested stack level<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_timing_on&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whehter timing information should be captured.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_log_modules&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Colon-separated list of output modules to be used.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SET_CONTEXT2"></A>
+<P CLASS="TYPE_TITLE">
+set_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_context(p_context_name in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Sets the trace context for the active session. Overloaded to directly set the context by means of a named context.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to set the active context to a predefined context. Contexts are defined as parameters with the name pattern CONTEXT_&lt;Name&gt; and a string value according to this pattern: [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST], fi: CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_context_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the context to swithc to.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="RESET_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+reset_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure reset_context(p_active_session_only in boolean default true)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Resets the trace context for the active session to the default values<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this procedure to reset trace/debug setting to the default.<br> If <code>p_active_session_only</code> is true, other settings remain unchanged. If false, any active context cross session is set back to default. This option is useful to clean up any unwanted debugging.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_active_session_only&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether the active session should be reset only.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="START_MESSAGE_COLLECTION"></A>
+<P CLASS="TYPE_TITLE">
+start_message_collection
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure start_message_collection
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Switches PIT collection mode on<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to set PIT to collect mode, where all messages are collected rather than thrown or processed immediate. This mode allows for validation methods to perfrom all internal validations prior to raising validation errors.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="STOP_MESSAGE_COLLECTION"></A>
+<P CLASS="TYPE_TITLE">
+stop_message_collection
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure stop_message_collection
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Switches PIT collection mode off<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+If called, the list of raised messages is examined. If at least one message of secverity C_LEVEL_FATAL is present, exception <A HREF="msg.html#PIT_BULK_FATAL">PIT_BULK_FATAL</A> is raised. If at least one message of secverity C_LEVEL_ERROR is present, exception <A HREF="msg.html#PIT_BULK_ERROR">PIT_BULK_ERROR</A> is raised. While processing these errors, use GET_COLLECTED_MESSAGES to retrieve a list of all collected messages<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_MESSAGE_COLLECTION"></A>
+<P CLASS="TYPE_TITLE">
+get_message_collection
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_message_collection return pit_message_table
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Retrieves the collection of messages raised since setting PIT to collect mode<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to retrieve a list of all messages raised during the collect cycle. It implicitly terminates collection mode by calling <code>SET_COLLECT_MODE(FALSE)</code> if PIT is still in collection mode. Normal usage is terminating collection mode explicity and deal with the list of messages in the exception block.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of <code>PIT_MESSAGE_TABLE</code>, a list of message instances<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+get_modules
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_modules return pit_module_list
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Pipelined function to retrieve a list of all installed modules<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Use this function if you require a list of all installed modules.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+PIT_MODULE_LIST-type, List of modules, availabilty and active status<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_AVAILABLE_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+get_available_modules
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_available_modules return args
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Pipelined function to retrieve the list of available output modules<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper function to get a list of available ourput modules.<br> Useful to populate a drop down list of output modules.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ARGS-type, name list of the available (successfully instantiated) modules<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_ACTIVE_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+get_active_modules
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_active_modules return args
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Pipelined function to retrieve the list of active output modules<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper function to get a list of active ourput modules.<br> Useful to populate a drop down list of output modules.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ARGS-type, name list of the actually active modules<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Re-initializes PIT<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Initializes the package. Either called implicitly upon first instantiation or explicitly upon request. Calling this method is sometimes useful after changing PIT parameters or to clean up the call stack if the level indication ran out of sync.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body param_admin</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="param_admin">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body param_admin</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONVERT_BOOLEAN">convert_boolean</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_GROUP">edit_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_PARAMETER_GROUP">delete_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_TYPE">edit_parameter_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER">edit_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_PARAMETER">delete_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EXPORT_PARAMETER_GROUP">export_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_PARAMETER_FILES">write_parameter_files</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRUE">c_true</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FALSE">c_false</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="C_TRUE"></A>
+<P CLASS="TYPE_TITLE">
+c_true
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_util.html#C_TRUE">c_true</A> constant char(1 byte) := 'Y';
+</PRE>
+<HR>
+<A NAME="C_FALSE"></A>
+<P CLASS="TYPE_TITLE">
+c_false
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_util.html#C_FALSE">c_false</A> constant char(1 byte) := 'N';
+</PRE>
+<HR>
+<A NAME="CONVERT_BOOLEAN"></A>
+<P CLASS="TYPE_TITLE">
+convert_boolean
+</P>
+<PRE CLASS="DECL_TEXT">
+Function convert_boolean(p_value in boolean) return varchar2
+
+</PRE>
+<HR>
+<A NAME="EDIT_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="param_admin.html#EDIT_PARAMETER_GROUP">edit_parameter_group</A>(p_pgr_id            in parameter_group.pgr_id%type,
+                               p_pgr_description   in parameter_group.pgr_description%type,
+                               p_pgr_is_modifiable in boolean default true)
+
+</PRE>
+<HR>
+<A NAME="DELETE_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+delete_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="param_admin.html#DELETE_PARAMETER_GROUP">delete_parameter_group</A>(p_pgr_id in parameter_group.pgr_id%type,
+                                 p_force  in boolean default false)
+
+</PRE>
+<HR>
+<A NAME="EDIT_PARAMETER_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="param_admin.html#EDIT_PARAMETER_TYPE">edit_parameter_type</A>(p_pat_id          parameter_type.pat_id%type,
+                              p_pat_description parameter_type.pat_description%type)
+
+</PRE>
+<HR>
+<A NAME="EDIT_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="param_admin.html#EDIT_PARAMETER">edit_parameter</A>(p_par_id                 in parameter_tab.par_id%type,
+                         p_par_pgr_id             in parameter_tab.par_pgr_id%type,
+                         p_par_description        in parameter_tab.par_description%type,
+                         p_par_string_value       in parameter_tab.par_string_value%type default null,
+                         p_par_xml_value          in parameter_tab.par_xml_value%type default null,
+                         p_par_integer_value      in parameter_tab.par_integer_value%type default null,
+                         p_par_float_value        in parameter_tab.par_float_value%type default null,
+                         p_par_date_value         in parameter_tab.par_date_value%type default null,
+                         p_par_timestamp_value    in parameter_tab.par_timestamp_value%type default null,
+                         p_par_boolean_value      in boolean default null,
+                         p_par_is_modifiable      in boolean default null,
+                         p_par_pat_id             in parameter_tab.par_pat_id%type default null,
+                         p_par_validation_string  in parameter_tab.par_validation_string%type default null,
+                         p_par_validation_message in parameter_tab.par_validation_message%type default null)
+
+</PRE>
+<HR>
+<A NAME="DELETE_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+delete_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="param_admin.html#DELETE_PARAMETER">delete_parameter</A>(p_par_id     in parameter_tab.par_id%type,
+                           p_par_pgr_id in parameter_tab.par_pgr_id%type)
+
+</PRE>
+<HR>
+<A NAME="EXPORT_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+export_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="param_admin.html#EXPORT_PARAMETER_GROUP">export_parameter_group</A>(p_pgr_id in parameter_group.pgr_id%type)
+  return clob
+
+</PRE>
+<HR>
+<A NAME="WRITE_PARAMETER_FILES"></A>
+<P CLASS="TYPE_TITLE">
+write_parameter_files
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="param_admin.html#WRITE_PARAMETER_FILES">write_parameter_files</A>(p_pgr_id    in parameter_group.pgr_id%type default null,
+                                p_directory in varchar2 default 'DATA_DIR')
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

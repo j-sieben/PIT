@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body pit_mail_pkg</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="pit_mail_pkg">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body pit_mail_pkg</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_HEADER">send_header</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to send header information for a <A HREF="mail.html">mail</A>
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+INTERFACE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE_MODULE">initialize_module</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+a connection to the server.
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PARAM_TAB">param_tab</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PARAM_LIST">g_param_list</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_RETURN">C_RETURN</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_CON">g_con</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_MAIL_TEMPLATE">g_mail_template</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PARAM_GROUP">C_PARAM_GROUP</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TEMPLATE">C_TEMPLATE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_HOST">C_HOST</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FROM">C_FROM</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TO">C_TO</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_SUBJECT">C_SUBJECT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PARAM_TAB"></A>
+<P CLASS="TYPE_TITLE">
+param_tab
+</P>
+<PRE CLASS="DECL_TEXT">
+type <A HREF="pit_file_pkg.body.html#PARAM_TAB">param_tab</A> is table of varchar2(32767)
+  index by varchar2(30);
+</PRE>
+<HR>
+<A NAME="G_PARAM_LIST"></A>
+<P CLASS="TYPE_TITLE">
+g_param_list
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_file_pkg.body.html#G_PARAM_LIST">g_param_list</A> param_tab;
+</PRE>
+<HR>
+<A NAME="C_PARAM_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+C_PARAM_GROUP
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_apex_pkg.body.html#C_PARAM_GROUP">C_PARAM_GROUP</A> constant varchar2(20) := 'PIT';
+</PRE>
+<HR>
+<A NAME="C_FIRE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_FIRE_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_apex_pkg.body.html#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_FIRE_THRESHOLD';
+</PRE>
+<HR>
+<A NAME="C_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+C_TEMPLATE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TEMPLATE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_TEMPLATE';
+</PRE>
+<HR>
+<A NAME="C_HOST"></A>
+<P CLASS="TYPE_TITLE">
+C_HOST
+</P>
+<PRE CLASS="DECL_TEXT">
+C_HOST constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_HOST';
+</PRE>
+<HR>
+<A NAME="C_FROM"></A>
+<P CLASS="TYPE_TITLE">
+C_FROM
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FROM constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_FROM_ADDRESS';
+</PRE>
+<HR>
+<A NAME="C_TO"></A>
+<P CLASS="TYPE_TITLE">
+C_TO
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TO constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_TO_ADDRESS';
+</PRE>
+<HR>
+<A NAME="C_SUBJECT"></A>
+<P CLASS="TYPE_TITLE">
+C_SUBJECT
+</P>
+<PRE CLASS="DECL_TEXT">
+C_SUBJECT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_SUBJECT';
+</PRE>
+<HR>
+<A NAME="C_RETURN"></A>
+<P CLASS="TYPE_TITLE">
+C_RETURN
+</P>
+<PRE CLASS="DECL_TEXT">
+C_RETURN varchar2(10) := utl_tcp.crlf;
+</PRE>
+<HR>
+<A NAME="G_CON"></A>
+<P CLASS="TYPE_TITLE">
+g_con
+</P>
+<PRE CLASS="DECL_TEXT">
+g_con utl_smtp.connection;
+</PRE>
+<HR>
+<A NAME="G_MAIL_TEMPLATE"></A>
+<P CLASS="TYPE_TITLE">
+g_mail_template
+</P>
+<PRE CLASS="DECL_TEXT">
+g_mail_template clob;
+</PRE>
+<HR>
+<A NAME="SEND_HEADER"></A>
+<P CLASS="TYPE_TITLE">
+send_header
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_header(p_name in varchar2, p_header in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to send header information for a <A HREF="mail.html">mail</A>
+%<A HREF="param.html">param</A> p_name Name of the header variable<br>
+%<A HREF="param.html">param</A> p_header Header value<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called by the package to help write formatted header <A HREF="mail.html">mail</A> information<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="LOG"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+INTERFACE<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="INITIALIZE_MODULE"></A>
+<P CLASS="TYPE_TITLE">
+initialize_module
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_apex_pkg.html#INITIALIZE_MODULE">initialize_module</A>(self in out PIT_MAIL)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+a connection to the server. The QUIT call will raise an exception that we can ignore.<br>
+
+<BR>
+</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

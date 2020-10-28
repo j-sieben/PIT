@@ -53,8 +53,8 @@ as
   g_user ora_name_type;
 
   /* Helper to check whether a context is maintained by this package
-   * @param  p_context  Name of the context to check
-   * @usage  Is called internally to assert that a context is maintained by this package
+   * %param  p_context  Name of the context to check
+   * %usage  Is called internally to assert that a context is maintained by this package
    */
   procedure check_param(
     p_context in varchar2)
@@ -79,8 +79,8 @@ as
 
 
   /* Helper to read metadata for a maintained context
-   * @param  p_context  Name of the context to read
-   * @usage  Is called internally to read metadata according to type context_setting_rec for a given context
+   * %param  p_context  Name of the context to read
+   * %usage  Is called internally to read metadata according to type context_setting_rec for a given context
    */
   procedure read_settings(
     p_context in varchar2)
@@ -92,8 +92,8 @@ as
 
 
   /* Helper function to wrap a call to user according to the settings of the context
-   * @usage  If a context requires a username, it is provided, otherwise null is returned.
-   * @return content of method USER
+   * %usage  If a context requires a username, it is provided, otherwise null is returned.
+   * %return content of method USER
    */
   function get_user_name
     return varchar2
@@ -108,14 +108,14 @@ as
 
 
   /* Helper function to wrap a call to sys_contexrt('USERENV', 'CLIENT_IDENTIFIER')
-   * @param [p_client_id] Optional client identifier
-   * @return If the context requires a client_id, this function returns
+   * %param [p_client_id] Optional client identifier
+   * %return If the context requires a client_id, this function returns
    *         - the client id
    *         - the client_identifier
    *         - constant c_no_value
    *         whatever is not null, in this order
    *         If the context requires a session_id, it will be returned
-   * @usage  if the settings for a given context require a client id, this
+   * %usage  if the settings for a given context require a client id, this
    *         function returns its value, otherwise null.
    *         
    */

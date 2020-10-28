@@ -1,0 +1,469 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body pit_apex_pkg</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="pit_apex_pkg">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body pit_apex_pkg</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+HELPER
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_HTTP_HEADER">set_http_header</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VALID_ENVIRONMENT">valid_environment</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+valid_environment checks whether module is called within a valid APEX session environment
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_MSG_PARAM">get_msg_param</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+helper function to convert MSG_PARAMS into NAME-VALUE-Pairs odd position number returns name of the parameter even position number returns value of the parameter
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DEBUG_MESSAGE">debug_message</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+debug_message forwards messages to the APEX <A HREF="pit.html#DEBUG">debug</A> stack, if - log_level PIT_APEX_FIRE_THRESHOLD is reached - APEX-logging is activated
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG_ERROR">log_error</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+helper to add <A HREF="pit.html#ERROR">error</A> messages to the apex <A HREF="pit.html#ERROR">error</A> stack
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PRINT_CLOB">print_clob</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+helper procedure to pass clob to APEX, using htp.p clob is splitted into chunks of <A HREF=#C_CHUNK_SIZE>C_CHUNK_SIZE</A> bytes to circumvent the limitation of http-streams of 32 KByte
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+INTERFACE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PRINT">print</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Level off
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENTER">enter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_APEX_TRIGGERED_CONTEXT">get_apex_triggered_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE_MODULE">initialize_module</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_APEX_TRIGGERED_CONTEXT">g_apex_triggered_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_FIRE_THRESHOLD">g_fire_threshold</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_WEBSOCKET_SERVER">g_websocket_server</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PARAM_GROUP">C_PARAM_GROUP</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CONSTANTS AND VARIABLES
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_APEX_CONTEXT">C_APEX_CONTEXT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DEFAULT_CONTEXT">C_DEFAULT_CONTEXT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRG_FIRE_THRESHOLD">C_TRG_FIRE_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRG_TRACE_THRESHOLD">C_TRG_TRACE_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRG_TRACE_TIMING">C_TRG_TRACE_TIMING</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRG_LOG_MODULES">C_TRG_LOG_MODULES</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_WEB_SOCKET_SERVER">C_WEB_SOCKET_SERVER</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_YES">C_YES</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_CHUNK_SIZE">C_CHUNK_SIZE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="C_PARAM_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+C_PARAM_GROUP
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
+</PRE>
+<P CLASS="DESC_TEXT">
+CONSTANTS AND VARIABLES<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="C_APEX_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+C_APEX_CONTEXT
+</P>
+<PRE CLASS="DECL_TEXT">
+C_APEX_CONTEXT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'CONTEXT_APEX';
+</PRE>
+<HR>
+<A NAME="C_DEFAULT_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+C_DEFAULT_CONTEXT
+</P>
+<PRE CLASS="DECL_TEXT">
+<A HREF="pit_util.html#C_DEFAULT_CONTEXT">C_DEFAULT_CONTEXT</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'CONTEXT_DEFAULT';
+</PRE>
+<HR>
+<A NAME="C_FIRE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_FIRE_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FIRE_THRESHOLD constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_APEX_FIRE_THRESHOLD';
+</PRE>
+<HR>
+<A NAME="C_TRG_FIRE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_TRG_FIRE_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TRG_FIRE_THRESHOLD constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_APEX_TRG_FIRE_THRESHOLD';
+</PRE>
+<HR>
+<A NAME="C_TRG_TRACE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_TRG_TRACE_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TRG_TRACE_THRESHOLD constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_APEX_TRG_TRACE_THRESHOLD';
+</PRE>
+<HR>
+<A NAME="C_TRG_TRACE_TIMING"></A>
+<P CLASS="TYPE_TITLE">
+C_TRG_TRACE_TIMING
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TRG_TRACE_TIMING constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_APEX_TRG_TRACE_TIMING';
+</PRE>
+<HR>
+<A NAME="C_TRG_LOG_MODULES"></A>
+<P CLASS="TYPE_TITLE">
+C_TRG_LOG_MODULES
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TRG_LOG_MODULES constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_APEX_TRG_LOG_MODULES';
+</PRE>
+<HR>
+<A NAME="C_WEB_SOCKET_SERVER"></A>
+<P CLASS="TYPE_TITLE">
+C_WEB_SOCKET_SERVER
+</P>
+<PRE CLASS="DECL_TEXT">
+C_WEB_SOCKET_SERVER constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_WEB_SOCKET_SERVER';
+</PRE>
+<HR>
+<A NAME="C_YES"></A>
+<P CLASS="TYPE_TITLE">
+C_YES
+</P>
+<PRE CLASS="DECL_TEXT">
+C_YES constant varchar2(3 byte) := 'YES';
+</PRE>
+<HR>
+<A NAME="C_CHUNK_SIZE"></A>
+<P CLASS="TYPE_TITLE">
+C_CHUNK_SIZE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_CHUNK_SIZE constant integer := 8192;
+</PRE>
+<HR>
+<A NAME="G_APEX_TRIGGERED_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+g_apex_triggered_context
+</P>
+<PRE CLASS="DECL_TEXT">
+g_apex_triggered_context pit_util.context_type;
+</PRE>
+<HR>
+<A NAME="G_FIRE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+g_fire_threshold
+</P>
+<PRE CLASS="DECL_TEXT">
+g_fire_threshold number;
+</PRE>
+<HR>
+<A NAME="G_WEBSOCKET_SERVER"></A>
+<P CLASS="TYPE_TITLE">
+g_websocket_server
+</P>
+<PRE CLASS="DECL_TEXT">
+g_websocket_server varchar2(1000 byte);
+</PRE>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+
+</PRE>
+<P CLASS="DESC_TEXT">
+HELPER<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="SET_HTTP_HEADER"></A>
+<P CLASS="TYPE_TITLE">
+set_http_header
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_http_header(p_title in varchar2, p_message in clob)
+
+</PRE>
+<HR>
+<A NAME="VALID_ENVIRONMENT"></A>
+<P CLASS="TYPE_TITLE">
+valid_environment
+</P>
+<PRE CLASS="DECL_TEXT">
+Function valid_environment return boolean
+
+</PRE>
+<P CLASS="DESC_TEXT">
+valid_environment checks whether module is called within a valid APEX session environment<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="GET_MSG_PARAM"></A>
+<P CLASS="TYPE_TITLE">
+get_msg_param
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_msg_param(p_call_stack in call_stack_type,
+                       p_position   in binary_integer) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+helper function to convert MSG_PARAMS into NAME-VALUE-Pairs odd position number returns name of the parameter even position number returns value of the parameter<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="DEBUG_MESSAGE"></A>
+<P CLASS="TYPE_TITLE">
+debug_message
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure debug_message(p_message in message_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+debug_message forwards messages to the APEX <A HREF="pit.html#DEBUG">debug</A> stack, if - log_level PIT_APEX_FIRE_THRESHOLD is reached - APEX-logging is activated<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LOG_ERROR"></A>
+<P CLASS="TYPE_TITLE">
+log_error
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure log_error(p_message in message_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+helper to add <A HREF="pit.html#ERROR">error</A> messages to the apex <A HREF="pit.html#ERROR">error</A> stack<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="PRINT_CLOB"></A>
+<P CLASS="TYPE_TITLE">
+print_clob
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure print_clob(p_text in clob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+helper procedure to pass clob to APEX, using htp.p clob is splitted into chunks of <A HREF=#C_CHUNK_SIZE>C_CHUNK_SIZE</A> bytes to circumvent the limitation of http-streams of 32 KByte<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LOG"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+INTERFACE<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="PRINT"></A>
+<P CLASS="TYPE_TITLE">
+print
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#PRINT">print</A>(p_message in message_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Level off<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="NOTIFY"></A>
+<P CLASS="TYPE_TITLE">
+notify
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in message_type)
+
+</PRE>
+<HR>
+<A NAME="ENTER"></A>
+<P CLASS="TYPE_TITLE">
+enter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
+
+</PRE>
+<HR>
+<A NAME="LEAVE"></A>
+<P CLASS="TYPE_TITLE">
+leave
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
+
+</PRE>
+<HR>
+<A NAME="GET_APEX_TRIGGERED_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+get_apex_triggered_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Function <A HREF="pit_apex_pkg.html#GET_APEX_TRIGGERED_CONTEXT">get_apex_triggered_context</A> return varchar2
+
+</PRE>
+<HR>
+<A NAME="INITIALIZE_MODULE"></A>
+<P CLASS="TYPE_TITLE">
+initialize_module
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure <A HREF="pit_apex_pkg.html#INITIALIZE_MODULE">initialize_module</A>(self in out nocopy pit_apex)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

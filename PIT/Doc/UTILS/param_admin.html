@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package param_admin</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="param_admin">
+ <META name="description" content="Package to maintain settings for parameter groups">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package param_admin</P>
+Package to maintain settings for parameter groups<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_GROUP">edit_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to change the definition of a parameter group
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_PARAMETER_GROUP">delete_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to delete a parameter group
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_TYPE">edit_parameter_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to edit the definition of a parameter type.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER">edit_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to edit a parameter
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_PARAMETER">delete_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure to delete a parameter
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EXPORT_PARAMETER_GROUP">export_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Return all parameters within a parameter group as a clob instance
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_PARAMETER_FILES">write_parameter_files</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Writes parameters into files per parameter group
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="EDIT_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_group(p_pgr_id            in parameter_group.pgr_id%type,
+                               p_pgr_description   in parameter_group.pgr_description%type,
+                               p_pgr_is_modifiable in boolean default true)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to change the definition of a parameter group<br>
+%<A HREF="param.html">param</A>&nbsp; p_pgr_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name of the parameter group<br>
+%<A HREF="param.html">param</A>&nbsp; p_pgr_description&nbsp;&nbsp;&nbsp; Longtext description of the parameter group<br>
+%<A HREF="param.html">param</A>&nbsp; p_pgr_is_modifiable&nbsp; Flag indicating whether parameters within this group<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; are allowed to be modifiable by the end user<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called by the developer to maintain the settings of a parameter group. May be used to create a new parameter group as well.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="DELETE_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+delete_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure delete_parameter_group(p_pgr_id in parameter_group.pgr_id%type,
+                                 p_force  in boolean default false)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to delete a parameter group<br>
+%<A HREF="param.html">param</A>&nbsp; p_pgr_id&nbsp; Name of the parameter group<br>
+%<A HREF="param.html">param</A> [p_force]&nbsp; Optional flag to indicate whether all referencing parameters should be deleted (TRUE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or not (FALSE, default)<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called by the developer to delete a parameter group.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="EDIT_PARAMETER_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_type(p_pat_id          in parameter_type.pat_id%type,
+                              p_pat_description in parameter_type.pat_description%type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to edit the definition of a parameter type.<br>
+%<A HREF="param.html">param</A> p_pat_id Name of the parameter type<br>
+%<A HREF="param.html">param</A> p_pat_description Longtext description of the parameter type<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure is called by the developer to edit parameter types. Paramater types are used to define the kind of string type a parameter has. Examples are HTML, SQL or similar. They are used to control which editer is used to edit the parameter value on the UI<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="EDIT_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter(p_par_id                 in parameter_tab.par_id%type,
+                         p_par_pgr_id             in parameter_tab.par_pgr_id%type,
+                         p_par_description        in parameter_tab.par_description%type,
+                         p_par_string_value       in parameter_tab.par_string_value%type default null,
+                         p_par_xml_value          in parameter_tab.par_xml_value%type default null,
+                         p_par_integer_value      in parameter_tab.par_integer_value%type default null,
+                         p_par_float_value        in parameter_tab.par_float_value%type default null,
+                         p_par_date_value         in parameter_tab.par_date_value%type default null,
+                         p_par_timestamp_value    in parameter_tab.par_timestamp_value%type default null,
+                         p_par_boolean_value      in boolean default null,
+                         p_par_is_modifiable      in boolean default null,
+                         p_par_pat_id             in parameter_tab.par_pat_id%type default null,
+                         p_par_validation_string  in parameter_tab.par_validation_string%type default null,
+                         p_par_validation_message in parameter_tab.par_validation_message%type default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to edit a parameter<br>
+%<A HREF="param.html">param</A> p_par_id Name of the parameter<br>
+%<A HREF="param.html">param</A> p_par_pgr_id Name of the parameter group<br>
+%<A HREF="param.html">param</A> p_par_description Optional description of the parameter<br>
+%<A HREF="param.html">param</A> p_par_string_value CLOB parameter value<br>
+%<A HREF="param.html">param</A> p_par_xml_value XML parameter value<br>
+%<A HREF="param.html">param</A> p_par_integer_value Integer parameter value<br>
+%<A HREF="param.html">param</A> p_par_float_value Float parameter value<br>
+%<A HREF="param.html">param</A> p_par_date_value Date parameter value<br>
+%<A HREF="param.html">param</A> p_par_timestamp_value Timestamp with time zone parameter value<br>
+%<A HREF="param.html">param</A> p_par_boolean_value Boolean parameter value<br>
+%<A HREF="param.html">param</A> p_pgr_is_modifiable Flag indicating whether this parameter is modifiable by the end user<br>
+%<A HREF="param.html">param</A> p_par_pat_id String type of the parameter, Reference to PARAMETER_TYPE.<br>
+%<A HREF="param.html">param</A> p_par_validation_string PL/SQL-chunk to validate a parameter value entered. Is used to validate parameter values<br>
+%<A HREF="param.html">param</A> p_par_validation_message Name of a Message that is thrown if a validation of the parameter fails.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; May be any predefined message from package <A HREF="msg.html">MSG</A>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called from the developer to create or change a parameter.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="DELETE_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+delete_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure delete_parameter(p_par_id     in parameter_tab.par_id%type,
+                           p_par_pgr_id in parameter_tab.par_pgr_id%type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Procedure to delete a parameter<br>
+%<A HREF="param.html">param</A> p_par_id Name of the parameter<br>
+%<A HREF="param.html">param</A> p_par_pgr_id Name of the parameter group<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method is used to delete a parameter from the list of parameters<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="EXPORT_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+export_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Function export_parameter_group(p_pgr_id in parameter_group.pgr_id%type)
+  return clob
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Return all parameters within a parameter group as a clob instance<br>
+%<A HREF="param.html">param</A> p_pgr_id Parameter group to create a clob installation file for<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to create an installation file as CLOB to be downloaded at the clients browser<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_PARAMETER_FILES"></A>
+<P CLASS="TYPE_TITLE">
+write_parameter_files
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_parameter_files(p_pgr_id    in parameter_group.pgr_id%type default null,
+                                p_directory in varchar2 default 'DATA_DIR')
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Writes parameters into files per parameter group<br>
+%<A HREF="param.html">param</A> p_par_pgr_id Optional name of a parameter group. Filters list of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; files to write. If set, only this parameter group gets written to file<br>
+%<A HREF="param.html">param</A> p_directory Optional directory name of the directory to write the files to<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Creates files with the actual parameter values<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>
