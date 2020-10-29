@@ -19,6 +19,9 @@ as
   g_websocket_server varchar2(1000 byte);
 
   /* HELPER */
+  /** Helper method to read parameter values into global package variables
+   * %usage  Is called from INITIALIZE_MODULE method.
+   */
   procedure initialize
   as
   begin
@@ -31,6 +34,11 @@ as
   end initialize;
   
   
+  /** Method sets http header when addressing the web socket connection
+   * %param  p_title    Title of the notification
+   * %param  p_message  Message of the notification
+   * %usage  Tbd
+   */
   procedure set_http_header(
     p_title in varchar2,
     p_message in clob)
@@ -56,8 +64,9 @@ as
   end set_http_header;
 
 
-  /* valid_environment checks whether module is called within a valid APEX
-   * session environment
+  /** Method checks whether module is called within a valid APEX session environment
+   * %return Flag to indicate whether a valid APEX session environment exists (TRUE) or not (FALSE)
+   * %usage  Is called from any public method to prevent useless execution of no APEX environment is available
    */
   function valid_environment
     return boolean
@@ -67,9 +76,11 @@ as
   end valid_environment;
 
 
-  /* helper function to convert MSG_PARAMS into NAME-VALUE-Pairs
-   * odd position number returns name of the parameter
-   * even position number returns value of the parameter
+  /** Method converts MSG_PARAMS into NAME-VALUE-Pairs
+   * %param  p_call_stack  Instance of CALL_STACK_TYPE with parameter information
+   * %param  p_position    Index of the nth parameter to read
+   * %usage  Is used to extract MSG_PARAMS to an explicit parameter list as used by APEX_DEBUG.ENTER
+   *         Odd position number returns name, even position number returns value of the parameter
    */
   function get_msg_param(
     p_call_stack in call_stack_type,
@@ -91,9 +102,13 @@ as
   end get_msg_param;
 
 
-  /* debug_message forwards messages to the APEX debug stack, if
-   * - log_level PIT_APEX_FIRE_THRESHOLD is reached
-   * - APEX-logging is activated
+  /** Method forwards messages to the APEX debug stack
+   * %param  p_message  Instance of MESSAGE_TYPE
+   * %usage  Emits data, if
+   *         {*} - Valid APEX environment exists
+   *         {*} - log_level PIT_APEX_FIRE_THRESHOLD is reached
+   *         {*} - APEX logging is activated
+   *         PIT severity is mapped to APEX severity and message transformed into plain string
    */
   procedure debug_message(
     p_message in message_type)
@@ -120,7 +135,13 @@ as
   end debug_message;
 
 
-  /* helper to add error messages to the apex error stack
+  /* Method adds error messages to the apex error stack
+   * %param  p_message  Instance of MESSAGE_TYPE
+   * %usage  Emits data, if
+   *         {*} - Valid APEX environment exists
+   *         If P_MESSAGE.AFFECTED_ID is set and the message contains anchor #ITEM_LABEL#
+   *         {*} - it tries to find the item label and replaces the anchor with the actual label
+   *         {*} - it shows the exception with reference to the affected id
    */
   procedure log_error(
     p_message in message_type)
@@ -162,9 +183,9 @@ as
   end log_error;
 
 
-  /* helper procedure to pass clob to APEX, using htp.p
-   * clob is splitted into chunks of C_CHUNK_SIZE bytes to circumvent the limitation
-   * of http-streams of 32 KByte
+  /* Method passes a CLOB text to APEX, using HTP.P
+   * %param  p_text  CLOB instance to pass to APEX
+   * %usage  CLOB is splitted into chunks of C_CHUNK_SIZE bytes to circumvent the limitation of http streams of 32 KByte
    */
   procedure print_clob(
     p_text in clob)
@@ -190,6 +211,22 @@ as
 
 
   /* INTERFACE */
+  function get_apex_triggered_context
+    return varchar2
+  as
+    l_context pit_util.ora_name_type;
+  begin
+    if valid_environment then
+      if apex_application.g_debug then
+        l_context := C_APEX_CONTEXT;
+      else
+        l_context := C_DEFAULT_CONTEXT;
+      end if;
+    end if;
+    return l_context;
+  end get_apex_triggered_context;
+  
+  
   procedure log(
     p_message in message_type)
   as
@@ -320,22 +357,6 @@ as
       debug_message(l_message);
     end if;
   end leave;
-
-
-  function get_apex_triggered_context
-    return varchar2
-  as
-    l_context pit_util.ora_name_type;
-  begin
-    if valid_environment then
-      if apex_application.g_debug then
-        l_context := C_APEX_CONTEXT;
-      else
-        l_context := C_DEFAULT_CONTEXT;
-      end if;
-    end if;
-    return l_context;
-  end get_apex_triggered_context;
 
 
   procedure initialize_module(

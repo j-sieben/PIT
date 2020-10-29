@@ -1,0 +1,1279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body mail</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="mail">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body mail</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MAIL_SERVER_ACCESS_GRANTED">mail_server_access_granted</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to check whether an ACL entry for this mail server exists
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#MAIL_SERVER_ACCESSIBLE">mail_server_accessible</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to check whether an ACL entry for this mail server is accessible
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Initialization method.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENCODE_ITEM">encode_item</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to encode an item with UTL_ENCODE.QUOTED_PRINTABLE_ENCODE
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#STRING_TO_ADDRESS_TAB">string_to_address_tab</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to cast a string to an instance of ADDRESS_TAB
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EXTRACT_MAIL_ADDRESS">extract_mail_address</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method extracts the mail address from a recipient or sender address
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ENCODE_MAIL_ADDRESS">encode_mail_address</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method encodes an address to adhere to the smtp standard
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_LOG">write_log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method adds a log entry to <A HREF=#G_TRACE_TEXT>G_TRACE_TEXT</A>
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_HEADER">write_header</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method writes smtp header entries
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_BODY">write_body</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method writes smtp body entries
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#WRITE_BOUNDARY">write_boundary</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method adds a boundary to the mail
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AUTHENTICATE_VIA_LOGIN">authenticate_via_login</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to connect to a mail server
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AUTHENTICATE_VIA_PLAIN">authenticate_via_plain</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to connect to a mail server
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONNECT_MAIL_SERVER">connect_mail_server</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to connect to a mail server
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_RECIPIENT_LIST">set_recipient_list</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method writes a recipient list to the mail text
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_CONTENT_TYPE">set_content_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to set the content type
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_MAIL_BODY">send_mail_body</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to write the mail body
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_ATTACHMENT">send_attachment</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to write the attachment
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DISCONNECT_MAIL_SERVER">disconnect_mail_server</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method disconnects from the mail server
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_MAIL">send_mail</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_MAIL2">send_mail</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ADDRESS_CHAR">address_char</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CR">cr</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_HOST">g_host</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_SENDER">g_sender</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PORT">g_port</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_USR">g_usr</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PWD">g_pwd</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_ENCODING">g_encoding</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_IS_MULTIPART_MAIL">g_is_multipart_mail</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_HTML_CONTENT_TYPE">g_html_content_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_MULTIPART_CONTENT_TYPE">g_multipart_content_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_TRACE_TEXT">g_trace_text</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PROMPT_FLAG">g_prompt_flag</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_BOUNDARY">C_BOUNDARY</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_WALLET_PATH">C_WALLET_PATH</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_WALLET_PWD">C_WALLET_PWD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ADDRESS_CHAR"></A>
+<P CLASS="TYPE_TITLE">
+address_char
+</P>
+<PRE CLASS="DECL_TEXT">
+subtype address_char is varchar2(200 char);
+</PRE>
+<HR>
+<A NAME="C_BOUNDARY"></A>
+<P CLASS="TYPE_TITLE">
+C_BOUNDARY
+</P>
+<PRE CLASS="DECL_TEXT">
+C_BOUNDARY constant varchar2(100) := 'Your.Boundary.0987654321';
+</PRE>
+<HR>
+<A NAME="C_WALLET_PATH"></A>
+<P CLASS="TYPE_TITLE">
+C_WALLET_PATH
+</P>
+<PRE CLASS="DECL_TEXT">
+C_WALLET_PATH constant varchar2(2000) := 'file:<your Path to the wallet>';
+</PRE>
+<HR>
+<A NAME="C_WALLET_PWD"></A>
+<P CLASS="TYPE_TITLE">
+C_WALLET_PWD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_WALLET_PWD constant varchar2(20) := '<WalletPWD>';
+</PRE>
+<HR>
+<A NAME="CR"></A>
+<P CLASS="TYPE_TITLE">
+cr
+</P>
+<PRE CLASS="DECL_TEXT">
+cr varchar2(2) := utl_tcp.crlf;
+</PRE>
+<HR>
+<A NAME="G_HOST"></A>
+<P CLASS="TYPE_TITLE">
+g_host
+</P>
+<PRE CLASS="DECL_TEXT">
+g_host varchar2(64);
+</PRE>
+<HR>
+<A NAME="G_SENDER"></A>
+<P CLASS="TYPE_TITLE">
+g_sender
+</P>
+<PRE CLASS="DECL_TEXT">
+g_sender varchar2(200);
+</PRE>
+<HR>
+<A NAME="G_PORT"></A>
+<P CLASS="TYPE_TITLE">
+g_port
+</P>
+<PRE CLASS="DECL_TEXT">
+g_port binary_integer := 25;
+</PRE>
+<HR>
+<A NAME="G_USR"></A>
+<P CLASS="TYPE_TITLE">
+g_usr
+</P>
+<PRE CLASS="DECL_TEXT">
+g_usr varchar2(64);
+</PRE>
+<HR>
+<A NAME="G_PWD"></A>
+<P CLASS="TYPE_TITLE">
+g_pwd
+</P>
+<PRE CLASS="DECL_TEXT">
+g_pwd varchar2(64);
+</PRE>
+<HR>
+<A NAME="G_ENCODING"></A>
+<P CLASS="TYPE_TITLE">
+g_encoding
+</P>
+<PRE CLASS="DECL_TEXT">
+g_encoding varchar2(20);
+</PRE>
+<HR>
+<A NAME="G_IS_MULTIPART_MAIL"></A>
+<P CLASS="TYPE_TITLE">
+g_is_multipart_mail
+</P>
+<PRE CLASS="DECL_TEXT">
+g_is_multipart_mail boolean := false;
+</PRE>
+<HR>
+<A NAME="G_HTML_CONTENT_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+g_html_content_type
+</P>
+<PRE CLASS="DECL_TEXT">
+g_html_content_type varchar2(200);
+</PRE>
+<HR>
+<A NAME="G_MULTIPART_CONTENT_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+g_multipart_content_type
+</P>
+<PRE CLASS="DECL_TEXT">
+g_multipart_content_type varchar2(200) := 'multipart/mixed; boundary=' || C_BOUNDARY;
+</PRE>
+<HR>
+<A NAME="G_TRACE_TEXT"></A>
+<P CLASS="TYPE_TITLE">
+g_trace_text
+</P>
+<PRE CLASS="DECL_TEXT">
+g_trace_text clob := '';
+</PRE>
+<HR>
+<A NAME="G_PROMPT_FLAG"></A>
+<P CLASS="TYPE_TITLE">
+g_prompt_flag
+</P>
+<PRE CLASS="DECL_TEXT">
+g_prompt_flag boolean := false;
+</PRE>
+<HR>
+<A NAME="MAIL_SERVER_ACCESS_GRANTED"></A>
+<P CLASS="TYPE_TITLE">
+mail_server_access_granted
+</P>
+<PRE CLASS="DECL_TEXT">
+Function mail_server_access_granted return boolean
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to check whether an ACL entry for this mail server exists<br>
+
+<BR>
+</P>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag that indicates whether an ACL entry was found (TRUE) or not (FALSE)<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="MAIL_SERVER_ACCESSIBLE"></A>
+<P CLASS="TYPE_TITLE">
+mail_server_accessible
+</P>
+<PRE CLASS="DECL_TEXT">
+Function mail_server_accessible return boolean
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to check whether an ACL entry for this mail server is accessible<br>
+
+<BR>
+</P>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag that indicates whether the mail server was successfully touched (TRUE) or not (FALSE). If a UTL_TCP.NETWORK_ERROR is received, the return value indicates whether the exception relates to a LISTENER. If so, TRUE is returned and FALSE in other cases.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure initialize
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Initialization method.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Initializes global variables and tries to detect whether the package is in a usable state. This requires that<br>
+
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+the mail server is accessible via ACL<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+the mail server is accessible and responds to a touch<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENCODE_ITEM"></A>
+<P CLASS="TYPE_TITLE">
+encode_item
+</P>
+<PRE CLASS="DECL_TEXT">
+Function encode_item(p_item in varchar2) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to encode an item with UTL_ENCODE.QUOTED_PRINTABLE_ENCODE<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to encode specific items such as recipients, subjects etc.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_item&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Item to encode<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Encoded item value<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="STRING_TO_ADDRESS_TAB"></A>
+<P CLASS="TYPE_TITLE">
+string_to_address_tab
+</P>
+<PRE CLASS="DECL_TEXT">
+Function string_to_address_tab(p_address_list in varchar2)
+  return address_tab
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to cast a string to an instance of ADDRESS_TAB<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called from the simplified <A HREF=#SEND_MAIL>SEND_MAIL</A> method to allow for more than one recpient without having to create an instance of ADDRESS_TAB externally. Instead, a semicolon-delimited list of addressees is sufficient<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_address_list&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Stringified address list, separated by semicolon<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of ADRESS_TAB containing the addresses<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="EXTRACT_MAIL_ADDRESS"></A>
+<P CLASS="TYPE_TITLE">
+extract_mail_address
+</P>
+<PRE CLASS="DECL_TEXT">
+Function extract_mail_address(p_address in varchar2) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method extracts the mail address from a recipient or sender address<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to remove the quoted name and the brackets from the address if existing<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_address&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Full address in the form &quot;Bill &lt;A HREF=&quot;MAILTO:Smith&quot;&lt;foo@server.de&gt;&quot;&gt;Smith&quot;&lt;foo@server.de&gt;</A> or <A HREF="MAILTO:foo@server.de">foo@server.de</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+email address of the full address<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="ENCODE_MAIL_ADDRESS"></A>
+<P CLASS="TYPE_TITLE">
+encode_mail_address
+</P>
+<PRE CLASS="DECL_TEXT">
+Function encode_mail_address(p_address in varchar2) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method encodes an address to adhere to the smtp standard<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Makes sure that the addressee does not contain unprintable characters<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_address&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Full address in the form &quot;Bill &lt;A HREF=&quot;MAILTO:Smith&quot;&lt;foo@server.de&gt;&quot;&gt;Smith&quot;&lt;foo@server.de&gt;</A> or <A HREF="MAILTO:foo@server.de">foo@server.de</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+email address of the full address<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_LOG"></A>
+<P CLASS="TYPE_TITLE">
+write_log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_log(p_text in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method adds a log entry to <A HREF=#G_TRACE_TEXT>G_TRACE_TEXT</A>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to maintain a trace log that is emitted upon disconnecting from the mail server.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_text&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Text to add to the trace<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_HEADER"></A>
+<P CLASS="TYPE_TITLE">
+write_header
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_header(p_conn  in out nocopy utl_smtp.connection,
+                       p_item  in varchar2,
+                       p_value in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method writes smtp header entries<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to write smtp header information in the correct format<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Connection reference to the mail server<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_item&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Item to write to the smtp header<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_value&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Item value to write to the smtp header<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_BODY"></A>
+<P CLASS="TYPE_TITLE">
+write_body
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_body(p_conn in out nocopy utl_smtp.connection,
+                     p_text in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method writes smtp body entries<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper to write smtp body information in the correct format<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Connection reference to the mail server<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_text&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Value to write to the smtp body<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="WRITE_BOUNDARY"></A>
+<P CLASS="TYPE_TITLE">
+write_boundary
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure write_boundary(p_conn          in out nocopy utl_smtp.connection,
+                         p_last_boundary in boolean default false)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method adds a boundary to the mail<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Writes boundaries to separate parts of the mail such as plain text and html text.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Connection reference to the mail server<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_last_boundary]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether this is the last boundary for the mail<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="AUTHENTICATE_VIA_LOGIN"></A>
+<P CLASS="TYPE_TITLE">
+authenticate_via_login
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure authenticate_via_login(p_conn in out nocopy utl_smtp.connection)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to connect to a mail server<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Establishes a connection to the mail server via LOGIN method<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to a UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="AUTHENTICATE_VIA_PLAIN"></A>
+<P CLASS="TYPE_TITLE">
+authenticate_via_plain
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure authenticate_via_plain(p_conn in out nocopy utl_smtp.connection)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to connect to a mail server<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Establishes a connection to the mail server via AUTH PLAIN method<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to a UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="CONNECT_MAIL_SERVER"></A>
+<P CLASS="TYPE_TITLE">
+connect_mail_server
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure connect_mail_server(p_conn out nocopy utl_smtp.connection)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to connect to a mail server<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Analyzes the respond from the mail server regarding the supported authentication methods and calls the respective connection method Supported connection methods so far are LOGIN and PLAIN.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to a UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SET_RECIPIENT_LIST"></A>
+<P CLASS="TYPE_TITLE">
+set_recipient_list
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_recipient_list(p_conn          in out nocopy utl_smtp.connection,
+                             p_sender        in varchar2,
+                             p_subject       in varchar2,
+                             p_recipients    in mail.address_tab,
+                             p_cc_recipients in mail.address_tab)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method writes a recipient list to the mail text<br>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to a UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="See also"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+See also
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+<A HREF=#SEND_MAIL>SEND_MAIL</A> for other parameters description<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SET_CONTENT_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+set_content_type
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_content_type(p_conn in out nocopy utl_smtp.connection)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to set the content type<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Based on <A HREF=#G_IS_MULTIPART_MAIL>G_IS_MULTIPART_MAIL</A> ths method set the content type<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SEND_MAIL_BODY"></A>
+<P CLASS="TYPE_TITLE">
+send_mail_body
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_mail_body(p_conn    in out nocopy utl_smtp.connection,
+                         p_message in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to write the mail body<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Based on <A HREF=#G_IS_MULTIPART_MAIL>G_IS_MULTIPART_MAIL</A> ths method set the content type<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Content of the mail. May contain plain text, boundary and html text<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SEND_ATTACHMENT"></A>
+<P CLASS="TYPE_TITLE">
+send_attachment
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_attachment(p_conn       in out nocopy utl_smtp.connection,
+                          p_filename   in varchar2,
+                          p_mime_type  in varchar2,
+                          p_attachment in blob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to write the attachment<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Writes the content of P_ATTACHMENT into a separate boundary region<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_filename&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+File name of the attachment<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_mime_type&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Mime type of the attachment<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attachment&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Binary content of the attachment<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="DISCONNECT_MAIL_SERVER"></A>
+<P CLASS="TYPE_TITLE">
+disconnect_mail_server
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure disconnect_mail_server(p_conn in out nocopy utl_smtp.connection)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method disconnects from the mail server<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to<br>
+
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+write a closing boundary<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+close the data channel<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+quit the connection<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+emit the trace text via PIT.VERBOSE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Reference to UTL_SMTP.CONNECTION<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SEND_MAIL"></A>
+<P CLASS="TYPE_TITLE">
+send_mail
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_mail(p_sender        in varchar2,
+                    p_recipients    in mail.address_tab,
+                    p_cc_recipients in mail.address_tab,
+                    p_subject       in varchar2,
+                    p_message       in varchar2,
+                    p_filename      in varchar2,
+                    p_mime_type     in varchar2,
+                    p_attachment    in blob)
+
+</PRE>
+<HR>
+<A NAME="SEND_MAIL2"></A>
+<P CLASS="TYPE_TITLE">
+send_mail
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_mail(p_sender     in varchar2,
+                    p_recipient  in varchar2,
+                    p_subject    in varchar2,
+                    p_message    in varchar2,
+                    p_filename   in varchar2 default null,
+                    p_mime_type  in varchar2 default null,
+                    p_attachment in blob default null)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

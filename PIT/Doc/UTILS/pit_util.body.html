@@ -31,7 +31,7 @@ Method to append P_CHUNK to P_TEXT
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#HARMONIZE_NAME">harmonize_name</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Harmonizes the spelling of database names etc.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#IGNORE_SUBPROGRAM">ignore_subprogram</A>&nbsp;&nbsp;
@@ -116,12 +116,12 @@ VALIDATION
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CHECK_TOGGLE_SETTINGS">check_toggle_settings</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-check context pattern
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#STRING_TO_CONTEXT_TYPE">string_to_context_type</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Harmonize names
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CONTEXT_TYPE_TO_STRING">context_type_to_string</A>&nbsp;&nbsp;
@@ -136,17 +136,17 @@ Harmonize names
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MODULE_AND_ACTION">get_module_and_action</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Cursors
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_CALL_STACK">get_call_stack</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-$END
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_ERROR_STACK">get_error_stack</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-$END
+
 </TD></TR>
 </TABLE>
 <BR>
@@ -235,7 +235,7 @@ CONSTANTS
 C_PKG
 </P>
 <PRE CLASS="DECL_TEXT">
-C_PKG constant <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A> := $$PLSQL_UNIT;
+C_PKG constant ora_name_type := $$PLSQL_UNIT;
 </PRE>
 <P CLASS="DESC_TEXT">
 CONSTANTS<br>
@@ -272,7 +272,7 @@ C_PARAMETER_GROUP constant varchar2(5) := 'PIT';
 C_NAME_SPELLING
 </P>
 <PRE CLASS="DECL_TEXT">
-C_NAME_SPELLING constant <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A> := 'NAME_SPELLING';
+C_NAME_SPELLING constant ora_name_type := 'NAME_SPELLING';
 </PRE>
 <HR>
 <A NAME="C_CTX_DEL"></A>
@@ -280,7 +280,7 @@ C_NAME_SPELLING constant <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A>
 C_CTX_DEL
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_pkg.body.html#C_CTX_DEL">C_CTX_DEL</A> constant char(1 byte) := '|';
+C_CTX_DEL constant char(1 byte) := '|';
 </PRE>
 <HR>
 <A NAME="G_USER"></A>
@@ -363,52 +363,9 @@ Method to append P_CHUNK to P_TEXT<br>
 harmonize_name
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#HARMONIZE_NAME">harmonize_name</A>(p_name in varchar2) return varchar2
+Function harmonize_name(p_name in varchar2) return varchar2
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Harmonizes the spelling of database names etc.<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to harmonize the spelling of names. Conversion is based on parameter PIT.NAME_SPELLING<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name to harmonize<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Returns"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Returns
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Harmonized name<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="IGNORE_SUBPROGRAM"></A>
 <P CLASS="TYPE_TITLE">
@@ -455,7 +412,7 @@ Flag to indicate whether a subprogram has to be ignored (TRUE) or not (FALSE)<br
 initialize
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+Procedure initialize
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -469,7 +426,7 @@ Package Initialization<br>
 get_true
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#GET_TRUE">get_true</A> return <A HREF="pit_util.html#FLAG_TYPE">flag_type</A>
+Function get_true return flag_type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -483,7 +440,7 @@ INTERFACE<br>
 get_false
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#GET_FALSE">get_false</A> return <A HREF="pit_util.html#FLAG_TYPE">flag_type</A>
+Function get_false return flag_type
 
 </PRE>
 <HR>
@@ -492,7 +449,7 @@ Function <A HREF="pit_util.html#GET_FALSE">get_false</A> return <A HREF="pit_uti
 get_user
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#GET_USER">get_user</A> return <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A>
+Function get_user return ora_name_type
 
 </PRE>
 <HR>
@@ -501,7 +458,7 @@ Function <A HREF="pit_util.html#GET_USER">get_user</A> return <A HREF="pit_util.
 string_to_table
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#STRING_TO_TABLE">string_to_table</A>(p_string_value in varchar2,
+Function string_to_table(p_string_value in varchar2,
                          p_delimiter    in varchar2 := ':') return args
 
 </PRE>
@@ -516,7 +473,7 @@ TEXT FUNCTIONS<br>
 bulk_replace
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#BULK_REPLACE">bulk_replace</A>(p_string in varchar2, p_chunks in char_table)
+Function bulk_replace(p_string in varchar2, p_chunks in char_table)
   return varchar2
 
 </PRE>
@@ -526,7 +483,7 @@ Function <A HREF="pit_util.html#BULK_REPLACE">bulk_replace</A>(p_string in varch
 clob_append
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_util.html#CLOB_APPEND">clob_append</A>(p_clob in out nocopy clob, p_chunk in clob)
+Procedure clob_append(p_clob in out nocopy clob, p_chunk in clob)
 
 </PRE>
 <HR>
@@ -535,7 +492,7 @@ Procedure <A HREF="pit_util.html#CLOB_APPEND">clob_append</A>(p_clob in out noco
 concatenate
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#CONCATENATE">concatenate</A>(p_chunk_list char_table,
+Function concatenate(p_chunk_list char_table,
                      p_delimiter  varchar2,
                      p_keep_null  boolean default true) return varchar2
 
@@ -546,7 +503,7 @@ Function <A HREF="pit_util.html#CONCATENATE">concatenate</A>(p_chunk_list char_t
 harmonize_sql_name
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#HARMONIZE_SQL_NAME">harmonize_sql_name</A>(p_name       in varchar2,
+Function harmonize_sql_name(p_name       in varchar2,
                             p_prefix     in varchar2 default null,
                             p_max_length number default null)
   return varchar2
@@ -558,7 +515,7 @@ Function <A HREF="pit_util.html#HARMONIZE_SQL_NAME">harmonize_sql_name</A>(p_nam
 harmonize_name
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#HARMONIZE_NAME">harmonize_name</A>(p_prefix in varchar2, p_name in varchar2)
+Function harmonize_name(p_prefix in varchar2, p_name in varchar2)
   return varchar2
 
 </PRE>
@@ -568,7 +525,7 @@ Function <A HREF="pit_util.html#HARMONIZE_NAME">harmonize_name</A>(p_prefix in v
 to_bool
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#TO_BOOL">to_bool</A>(p_boolean in <A HREF="pit_util.html#FLAG_TYPE">flag_type</A>) return boolean
+Function to_bool(p_boolean in flag_type) return boolean
 
 </PRE>
 <HR>
@@ -577,7 +534,7 @@ Function <A HREF="pit_util.html#TO_BOOL">to_bool</A>(p_boolean in <A HREF="pit_u
 get_error_name
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#GET_ERROR_NAME">get_error_name</A>(p_pms_name in pit_message.pms_name%type)
+Function get_error_name(p_pms_name in pit_message.pms_name%type)
   return varchar2
 
 </PRE>
@@ -587,7 +544,7 @@ Function <A HREF="pit_util.html#GET_ERROR_NAME">get_error_name</A>(p_pms_name in
 cast_to_msg_args_char
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#CAST_TO_MSG_ARGS_CHAR">cast_to_msg_args_char</A>(p_msg_args msg_args) return msg_args_char
+Function cast_to_msg_args_char(p_msg_args msg_args) return msg_args_char
 
 </PRE>
 <HR>
@@ -596,7 +553,7 @@ Function <A HREF="pit_util.html#CAST_TO_MSG_ARGS_CHAR">cast_to_msg_args_char</A>
 cast_to_msg_args
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#CAST_TO_MSG_ARGS">cast_to_msg_args</A>(p_msg_args msg_args_char) return msg_args
+Function cast_to_msg_args(p_msg_args msg_args_char) return msg_args
 
 </PRE>
 <HR>
@@ -605,7 +562,7 @@ Function <A HREF="pit_util.html#CAST_TO_MSG_ARGS">cast_to_msg_args</A>(p_msg_arg
 check_context_settings
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_util.html#CHECK_CONTEXT_SETTINGS">check_context_settings</A>(p_context_name in <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A>,
+Procedure check_context_settings(p_context_name in ora_name_type,
                                  p_settings     in varchar2)
 
 </PRE>
@@ -620,38 +577,28 @@ VALIDATION<br>
 check_toggle_settings
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_util.html#CHECK_TOGGLE_SETTINGS">check_toggle_settings</A>(p_toggle_name  in <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A>,
+Procedure check_toggle_settings(p_toggle_name  in ora_name_type,
                                 p_module_list  in varchar2,
-                                p_context_name in <A HREF="pit_util.html#ORA_NAME_TYPE">ora_name_type</A>)
+                                p_context_name in ora_name_type)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-check context pattern<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="STRING_TO_CONTEXT_TYPE"></A>
 <P CLASS="TYPE_TITLE">
 string_to_context_type
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_util.html#STRING_TO_CONTEXT_TYPE">string_to_context_type</A>(p_context_values in varchar2,
-                                 p_context        in out nocopy <A HREF="pit_util.html#CONTEXT_TYPE">context_type</A>)
+Procedure string_to_context_type(p_context_values in varchar2,
+                                 p_context        in out nocopy context_type)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Harmonize names<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="CONTEXT_TYPE_TO_STRING"></A>
 <P CLASS="TYPE_TITLE">
 context_type_to_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#CONTEXT_TYPE_TO_STRING">context_type_to_string</A>(p_settings in <A HREF="pit_util.html#CONTEXT_TYPE">context_type</A>) return varchar2
+Function context_type_to_string(p_settings in context_type) return varchar2
 
 </PRE>
 <HR>
@@ -660,7 +607,7 @@ Function <A HREF="pit_util.html#CONTEXT_TYPE_TO_STRING">context_type_to_string</
 recompile_invalid_objects
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_util.html#RECOMPILE_INVALID_OBJECTS">recompile_invalid_objects</A>
+Procedure recompile_invalid_objects
 
 </PRE>
 <HR>
@@ -669,43 +616,28 @@ Procedure <A HREF="pit_util.html#RECOMPILE_INVALID_OBJECTS">recompile_invalid_ob
 get_module_and_action
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_util.html#GET_MODULE_AND_ACTION">get_module_and_action</A>(p_module in out nocopy varchar2,
+Procedure get_module_and_action(p_module in out nocopy varchar2,
                                 p_action in out nocopy varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Cursors<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_CALL_STACK"></A>
 <P CLASS="TYPE_TITLE">
 get_call_stack
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#GET_CALL_STACK">get_call_stack</A> return varchar2
+Function get_call_stack return varchar2
 
 </PRE>
-<P CLASS="DESC_TEXT">
-$END<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_ERROR_STACK"></A>
 <P CLASS="TYPE_TITLE">
 get_error_stack
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_util.html#GET_ERROR_STACK">get_error_stack</A> return varchar2
+Function get_error_stack return varchar2
 
 </PRE>
-<P CLASS="DESC_TEXT">
-$END<br>
-
-<BR>
-</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

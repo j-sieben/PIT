@@ -6,47 +6,65 @@ begin
   );
 
   param_admin.edit_parameter(
+    p_par_id => 'PIT_MAIL_DAILY_LEVEL'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Severity level up to which mail notifications are sent daily'
+   ,p_par_integer_value => 30
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_MAIL_LIVE_LEVEL'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Severity level up to which mail notifications are sent immediately'
+   ,p_par_integer_value => 20
+  );
+
+  param_admin.edit_parameter(
     p_par_id => 'PIT_MAIL_FIRE_THRESHOLD'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Loglevel des Moduls PIT_MAIL'
-   ,p_par_integer_value => 70
-   ,p_par_boolean_value => null
-   ,p_par_is_modifiable => null
+   ,p_par_description => 'Log level of the module PIT_MAIL'
+   ,p_par_integer_value => 30
   );
 
   param_admin.edit_parameter(
     p_par_id => 'PIT_MAIL_FROM_ADDRESS'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Absender des Moduls PIT_MAIL'
-   ,p_par_string_value => q'^pit_MAIL.trc^'
-   ,p_par_boolean_value => null
-   ,p_par_is_modifiable => null
+   ,p_par_description => 'Sender of the module PIT_MAIL'
+   ,p_par_string_value => q'^administration@foo.de^'
+   ,p_par_pat_id => 'STRING'
   );
 
   param_admin.edit_parameter(
-    p_par_id => 'PIT_MAIL_HOST'
+    p_par_id => 'PIT_MAIL_PURGE_PERIOD'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Host-Adresse des Moduls PIT_MAIL'   ,p_par_string_value => q'^PIT_MAIL_DIR^'   ,p_par_boolean_value => null   ,p_par_is_modifiable => null
+   ,p_par_description => 'Number of days to be kept as log duration in the queue table'
+   ,p_par_integer_value => 7
   );
 
   param_admin.edit_parameter(
     p_par_id => 'PIT_MAIL_SUBJECT'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Thema der Mail des Moduls PIT_MAIL'   ,p_par_string_value => q'^pit_MAIL.trc^'   ,p_par_boolean_value => null   ,p_par_is_modifiable => null
-  );
-
-  param_admin.edit_parameter(
-    p_par_id => 'PIT_MAIL_TEMPLATE'
-   ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Email-Template des Moduls PIT_MAIL'   ,p_par_string_value => q'^PIT_MAIL_DIR^'   ,p_par_boolean_value => null   ,p_par_is_modifiable => null
+   ,p_par_description => 'Mail subject of the module PIT_MAIL'
+   ,p_par_string_value => q'^Automatic error report^'
+   ,p_par_pat_id => 'STRING'
   );
 
   param_admin.edit_parameter(
     p_par_id => 'PIT_MAIL_TO_ADDRESS'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Adressat des Moduls PIT_MAIL'   ,p_par_string_value => q'^pit_MAIL.trc^'   ,p_par_boolean_value => null   ,p_par_is_modifiable => null
+   ,p_par_description => 'Addressee of the module PIT_MAIL'
+   ,p_par_string_value => q'^notification@some_server.de^'
+   ,p_par_pat_id => 'STRING'
   );
 
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_MAIL_FILE_NAME'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Name of the attachment file with the error list'
+   ,p_par_string_value => q'^notification@some_server.de^'
+   ,p_par_pat_id => 'STRING'
+  );
+  
   commit;
 end;
 /

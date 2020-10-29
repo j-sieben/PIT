@@ -5,7 +5,7 @@
  <TITLE>Type pit_apex_adapter</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_apex_adapter">
- <META name="description" content="">
+ <META name="description" content="Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,7 +14,33 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_apex_adapter</P>
+Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX<br>
 
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="MAIN_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_user_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+User actually logged on at the active APEX application
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_session_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Session Id of the APEX session
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_required_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+If APEX is set to debug, this parameter will contain the name of a context as given by PIT_APEX_PKG.GET_APEX_TRIGGERED_CONTEXT This way, PIT will switch on logging for the actual session if APEX mandates for it
+</TD></TR>
+</TABLE>
 <BR>
 </TD></TR></TABLE>
 <HR>
@@ -31,7 +57,7 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_APEX_ADAPTER">pit_apex_adapter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor method
 </TD></TR>
 </TABLE>
 <BR>
@@ -56,6 +82,23 @@ Function pit_apex_adapter(self in out nocopy pit_apex_adapter)
   return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor method<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+It will mark this adapter as valid if an APEX session context is detected and invalid if not.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

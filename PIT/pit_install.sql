@@ -44,7 +44,6 @@ prompt &h1.Installing PIT output modules
 @modules/pit_console/install.sql
 @modules/pit_table/install.sql
 @modules/pit_apex/install.sql
-@modules/pit_ut/install.sql
 @modules/pit_file/install.sql
 @modules/pit_mail/install.sql
 

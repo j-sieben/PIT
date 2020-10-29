@@ -1,6 +1,7 @@
 create or replace type body pit_apex as
    
    overriding member procedure log(
+    self in out nocopy pit_apex,
       p_message in message_type)
    as
    begin
@@ -10,6 +11,7 @@ create or replace type body pit_apex as
    end log;
    
    overriding member procedure print(
+    self in out nocopy pit_apex,
       p_message in message_type)
    as
    begin
@@ -17,6 +19,7 @@ create or replace type body pit_apex as
    end print;
    
    overriding member procedure notify(
+    self in out nocopy pit_apex,
       p_message in message_type)
    as
    begin
@@ -24,6 +27,7 @@ create or replace type body pit_apex as
    end notify;
    
    overriding member procedure enter(
+    self in out nocopy pit_apex,
       p_call_stack in call_stack_type)
    as
    begin
@@ -31,6 +35,7 @@ create or replace type body pit_apex as
    end enter;
    
    overriding member procedure leave(
+    self in out nocopy pit_apex,
       p_call_stack in call_stack_type)
    as
    begin

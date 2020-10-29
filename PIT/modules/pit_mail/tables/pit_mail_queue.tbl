@@ -1,0 +1,24 @@
+create table pit_mail_queue(
+  pmq_id number, 
+	pmq_pms_id varchar2(50 byte), 
+	pmq_pse_id number, 
+	pmq_message_text clob, 
+	pmq_log_date date default sysdate, 
+	pmq_is_processed &FLAG_TYPE. default &C_FALSE.,
+  constraint pk_pit_mail_queue primary key(pmq_id),
+  constraint fk_pmq_pms_id foreign key(pmq_pms_id)
+    references pit_message(pms_id) on delete cascade,
+  constraint fk_pmq_pse_id foreign key(pmq_pse_id)
+    references pit_message_severity(pse_id)
+) organization index;
+
+create index idx_fk_pmq_pms_id on pit_mail_queue(pmq_pms_id);
+create index idx_fk_pmq_pse_id on pit_mail_queue(pmq_pse_id);
+
+comment on table pit_mail_queue is 'Table to buffer mail notifications for later delivery';
+comment on column pit_mail_queue.pmq_id is 'Flag indicating whether the message was processed';
+comment on column pit_mail_queue.pmq_pms_id is 'Name of the message, used to summarize messages';
+comment on column pit_mail_queue.pmq_pse_id is 'Severity of the message';
+comment on column pit_mail_queue.pmq_message_text is 'Message text';
+comment on column pit_mail_queue.pmq_log_date is 'Date when the message was set';
+comment on column pit_mail_queue.pmq_is_processed is 'Flag to indicate whether the mail was successfully sent';

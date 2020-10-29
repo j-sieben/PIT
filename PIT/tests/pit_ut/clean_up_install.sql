@@ -12,7 +12,7 @@ declare
             from all_objects
            where object_name in (
                  'PIT_UT', -- Typen
-                 'PIT_UT_PKG', -- Packages
+                 'PIT_UT_PKG', 'UT_PIT', 'UT_PIT_PKG',  -- Packages
                  '', -- Tabellen
                  '' -- Sequenzen
                  )

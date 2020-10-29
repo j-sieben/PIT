@@ -1,6 +1,7 @@
 create or replace type body pit_console 
 as
   overriding member procedure log(
+    self in out nocopy pit_console,
     p_message in message_type)
   as
   begin
@@ -11,6 +12,7 @@ as
   
   
   overriding member procedure log(
+    self in out nocopy pit_console,
     p_params in msg_params)
   as
   begin
@@ -19,6 +21,7 @@ as
   
   
   overriding member procedure print(
+    self in out nocopy pit_console,
     p_message in message_type)
   as
   begin
@@ -27,6 +30,7 @@ as
   
   
   overriding member procedure notify(
+    self in out nocopy pit_console,
     p_message in message_type)
   as
   begin
@@ -35,6 +39,7 @@ as
   
   
   overriding member procedure enter(
+    self in out nocopy pit_console,
     p_call_stack call_stack_type)
   as
   begin
@@ -43,6 +48,7 @@ as
   
   
   overriding member procedure leave (
+    self in out nocopy pit_console,
     p_call_stack call_stack_type)
   as
   begin
@@ -50,6 +56,7 @@ as
   end leave;
   
   overriding member procedure context_changed(
+    self in out nocopy pit_console,
     p_ctx in pit_context)
   as
   begin

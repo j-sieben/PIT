@@ -13,6 +13,7 @@ as
     p_required_context := pit_apex_pkg.get_apex_triggered_context;
   end get_session_details;
    
+   
   constructor function pit_apex_adapter(
     self in out nocopy pit_apex_adapter)
     return self as result

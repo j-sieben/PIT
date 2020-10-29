@@ -26,7 +26,7 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_TRUE">get_true</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Getter for SYS.STANDARD.USER to avoid environment changes to SQL
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_FALSE">get_false</A>&nbsp;&nbsp;
@@ -41,7 +41,7 @@ Getter for SYS.STANDARD.USER to avoid environment changes to SQL
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#STRING_TO_TABLE">string_to_table</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-+ Helper to convert a string with a given separator into an instance of type ARGS
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#BULK_REPLACE">bulk_replace</A>&nbsp;&nbsp;
@@ -91,7 +91,7 @@ Methods to cast an instance of type MSG_ARGS to MSG_ARGS_CHAR and vice versa
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_ERROR_NAME">get_error_name</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Helper to create the name for an exception constant in package <A HREF="msg.html">MSG</A>.
+Helper to create the name for an exception constant in package MSG.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CHECK_CONTEXT_SETTINGS">check_context_settings</A>&nbsp;&nbsp;
@@ -121,7 +121,7 @@ Procedure to recompile invalid objects
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MODULE_AND_ACTION">get_module_and_action</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Reads module and action from UTL_CALL_STACK
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_CALL_STACK">get_call_stack</A>&nbsp;&nbsp;
@@ -143,7 +143,7 @@ Exceptions
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#INVALID_SQL_NAME">invalid_sql_name</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Don't use <A HREF="pit.html">PIT</A> messages here as <A HREF="pit.html">PIT</A> may not be initialized yet.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CONTEXT_MISSING">context_missing</A>&nbsp;&nbsp;
@@ -180,7 +180,7 @@ Types
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MAX_SQL_CHAR">max_sql_char</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-As extended char length is stored as a length delimited CLOB, MAX_SQL_CHAR is still set to 4000 byte.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SMALL_CHAR">small_char</A>&nbsp;&nbsp;
@@ -195,7 +195,7 @@ As extended char length is stored as a length delimited CLOB, MAX_SQL_CHAR is st
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CONTEXT_TYPE">context_type</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Record to store <A HREF="pit.html#LOG">log</A> and trace settings
+Record to store log and trace settings
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NAMED_CTX_LIST_TAB">named_ctx_list_tab</A>&nbsp;&nbsp;
@@ -291,11 +291,6 @@ max_sql_char
 <PRE CLASS="DECL_TEXT">
 subtype max_sql_char is varchar2(4000 byte);
 </PRE>
-<P CLASS="DESC_TEXT">
-As extended char length is stored as a length delimited CLOB, MAX_SQL_CHAR is still set to 4000 byte. Use CLOB otherwise<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="SMALL_CHAR"></A>
 <P CLASS="TYPE_TITLE">
@@ -318,13 +313,8 @@ subtype sign_type is char(1 byte);
 invalid_sql_name
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="msg.html#INVALID_SQL_NAME">invalid_sql_name</A> exception;
+invalid_sql_name exception;
 </PRE>
-<P CLASS="DESC_TEXT">
-Don't use <A HREF="pit.html">PIT</A> messages here as <A HREF="pit.html">PIT</A> may not be initialized yet.<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="CONTEXT_MISSING"></A>
 <P CLASS="TYPE_TITLE">
@@ -401,10 +391,10 @@ type context_type is record (
   module_list <A HREF=#MAX_SQL_CHAR>pit_util.max_sql_char</A>,
   allow_toggle boolean,
   broadcast_context_switch boolean,
-  <A HREF="msg.html#CTX_CHANGED">ctx_changed</A> boolean := true);
+  ctx_changed boolean := true);
 </PRE>
 <P CLASS="DESC_TEXT">
-Record to store <A HREF="pit.html#LOG">log</A> and trace settings<br>
+Record to store log and trace settings<br>
 
 <BR>
 </P>
@@ -471,7 +461,7 @@ Flag to indicate whether a context switch should be broadcasted to all instantia
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-<A HREF="msg.html#CTX_CHANGED">ctx_changed</A>&nbsp;&nbsp;
+ctx_changed&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Flag to indicate whether context has changed in comparison to actual context<br>
 
@@ -544,11 +534,6 @@ get_true
 Function get_true return <A HREF=#FLAG_TYPE>flag_type</A>
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Getter for SYS.STANDARD.USER to avoid environment changes to SQL<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_FALSE"></A>
 <P CLASS="TYPE_TITLE">
@@ -577,56 +562,6 @@ Function string_to_table(p_string_value in varchar2,
                          p_delimiter    in varchar2 := ':') return args
 
 </PRE>
-<P CLASS="DESC_TEXT">
-+ Helper to convert a string with a given separator into an instance of type ARGS<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-internal helper to split a string into an array of chars.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_string_value&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-List of items to be split<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_delimiter]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-character that separates the items in <code>p_string_value</code> Default: colon (:)<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Returns"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Returns
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Array of items (up to 50) of <code>varchar2(50)</code>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="BULK_REPLACE"></A>
 <P CLASS="TYPE_TITLE">
@@ -1002,7 +937,7 @@ Function get_error_name(p_pms_name in pit_message.pms_name%type)
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Helper to create the name for an exception constant in package <A HREF="msg.html">MSG</A>.<br>
+Helper to create the name for an exception constant in package MSG.<br>
 Name is formed on the basis of params ERROR_PREFIX and ERROR_POSTFIX<br>
 
 <BR>
@@ -1094,7 +1029,7 @@ Procedure check_toggle_settings(p_toggle_name  in <A HREF=#ORA_NAME_TYPE>ora_nam
 </PRE>
 <P CLASS="DESC_TEXT">
 Helper to validate toggle settings<br>
-@throws <A HREF=#INVALID_SQL_NAME>pit_util.invalid_sql_name</A>&nbsp; Toggle name must adhere to the SQL naming conventions<br>
+%throws <A HREF=#INVALID_SQL_NAME>pit_util.invalid_sql_name</A>&nbsp; Toggle name must adhere to the SQL naming conventions<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=#CONTEXT_MISSING>pit_util.context_missing</A>&nbsp;&nbsp; Referenced context does not exist<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=#NAME_TOO_LONG>pit_util.name_too_long</A>&nbsp;&nbsp;&nbsp;&nbsp; The maximum length of a toggle name was exceeded<br>
 
@@ -1107,7 +1042,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called from <A HREF="pit_admin.html#CREATE_CONTEXT_TOGGLE">PIT_ADMIN.CREATE_CONTEXT_TOGGLE</A> to validate settings<br>
+Is called from PIT_ADMIN.CREATE_CONTEXT_TOGGLE to validate settings<br>
 
 </TD></TR>
 </TABLE>
@@ -1237,7 +1172,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Called internally when recreating <A HREF="msg.html">MSG</A> package to recompile packages with dependencies on <A HREF="msg.html">MSG</A>
+Called internally when recreating MSG package to recompile packages with dependencies on MSG<br>
 
 </TD></TR>
 </TABLE>
@@ -1252,51 +1187,6 @@ Procedure get_module_and_action(p_module in out nocopy varchar2,
                                 p_action in out nocopy varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Reads module and action from UTL_CALL_STACK<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used only from Oracle 12c onwards. Should p_module and/or p_action be null, UTL_CALL_STACK is called to get the respective information<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_trace_level&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Controls the recursive level needed by UTL_CALL_STACK<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_module&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Module that was called<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_action&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method with module that was called<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="GET_CALL_STACK"></A>
 <P CLASS="TYPE_TITLE">

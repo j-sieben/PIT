@@ -5,7 +5,7 @@
  <TITLE>Package mail</TITLE>
  <META name="object" content="PACKAGE">
  <META name="name" content="mail">
- <META name="description" content="Public constant declarations">
+ <META name="description" content="Helper package to send emails">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,7 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package mail</P>
-Public constant declarations<br>
+Helper package to send emails<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -27,12 +27,12 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SEND_MAIL">send_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Prozedur SEND_MAIL versendet Mails inkl.
+Procedure SEND_MAIL sends mails including attachments.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SEND_MAIL2">send_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Prozedur SEND_MAIL versendet Mails inkl.
+Procedure SEND_MAIL sends mails including attachments.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
@@ -49,7 +49,7 @@ Types
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ADDRESS_REC">address_rec</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Public type declarations
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ADDRESS_TAB">address_tab</A>&nbsp;&nbsp;
@@ -66,7 +66,7 @@ Variables
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#G_PKG_IS_WORKING">g_pkg_is_working</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Public variable declarations
+
 </TD></TR>
 </TABLE>
 <BR>
@@ -80,11 +80,6 @@ type address_rec is record(
   user_name pit_util.ora_name_type,
   email varchar2(200));
 </PRE>
-<P CLASS="DESC_TEXT">
-Public type declarations<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="ADDRESS_TAB"></A>
 <P CLASS="TYPE_TITLE">
@@ -101,11 +96,6 @@ g_pkg_is_working
 <PRE CLASS="DECL_TEXT">
 g_pkg_is_working boolean;
 </PRE>
-<P CLASS="DESC_TEXT">
-Public variable declarations<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="SEND_MAIL"></A>
 <P CLASS="TYPE_TITLE">
@@ -123,12 +113,7 @@ Procedure send_mail(p_sender        in varchar2,
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Prozedur SEND_MAIL versendet Mails inkl. Attachments.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #SALUTATION#: Wird ersetzt durch<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sehr geehrter Herr/geehrte Frau &lt;Titel&gt; &lt;Vorname&gt; &lt;Nachname&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; die Informationen werden aus den Benutzerstammdaten gewonnen und in<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Message MAIL_SALUTATION eingefuegt.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Maximale Laenge der Mail: 32KByte.<br>
+Procedure SEND_MAIL sends mails including attachments.<br>
 
 <BR>
 </P>
@@ -141,42 +126,56 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_sender&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Absender der Mail. Die Adresse kann in der Form <A HREF="MAILTO:foo@server.de">foo@server.de</A> oder &quot;Willi &lt;A HREF=&quot;MAILTO:Schmitz&quot;&lt;foo@server.de&gt;&quot;&gt;Schmitz&quot;&lt;foo@server.de&gt;</A> uebergeben werden.<br>
+Sender of the mail. The address can be transferred in the form <A HREF="MAILTO:foo@server.de">foo@server.de</A> or &quot;Bill &lt;A HREF=&quot;MAILTO:Smith&quot;&lt;foo@server.de&gt;&quot;&gt;Smith&quot;&lt;foo@server.de&gt;</A>.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_recipients&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Instanz der Nested Table <A HREF=#ADDRESS_TAB>MAIL.ADDRESS_TAB</A> mit der Struktur &lt;USER_NAME&gt;|&lt;EMAIL&gt;. Die Email kann analog zu P_SENDER uebergeben werden, der Benutzername ist der Benutzername, der mit der Mailadresse verbunden ist. Der Benutzername wird Jasper Reports zur Filterung von Berichten uebergeben.<br>
+Recipients of the mail. Instance of the nested table <A HREF=#ADDRESS_TAB>MAIL.ADDRESS_TAB</A> with the structure &lt;USER_NAME&gt;|&lt;EMAIL&gt;. The email can be passed in the same way as P_SENDER, the username is the username associated with the email address.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_cc_recipients&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CC-Recipients of the mail. Instance of the nested table <A HREF=#ADDRESS_TAB>MAIL.ADDRESS_TAB</A> with the structure &lt;USER_NAME&gt;|&lt;EMAIL&gt;. The email can be passed in the same way as P_SENDER, the username is the username associated with the email address.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_subject&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Betreff der Mail. Maximale Laenge ist 1000 Zeichen (empfohlen: 78 Zeichen)<br>
+Subject of the mail. Maximum length is 1000 characters (recommended: 78 characters)<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Inhalt der Mail. Innerhalb der Mail werden verschiedene Platzhalter automatisch ersetzt. Bislang ist folgender Platzhalter vorgesehen:<br>
+Content of the mail. Maximum length of the mail: 32KByte.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_filename&nbsp;&nbsp;
+[p_filename]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name der Datei, in der das Attachment uebergeben werden soll. Den Dateinamen mit Mime-Type angeben, typischerweise: &lt;Berichtname&gt;.&lt;Mime-Type&gt;.<br>
+Name of the file in which the attachment should be transferred, including the file extension. Example: foo.pdf<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_attachment&nbsp;&nbsp;
+[p_mime_type]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-BLOB des Attachments. Falls NULL, wird kein Attachment angefuegt. in diesem Fall kann auch P_FILENAME NULL sein.<br>
+Mime type of the attachment. Example: application/pdf<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_attachment]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+BLOB of the attachment. If NULL, no attachment is added. In this case P_FILENAME can also be NULL.<br>
 
 </TD></TR>
 </TABLE>
@@ -197,13 +196,7 @@ Procedure send_mail(p_sender     in varchar2,
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Prozedur SEND_MAIL versendet Mails inkl. Attachments.<br>
-Ueberladung zur vereinfachten Verwendung<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #SALUTATION#: Wird ersetzt durch<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sehr geehrter Herr/geehrte Frau &lt;Titel&gt; &lt;Vorname&gt; &lt;Nachname&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; die Informationen werden aus den Benutzerstammdaten gewonnen und in<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Message MAIL_SALUTATION eingefuegt.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Maximale Laenge der Mail: 32KByte.<br>
+Procedure SEND_MAIL sends mails including attachments. Overloaded to send a mail to one recipient without cc-recipients only.<br>
 
 <BR>
 </P>
@@ -216,42 +209,49 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_sender&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Absender der Mail. Die Adresse kann in der Form <A HREF="MAILTO:foo@server.de">foo@server.de</A> oder &quot;Willi &lt;A HREF=&quot;MAILTO:Schmitz&quot;&lt;foo@server.de&gt;&quot;&gt;Schmitz&quot;&lt;foo@server.de&gt;</A> uebergeben werden.<br>
+Sender of the mail. The address can be transferred in the form <A HREF="MAILTO:foo@server.de">foo@server.de</A> or &quot;Bill &lt;A HREF=&quot;MAILTO:Smith&quot;&lt;foo@server.de&gt;&quot;&gt;Smith&quot;&lt;foo@server.de&gt;</A>.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_recipient&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Einzelne Adresse, an die die Mail gesendet werden soll.<br>
+semicolon-delimited list of addresses to which the mail should be sent.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_subject&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Betreff der Mail. Maximale Laenge ist 1000 Zeichen (empfohlen: 78 Zeichen)<br>
+Subject of the mail. Maximum length is 1000 characters (recommended: 78 characters)<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Inhalt der Mail. Innerhalb der Mail werden verschiedene Platzhalter automatisch ersetzt. Bislang ist folgender Platzhalter vorgesehen:<br>
+Content of the mail. Maximum length of the mail: 32KByte.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_filename&nbsp;&nbsp;
+[p_filename]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name der Datei, in der das Attachment uebergeben werden soll. Den Dateinamen mit Mime-Type angeben, typischerweise: &lt;Berichtname&gt;.&lt;Mime-Type&gt;.<br>
+Name of the file in which the attachment should be transferred, including the file extension. Example: foo.pdf<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_attachment&nbsp;&nbsp;
+[p_mime_type]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-BLOB des Attachments. Falls NULL, wird kein Attachment angefuegt. in diesem Fall kann auch P_FILENAME NULL sein.<br>
+Mime type of the attachment. Example: application/pdf<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_attachment]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+BLOB of the attachment. If NULL, no attachment is added. In this case P_FILENAME can also be NULL.<br>
 
 </TD></TR>
 </TABLE>

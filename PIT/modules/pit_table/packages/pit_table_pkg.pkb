@@ -1,9 +1,11 @@
 create or replace package body pit_table_pkg 
 as
+
   C_FIRE_THRESHOLD constant varchar2(30 char) := 'PIT_TABLE_FIRE_THRESHOLD';
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
   
 
+  /* INTERFACE */
   procedure log(
     p_message in message_type)
   as

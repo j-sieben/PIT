@@ -16,22 +16,24 @@ as
   C_MESSAGE_TEMPLATE constant pit_util.ora_name_type := C_PIT_FILE || '_MSG_TEMPLATE';
   C_LEVEL_INDICATOR  constant pit_util.ora_name_type := C_PIT_FILE || '_LEVEL_INDICATOR';
   
-  C_WRITE_APPEND constant pit_util.flag_type := 'A';  
-  C_WRITE_REPLACE constant pit_util.flag_type := 'W';
+  C_WRITE_APPEND constant pit_util.sign_type := 'A';  
+  C_WRITE_REPLACE constant pit_util.sign_type := 'W';
   C_ENTER_FLAG constant varchar2(5) := '> ';
   C_LEAVE_FLAG constant varchar2(5) := '< ';
-  C_LEVEL_SIGN constant char(1) := '.';
+  C_LEVEL_SIGN constant pit_util.sign_type := '.';
+  C_CR constant varchar2(2) := chr(10);
   
   g_dir varchar2(2000);
   g_filename varchar2(100);
   g_trc_file utl_file.file_type;
   g_message_template varchar2(2000);
+  g_state_template varchar2(2000);
   g_enter_template varchar2(2000);
   g_leave_template varchar2(2000);
   g_level_indicator varchar2(100);
   
-  /* Initialization
-   * %usage Reads several parameters into global variables
+  /** Initialization method
+   * %usage Is called by INITIALIZE_MODULE and reads several parameters into global variables
    */
   procedure initialize
   as
@@ -43,7 +45,7 @@ as
   end initialize;
 
   
-  /* Helper method to open the log file.
+  /** Helper method to open the log file.
    * %param p_write_mode flag according to UTL_FILE to control how a file has to be opened
    * %usage Is called to prepare the log file for writing.
    */
@@ -57,7 +59,7 @@ as
   end open_file;
   
   
-  /* Helper to close the log file.
+  /** Helper to close the log file.
    * %usage Is called to close the log file and release the resources
    */
   procedure close_file
@@ -69,7 +71,7 @@ as
   end close_file;
   
   
-  /* Helper to write text to the log file
+  /** Helper to write text to the log file
    * %param p_text Text that is appended to the log file
    * %usage Is called to append text to the log file
    */
@@ -81,7 +83,7 @@ as
   end write_to_file;
   
   
-  /* Helper to format call stack entries to write them to the log file
+  /** Helper to format call stack entries to write them to the log file
    * %param p_call_stack Instance of call stack to be printed
    * %param p_template Name of the template to be used to format the output.
    * %usage Templates are defined as parameters and referenced here to control
@@ -92,10 +94,10 @@ as
     p_call_stack in call_stack_type,
     p_template in varchar2)
   as
-    l_unit_name varchar2(61);
-    l_indent varchar2(2000);
-    l_indent_length binary_integer;
-    l_timing varchar2(100);
+    l_unit_name pit_util.ora_name_type;
+    l_indent pit_util.max_sql_char;
+    l_indent_length pls_integer;
+    l_timing pit_util.small_char;
     l_message pit_util.max_char;
   begin
     -- Program unit
@@ -107,7 +109,7 @@ as
     l_indent := lpad(g_level_indicator, l_indent_length, g_level_indicator);
     
     -- Timing
-    if p_call_stack.trace_timing = 'Y' then
+    if p_call_stack.trace_timing = pit_util.C_TRUE then
       l_timing := ' [wc=' || to_char(p_call_stack.wall_clock) ||
                   '; e=' || to_char(p_call_stack.elapsed) ||
                   '; e_cpu=' || to_char(p_call_stack.elapsed_cpu) ||
@@ -129,6 +131,30 @@ as
     if p_message.backtrace is not null then
       write_to_file(p_message.stack);
       write_to_file(p_message.backtrace);
+    end if;
+  end log;
+  
+  
+  procedure log(
+    p_params in msg_params)
+  as
+    l_position pls_integer;
+    l_state_start pit_util.max_sql_char;
+    l_state_end pit_util.max_sql_char;
+    l_state pit_util.max_char;
+    C_ANCHOR constant pit_util.small_char := '#STATE#';
+    C_PREFIX constant pit_util.small_char := '-  ';
+  begin
+    if p_params.count > 0 then
+      l_position := instr(g_state_template, C_ANCHOR);
+      l_state_start := substr(g_state_template, 1, l_position - 1);
+      l_state_end := substr(g_state_template, l_position + length(C_ANCHOR));
+          
+      write_to_file(l_state_start);
+      for i in 1 .. p_params.count loop
+        write_to_file(C_PREFIX || p_params(i).p_param || ': ' || p_params(i).p_value || C_CR);
+      end loop;
+      write_to_file(l_state_end);
     end if;
   end log;
   

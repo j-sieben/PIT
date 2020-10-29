@@ -73,7 +73,7 @@ Constants
 C_FIRE_THRESHOLD
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A> constant varchar2(30 char) := 'PIT_TABLE_FIRE_THRESHOLD';
+C_FIRE_THRESHOLD constant varchar2(30 char) := 'PIT_TABLE_FIRE_THRESHOLD';
 </PRE>
 <HR>
 <A NAME="C_PARAM_GROUP"></A>
@@ -81,7 +81,7 @@ C_FIRE_THRESHOLD
 C_PARAM_GROUP
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_PARAM_GROUP">C_PARAM_GROUP</A> constant varchar2(20 char) := 'PIT';
+C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
 </PRE>
 <HR>
 <A NAME="LOG"></A>
@@ -89,7 +89,7 @@ C_PARAM_GROUP
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+Procedure log(p_message in message_type)
 
 </PRE>
 <HR>
@@ -98,7 +98,7 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
 purge
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_date_until             in date,
+Procedure purge(p_date_until             in date,
                 p_severity_greater_equal in number default null)
 
 </PRE>
@@ -108,7 +108,7 @@ Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_date_until             i
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
+Procedure enter(p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -117,7 +117,7 @@ Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
+Procedure leave(p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -126,7 +126,7 @@ Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
 initialize_module
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_apex_pkg.html#INITIALIZE_MODULE">initialize_module</A>(self in out pit_table)
+Procedure initialize_module(self in out pit_table)
 
 </PRE>
 <P>&nbsp;</P>

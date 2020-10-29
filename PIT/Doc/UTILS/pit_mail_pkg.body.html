@@ -24,29 +24,47 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#SEND_HEADER">send_header</A>&nbsp;&nbsp;
+<A HREF="#PREPARE_MESSAGE">prepare_message</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method to send header information for a <A HREF="mail.html">mail</A>
+Method to convert a MESSAGE_TYPE.message into a string
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PREPARE_MAIL">prepare_mail</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to prepare a mail
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_MAIL">send_mail</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Sends a mail using the MAIL package
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_SCHEDULE">send_schedule</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to send messages as a report
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Initialization method
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_DAILY">send_daily</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-INTERFACE
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE">purge</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#INITIALIZE_MODULE">initialize_module</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-a connection to the server.
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Types"></A>
-<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
-Types
-</TD></TR></TABLE>
-<TABLE CLASS="SUB_TABLE">
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#PARAM_TAB">param_tab</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -58,22 +76,47 @@ Variables
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#G_PARAM_LIST">g_param_list</A>&nbsp;&nbsp;
+<A HREF="#G_SENDER">g_sender</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_RECIPIENT">g_recipient</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_SUBJECT">g_subject</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_PURGE_PERIOD">g_purge_period</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_FIRE_THRESHOLD">g_fire_threshold</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_LIVE_THRESHOLD">g_live_threshold</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_DAILY_THRESHOLD">g_daily_threshold</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_FILE_NAME">g_file_name</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_RETURN">C_RETURN</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#G_CON">g_con</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#G_MAIL_TEMPLATE">g_mail_template</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -90,17 +133,12 @@ Constants
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MODULE_NAME">C_MODULE_NAME</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#C_TEMPLATE">C_TEMPLATE</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#C_HOST">C_HOST</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -119,24 +157,96 @@ Constants
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_LIVE_THRESHOLD">C_LIVE_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DAILY_THRESHOLD">C_DAILY_THRESHOLD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PURGE_PERIOD">C_PURGE_PERIOD</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FILE_NAME">C_FILE_NAME</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DATE_FORMAT">C_DATE_FORMAT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
-<A NAME="PARAM_TAB"></A>
+<A NAME="G_SENDER"></A>
 <P CLASS="TYPE_TITLE">
-param_tab
+g_sender
 </P>
 <PRE CLASS="DECL_TEXT">
-type <A HREF="pit_file_pkg.body.html#PARAM_TAB">param_tab</A> is table of varchar2(32767)
-  index by varchar2(30);
+g_sender pit_util.max_char;
 </PRE>
 <HR>
-<A NAME="G_PARAM_LIST"></A>
+<A NAME="G_RECIPIENT"></A>
 <P CLASS="TYPE_TITLE">
-g_param_list
+g_recipient
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_file_pkg.body.html#G_PARAM_LIST">g_param_list</A> param_tab;
+g_recipient pit_util.max_char;
+</PRE>
+<HR>
+<A NAME="G_SUBJECT"></A>
+<P CLASS="TYPE_TITLE">
+g_subject
+</P>
+<PRE CLASS="DECL_TEXT">
+g_subject pit_util.max_char;
+</PRE>
+<HR>
+<A NAME="G_PURGE_PERIOD"></A>
+<P CLASS="TYPE_TITLE">
+g_purge_period
+</P>
+<PRE CLASS="DECL_TEXT">
+g_purge_period number;
+</PRE>
+<HR>
+<A NAME="G_FIRE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+g_fire_threshold
+</P>
+<PRE CLASS="DECL_TEXT">
+g_fire_threshold number(2,0);
+</PRE>
+<HR>
+<A NAME="G_LIVE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+g_live_threshold
+</P>
+<PRE CLASS="DECL_TEXT">
+g_live_threshold number(2,0);
+</PRE>
+<HR>
+<A NAME="G_DAILY_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+g_daily_threshold
+</P>
+<PRE CLASS="DECL_TEXT">
+g_daily_threshold number(2,0);
+</PRE>
+<HR>
+<A NAME="G_FILE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+g_file_name
+</P>
+<PRE CLASS="DECL_TEXT">
+g_file_name pit_util.small_char;
 </PRE>
 <HR>
 <A NAME="C_PARAM_GROUP"></A>
@@ -144,7 +254,15 @@ g_param_list
 C_PARAM_GROUP
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_PARAM_GROUP">C_PARAM_GROUP</A> constant varchar2(20) := 'PIT';
+C_PARAM_GROUP constant varchar2(20) := 'PIT';
+</PRE>
+<HR>
+<A NAME="C_MODULE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+C_MODULE_NAME
+</P>
+<PRE CLASS="DECL_TEXT">
+C_MODULE_NAME constant pit_util.ora_name_type := 'PIT_MAIL';
 </PRE>
 <HR>
 <A NAME="C_FIRE_THRESHOLD"></A>
@@ -152,23 +270,7 @@ C_PARAM_GROUP
 C_FIRE_THRESHOLD
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_FIRE_THRESHOLD';
-</PRE>
-<HR>
-<A NAME="C_TEMPLATE"></A>
-<P CLASS="TYPE_TITLE">
-C_TEMPLATE
-</P>
-<PRE CLASS="DECL_TEXT">
-C_TEMPLATE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_TEMPLATE';
-</PRE>
-<HR>
-<A NAME="C_HOST"></A>
-<P CLASS="TYPE_TITLE">
-C_HOST
-</P>
-<PRE CLASS="DECL_TEXT">
-C_HOST constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_HOST';
+C_FIRE_THRESHOLD constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>C_MODULE_NAME</A> || '_FIRE_THRESHOLD';
 </PRE>
 <HR>
 <A NAME="C_FROM"></A>
@@ -176,7 +278,7 @@ C_HOST constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>
 C_FROM
 </P>
 <PRE CLASS="DECL_TEXT">
-C_FROM constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_FROM_ADDRESS';
+C_FROM constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>C_MODULE_NAME</A> || '_FROM_ADDRESS';
 </PRE>
 <HR>
 <A NAME="C_TO"></A>
@@ -184,7 +286,7 @@ C_FROM constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>
 C_TO
 </P>
 <PRE CLASS="DECL_TEXT">
-C_TO constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_TO_ADDRESS';
+C_TO constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>C_MODULE_NAME</A> || '_TO_ADDRESS';
 </PRE>
 <HR>
 <A NAME="C_SUBJECT"></A>
@@ -192,7 +294,39 @@ C_TO constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> :
 C_SUBJECT
 </P>
 <PRE CLASS="DECL_TEXT">
-C_SUBJECT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MAIL_SUBJECT';
+C_SUBJECT constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>C_MODULE_NAME</A> || '_MAIL_SUBJECT';
+</PRE>
+<HR>
+<A NAME="C_LIVE_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_LIVE_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_LIVE_THRESHOLD constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>c_module_name</A> || '_LIVE_LEVEL';
+</PRE>
+<HR>
+<A NAME="C_DAILY_THRESHOLD"></A>
+<P CLASS="TYPE_TITLE">
+C_DAILY_THRESHOLD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_DAILY_THRESHOLD constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>c_module_name</A> || '_DAILY_LEVEL';
+</PRE>
+<HR>
+<A NAME="C_PURGE_PERIOD"></A>
+<P CLASS="TYPE_TITLE">
+C_PURGE_PERIOD
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PURGE_PERIOD constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>c_module_name</A> || '_PURGE_PERIOD';
+</PRE>
+<HR>
+<A NAME="C_FILE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+C_FILE_NAME
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FILE_NAME constant pit_util.ora_name_type := <A HREF=#C_MODULE_NAME>c_module_name</A> || '_FILE_NAME';
 </PRE>
 <HR>
 <A NAME="C_RETURN"></A>
@@ -203,34 +337,27 @@ C_RETURN
 C_RETURN varchar2(10) := utl_tcp.crlf;
 </PRE>
 <HR>
-<A NAME="G_CON"></A>
+<A NAME="C_DATE_FORMAT"></A>
 <P CLASS="TYPE_TITLE">
-g_con
+C_DATE_FORMAT
 </P>
 <PRE CLASS="DECL_TEXT">
-g_con utl_smtp.connection;
+C_DATE_FORMAT constant pit_util.ora_name_type := 'dd.mm. hh24:mi';
 </PRE>
 <HR>
-<A NAME="G_MAIL_TEMPLATE"></A>
+<A NAME="PREPARE_MESSAGE"></A>
 <P CLASS="TYPE_TITLE">
-g_mail_template
+prepare_message
 </P>
 <PRE CLASS="DECL_TEXT">
-g_mail_template clob;
-</PRE>
-<HR>
-<A NAME="SEND_HEADER"></A>
-<P CLASS="TYPE_TITLE">
-send_header
-</P>
-<PRE CLASS="DECL_TEXT">
-Procedure send_header(p_name in varchar2, p_header in varchar2)
+Function prepare_message(p_message    in message_type,
+                         p_amount     in number default null,
+                         p_first_date in date default null,
+                         p_last_date  in date default null) return clob
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Method to send header information for a <A HREF="mail.html">mail</A>
-%<A HREF="param.html">param</A> p_name Name of the header variable<br>
-%<A HREF="param.html">param</A> p_header Header value<br>
+Method to convert a MESSAGE_TYPE.message into a string<br>
 
 <BR>
 </P>
@@ -241,39 +368,280 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called by the package to help write formatted header <A HREF="mail.html">mail</A> information<br>
+Is used to cast a message text into a CLOB text instance<br>
 
 </TD></TR>
 </TABLE>
 <BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+MESSAGE_TYPE instance<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_amount]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Amount of messages of the same type within the report time frame<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_first_date]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+First time the message was raised<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_last_date]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Last time the message was raised<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+String with a formatted message<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PREPARE_MAIL"></A>
+<P CLASS="TYPE_TITLE">
+prepare_mail
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure prepare_mail(p_message    in out nocopy clob,
+                       p_attachment out nocopy blob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to prepare a mail<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to create an attachment if the length of the message is too long for a normal mail<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_text&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Text of the message to send<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attachment&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Out variable, is filled if P_MESSAGE_TEXT exceeds 2000 byte in length<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SEND_MAIL"></A>
+<P CLASS="TYPE_TITLE">
+send_mail
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_mail(p_message in clob, p_attachment in blob)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Sends a mail using the MAIL package<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to send a message via mail<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_text&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Text of the message to send<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_attachment&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional attachment<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SEND_SCHEDULE"></A>
+<P CLASS="TYPE_TITLE">
+send_schedule
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_schedule(p_threshold in number)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to send messages as a report<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This method is called from various SEND_&lt;Name of the Schedule&gt; methods defined in this package. If you want to create a new schedule, thew following tasks need to be done:<br>
+
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Create a schedule and assign the method name as its action (or add this action to an existing schedule)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Define a threshold that defines which messages are to be sent (All messages lower or equal this threshold are sent if they are not processed yet)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Create a parameter to hold this threshold and read it in the <A HREF=#INITIALIZE>initialize</A> method<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_threshold&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Severity that defines which messages are being sent<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure initialize
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Initialization method<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called from INITIALIE_MODULE to read parameter values<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SEND_DAILY"></A>
+<P CLASS="TYPE_TITLE">
+send_daily
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_daily
+
+</PRE>
 <HR>
 <A NAME="LOG"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+Procedure log(p_message in message_type)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-INTERFACE<br>
-
-<BR>
+<HR>
+<A NAME="PURGE"></A>
+<P CLASS="TYPE_TITLE">
+purge
 </P>
+<PRE CLASS="DECL_TEXT">
+Procedure purge(p_date_until             in date,
+                p_severity_greater_equal in number default null)
+
+</PRE>
 <HR>
 <A NAME="INITIALIZE_MODULE"></A>
 <P CLASS="TYPE_TITLE">
 initialize_module
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_apex_pkg.html#INITIALIZE_MODULE">initialize_module</A>(self in out PIT_MAIL)
+Procedure initialize_module(self in out PIT_MAIL)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-a connection to the server. The QUIT call will raise an exception that we can ignore.<br>
-
-<BR>
-</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

@@ -14,8 +14,8 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package body pit_pkg</P>
-Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="pit.html">PIT</A> (<A HREF="www.github.com/j-sieben/PIT">www.github.com/j-sieben/PIT</A>) Descriptioon: Package body to implement the core <A HREF="pit.html">PIT</A> logic.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This package is called by <A HREF="pit.html">PIT</A> as the API for <A HREF="pit_pkg.html">PIT_PKG</A> only.<br>
+Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (<A HREF="www.github.com/j-sieben/PIT">www.github.com/j-sieben/PIT</A>) Descriptioon: Package body to implement the core PIT logic.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This package is called by PIT as the API for PIT_PKG only.<br>
 @headcom<br>
 
 <BR>
@@ -59,7 +59,7 @@ Reads actual context settings into <A HREF=#G_CONTEXT>G_CONTEXT</A> and decide w
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_CONTEXT_IF_CHANGED">set_context_if_changed</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Sets new context settings for <A HREF="pit.html">PIT</A> at the context and raises <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">CONTEXT_CHANGED</A> event
+Sets new context settings for PIT at the context and raises CONTEXT_CHANGED event
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_CONTEXT_TEMPORARILY">set_context_temporarily</A>&nbsp;&nbsp;
@@ -94,12 +94,12 @@ Loads and instantiates an adapter to read client information
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CHECK_CONTEXT_TOGGLE">check_context_toggle</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Checks whether <A HREF="pit.html#LOG">log</A> settings have to be changed due to toggle settings
+Checks whether log settings have to be changed due to toggle settings
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MAINTAIN_APPLICATION_INFO">maintain_application_info</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Helper to maintain Application <A HREF="pit.html#INFO">Info</A>
+Helper to maintain Application Info
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PUSH_STACK">push_stack</A>&nbsp;&nbsp;
@@ -114,7 +114,7 @@ Method to pop an entry from the call stack
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CLEAN_STACK">clean_stack</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Helper method to clean stack after a <A HREF="pit.html#FATAL">fatal</A> <A HREF="pit.html#ERROR">error</A> has ocurred.
+Helper method to clean stack after a fatal error has ocurred.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PUSH_MESSAGE">push_message</A>&nbsp;&nbsp;
@@ -154,7 +154,7 @@ CORE
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG_STATE">log_state</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-if used with <A HREF="pit.html#SQL_EXCEPTION">SQL_EXCEPTION</A>, code may re raise the exception explicitly
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG_SPECIFIC">log_specific</A>&nbsp;&nbsp;
@@ -164,22 +164,22 @@ if used with <A HREF="pit.html#SQL_EXCEPTION">SQL_EXCEPTION</A>, code may re rai
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF=#INITIALIZE>initialize</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Do minimal tracing if context toggle is active
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LONG_OP">long_op</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-toggle may have set a new trace level, Check and set accordingly for higher entries on stack
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT">print</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-$END
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
@@ -189,12 +189,12 @@ $END
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RAISE_ERROR">raise_error</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF=#INITIALIZE>initialize</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#HANDLE_ERROR">handle_error</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-P_MESSAGE_NAME could be NULL, we use <A HREF=#G_ACTIVE_MESSAGE>G_ACTIVE_MESSAGE</A> then
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PURGE_LOG">purge_log</A>&nbsp;&nbsp;
@@ -209,7 +209,7 @@ MESSAGE related methods
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_ACTIVE_MESSAGE">get_active_message</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-use a local message here to prevent to overwrite <A HREF=#G_ACTIVE_MESSAGE>g_active_message</A> with messages that are never raised
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CHECK_DATATYPE">check_datatype</A>&nbsp;&nbsp;
@@ -239,7 +239,7 @@ CONTEXT MAINTENANCE
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RESET_ACTIVE_CONTEXT">reset_active_context</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Explicit context settings without a context name passed in.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RESET_CONTEXT">reset_context</A>&nbsp;&nbsp;
@@ -254,7 +254,7 @@ COLLECT MODE methods
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_COLLECT_MODE">get_collect_mode</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF=#INITIALIZE>initialize</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MESSAGE_COLLECTION">get_message_collection</A>&nbsp;&nbsp;
@@ -264,7 +264,7 @@ COLLECT MODE methods
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_ACTUAL_CALL_STACK_DEPTH">get_actual_call_stack_depth</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-deep copy to allow for clean up of <A HREF=#G_MESSAGE_STACK>G_MESSAGE_STACK</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MODULES">get_modules</A>&nbsp;&nbsp;
@@ -274,17 +274,17 @@ MODULE MAINTENANCE
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_ACTIVE_MODULES">get_active_modules</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF=#INITIALIZE>initialize</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_AVAILABLE_MODULES">get_available_modules</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF=#INITIALIZE>initialize</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#REPORT_MODULE_STATUS2">report_module_status</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF=#INITIALIZE>initialize</A>
+
 </TD></TR>
 </TABLE>
 <BR>
@@ -415,7 +415,7 @@ parameter constants
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_MODULE_INSTANTIATED">C_MODULE_INSTANTIATED</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-message constants to avoid dependency from <A HREF="msg.html">MSG</A> package
+message constants to avoid dependency from MSG package
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_FAIL_MODULE_INIT">C_FAIL_MODULE_INIT</A>&nbsp;&nbsp;
@@ -619,7 +619,7 @@ subtype client_info_t is varchar2(64 byte);
 C_PACKAGE_OWNER
 </P>
 <PRE CLASS="DECL_TEXT">
-C_PACKAGE_OWNER constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := $$PLSQL_UNIT_OWNER;
+C_PACKAGE_OWNER constant pit_util.ora_name_type := $$PLSQL_UNIT_OWNER;
 </PRE>
 <P CLASS="DESC_TEXT">
 parameter constants<br>
@@ -632,7 +632,7 @@ parameter constants<br>
 C_PARAM_GROUP
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_PARAM_GROUP">C_PARAM_GROUP</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT';
+C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
 </PRE>
 <HR>
 <A NAME="C_BASE_MODULE"></A>
@@ -640,7 +640,7 @@ C_PARAM_GROUP
 C_BASE_MODULE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_BASE_MODULE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MODULE';
+C_BASE_MODULE constant pit_util.ora_name_type := 'PIT_MODULE';
 </PRE>
 <HR>
 <A NAME="C_WARN_IF_UNUSABLE_MODULES"></A>
@@ -648,7 +648,7 @@ C_BASE_MODULE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_t
 C_WARN_IF_UNUSABLE_MODULES
 </P>
 <PRE CLASS="DECL_TEXT">
-C_WARN_IF_UNUSABLE_MODULES constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'WARN_IF_UNUSABLE_MODULES';
+C_WARN_IF_UNUSABLE_MODULES constant pit_util.ora_name_type := 'WARN_IF_UNUSABLE_MODULES';
 </PRE>
 <HR>
 <A NAME="C_LOG_STATE_THRESHOLD"></A>
@@ -656,7 +656,7 @@ C_WARN_IF_UNUSABLE_MODULES constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_ut
 C_LOG_STATE_THRESHOLD
 </P>
 <PRE CLASS="DECL_TEXT">
-C_LOG_STATE_THRESHOLD constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'LOG_STATE_THRESHOLD';
+C_LOG_STATE_THRESHOLD constant pit_util.ora_name_type := 'LOG_STATE_THRESHOLD';
 </PRE>
 <HR>
 <A NAME="C_MODULE_INSTANTIATED"></A>
@@ -664,10 +664,10 @@ C_LOG_STATE_THRESHOLD constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.or
 C_MODULE_INSTANTIATED
 </P>
 <PRE CLASS="DECL_TEXT">
-C_MODULE_INSTANTIATED constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MODULE_INSTANTIATED';
+C_MODULE_INSTANTIATED constant pit_util.ora_name_type := 'PIT_MODULE_INSTANTIATED';
 </PRE>
 <P CLASS="DESC_TEXT">
-message constants to avoid dependency from <A HREF="msg.html">MSG</A> package<br>
+message constants to avoid dependency from MSG package<br>
 
 <BR>
 </P>
@@ -677,7 +677,7 @@ message constants to avoid dependency from <A HREF="msg.html">MSG</A> package<br
 C_FAIL_MODULE_INIT
 </P>
 <PRE CLASS="DECL_TEXT">
-C_FAIL_MODULE_INIT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_FAIL_MODULE_INIT';
+C_FAIL_MODULE_INIT constant pit_util.ora_name_type := 'PIT_FAIL_MODULE_INIT';
 </PRE>
 <HR>
 <A NAME="C_FAIL_MESSAGE_CREATION"></A>
@@ -685,7 +685,7 @@ C_FAIL_MODULE_INIT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_n
 C_FAIL_MESSAGE_CREATION
 </P>
 <PRE CLASS="DECL_TEXT">
-C_FAIL_MESSAGE_CREATION constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_FAIL_MESSAGE_CREATION';
+C_FAIL_MESSAGE_CREATION constant pit_util.ora_name_type := 'PIT_FAIL_MESSAGE_CREATION';
 </PRE>
 <HR>
 <A NAME="C_FAIL_MESSAGE_PURGE"></A>
@@ -693,7 +693,7 @@ C_FAIL_MESSAGE_CREATION constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.
 C_FAIL_MESSAGE_PURGE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_FAIL_MESSAGE_PURGE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_FAIL_MESSAGE_PURGE';
+C_FAIL_MESSAGE_PURGE constant pit_util.ora_name_type := 'PIT_FAIL_MESSAGE_PURGE';
 </PRE>
 <HR>
 <A NAME="C_MSG_NOT_EXISTING"></A>
@@ -701,7 +701,7 @@ C_FAIL_MESSAGE_PURGE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora
 C_MSG_NOT_EXISTING
 </P>
 <PRE CLASS="DECL_TEXT">
-C_MSG_NOT_EXISTING constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_MSG_NOT_EXISTING';
+C_MSG_NOT_EXISTING constant pit_util.ora_name_type := 'PIT_MSG_NOT_EXISTING';
 </PRE>
 <HR>
 <A NAME="C_UNKNOWN_NAMED_CONTEXT"></A>
@@ -709,7 +709,7 @@ C_MSG_NOT_EXISTING constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_n
 C_UNKNOWN_NAMED_CONTEXT
 </P>
 <PRE CLASS="DECL_TEXT">
-C_UNKNOWN_NAMED_CONTEXT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_UNKNOWN_NAMED_CONTEXT';
+C_UNKNOWN_NAMED_CONTEXT constant pit_util.ora_name_type := 'PIT_UNKNOWN_NAMED_CONTEXT';
 </PRE>
 <HR>
 <A NAME="C_BULK_ERROR"></A>
@@ -717,7 +717,7 @@ C_UNKNOWN_NAMED_CONTEXT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.
 C_BULK_ERROR
 </P>
 <PRE CLASS="DECL_TEXT">
-C_BULK_ERROR constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_BULK_ERROR';
+C_BULK_ERROR constant pit_util.ora_name_type := 'PIT_BULK_ERROR';
 </PRE>
 <HR>
 <A NAME="C_BULK_FATAL"></A>
@@ -725,7 +725,7 @@ C_BULK_ERROR constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_ty
 C_BULK_FATAL
 </P>
 <PRE CLASS="DECL_TEXT">
-C_BULK_FATAL constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_BULK_FATAL';
+C_BULK_FATAL constant pit_util.ora_name_type := 'PIT_BULK_FATAL';
 </PRE>
 <HR>
 <A NAME="C_FAIL_READ_MODULE_LIST"></A>
@@ -733,7 +733,7 @@ C_BULK_FATAL constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_ty
 C_FAIL_READ_MODULE_LIST
 </P>
 <PRE CLASS="DECL_TEXT">
-C_FAIL_READ_MODULE_LIST constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_FAIL_READ_MODULE_LIST';
+C_FAIL_READ_MODULE_LIST constant pit_util.ora_name_type := 'PIT_FAIL_READ_MODULE_LIST';
 </PRE>
 <HR>
 <A NAME="C_NO_CONTEXT_SETTINGS"></A>
@@ -741,7 +741,7 @@ C_FAIL_READ_MODULE_LIST constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.
 C_NO_CONTEXT_SETTINGS
 </P>
 <PRE CLASS="DECL_TEXT">
-C_NO_CONTEXT_SETTINGS constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'PIT_NO_CONTEXT_SETTINGS';
+C_NO_CONTEXT_SETTINGS constant pit_util.ora_name_type := 'PIT_NO_CONTEXT_SETTINGS';
 </PRE>
 <HR>
 <A NAME="C_GLOBAL_CONTEXT"></A>
@@ -749,7 +749,7 @@ C_NO_CONTEXT_SETTINGS constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.or
 C_GLOBAL_CONTEXT
 </P>
 <PRE CLASS="DECL_TEXT">
-C_GLOBAL_CONTEXT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := substr('PIT_CTX_' || <A HREF=#C_PACKAGE_OWNER>C_PACKAGE_OWNER</A>, 1, 30);
+C_GLOBAL_CONTEXT constant pit_util.ora_name_type := substr('PIT_CTX_' || <A HREF=#C_PACKAGE_OWNER>C_PACKAGE_OWNER</A>, 1, 30);
 </PRE>
 <P CLASS="DESC_TEXT">
 context constants<br>
@@ -762,7 +762,7 @@ context constants<br>
 C_CONTEXT_TYPE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_CONTEXT_TYPE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_GLOBAL_CONTEXT>C_GLOBAL_CONTEXT</A> || '_TYPE';
+C_CONTEXT_TYPE constant pit_util.ora_name_type := <A HREF=#C_GLOBAL_CONTEXT>C_GLOBAL_CONTEXT</A> || '_TYPE';
 </PRE>
 <HR>
 <A NAME="C_CONTEXT_GROUP"></A>
@@ -770,7 +770,7 @@ C_CONTEXT_TYPE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_
 C_CONTEXT_GROUP
 </P>
 <PRE CLASS="DECL_TEXT">
-C_CONTEXT_GROUP constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'CONTEXT';
+C_CONTEXT_GROUP constant pit_util.ora_name_type := 'CONTEXT';
 </PRE>
 <HR>
 <A NAME="C_CONTEXT_PREFIX"></A>
@@ -778,7 +778,7 @@ C_CONTEXT_GROUP constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name
 C_CONTEXT_PREFIX
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_admin.body.html#C_CONTEXT_PREFIX">C_CONTEXT_PREFIX</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_CONTEXT_GROUP>C_CONTEXT_GROUP</A> || '_';
+C_CONTEXT_PREFIX constant pit_util.ora_name_type := <A HREF=#C_CONTEXT_GROUP>C_CONTEXT_GROUP</A> || '_';
 </PRE>
 <HR>
 <A NAME="C_CONTEXT_DEFAULT"></A>
@@ -786,7 +786,7 @@ C_CONTEXT_PREFIX
 C_CONTEXT_DEFAULT
 </P>
 <PRE CLASS="DECL_TEXT">
-C_CONTEXT_DEFAULT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_CONTEXT_PREFIX>C_CONTEXT_PREFIX</A> || 'DEFAULT';
+C_CONTEXT_DEFAULT constant pit_util.ora_name_type := <A HREF=#C_CONTEXT_PREFIX>C_CONTEXT_PREFIX</A> || 'DEFAULT';
 </PRE>
 <HR>
 <A NAME="C_CONTEXT_ACTIVE"></A>
@@ -794,7 +794,7 @@ C_CONTEXT_DEFAULT constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_na
 C_CONTEXT_ACTIVE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_CONTEXT_ACTIVE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := <A HREF=#C_CONTEXT_PREFIX>C_CONTEXT_PREFIX</A> || 'ACTIVE';
+C_CONTEXT_ACTIVE constant pit_util.ora_name_type := <A HREF=#C_CONTEXT_PREFIX>C_CONTEXT_PREFIX</A> || 'ACTIVE';
 </PRE>
 <HR>
 <A NAME="C_TOGGLE_PREFIX"></A>
@@ -802,7 +802,7 @@ C_CONTEXT_ACTIVE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_nam
 C_TOGGLE_PREFIX
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_admin.body.html#C_TOGGLE_PREFIX">C_TOGGLE_PREFIX</A> constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'TOGGLE_';
+C_TOGGLE_PREFIX constant pit_util.ora_name_type := 'TOGGLE_';
 </PRE>
 <HR>
 <A NAME="C_ALLOW_TOGGLE"></A>
@@ -810,7 +810,7 @@ C_TOGGLE_PREFIX
 C_ALLOW_TOGGLE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_ALLOW_TOGGLE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'ALLOW_TOGGLE';
+C_ALLOW_TOGGLE constant pit_util.ora_name_type := 'ALLOW_TOGGLE';
 </PRE>
 <HR>
 <A NAME="C_BROADCAST_CONTEXT_SWITCH"></A>
@@ -818,7 +818,7 @@ C_ALLOW_TOGGLE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_
 C_BROADCAST_CONTEXT_SWITCH
 </P>
 <PRE CLASS="DECL_TEXT">
-C_BROADCAST_CONTEXT_SWITCH constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'BROADCAST_CONTEXT_SWITCH';
+C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
 </PRE>
 <HR>
 <A NAME="C_CTX_DEL"></A>
@@ -826,7 +826,7 @@ C_BROADCAST_CONTEXT_SWITCH constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_ut
 C_CTX_DEL
 </P>
 <PRE CLASS="DECL_TEXT">
-C_CTX_DEL constant <A HREF="pit_util.html#SIGN_TYPE">pit_util.sign_type</A> := '|';
+C_CTX_DEL constant pit_util.sign_type := '|';
 </PRE>
 <HR>
 <A NAME="C_LIST_DEL"></A>
@@ -834,7 +834,7 @@ C_CTX_DEL constant <A HREF="pit_util.html#SIGN_TYPE">pit_util.sign_type</A> := '
 C_LIST_DEL
 </P>
 <PRE CLASS="DECL_TEXT">
-C_LIST_DEL constant <A HREF="pit_util.html#SIGN_TYPE">pit_util.sign_type</A> := ':';
+C_LIST_DEL constant pit_util.sign_type := ':';
 </PRE>
 <HR>
 <A NAME="C_ADAPTER_PREFERENCE"></A>
@@ -842,7 +842,7 @@ C_LIST_DEL constant <A HREF="pit_util.html#SIGN_TYPE">pit_util.sign_type</A> := 
 C_ADAPTER_PREFERENCE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_ADAPTER_PREFERENCE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'ADAPTER_PREFERENCE';
+C_ADAPTER_PREFERENCE constant pit_util.ora_name_type := 'ADAPTER_PREFERENCE';
 </PRE>
 <P CLASS="DESC_TEXT">
 adapter constants<br>
@@ -855,7 +855,7 @@ adapter constants<br>
 C_ADAPTER_OK
 </P>
 <PRE CLASS="DECL_TEXT">
-C_ADAPTER_OK constant <A HREF="pit_util.html#FLAG_TYPE">pit_util.flag_type</A> := pit_util.C_TRUE;
+C_ADAPTER_OK constant pit_util.flag_type := pit_util.C_TRUE;
 </PRE>
 <HR>
 <A NAME="C_EVENT_FOCUS_ALL"></A>
@@ -863,7 +863,7 @@ C_ADAPTER_OK constant <A HREF="pit_util.html#FLAG_TYPE">pit_util.flag_type</A> :
 C_EVENT_FOCUS_ALL
 </P>
 <PRE CLASS="DECL_TEXT">
-C_EVENT_FOCUS_ALL constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'ALL';
+C_EVENT_FOCUS_ALL constant pit_util.ora_name_type := 'ALL';
 </PRE>
 <P CLASS="DESC_TEXT">
 &quot;events&quot;<br>
@@ -876,7 +876,7 @@ C_EVENT_FOCUS_ALL constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_na
 C_EVENT_FOCUS_ACTIVE
 </P>
 <PRE CLASS="DECL_TEXT">
-C_EVENT_FOCUS_ACTIVE constant <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> := 'ACTIVE';
+C_EVENT_FOCUS_ACTIVE constant pit_util.ora_name_type := 'ACTIVE';
 </PRE>
 <HR>
 <A NAME="C_CONTEXT_EVENT"></A>
@@ -1101,7 +1101,7 @@ Procedure raise_event(p_event                in pls_integer,
                       p_event_focus          in varchar2,
                       p_call_stack           in call_stack_type default null,
                       p_params               in msg_params default null,
-                      p_context              in <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A> default null,
+                      p_context              in pit_util.context_type default null,
                       p_date_before          in date default null,
                       p_severity_lower_equal in pls_integer default null)
 
@@ -1132,7 +1132,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Loads and instantiates all output modules which are installed under PIT_MODULE All modules are availabe in <A HREF=#G_ALL_MODULES>G_ALL_MODULES</A> All successfully instantiated modules are available in <A HREF=#G_AVAILABLE_MODULES>G_AVAILABLE_MODULES</A> An <A HREF="pit.html#ERROR">error</A> is thrown if no module could be made available<br>
+Loads and instantiates all output modules which are installed under PIT_MODULE All modules are availabe in <A HREF=#G_ALL_MODULES>G_ALL_MODULES</A> All successfully instantiated modules are available in <A HREF=#G_AVAILABLE_MODULES>G_AVAILABLE_MODULES</A> An error is thrown if no module could be made available<br>
 
 </TD></TR>
 </TABLE>
@@ -1143,7 +1143,7 @@ Loads and instantiates all output modules which are installed under PIT_MODULE A
 report_module_status
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#REPORT_MODULE_STATUS">report_module_status</A>
+Procedure report_module_status
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1185,7 +1185,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Copies available modules as requested by the actual context into a list of modules. These modules will then be used to <A HREF="pit.html#LOG">log</A> to.<br>
+Copies available modules as requested by the actual context into a list of modules. These modules will then be used to log to.<br>
 
 </TD></TR>
 </TABLE>
@@ -1223,7 +1223,7 @@ read_best_matching_context
 </P>
 <PRE CLASS="DECL_TEXT">
 Function read_best_matching_context(p_args in args default null)
-  return <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>
+  return pit_util.context_type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1264,7 +1264,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called to read the <A HREF="pit.html#LOG">log</A> settings from the globally accessed context. It tries to read the context in the following order: CONTEXT_FROM SESSION_ADAPTER, P_CONTEXT_NAME, <A HREF="pit_util.html#C_ACTIVE_CONTEXT">C_ACTIVE_CONTEXT</A>, <A HREF="pit_util.html#C_DEFAULT_CONTEXT">C_DEFAULT_CONTEXT</A> After having read the actual settings, it compares them to the settings known so far. If they differ, <A HREF="msg.html#CTX_CHANGED">CTX_CHANGED</A> is set to TRUE and to FALSE otherwise.<br>
+Is called to read the log settings from the globally accessed context. It tries to read the context in the following order: CONTEXT_FROM SESSION_ADAPTER, P_CONTEXT_NAME, C_ACTIVE_CONTEXT, C_DEFAULT_CONTEXT After having read the actual settings, it compares them to the settings known so far. If they differ, CTX_CHANGED is set to TRUE and to FALSE otherwise.<br>
 
 </TD></TR>
 </TABLE>
@@ -1301,11 +1301,11 @@ Session context, if required, named context if requested, active context if avai
 set_context_if_changed
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_context_if_changed(p_context in <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>)
+Procedure set_context_if_changed(p_context in pit_util.context_type)
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Sets new context settings for <A HREF="pit.html">PIT</A> at the context and raises <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">CONTEXT_CHANGED</A> event<br>
+Sets new context settings for PIT at the context and raises CONTEXT_CHANGED event<br>
 
 <BR>
 </P>
@@ -1335,7 +1335,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_context&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-New context settings, instance of <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>
+New context settings, instance of pit_util.context_type<br>
 
 </TD></TR>
 </TABLE>
@@ -1346,8 +1346,8 @@ New context settings, instance of <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.
 set_context_temporarily
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_context_temporarily(p_old_context out nocopy <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>,
-                                  p_new_context in <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>)
+Procedure set_context_temporarily(p_old_context out nocopy pit_util.context_type,
+                                  p_new_context in pit_util.context_type)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1362,7 +1362,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used if for a single <A HREF="pit.html#LOG">log</A> activity a new context setting is required, such as with <A HREF=#LOG_SPECIFIC>LOG_SPECIFIC</A> or <A HREF=#NOTIFY>NOTIFY</A>. In this environment, only output modules and <A HREF="pit.html#LOG">log</A> threshold can be changed, therefore all other settings are copied from the actually active context.<br>
+Is used if for a single log activity a new context setting is required, such as with <A HREF=#LOG_SPECIFIC>LOG_SPECIFIC</A> or <A HREF=#NOTIFY>NOTIFY</A>. In this environment, only output modules and log threshold can be changed, therefore all other settings are copied from the actually active context.<br>
 
 </TD></TR>
 </TABLE>
@@ -1376,7 +1376,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_old_context&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Instance of <A HREF="pit_util.html#CONTEXT_TYPE">PIT_UTIL.context_type</A> to hold the existing context settings and a flag on whether the context was changed by this method<br>
+Instance of PIT_UTIL.context_type to hold the existing context settings and a flag on whether the context was changed by this method<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1394,7 +1394,7 @@ partly filled new context (log_level and module_list may be filled)<br>
 reset_temporarily_set_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure reset_temporarily_set_context(p_context in <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>)
+Procedure reset_temporarily_set_context(p_context in pit_util.context_type)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1434,9 +1434,9 @@ Context settings of the context before the temporarily shift<br>
 get_toggle_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_toggle_context(p_module in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
-                            p_method in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>)
-  return <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>
+Function get_toggle_context(p_module in pit_util.ora_name_type,
+                            p_method in pit_util.ora_name_type)
+  return pit_util.context_type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1451,7 +1451,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-A toggle controls whether <A HREF="pit.html">PIT</A> should <A HREF="pit.html#LOG">log</A> or not. Therefore it must be checked whether a toggle was defined for the actual package/method the call stack is at. If a setting is present, this method will set the new environment and return the settings at the same time to store them in the call stack. This is necessary to reset it if the call stack entry is popped.<br>
+A toggle controls whether PIT should log or not. Therefore it must be checked whether a toggle was defined for the actual package/method the call stack is at. If a setting is present, this method will set the new environment and return the settings at the same time to store them in the call stack. This is necessary to reset it if the call stack entry is popped.<br>
 
 </TD></TR>
 </TABLE>
@@ -1489,7 +1489,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-If a toggle was found and the call stack pops that entry, the <A HREF="pit.html#LOG">log</A> settings outside the toggle must be restored.<br>
+If a toggle was found and the call stack pops that entry, the log settings outside the toggle must be restored.<br>
 
 </TD></TR>
 </TABLE>
@@ -1568,11 +1568,11 @@ check_context_toggle
 <PRE CLASS="DECL_TEXT">
 Function check_context_toggle(p_trace_settings in varchar2,
                               p_last_entry     in pls_integer)
-  return <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>
+  return pit_util.context_type
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Checks whether <A HREF="pit.html#LOG">log</A> settings have to be changed due to toggle settings<br>
+Checks whether log settings have to be changed due to toggle settings<br>
 
 <BR>
 </P>
@@ -1609,7 +1609,7 @@ Procedure maintain_application_info(p_module      in varchar2,
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Helper to maintain Application <A HREF="pit.html#INFO">Info</A>
+Helper to maintain Application Info<br>
 
 <BR>
 </P>
@@ -1648,7 +1648,7 @@ Method of the module that was called<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_client_info&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Client <A HREF="pit.html#INFO">info</A> passed in as optional parameter<br>
+Client info passed in as optional parameter<br>
 
 </TD></TR>
 </TABLE>
@@ -1707,7 +1707,7 @@ Method of the module that was called<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_client_info&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional client <A HREF="pit.html#INFO">info</A> passed in as a pararameter to <A HREF=#ENTER>ENTER</A>
+Optional client info passed in as a pararameter to <A HREF=#ENTER>ENTER</A>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1811,7 +1811,7 @@ Procedure clean_stack(p_params in msg_params)
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Helper method to clean stack after a <A HREF="pit.html#FATAL">fatal</A> <A HREF="pit.html#ERROR">error</A> has ocurred.<br>
+Helper method to clean stack after a fatal error has ocurred.<br>
 
 <BR>
 </P>
@@ -1822,7 +1822,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Called from method <A HREF=#HANDLE_ERROR>HANDLE_ERROR</A> if level is <A HREF="pit_pkg.html#C_LEVEL_FATAL">C_LEVEL_FATAL</A>. Pops all call stack entries<br>
+Called from method <A HREF=#HANDLE_ERROR>HANDLE_ERROR</A> if level is C_LEVEL_FATAL. Pops all call stack entries<br>
 
 </TD></TR>
 </TABLE>
@@ -1879,7 +1879,7 @@ Procedure raise_event(p_event                in pls_integer,
                       p_event_focus          in varchar2,
                       p_call_stack           in call_stack_type default null,
                       p_params               in msg_params default null,
-                      p_context              in <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A> default null,
+                      p_context              in pit_util.context_type default null,
                       p_date_before          in date default null,
                       p_severity_lower_equal in pls_integer default null)
 
@@ -1910,7 +1910,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_event&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Integer indicating the type of &quot;event&quot; (i.e. LOG|PRINT|ENTER etc.) thrown by <A HREF="pit.html">PIT</A>
+Integer indicating the type of &quot;event&quot; (i.e. LOG|PRINT|ENTER etc.) thrown by PIT<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1931,7 +1931,7 @@ Instance of the actual call stack in the event of ENTER|LEAVE<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_date_before&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Date indicating the point in time, up to when the <A HREF="pit.html#LOG">log</A> is to be purged<br>
+Date indicating the point in time, up to when the log is to be purged<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1964,7 +1964,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called during logging to decide whether the actual settings allow for logging.<br> The decision is based on the requested <A HREF="pit.html#LOG">log</A> level as well as on settings in the global context<br>
+Is called during logging to decide whether the actual settings allow for logging.<br> The decision is based on the requested log level as well as on settings in the global context<br>
 
 </TD></TR>
 </TABLE>
@@ -2079,7 +2079,7 @@ Language string as per oracle convention: AMERICAN|GERMN etc.<br>
 initialize
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+Procedure initialize
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -2093,10 +2093,10 @@ INTERFACE<br>
 log_event
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#LOG_EVENT">log_event</A>(p_severity     in pls_integer,
-                    p_message_name in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A> default null,
+Procedure log_event(p_severity     in pls_integer,
+                    p_message_name in pit_util.ora_name_type default null,
                     p_msg_args     in msg_args default null,
-                    p_affected_id  in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A> default null,
+                    p_affected_id  in pit_util.max_sql_char default null,
                     p_error_code   in varchar2 default null)
 
 </PRE>
@@ -2111,26 +2111,21 @@ CORE<br>
 log_state
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG_STATE">log_state</A>(p_params in msg_params)
+Procedure log_state(p_params in msg_params)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-if used with <A HREF="pit.html#SQL_EXCEPTION">SQL_EXCEPTION</A>, code may re raise the exception explicitly<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="LOG_SPECIFIC"></A>
 <P CLASS="TYPE_TITLE">
 log_specific
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#LOG_SPECIFIC">log_specific</A>(p_message_name  in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
-                       p_affected_id   in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>,
+Procedure log_specific(p_message_name  in pit_util.ora_name_type,
+                       p_affected_id   in pit_util.max_sql_char,
                        p_error_code    in varchar2,
                        p_msg_args      in msg_args,
                        p_log_threshold in pit_message.pms_pse_id%type,
-                       p_log_modules   in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>)
+                       p_log_modules   in pit_util.max_sql_char)
 
 </PRE>
 <HR>
@@ -2139,76 +2134,56 @@ Procedure <A HREF="pit_pkg.html#LOG_SPECIFIC">log_specific</A>(p_message_name  i
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_action      in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
-                p_module      in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+Procedure enter(p_action      in pit_util.ora_name_type,
+                p_module      in pit_util.ora_name_type,
                 p_params      in msg_params,
                 p_trace_level in pls_integer,
                 p_client_info in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-<A HREF=#INITIALIZE>initialize</A>
-
-<BR>
-</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_trace_level in pls_integer, p_params in msg_params)
+Procedure leave(p_trace_level in pls_integer, p_params in msg_params)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Do minimal tracing if context toggle is active<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="LONG_OP"></A>
 <P CLASS="TYPE_TITLE">
 long_op
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LONG_OP">long_op</A>(p_target  in varchar2,
+Procedure long_op(p_target  in varchar2,
                   p_sofar   in number,
                   p_total   in number,
                   p_units   in varchar2,
                   p_op_name in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-toggle may have set a new trace level, Check and set accordingly for higher entries on stack<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="PRINT"></A>
 <P CLASS="TYPE_TITLE">
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message_name in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+Procedure print(p_message_name in pit_util.ora_name_type,
                 p_msg_args     msg_args)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-$END<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="NOTIFY"></A>
 <P CLASS="TYPE_TITLE">
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message_name  in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
-                 p_affected_id   in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>,
+Procedure notify(p_message_name  in pit_util.ora_name_type,
+                 p_affected_id   in pit_util.max_sql_char,
                  p_msg_args      in msg_args,
                  p_log_threshold in pit_message.pms_pse_id%type,
-                 p_log_modules   in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>)
+                 p_log_modules   in pit_util.max_sql_char)
 
 </PRE>
 <HR>
@@ -2217,44 +2192,34 @@ Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message_name  in <A HREF="pit_u
 raise_error
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#RAISE_ERROR">raise_error</A>(p_severity     in pls_integer,
-                      p_message_name <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+Procedure raise_error(p_severity     in pls_integer,
+                      p_message_name pit_util.ora_name_type,
                       p_msg_args     in msg_args,
-                      p_affected_id  in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>,
+                      p_affected_id  in pit_util.max_sql_char,
                       p_error_code   in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-<A HREF=#INITIALIZE>initialize</A>
-
-<BR>
-</P>
 <HR>
 <A NAME="HANDLE_ERROR"></A>
 <P CLASS="TYPE_TITLE">
 handle_error
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#HANDLE_ERROR">handle_error</A>(p_severity     in pls_integer,
-                       p_message_name <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+Procedure handle_error(p_severity     in pls_integer,
+                       p_message_name pit_util.ora_name_type,
                        p_msg_args     in msg_args,
-                       p_affected_id  in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>,
+                       p_affected_id  in pit_util.max_sql_char,
                        p_error_code   in varchar2,
                        p_params       in msg_params)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-P_MESSAGE_NAME could be NULL, we use <A HREF=#G_ACTIVE_MESSAGE>G_ACTIVE_MESSAGE</A> then<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="PURGE_LOG"></A>
 <P CLASS="TYPE_TITLE">
 purge_log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PURGE_LOG">purge_log</A>(p_date_before          in date,
+Procedure purge_log(p_date_before          in date,
                     p_severity_lower_equal in pls_integer)
 
 </PRE>
@@ -2264,9 +2229,9 @@ Procedure <A HREF="pit.html#PURGE_LOG">purge_log</A>(p_date_before          in d
 get_message
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE">get_message</A>(p_message_name in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+Function get_message(p_message_name in pit_util.ora_name_type,
                      p_msg_args     in msg_args,
-                     p_affected_id  in <A HREF="pit_util.html#MAX_SQL_CHAR">pit_util.max_sql_char</A>,
+                     p_affected_id  in pit_util.max_sql_char,
                      p_error_code   in varchar2) return message_type
 
 </PRE>
@@ -2281,21 +2246,16 @@ MESSAGE related methods<br>
 get_active_message
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_ACTIVE_MESSAGE">get_active_message</A> return message_type
+Function get_active_message return message_type
 
 </PRE>
-<P CLASS="DESC_TEXT">
-use a local message here to prevent to overwrite <A HREF=#G_ACTIVE_MESSAGE>g_active_message</A> with messages that are never raised<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="CHECK_DATATYPE"></A>
 <P CLASS="TYPE_TITLE">
 check_datatype
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_pkg.html#CHECK_DATATYPE">check_datatype</A>(p_value       in varchar2,
+Function check_datatype(p_value       in varchar2,
                         p_type        in varchar2,
                         p_format_mask in varchar2) return boolean
 
@@ -2306,7 +2266,7 @@ Function <A HREF="pit_pkg.html#CHECK_DATATYPE">check_datatype</A>(p_value       
 get_message_text
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE_TEXT">get_message_text</A>(p_message_name in <A HREF="pit_util.html#ORA_NAME_TYPE">pit_util.ora_name_type</A>,
+Function get_message_text(p_message_name in pit_util.ora_name_type,
                           p_msg_args     in msg_args) return clob
 
 </PRE>
@@ -2316,11 +2276,11 @@ Function <A HREF="pit.html#GET_MESSAGE_TEXT">get_message_text</A>(p_message_name
 get_trans_item
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_TRANS_ITEM">get_trans_item</A>(p_pti_pmg_name in pit_message_group.pmg_name%type,
+Function get_trans_item(p_pti_pmg_name in pit_message_group.pmg_name%type,
                         p_pti_id       in pit_translatable_item.pti_id%type,
                         p_msg_args     msg_args,
                         p_pti_pml_name in pit_message_language.pml_name%type)
-  return <A HREF="pit_util.html#TRANSLATABLE_ITEM_REC">pit_util.translatable_item_rec</A>
+  return pit_util.translatable_item_rec
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -2334,7 +2294,7 @@ TRNALSATION ITEM methods<br>
 get_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_pkg.html#GET_CONTEXT">get_context</A> return <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>
+Function get_context return pit_util.context_type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -2348,7 +2308,7 @@ CONTEXT MAINTENANCE<br>
 set_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#SET_CONTEXT">set_context</A>(p_context in <A HREF="pit_util.html#CONTEXT_TYPE">pit_util.context_type</A>)
+Procedure set_context(p_context in pit_util.context_type)
 
 </PRE>
 <HR>
@@ -2357,22 +2317,16 @@ Procedure <A HREF="pit.html#SET_CONTEXT">set_context</A>(p_context in <A HREF="p
 reset_active_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#RESET_ACTIVE_CONTEXT">reset_active_context</A>
+Procedure reset_active_context
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Explicit context settings without a context name passed in.<br>
-Don't try to read context settings from global context, <A HREF=#LEAVE>leave</A> context_name to NULL to force <A HREF=#SET_CONTEXT_IF_CHANGED>SET_CONTEXT_IF_CHANGED</A> to check whether new settings apply<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="RESET_CONTEXT"></A>
 <P CLASS="TYPE_TITLE">
 reset_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#RESET_CONTEXT">reset_context</A>
+Procedure reset_context
 
 </PRE>
 <HR>
@@ -2381,7 +2335,7 @@ Procedure <A HREF="pit.html#RESET_CONTEXT">reset_context</A>
 set_collect_mode
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_pkg.html#SET_COLLECT_MODE">set_collect_mode</A>(p_mode in boolean)
+Procedure set_collect_mode(p_mode in boolean)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -2395,21 +2349,16 @@ COLLECT MODE methods<br>
 get_collect_mode
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_pkg.html#GET_COLLECT_MODE">get_collect_mode</A> return boolean
+Function get_collect_mode return boolean
 
 </PRE>
-<P CLASS="DESC_TEXT">
-<A HREF=#INITIALIZE>initialize</A>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_MESSAGE_COLLECTION"></A>
 <P CLASS="TYPE_TITLE">
 get_message_collection
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE_COLLECTION">get_message_collection</A> return pit_message_table
+Function get_message_collection return pit_message_table
 
 </PRE>
 <HR>
@@ -2418,21 +2367,16 @@ Function <A HREF="pit.html#GET_MESSAGE_COLLECTION">get_message_collection</A> re
 get_actual_call_stack_depth
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_pkg.html#GET_ACTUAL_CALL_STACK_DEPTH">get_actual_call_stack_depth</A> return pls_integer
+Function get_actual_call_stack_depth return pls_integer
 
 </PRE>
-<P CLASS="DESC_TEXT">
-deep copy to allow for clean up of <A HREF=#G_MESSAGE_STACK>G_MESSAGE_STACK</A>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_MODULES"></A>
 <P CLASS="TYPE_TITLE">
 get_modules
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MODULES">get_modules</A> return pit_module_list
+Function get_modules return pit_module_list
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -2446,42 +2390,27 @@ MODULE MAINTENANCE<br>
 get_active_modules
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_ACTIVE_MODULES">get_active_modules</A> return args
+Function get_active_modules return args
 
 </PRE>
-<P CLASS="DESC_TEXT">
-<A HREF=#INITIALIZE>initialize</A>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_AVAILABLE_MODULES"></A>
 <P CLASS="TYPE_TITLE">
 get_available_modules
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_AVAILABLE_MODULES">get_available_modules</A> return args
+Function get_available_modules return args
 
 </PRE>
-<P CLASS="DESC_TEXT">
-<A HREF=#INITIALIZE>initialize</A>
-
-<BR>
-</P>
 <HR>
 <A NAME="REPORT_MODULE_STATUS2"></A>
 <P CLASS="TYPE_TITLE">
 report_module_status
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_pkg.html#REPORT_MODULE_STATUS">report_module_status</A> return args
+Function report_module_status return args
 
 </PRE>
-<P CLASS="DESC_TEXT">
-<A HREF=#INITIALIZE>initialize</A>
-
-<BR>
-</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

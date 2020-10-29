@@ -5,7 +5,7 @@
  <TITLE>Package pit_pkg</TITLE>
  <META name="object" content="PACKAGE">
  <META name="name" content="pit_pkg">
- <META name="description" content="accessible by (package PIT)">
+ <META name="description" content="">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,7 +14,6 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package pit_pkg</P>
-accessible by (package <A HREF="pit.html">PIT</A>)<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -42,7 +41,7 @@ Logs parameters
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG_SPECIFIC">log_specific</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Logs messages regardless of <A HREF="pit.html#LOG">log</A> settings
+Logs messages regardless of log settings
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
@@ -72,17 +71,17 @@ Prints a message to the output modules.
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF="pit.html#NOTIFY">Notify</A> output modules
+Notify output modules
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RAISE_ERROR">raise_error</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Raises an <A HREF="pit.html#ERROR">error</A>
+Raises an error
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#HANDLE_ERROR">handle_error</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Handels an <A HREF="pit.html#ERROR">error</A>
+Handels an error
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MESSAGE">get_message</A>&nbsp;&nbsp;
@@ -107,7 +106,7 @@ Returns the text of a message
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_TRANS_ITEM">get_trans_item</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Function to retrieve a <A HREF="pit.html">PIT</A> translatable item (PTI)
+Function to retrieve a PIT translatable item (PTI)
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_CONTEXT">get_context</A>&nbsp;&nbsp;
@@ -122,7 +121,7 @@ Procedure to change the settings in the global PIT_CONTEXT
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RESET_ACTIVE_CONTEXT">reset_active_context</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to reset <A HREF="pit.html#LOG">log</A> settings to the default settings
+Procedure to reset log settings to the default settings
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RESET_CONTEXT">reset_context</A>&nbsp;&nbsp;
@@ -132,7 +131,7 @@ Procedure to reset the complete context to default settings
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_COLLECT_MODE">set_collect_mode</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to toggle <A HREF="pit.html">PIT</A> collection mode
+Procedure to toggle PIT collection mode
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_COLLECT_MODE">get_collect_mode</A>&nbsp;&nbsp;
@@ -142,7 +141,7 @@ Method to read the actually set collection mode
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MESSAGE_COLLECTION">get_message_collection</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method to retrieve the collection of messages raised since setting <A HREF="pit.html">PIT</A> to collect mode
+Method to retrieve the collection of messages raised since setting PIT to collect mode
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_ACTUAL_CALL_STACK_DEPTH">get_actual_call_stack_depth</A>&nbsp;&nbsp;
@@ -410,7 +409,7 @@ C_TYPE_XML constant pit_util.ora_name_type := 'XML';
 initialize
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+Procedure initialize
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -425,7 +424,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Made public to allow for any session to re-initialize <A HREF="pit.html">PIT</A>. As the actual status is persisted in a global context, initializing <A HREF="pit.html">PIT</A> will effectively re-initialize all <A HREF="pit.html">PIT</A> packages<br>
+Made public to allow for any session to re-initialize PIT. As the actual status is persisted in a global context, initializing PIT will effectively re-initialize all PIT packages<br>
 
 </TD></TR>
 </TABLE>
@@ -455,7 +454,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This method is called from <A HREF="pit.html">PIT</A>. It takes the message_name and constructs an instance of <code>MESSAGE_TYPE</code> for it. It then calls any <A HREF="pit.html#LOG">log</A> procedure of all active output modules and passes the message.<br>
+This method is called from PIT. It takes the message_name and constructs an instance of <code>MESSAGE_TYPE</code> for it. It then calls any log procedure of all active output modules and passes the message.<br>
 
 </TD></TR>
 </TABLE>
@@ -469,14 +468,14 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_severity&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Log-level. Allows to decide whether <A HREF="pit.html">PIT</A> should <A HREF="pit.html#LOG">log</A> or not. If 0, the message gets logged anyway, regardless of <A HREF="pit.html#LOG">log</A> settings<br>
+Log-level. Allows to decide whether PIT should log or not. If 0, the message gets logged anyway, regardless of log settings<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -490,14 +489,14 @@ List of replacement values for the message<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_affected_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional ID of an item a <A HREF="pit.html#LOG">log</A> entry relates to<br>
+Optional ID of an item a log entry relates to<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_error_code&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Additional <A HREF="pit.html#ERROR">error</A> code, used in external applications<br>
+Additional error code, used in external applications<br>
 
 </TD></TR>
 </TABLE>
@@ -508,7 +507,7 @@ Additional <A HREF="pit.html#ERROR">error</A> code, used in external application
 log_state
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG_STATE">log_state</A>(p_params in msg_params)
+Procedure log_state(p_params in msg_params)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -523,7 +522,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This method is called from <A HREF="pit.html">PIT</A>. It expects an instance of MSG_PARAMS, containing variable names and their actual value. Useful if you want to <A HREF="pit.html#LOG">log</A> the state of variables without the context of a method call, fi to <A HREF="pit.html#DEBUG">debug</A> state within a loop. Optionally, you may add an ID to reference an item.<br>
+This method is called from PIT. It expects an instance of MSG_PARAMS, containing variable names and their actual value. Useful if you want to log the state of variables without the context of a method call, fi to debug state within a loop. Optionally, you may add an ID to reference an item.<br>
 
 </TD></TR>
 </TABLE>
@@ -557,7 +556,7 @@ Procedure log_specific(p_message_name  in pit_util.ora_name_type,
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Logs messages regardless of <A HREF="pit.html#LOG">log</A> settings<br>
+Logs messages regardless of log settings<br>
 
 <BR>
 </P>
@@ -568,7 +567,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name and constructs an instance of <code>MESSAGE_TYPE</code> for it. It then calls any <A HREF="pit.html#LOG">log</A> procedure of all active output modules and passes the message, regardless of the actual <A HREF="pit.html#LOG">log</A> settings. This overloaded version is used to provide a mechanism to <A HREF="pit.html#LOG">log</A> different messages to a certain set of <A HREF="pit.html#LOG">log</A> modules only<br>
+This procedure is called from PIT. It takes the message_name and constructs an instance of <code>MESSAGE_TYPE</code> for it. It then calls any log procedure of all active output modules and passes the message, regardless of the actual log settings. This overloaded version is used to provide a mechanism to log different messages to a certain set of log modules only<br>
 
 </TD></TR>
 </TABLE>
@@ -582,21 +581,21 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_affected_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional ID of an item a <A HREF="pit.html#LOG">log</A> entry relates to<br>
+Optional ID of an item a log entry relates to<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_error_code&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Additional <A HREF="pit.html#ERROR">error</A> code, used in external applications<br>
+Additional error code, used in external applications<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -617,7 +616,7 @@ Threshold that is taken as a comparison to the message severity to decide whethe
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_log_modules&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-List of output modules to <A HREF="pit.html#LOG">log</A> to. This list is taken for this single call only. It does not affected the overall <A HREF="pit.html#LOG">log</A> module settings for the active or default context<br>
+List of output modules to log to. This list is taken for this single call only. It does not affected the overall log module settings for the active or default context<br>
 
 </TD></TR>
 </TABLE>
@@ -628,7 +627,7 @@ List of output modules to <A HREF="pit.html#LOG">log</A> to. This list is taken 
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_action      in pit_util.ora_name_type,
+Procedure enter(p_action      in pit_util.ora_name_type,
                 p_module      in pit_util.ora_name_type,
                 p_params      in msg_params,
                 p_trace_level in pls_integer,
@@ -647,7 +646,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called from <A HREF="pit.html">PIT</A> to trace entering a method. It will determine timing information and maintain a call stack.<br>
+Is called from PIT to trace entering a method. It will determine timing information and maintain a call stack.<br>
 
 </TD></TR>
 </TABLE>
@@ -689,7 +688,7 @@ Trace level to allow for selective tracing.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_client_info&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional <A HREF="pit.html#INFO">info</A> to be passed to <code>DBMS_APPLICATION_INFO</code>, applicable for <code>TRACE_MANDATORY</code> only<br>
+Optional info to be passed to <code>DBMS_APPLICATION_INFO</code>, applicable for <code>TRACE_MANDATORY</code> only<br>
 
 </TD></TR>
 </TABLE>
@@ -700,7 +699,7 @@ Optional <A HREF="pit.html#INFO">info</A> to be passed to <code>DBMS_APPLICATION
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_trace_level in pls_integer, p_params in msg_params)
+Procedure leave(p_trace_level in pls_integer, p_params in msg_params)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -715,7 +714,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called from <A HREF="pit.html">PIT</A> to trace leaving a method. Calculates timing information if requested and maintain a call stack.<br>
+Is called from PIT to trace leaving a method. Calculates timing information if requested and maintain a call stack.<br>
 
 </TD></TR>
 </TABLE>
@@ -747,7 +746,7 @@ Instance of <code>msg_params</code> with a list of key-value pairs representing 
 long_op
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LONG_OP">long_op</A>(p_target  in varchar2,
+Procedure long_op(p_target  in varchar2,
                   p_sofar   in number,
                   p_total   in number,
                   p_units   in varchar2,
@@ -819,7 +818,7 @@ Actual action. Either passed in manually or taken from the method name<br>
 purge_log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PURGE_LOG">purge_log</A>(p_date_before          in date,
+Procedure purge_log(p_date_before          in date,
                     p_severity_lower_equal in pls_integer)
 
 </PRE>
@@ -835,7 +834,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called from <A HREF="pit.html">PIT</A> to <A HREF="pit_file_pkg.html#PURGE">purge</A> the message stack - P_DATE_BEFORE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; determines which entries to <A HREF="pit_file_pkg.html#PURGE">purge</A>. - P_SEVERITY_GREATER_EQUAL determines which severity is to be purged. Setting it to 40 will <A HREF="pit_file_pkg.html#PURGE">purge</A> all entries with severity of 40 and greater.<br>
+Is called from PIT to purge the message stack - P_DATE_BEFORE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; determines which entries to purge. - P_SEVERITY_GREATER_EQUAL determines which severity is to be purged. Setting it to 40 will purge all entries with severity of 40 and greater.<br>
 
 </TD></TR>
 </TABLE>
@@ -849,7 +848,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_date_before&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Date, before which the message <A HREF="pit.html#LOG">log</A> is purged<br>
+Date, before which the message log is purged<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -867,7 +866,7 @@ Optional severity level that controls which severity of messages shall be purged
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message_name in pit_util.ora_name_type,
+Procedure print(p_message_name in pit_util.ora_name_type,
                 p_msg_args     in msg_args)
 
 </PRE>
@@ -883,7 +882,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls any <A HREF="pit.html#PRINT">print</A> procedure of all active output modules and passes the message.<br>
+This procedure is called from PIT. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls any print procedure of all active output modules and passes the message.<br>
 
 </TD></TR>
 </TABLE>
@@ -897,7 +896,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -915,7 +914,7 @@ List of replacement values for the message<br>
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message_name  in pit_util.ora_name_type,
+Procedure notify(p_message_name  in pit_util.ora_name_type,
                  p_affected_id   in pit_util.max_sql_char,
                  p_msg_args      in msg_args,
                  p_log_threshold in pit_message.pms_pse_id%type,
@@ -923,7 +922,7 @@ Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message_name  in pit_util.ora_n
 
 </PRE>
 <P CLASS="DESC_TEXT">
-<A HREF="pit.html#NOTIFY">Notify</A> output modules<br>
+Notify output modules<br>
 
 <BR>
 </P>
@@ -934,7 +933,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls any <A HREF="pit.html#NOTIFY">notify</A> procedure of all active output modules and passes the message. Notifications are meant to be used for progress messages and the like.<br>
+This procedure is called from PIT. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls any notify procedure of all active output modules and passes the message. Notifications are meant to be used for progress messages and the like.<br>
 
 </TD></TR>
 </TABLE>
@@ -948,14 +947,14 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_affected_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional ID of an item a <A HREF="pit.html#LOG">log</A> entry relates to<br>
+Optional ID of an item a log entry relates to<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -976,7 +975,7 @@ Threshold that is taken as a comparison to the message severity to decide whethe
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_log_modules&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-List of output modules to <A HREF="pit.html#LOG">log</A> to. This list is taken for this single call only. It does not affected the overall <A HREF="pit.html#LOG">log</A> module settings for the active or default context<br>
+List of output modules to log to. This list is taken for this single call only. It does not affected the overall log module settings for the active or default context<br>
 
 </TD></TR>
 </TABLE>
@@ -995,7 +994,7 @@ Procedure raise_error(p_severity     in pls_integer,
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Raises an <A HREF="pit.html#ERROR">error</A>
+Raises an error<br>
 
 <BR>
 </P>
@@ -1006,7 +1005,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls raises an <A HREF="pit.html#ERROR">error</A> with the respective message that can be caught by the exception block. Messages with severity <A HREF="pit.html#ERROR">error</A> or <A HREF="pit.html#FATAL">fatal</A> have an associated <A HREF="pit.html#ERROR">error</A> called &lt;MESSAGE_NAME&gt;_ERR that can be used to capture the <A HREF="pit.html#ERROR">error</A>.<br>
+This procedure is called from PIT. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls raises an error with the respective message that can be caught by the exception block. Messages with severity error or fatal have an associated error called &lt;MESSAGE_NAME&gt;_ERR that can be used to capture the error.<br>
 
 </TD></TR>
 </TABLE>
@@ -1048,7 +1047,7 @@ ID of an object that is affected by this message<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_error_code&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Additional <A HREF="pit.html#ERROR">error</A> code, used in external applications<br>
+Additional error code, used in external applications<br>
 
 </TD></TR>
 </TABLE>
@@ -1068,7 +1067,7 @@ Procedure handle_error(p_severity     in pls_integer,
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Handels an <A HREF="pit.html#ERROR">error</A>
+Handels an error<br>
 
 <BR>
 </P>
@@ -1079,7 +1078,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls raises an <A HREF="pit.html#ERROR">error</A> with the respective message that can be caught by the exception block. Messages with severity <A HREF="pit.html#ERROR">error</A> or <A HREF="pit.html#FATAL">fatal</A> have an associated <A HREF="pit.html#ERROR">error</A> called &lt;MESSAGE_NAME&gt;_ERR that can be used to capture the <A HREF="pit.html#ERROR">error</A>.<br>
+This procedure is called from PIT. It takes the message_name and constructs an instance of MESSAGE_TYPE for it. It then calls raises an error with the respective message that can be caught by the exception block. Messages with severity error or fatal have an associated error called &lt;MESSAGE_NAME&gt;_ERR that can be used to capture the error.<br>
 
 </TD></TR>
 </TABLE>
@@ -1093,14 +1092,14 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_severity&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Severity of the message to <A HREF="pit.html#LOG">log</A> (FATAL|ERROR)<br>
+Severity of the message to log (FATAL|ERROR)<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1121,7 +1120,7 @@ ID of an object that is affected by this message<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_error_code&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Additional <A HREF="pit.html#ERROR">error</A> code, used in external applications<br>
+Additional error code, used in external applications<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1139,7 +1138,7 @@ Instance of <code>msg_params</code> with a list of key-value pairs representing 
 get_message
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE">get_message</A>(p_message_name in pit_util.ora_name_type,
+Function get_message(p_message_name in pit_util.ora_name_type,
                      p_msg_args     in msg_args,
                      p_affected_id  in pit_util.max_sql_char,
                      p_error_code   in varchar2) return message_type
@@ -1157,7 +1156,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name, constructs an instance of MESSAGE_TYPE and returns the message instance.<br>
+This procedure is called from PIT. It takes the message_name, constructs an instance of MESSAGE_TYPE and returns the message instance.<br>
 
 </TD></TR>
 </TABLE>
@@ -1171,7 +1170,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1192,7 +1191,7 @@ ID of an object that is affected by this message<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_error_code&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional <A HREF="pit.html#ERROR">error</A> code, usable by external applications<br>
+Optional error code, usable by external applications<br>
 
 </TD></TR>
 </TABLE>
@@ -1215,7 +1214,7 @@ Instance of the requested message.<br>
 get_active_message
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_ACTIVE_MESSAGE">get_active_message</A> return message_type
+Function get_active_message return message_type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1230,7 +1229,7 @@ Returns
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Instance of type MESSAGE_TYPE that has been instantiated by <A HREF="pit.html">PIT</A> before<br>
+Instance of type MESSAGE_TYPE that has been instantiated by PIT before<br>
 
 </TD></TR>
 </TABLE>
@@ -1258,7 +1257,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to implement <A HREF="msg.html#ASSERT_DATATYPE">assert_datatype</A> method<br>
+Is used to implement assert_datatype method<br>
 
 </TD></TR>
 </TABLE>
@@ -1309,7 +1308,7 @@ Flag to indicate whether the varchar2 string is of the expected type (TRUE) or n
 get_message_text
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE_TEXT">get_message_text</A>(p_message_name in pit_util.ora_name_type,
+Function get_message_text(p_message_name in pit_util.ora_name_type,
                           p_msg_args     in msg_args) return clob
 
 </PRE>
@@ -1325,7 +1324,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is called from <A HREF="pit.html">PIT</A>. It takes the message_name , constructs an instance of MESSAGE_TYPE and returns the message text.<br>
+This procedure is called from PIT. It takes the message_name , constructs an instance of MESSAGE_TYPE and returns the message text.<br>
 
 </TD></TR>
 </TABLE>
@@ -1339,7 +1338,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to <A HREF="pit.html#LOG">log</A>
+Name of the message to log<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1369,7 +1368,7 @@ Messagetext of the requested message.<br>
 get_trans_item
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_TRANS_ITEM">get_trans_item</A>(p_pti_pmg_name in pit_message_group.pmg_name%type,
+Function get_trans_item(p_pti_pmg_name in pit_message_group.pmg_name%type,
                         p_pti_id       in pit_translatable_item.pti_id%type,
                         p_msg_args     msg_args,
                         p_pti_pml_name in pit_message_language.pml_name%type)
@@ -1377,7 +1376,7 @@ Function <A HREF="pit.html#GET_TRANS_ITEM">get_trans_item</A>(p_pti_pmg_name in 
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Function to retrieve a <A HREF="pit.html">PIT</A> translatable item (PTI)<br>
+Function to retrieve a PIT translatable item (PTI)<br>
 
 <BR>
 </P>
@@ -1484,7 +1483,7 @@ Instance of context_type filled with the actually valid settings<br>
 set_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#SET_CONTEXT">set_context</A>(p_context in pit_util.context_type)
+Procedure set_context(p_context in pit_util.context_type)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1499,7 +1498,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This procedure is used if <A HREF="pit.html#LOG">log</A> settings have to be changed dynamically Normal usage is to overwrite <A HREF="pit.html#LOG">log</A> settings as defined in the parameters for a given session.<br>
+This procedure is used if log settings have to be changed dynamically Normal usage is to overwrite log settings as defined in the parameters for a given session.<br>
 
 </TD></TR>
 </TABLE>
@@ -1528,7 +1527,7 @@ Procedure reset_active_context
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Procedure to reset <A HREF="pit.html#LOG">log</A> settings to the default settings<br>
+Procedure to reset log settings to the default settings<br>
 
 <BR>
 </P>
@@ -1550,7 +1549,7 @@ If settings for a session were changed, calling this procedure resets these sett
 reset_context
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#RESET_CONTEXT">reset_context</A>
+Procedure reset_context
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1565,7 +1564,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Use this procedure to rest all session settings to the default settings. Be aware that calling this procedure will reset ALL <A HREF="pit.html#LOG">log</A> settings of ALL sessions to default<br>
+Use this procedure to rest all session settings to the default settings. Be aware that calling this procedure will reset ALL log settings of ALL sessions to default<br>
 
 </TD></TR>
 </TABLE>
@@ -1580,7 +1579,7 @@ Procedure set_collect_mode(p_mode in boolean)
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Procedure to toggle <A HREF="pit.html">PIT</A> collection mode<br>
+Procedure to toggle PIT collection mode<br>
 
 <BR>
 </P>
@@ -1591,7 +1590,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to set <A HREF="pit.html">PIT</A> to collect mode, where all messages are collected rather than thrown or processed immediate. This mode allows for validation methods to perfrom all internal validations prior to raising validation errors. If collection mode is switched off by passing FALSE into this function, the list of raised messages is examined. If at least one message of secverity <A HREF=#C_LEVEL_FATAL>C_LEVEL_FATAL</A> is present, exception <A HREF="msg.html#PIT_BULK_FATAL">PIT_BULK_FATAL</A> is raised. If at least one message of secverity <A HREF=#C_LEVEL_ERROR>C_LEVEL_ERROR</A> is present, exception <A HREF="msg.html#PIT_BULK_ERROR">PIT_BULK_ERROR</A> is raised.<br>
+Is used to set PIT to collect mode, where all messages are collected rather than thrown or processed immediate. This mode allows for validation methods to perfrom all internal validations prior to raising validation errors. If collection mode is switched off by passing FALSE into this function, the list of raised messages is examined. If at least one message of secverity <A HREF=#C_LEVEL_FATAL>C_LEVEL_FATAL</A> is present, exception PIT_BULK_FATAL is raised. If at least one message of secverity <A HREF=#C_LEVEL_ERROR>C_LEVEL_ERROR</A> is present, exception PIT_BULK_ERROR is raised.<br>
 
 </TD></TR>
 </TABLE>
@@ -1605,7 +1604,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_mode&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Flag to indicate whether <A HREF="pit.html">PIT</A> shall collect messages (TRUE) or not (FALSE);<br>
+Flag to indicate whether PIT shall collect messages (TRUE) or not (FALSE);<br>
 
 </TD></TR>
 </TABLE>
@@ -1630,11 +1629,11 @@ Method to read the actually set collection mode<br>
 get_message_collection
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE_COLLECTION">get_message_collection</A> return pit_message_table
+Function get_message_collection return pit_message_table
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Method to retrieve the collection of messages raised since setting <A HREF="pit.html">PIT</A> to collect mode<br>
+Method to retrieve the collection of messages raised since setting PIT to collect mode<br>
 
 <BR>
 </P>
@@ -1645,7 +1644,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to retrieve a list of all messages raised during the collect cycle. It implicitly terminates collection mode by calling <A HREF=#SET_COLLECT_MODE>SET_COLLECT_MODE</A>(FALSE) if <A HREF="pit.html">PIT</A> is still in collection mode. Normal usage is terminating collection mode explicity and deal with the list of messages in the exception block<br>
+Is used to retrieve a list of all messages raised during the collect cycle. It implicitly terminates collection mode by calling <A HREF=#SET_COLLECT_MODE>SET_COLLECT_MODE</A>(FALSE) if PIT is still in collection mode. Normal usage is terminating collection mode explicity and deal with the list of messages in the exception block<br>
 
 </TD></TR>
 </TABLE>
@@ -1706,7 +1705,7 @@ Actual stack depth<br>
 get_modules
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MODULES">get_modules</A> return pit_module_list
+Function get_modules return pit_module_list
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1744,7 +1743,7 @@ PIT_MODULE_LIST-type, List of modules, availabilty and active status<br>
 get_active_modules
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_ACTIVE_MODULES">get_active_modules</A> return args
+Function get_active_modules return args
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1782,7 +1781,7 @@ ARGS-type, List of module names<br>
 get_available_modules
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_AVAILABLE_MODULES">get_available_modules</A> return args
+Function get_available_modules return args
 
 </PRE>
 <P CLASS="DESC_TEXT">

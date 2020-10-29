@@ -1,6 +1,6 @@
 create or replace package body pit_ut_pkg
 as
-  /* Konstanten und Variablen */
+  
   subtype max_char is varchar2(32767);
   subtype sql_char is varchar2(4000 byte);
   subtype name_type is varchar2(128 byte);
@@ -20,6 +20,11 @@ as
   end initialize;
   
   
+  /** Method creates a text message from a CALL_STACK_TYPE instance
+   * %param  p_call_stack  Instance of CALL_STACK_TYPE
+   * %return Formatted message string to pass to UT_PIT.SET_RESULT
+   * %usage  Is used to write a console output for the tests
+   */
   function format_call_stack(
     p_call_stack in call_stack_type)
   return varchar2
@@ -78,7 +83,7 @@ as
   end format_call_stack;
   
 
-  /* Interface Implementierung */
+  /* Interface  */
   procedure log(
     p_message in message_type)
   as
@@ -92,6 +97,26 @@ as
     ut_pit.set_result(
       p_log => true,
       p_message => p_message);
+  end log;
+  
+  
+  procedure log(
+    p_params in msg_params)
+  as
+    l_message max_char;
+  begin
+    l_message := 'State: ';
+    
+    for i in p_params.count loop
+      l_message := l_message || 'Param_' || i || ': ' || p_params(i).p_param
+              || ', Value: ' || p_params(i).p_value || '; ';
+    end loop;
+    
+    dbms_output.put_line(l_message);
+    ut_pit.set_result(
+      p_state => true,
+      p_params => p_params,
+      p_message => l_message);
   end log;
   
   

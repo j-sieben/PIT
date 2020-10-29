@@ -1,6 +1,7 @@
 create or replace type body pit_ut 
 as
   overriding member procedure log(
+    self in out nocopy pit_ut,
     p_message in message_type)
   as
   begin
@@ -10,7 +11,19 @@ as
   end log;
   
   
+  overriding member procedure log(
+    self in out nocopy pit_ut,
+    p_params in msg_params)
+  as
+  begin
+    if pit_ut_pkg.get_state_threshold <= fire_threshold then
+       pit_ut_pkg.log(p_params);
+    end if;
+  end log;
+  
+  
   overriding member procedure print(
+    self in out nocopy pit_ut,
     p_message in message_type)
   as
   begin
@@ -19,6 +32,7 @@ as
   
   
   overriding member procedure notify(
+    self in out nocopy pit_ut,
     p_message in message_type)
   as
   begin
@@ -27,6 +41,7 @@ as
   
   
   overriding member procedure enter(
+    self in out nocopy pit_ut,
     p_call_stack call_stack_type)
   as
   begin
@@ -35,6 +50,7 @@ as
   
   
   overriding member procedure leave (
+    self in out nocopy pit_ut,
     p_call_stack call_stack_type)
   as
   begin
@@ -42,6 +58,7 @@ as
   end leave;
   
   overriding member procedure context_changed(
+    self in out nocopy pit_ut,
     p_ctx in pit_context)
   as
   begin

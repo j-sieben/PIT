@@ -31,7 +31,7 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_APEX_ADAPTER">pit_apex_adapter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-If APEX is set to logging, adjust context to predefined <A HREF="pit.html#LOG">log</A> settings defined in <A HREF="pit_apex.html#PIT_APEX">PIT_APEX</A> <A HREF="call_stack_type.html#PARAMS">params</A>
+
 </TD></TR>
 </TABLE>
 <BR>
@@ -41,7 +41,7 @@ If APEX is set to logging, adjust context to predefined <A HREF="pit.html#LOG">l
 get_session_details
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_apex_adapter.html#GET_SESSION_DETAILS">get_session_details</A>(p_user_name        out varchar2,
+Procedure get_session_details(p_user_name        out varchar2,
                               p_session_id       out varchar2,
                               p_required_context out nocopy varchar2)
 
@@ -52,15 +52,10 @@ Procedure <A HREF="pit_apex_adapter.html#GET_SESSION_DETAILS">get_session_detail
 pit_apex_adapter
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_apex_adapter.html#PIT_APEX_ADAPTER">pit_apex_adapter</A>(self in out nocopy <A HREF="pit_apex_adapter.html#PIT_APEX_ADAPTER">pit_apex_adapter</A>)
+Function pit_apex_adapter(self in out nocopy pit_apex_adapter)
   return self as result
 
 </PRE>
-<P CLASS="DESC_TEXT">
-If APEX is set to logging, adjust context to predefined <A HREF="pit.html#LOG">log</A> settings defined in <A HREF="pit_apex.html#PIT_APEX">PIT_APEX</A> <A HREF="call_stack_type.html#PARAMS">params</A>
-
-<BR>
-</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

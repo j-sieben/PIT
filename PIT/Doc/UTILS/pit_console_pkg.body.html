@@ -31,7 +31,7 @@ Initialization
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT">print</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Helper to <A HREF="pit.html#PRINT">print</A> a message to the console
+Helper to print a message to the console
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT_CALL_STACK">print_call_stack</A>&nbsp;&nbsp;
@@ -41,7 +41,7 @@ Helper to <A HREF=#PRINT>print</A> the content of a call stack
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Interface Implementierung
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG2">log</A>&nbsp;&nbsp;
@@ -105,7 +105,7 @@ Constants
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_PARAM_GROUP">C_PARAM_GROUP</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Konstanten und Variablen
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_PIT_CONSOLE">C_PIT_CONSOLE</A>&nbsp;&nbsp;
@@ -145,13 +145,8 @@ Konstanten und Variablen
 C_PARAM_GROUP
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_PARAM_GROUP">C_PARAM_GROUP</A> constant varchar2(20 char) := 'PIT';
+C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
 </PRE>
-<P CLASS="DESC_TEXT">
-Konstanten und Variablen<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="C_PIT_CONSOLE"></A>
 <P CLASS="TYPE_TITLE">
@@ -166,7 +161,7 @@ C_PIT_CONSOLE constant varchar2(20) := 'PIT_CONSOLE';
 C_FIRE_THRESHOLD
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_apex_pkg.body.html#C_FIRE_THRESHOLD">C_FIRE_THRESHOLD</A> constant varchar2(30 char) := <A HREF=#C_PIT_CONSOLE>C_PIT_CONSOLE</A> || '_FIRE_THRESHOLD';
+C_FIRE_THRESHOLD constant varchar2(30 char) := <A HREF=#C_PIT_CONSOLE>C_PIT_CONSOLE</A> || '_FIRE_THRESHOLD';
 </PRE>
 <HR>
 <A NAME="C_ENTER_TEMPLATE"></A>
@@ -238,7 +233,7 @@ g_level_indicator varchar2(10);
 initialize
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+Procedure initialize
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -264,12 +259,11 @@ Reads several parameters into global variables<br>
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in clob)
+Procedure print(p_message in clob)
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Helper to <A HREF="pit.html#PRINT">print</A> a message to the console<br>
-%<A HREF="param.html">param</A> p_message Message to <A HREF="pit.html#PRINT">print</A> to the console<br>
+Helper to print a message to the console<br>
 
 <BR>
 </P>
@@ -280,7 +274,21 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Called to forward a message text to the console, reducing output to 32KByte to take limitations of dbms_output into account<br>
+Called to print a message text to the console, reducing output to 32KByte to take limitations of DBMS_OUTPUT into account<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message to print to the console<br>
 
 </TD></TR>
 </TABLE>
@@ -297,8 +305,6 @@ Procedure print_call_stack(p_call_stack in call_stack_type,
 </PRE>
 <P CLASS="DESC_TEXT">
 Helper to <A HREF=#PRINT>print</A> the content of a call stack<br>
-%<A HREF="param.html">param</A> p_call_stack Instance of call stack to <A HREF=#PRINT>print</A>
-%<A HREF="param.html">param</A> p_template Name of the template to be used to format the output.<br>
 
 <BR>
 </P>
@@ -314,27 +320,43 @@ Templates are defined as parameters and referenced here to control the formattin
 </TD></TR>
 </TABLE>
 <BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_call_stack&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of call stack to <A HREF=#PRINT>print</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_template&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the template to be used to format the output.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="LOG"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+Procedure log(p_message in message_type)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Interface Implementierung<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="LOG2"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_params in msg_params)
+Procedure log(p_params in msg_params)
 
 </PRE>
 <HR>
@@ -343,7 +365,7 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_params in msg_params)
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
+Procedure enter(p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -352,7 +374,7 @@ Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
+Procedure leave(p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -361,7 +383,7 @@ Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
 context_changed
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>(p_ctx in pit_context)
+Procedure context_changed(p_ctx in pit_context)
 
 </PRE>
 <HR>
@@ -370,7 +392,7 @@ Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>(p_c
 initialize_module
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_apex_pkg.html#INITIALIZE_MODULE">initialize_module</A>(self in out pit_console)
+Procedure initialize_module(self in out pit_console)
 
 </PRE>
 <P>&nbsp;</P>

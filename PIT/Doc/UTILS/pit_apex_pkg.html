@@ -5,7 +5,7 @@
  <TITLE>Package pit_apex_pkg</TITLE>
  <META name="object" content="PACKAGE">
  <META name="name" content="pit_apex_pkg">
- <META name="description" content="">
+ <META name="description" content="Implementation package for type PIT_APEX Notify functionality is based on the work of Daniel Hochleitner https://github.com/Dani3lSun/apex-websocket-notify-bundle">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package pit_apex_pkg</P>
+Implementation package for type PIT_APEX <A HREF=#NOTIFY>Notify</A> functionality is based on the work of Daniel Hochleitner https://github.com/Dani3lSun/apex-websocket-notify-bundle<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,37 +27,37 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_APEX_TRIGGERED_CONTEXT">get_apex_triggered_context</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Implementation package for type PIT_APEX <A HREF=#NOTIFY>Notify</A> functionality is based on the work of Daniel Hochleitner https://github.com/Dani3lSun/apex-websocket-notify-bundle
+Method to retrieve the name of the context that is used for logging if APEX is set to DEBUG mode
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write log information to the APEX debug stack
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT">print</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write general information to the APEX application
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write <A HREF=#LOG>log</A> information to the APEX application
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write call stack information on enter to the APEX debug stack
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write call stack information on leave to the APEX debug stack
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#INITIALIZE_MODULE">initialize_module</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Initialization method for PIT_APEX output module
 </TD></TR>
 </TABLE>
 <BR>
@@ -70,55 +71,234 @@ Function get_apex_triggered_context return varchar2
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Implementation package for type PIT_APEX <A HREF=#NOTIFY>Notify</A> functionality is based on the work of Daniel Hochleitner https://github.com/Dani3lSun/apex-websocket-notify-bundle<br>
+Method to retrieve the name of the context that is used for logging if APEX is set to DEBUG mode<br>
 
 <BR>
 </P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called from the APEX session adapter PIT_APEX_ADAPTER<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CONTEXT_APEX, the name of the APEX specific context. Context settings are set using the CONTEXT_APEX parameter<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="LOG"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in message_type)
+Procedure log(p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write log information to the APEX debug stack<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method implements the LOG member procedure of type PIT_APEX and writes the message attributes to the APEX debug stack.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of MESSAGE_TYPE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="PRINT"></A>
 <P CLASS="TYPE_TITLE">
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in message_type)
+Procedure print(p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write general information to the APEX application<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method implements the PRINT member procedure of type PIT_APEX and writes the message attributes to the APEX http stream.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of MESSAGE_TYPE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="NOTIFY"></A>
 <P CLASS="TYPE_TITLE">
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in message_type)
+Procedure notify(p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write <A HREF=#LOG>log</A> information to the APEX application<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method implements the NOTIFY member procedure of type PIT_APEX and writes the message attributes to the APEX http stream. This method uses a web socket connection and should be used if a progress or other state information has to be shown at the apex application. It will take the session id parameter of MESSAGE_TYPE to route the message to the correct client. ATTENTION: Not fully implemented yet.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of MESSAGE_TYPE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="ENTER"></A>
 <P CLASS="TYPE_TITLE">
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in call_stack_type)
+Procedure enter(p_call_stack in call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write call stack information on enter to the APEX debug stack<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method implements the ENTER member procedure of type PIT_APEX and writes the call stack type attributes to the APEX debug stack. Requires an APEX <A HREF=#LOG>log</A> level of LEVEL5 or higher to show the entries<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_call_stack&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of CALL_STACK_TYPE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in call_stack_type)
+Procedure leave(p_call_stack in call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write call stack information on leave to the APEX debug stack<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method implements the LEAVE member procedure of type PIT_APEX and writes the call stack type attributes to the APEX debug stack. Requires an APEX <A HREF=#LOG>log</A> level of LEVEL5 or higher to show the entries<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_call_stack&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of CALL_STACK_TYPE<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="INITIALIZE_MODULE"></A>
 <P CLASS="TYPE_TITLE">
@@ -128,6 +308,23 @@ initialize_module
 Procedure initialize_module(self in out nocopy pit_apex)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Initialization method for PIT_APEX output module<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method implements the parameterless constructor method of PIT_APEX. This method marks the output module available only in an existing APEX environment.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

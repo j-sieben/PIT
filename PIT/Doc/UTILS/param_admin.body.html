@@ -88,7 +88,7 @@ Constants
 c_true
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_util.html#C_TRUE">c_true</A> constant char(1 byte) := 'Y';
+c_true constant char(1 byte) := 'Y';
 </PRE>
 <HR>
 <A NAME="C_FALSE"></A>
@@ -96,7 +96,7 @@ c_true
 c_false
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_util.html#C_FALSE">c_false</A> constant char(1 byte) := 'N';
+c_false constant char(1 byte) := 'N';
 </PRE>
 <HR>
 <A NAME="CONVERT_BOOLEAN"></A>
@@ -113,7 +113,7 @@ Function convert_boolean(p_value in boolean) return varchar2
 edit_parameter_group
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param_admin.html#EDIT_PARAMETER_GROUP">edit_parameter_group</A>(p_pgr_id            in parameter_group.pgr_id%type,
+Procedure edit_parameter_group(p_pgr_id            in parameter_group.pgr_id%type,
                                p_pgr_description   in parameter_group.pgr_description%type,
                                p_pgr_is_modifiable in boolean default true)
 
@@ -124,7 +124,7 @@ Procedure <A HREF="param_admin.html#EDIT_PARAMETER_GROUP">edit_parameter_group</
 delete_parameter_group
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param_admin.html#DELETE_PARAMETER_GROUP">delete_parameter_group</A>(p_pgr_id in parameter_group.pgr_id%type,
+Procedure delete_parameter_group(p_pgr_id in parameter_group.pgr_id%type,
                                  p_force  in boolean default false)
 
 </PRE>
@@ -134,7 +134,7 @@ Procedure <A HREF="param_admin.html#DELETE_PARAMETER_GROUP">delete_parameter_gro
 edit_parameter_type
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param_admin.html#EDIT_PARAMETER_TYPE">edit_parameter_type</A>(p_pat_id          parameter_type.pat_id%type,
+Procedure edit_parameter_type(p_pat_id          parameter_type.pat_id%type,
                               p_pat_description parameter_type.pat_description%type)
 
 </PRE>
@@ -144,7 +144,7 @@ Procedure <A HREF="param_admin.html#EDIT_PARAMETER_TYPE">edit_parameter_type</A>
 edit_parameter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param_admin.html#EDIT_PARAMETER">edit_parameter</A>(p_par_id                 in parameter_tab.par_id%type,
+Procedure edit_parameter(p_par_id                 in parameter_tab.par_id%type,
                          p_par_pgr_id             in parameter_tab.par_pgr_id%type,
                          p_par_description        in parameter_tab.par_description%type,
                          p_par_string_value       in parameter_tab.par_string_value%type default null,
@@ -166,7 +166,7 @@ Procedure <A HREF="param_admin.html#EDIT_PARAMETER">edit_parameter</A>(p_par_id 
 delete_parameter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param_admin.html#DELETE_PARAMETER">delete_parameter</A>(p_par_id     in parameter_tab.par_id%type,
+Procedure delete_parameter(p_par_id     in parameter_tab.par_id%type,
                            p_par_pgr_id in parameter_tab.par_pgr_id%type)
 
 </PRE>
@@ -176,7 +176,7 @@ Procedure <A HREF="param_admin.html#DELETE_PARAMETER">delete_parameter</A>(p_par
 export_parameter_group
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param_admin.html#EXPORT_PARAMETER_GROUP">export_parameter_group</A>(p_pgr_id in parameter_group.pgr_id%type)
+Function export_parameter_group(p_pgr_id in parameter_group.pgr_id%type)
   return clob
 
 </PRE>
@@ -186,7 +186,7 @@ Function <A HREF="param_admin.html#EXPORT_PARAMETER_GROUP">export_parameter_grou
 write_parameter_files
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param_admin.html#WRITE_PARAMETER_FILES">write_parameter_files</A>(p_pgr_id    in parameter_group.pgr_id%type default null,
+Procedure write_parameter_files(p_pgr_id    in parameter_group.pgr_id%type default null,
                                 p_directory in varchar2 default 'DATA_DIR')
 
 </PRE>

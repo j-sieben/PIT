@@ -14,7 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package pit_admin</P>
-Package to administer <A HREF="pit.html">PIT</A>. Provides methods to create or maintain messages.<br>
+Package to administer PIT. Provides methods to create or maintain messages.<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -27,7 +27,7 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MERGE_MESSAGE_GROUP">merge_message_group</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to maintain message groups
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_MESSAGE_GROUP">delete_message_group</A>&nbsp;&nbsp;
@@ -37,17 +37,17 @@ Procedure to delete a message group
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MERGE_MESSAGE">merge_message</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to maintain messages
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_MESSAGE">delete_message</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to delete a single pit_message.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_ALL_MESSAGES">delete_all_messages</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to delete all messages
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MERGE_TRANSLATABLE_ITEM">merge_translatable_item</A>&nbsp;&nbsp;
@@ -62,42 +62,42 @@ Procedure to create a or change a translatable item
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_MESSAGE_TEXT">get_message_text</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Function to retrieve the text for a given language without replacements
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_LANGUAGE_SETTINGS">set_language_settings</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method to set default language settings
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CREATE_MESSAGE_PACKAGE">create_message_package</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to (re-) create package <A HREF="msg.html">MSG</A>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CREATE_NAMED_CONTEXT">create_named_context</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to create a named context
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CREATE_NAMED_CONTEXT2">create_named_context</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to create a named context.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#REMOVE_NAMED_CONTEXT">remove_named_context</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to remove a named context
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CREATE_CONTEXT_TOGGLE">create_context_toggle</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to create a context toggle
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_CONTEXT_TOGGLE">delete_context_toggle</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to remove a context toggle
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CREATE_INSTALLATION_SCRIPT">create_installation_script</A>&nbsp;&nbsp;
@@ -107,27 +107,27 @@ Method to get items of a group as a script of API calls to PIT_ADMIN package
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#TRANSLATE_MESSAGE">translate_message</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to translate a given message
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CREATE_TRANSLATION_XML">create_translation_xml</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method to generate an XML file in format XLIFF to translate items
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#APPLY_TRANSLATION">apply_translation</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to import translated items into the database
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_TRANSLATION">delete_translation</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure to delete a translation
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#REGISTER_TRANSLATION">register_translation</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method to register a translated message, if not yet registered
+
 </TD></TR>
 </TABLE>
 <BR>
@@ -139,7 +139,7 @@ Constants
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_LEVEL_LE_WARN">c_level_le_warn</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Installation switches
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_LEVEL_LE_INFO">c_level_le_info</A>&nbsp;&nbsp;
@@ -184,17 +184,17 @@ Installation switches
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_TARGET_PMS">C_TARGET_PMS</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Target distinguish between areas of similar items to streamline the API
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_TARGET_PTI">C_TARGET_PTI</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Translatable Items
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#C_TARGET_PAR">C_TARGET_PAR</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Parameters
+
 </TD></TR>
 </TABLE>
 <BR>
@@ -206,11 +206,6 @@ c_level_le_warn
 <PRE CLASS="DECL_TEXT">
 c_level_le_warn constant boolean := TRUE;
 </PRE>
-<P CLASS="DESC_TEXT">
-Installation switches<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="C_LEVEL_LE_INFO"></A>
 <P CLASS="TYPE_TITLE">
@@ -283,11 +278,6 @@ C_TARGET_PMS
 <PRE CLASS="DECL_TEXT">
 C_TARGET_PMS constant pit_util.ora_name_type := 'PMS';
 </PRE>
-<P CLASS="DESC_TEXT">
-Target distinguish between areas of similar items to streamline the API<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="C_TARGET_PTI"></A>
 <P CLASS="TYPE_TITLE">
@@ -296,11 +286,6 @@ C_TARGET_PTI
 <PRE CLASS="DECL_TEXT">
 C_TARGET_PTI constant pit_util.ora_name_type := 'PTI';
 </PRE>
-<P CLASS="DESC_TEXT">
-Translatable Items<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="C_TARGET_PAR"></A>
 <P CLASS="TYPE_TITLE">
@@ -309,11 +294,6 @@ C_TARGET_PAR
 <PRE CLASS="DECL_TEXT">
 C_TARGET_PAR constant pit_util.ora_name_type := 'PAR';
 </PRE>
-<P CLASS="DESC_TEXT">
-Parameters<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="MERGE_MESSAGE_GROUP"></A>
 <P CLASS="TYPE_TITLE">
@@ -324,44 +304,6 @@ Procedure merge_message_group(p_pmg_name        in pit_message_group.pmg_name%TY
                               p_pmg_description in pit_message_group.pmg_description%TYPE default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to maintain message groups<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to create or change a message group. Message groups do not have any special meaning other than sorting messages for easier maintenance and export separation<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pmg_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message group<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pmg_description]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional description to describe the message group.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="DELETE_MESSAGE_GROUP"></A>
 <P CLASS="TYPE_TITLE">
@@ -384,7 +326,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to delete a message group. Does not delete a message group if messages exists within that group, unless specified by setting the P_FORCE parameter to TRUE. Will not commit nor re-create the <A HREF="msg.html">MSG</A> package.<br>
+Is used to delete a message group. Does not delete a message group if messages exists within that group, unless specified by setting the P_FORCE parameter to TRUE. Will not commit nor re-create the MSG package.<br>
 
 </TD></TR>
 </TABLE>
@@ -405,7 +347,7 @@ Name of the message group<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_force]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Flag to indicate whether deleting this group should delete all messages of this group Standard: FALSE: If messages exists, an <A HREF="pit.html#ERROR">error</A> is thrown<br>
+Flag to indicate whether deleting this group should delete all messages of this group Standard: FALSE: If messages exists, an error is thrown<br>
 
 </TD></TR>
 </TABLE>
@@ -425,72 +367,6 @@ Procedure merge_message(p_pms_name        in pit_message.pms_name%TYPE,
                         p_error_number    in pit_message.pms_custom_error%TYPE default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to maintain messages<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to create or change a <A HREF="pit.html">PIT</A> message. Will not commit nor re-create the <A HREF="msg.html">MSG</A> package.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the respective pit_message. Must be unique for the default language<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_text&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Message text with replacement anchors in the format #n#, where n is an integer that references up to 50 replacement items<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_pse_id&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Reference to a severity as defined in PIT.LEVEL_&lt;level&gt; constants. Ranges from <A HREF="pit.html#LEVEL_FATAL">PIT.LEVEL_FATAL</A> to PIT.LEVEL_VERBOSE or 20..70<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pms_pmg_name]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Reference to the message group<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pms_pml_name]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Reference to the Oracle supported language names, if null, the default language is used (as defined in pms_pml_name)<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_error_number]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional reference to an Oracle system <A HREF="pit.html#ERROR">error</A> number. must not be a number of an Oracle predefined <A HREF="pit.html#ERROR">error</A> number. If null and the severity of the message is in 20|30, then an <A HREF="pit.html#ERROR">error</A> number from the range -20999..-20000 is used.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="DELETE_MESSAGE"></A>
 <P CLASS="TYPE_TITLE">
@@ -501,44 +377,6 @@ Procedure delete_message(p_pms_name     in pit_message.pms_name%TYPE,
                          p_pms_pml_name in pit_message_language.pml_name%TYPE default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to delete a single pit_message. Will delete all translations as well<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-is called to remove mistyped or unnecessary messages in all languages. Will not commit nor re-create the <A HREF="msg.html">MSG</A> package.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to delete<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pms_pml_name]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional language of the message to delete. If null, all translations are deleted, otherwise only the translated message<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="DELETE_ALL_MESSAGES"></A>
 <P CLASS="TYPE_TITLE">
@@ -548,37 +386,6 @@ delete_all_messages
 Procedure delete_all_messages(p_pmg_name in pit_message_group.pmg_name%TYPE default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to delete all messages<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called if a new set of messages shall be installed and all old and unneeded messages shall be thrown away. Will not commit nor re-create the <A HREF="msg.html">MSG</A> package.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pmg_name]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional message group to limit deletion to message of this group.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="MERGE_TRANSLATABLE_ITEM"></A>
 <P CLASS="TYPE_TITLE">
@@ -705,49 +512,11 @@ ID of the translatable item<br>
 get_message_text
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit.html#GET_MESSAGE_TEXT">get_message_text</A>(p_pms_name     in pit_message.pms_name%TYPE,
+Function get_message_text(p_pms_name     in pit_message.pms_name%TYPE,
                           p_pms_pml_name in pit_message_language.pml_name%TYPE default null)
   return varchar2
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Function to retrieve the text for a given language without replacements<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This function is used to review the text of a given message in a desired language<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message to retrieve the text for<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pms_pml_name]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Oracle language reference<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="SET_LANGUAGE_SETTINGS"></A>
 <P CLASS="TYPE_TITLE">
@@ -757,37 +526,6 @@ set_language_settings
 Procedure set_language_settings(p_pml_list in pit_util.max_sql_char)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Method to set default language settings<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to initially set the default language settings Precedence is set accoding to the sort order: First languages preceede later languages<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pml_list&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-List of colon-separated language names<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="CREATE_MESSAGE_PACKAGE"></A>
 <P CLASS="TYPE_TITLE">
@@ -797,37 +535,6 @@ create_message_package
 Procedure create_message_package(p_directory varchar2 default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to (re-) create package <A HREF="msg.html">MSG</A>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-If called with no parameter, this procedure creates package <A HREF="msg.html">MSG</A> based on the actual messages from table pit_message. It automatically maps all custom or oracle errors and creates respective exception variables for them. If called with a directory name, the package is not created but its DDL is written to the file system for later creation or deployment purposes.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_directory&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional parameter to define a directory object the creation writes to. If NULL, the code is executed immediately.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="CREATE_NAMED_CONTEXT"></A>
 <P CLASS="TYPE_TITLE">
@@ -842,72 +549,6 @@ Procedure create_named_context(p_context_name in varchar2,
                                p_comment      in varchar2 default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to create a named context<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called to create a named context to control&nbsp; <A HREF="pit.html#DEBUG">debug</A> settings<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_context_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the context. Maximum of 20 byte. Don't use umlauts or special chars<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_log_level&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-<A HREF="pit.html#LOG">Log</A> level of the named context. Allowed values: LOG_LEVEL(10,20..70)<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_trace&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-level&nbsp;&nbsp; Trace level of the named context. Allowed values: TRACE_LEVEL (10,20..40)<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_trace_timing&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Flag to indicate whether timing information should be captured<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_module_list&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-List of colon separated output module names to be used for logging<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_comment]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional comment to explain the usage of the named context<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="CREATE_NAMED_CONTEXT2"></A>
 <P CLASS="TYPE_TITLE">
@@ -919,51 +560,6 @@ Procedure create_named_context(p_context_name in varchar2,
                                p_comment      in varchar2 default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to create a named context. Overload<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called to create a new named context<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_context_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the context. Maximum of 20 byte. Don't use umlauts or special chars<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_settings&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Settings string in the format LOG_LEVEL(10,20..70)|TRACE_LEVEL (10,20..40)|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST (MODULE_1:MODULE_2) Valid examples are: - 30|10|N|PIT_TABLE:PIT_MAIL, - 70|40|Y|PIT_CONSOLE If you want to express that no logging should be used, use 10|10|N|<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_comment]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional comment to explain the usage of the named context<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="REMOVE_NAMED_CONTEXT"></A>
 <P CLASS="TYPE_TITLE">
@@ -973,37 +569,6 @@ remove_named_context
 Procedure remove_named_context(p_context_name in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to remove a named context<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called to remove a named context<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_context_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the context to remove<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="CREATE_CONTEXT_TOGGLE"></A>
 <P CLASS="TYPE_TITLE">
@@ -1016,58 +581,6 @@ Procedure create_context_toggle(p_toggle_name  in varchar2,
                                 p_comment      in varchar2 default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to create a context toggle<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called to have <A HREF="pit.html">PIT</A> toggle it's context settings based on entering a module or a list of modules. A toggle switches the <A HREF="pit.html#DEBUG">debug</A> settings if the package or procedure mentioned in the toggle is entered.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_toggle_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the context toggle. Maximum of 20 byte. Don't use umlauts or special chars<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_module_list&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the module to toggle the context for. May be a pipe separated list of modules Two formats are allowed: Name of a package/method or qualified name of a method in a package (without owner): Examples: MY_PACKAGE|MY_OTHER_PACKAGE.MY_PROC<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_context_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the context to switch to. Must be an excisting context<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_comment]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional comment to explain the usage of the toggle<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="DELETE_CONTEXT_TOGGLE"></A>
 <P CLASS="TYPE_TITLE">
@@ -1077,37 +590,6 @@ delete_context_toggle
 Procedure delete_context_toggle(p_toggle_name in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to remove a context toggle<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to delete a context toggle<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_toggle_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the context toggle to remove<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="CREATE_INSTALLATION_SCRIPT"></A>
 <P CLASS="TYPE_TITLE">
@@ -1184,58 +666,6 @@ Procedure translate_message(p_pms_name        in pit_message.pms_name%TYPE,
                             p_pms_description in pit_message.pms_description%TYPE default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to translate a given message<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Use this procedure as a shortcut for an already existing message, if the only task is to translate it.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the respective pit_message. Must be unique for the default language<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_text&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Message text with replacement anchors in the format #n#, where n is an integer that references up to 50 replacement items<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pms_pml_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Reference to the Oracle supported language names<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_pms_description]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Optional description to translate the message description<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="CREATE_TRANSLATION_XML"></A>
 <P CLASS="TYPE_TITLE">
@@ -1249,77 +679,6 @@ Procedure create_translation_xml(p_target_language in pit_message_language.pml_n
                                  p_xliff           out nocopy xmltype)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Method to generate an XML file in format XLIFF to translate items<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Call this function to create an XLIFF-File that can be used to translate all members of a target type group to a target language.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_target_language&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Oracle supported language name to tranlsate the items to<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pmg_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Group to filter the items to translate<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_target&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Type of items to translate <A HREF=#C_TARGET_PMS>C_TARGET_PMS</A> | <A HREF=#C_TARGET_PTI>C_TARGET_PTI</A>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_file_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Out parameter that provides the file name for the XLIFF file<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_xliff&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Out parameter that contains the XLIFF file created<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Returns"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Returns
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="APPLY_TRANSLATION"></A>
 <P CLASS="TYPE_TITLE">
@@ -1329,44 +688,6 @@ apply_translation
 Procedure apply_translation(p_xliff in xmltype, p_target in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to import translated items into the database<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-If provided with a translated XLIFF-Instance, this procedure creates the necessary items for the new language based on it target type.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_xliff&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-XLIFF-instance with the translated messages<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_target&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Type of items to translate <A HREF=#C_TARGET_PMS>C_TARGET_PMS</A> | <A HREF=#C_TARGET_PTI>C_TARGET_PTI</A>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="DELETE_TRANSLATION"></A>
 <P CLASS="TYPE_TITLE">
@@ -1377,44 +698,6 @@ Procedure delete_translation(p_pml_name in pit_message_language.pml_name%TYPE,
                              p_target   in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure to delete a translation<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called to remove all items in the given language and target type. Will not commit.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pml_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Oracle language name of the translation to be removed<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_target&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Type of items to translate <A HREF=#C_TARGET_PMS>C_TARGET_PMS</A> | <A HREF=#C_TARGET_PTI>C_TARGET_PTI</A>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="REGISTER_TRANSLATION"></A>
 <P CLASS="TYPE_TITLE">
@@ -1424,32 +707,6 @@ register_translation
 Procedure register_translation(p_pml_name in pit_message_language.pml_name%TYPE)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Method to register a translated message, if not yet registered<br>
-
-<BR>
-</P>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pml_name&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Oracle language name of the translation to register<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-Is&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-called when loading a translation. The translation message is set to one of the available langauges<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

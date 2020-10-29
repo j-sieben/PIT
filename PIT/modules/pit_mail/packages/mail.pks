@@ -2,38 +2,35 @@ create or replace package mail
 authid current_user
 as
 
-  /** Public constant declarations */
+  /** Helper package to send emails */
 
-  /** Public type declarations  */
+  /* Public type declarations  */
   type address_rec is record(
     user_name pit_util.ora_name_type,
     email varchar2(200));
   type address_tab is table of address_rec;
 
-  /** Public variable declarations */
+  /* Public variable declarations */
   g_pkg_is_working boolean;
   
 
-  /* Prozedur SEND_MAIL versendet Mails inkl. Attachments.
-   * #param p_sender Absender der Mail. Die Adresse kann in der Form
-   *        foo@server.de oder "Willi Schmitz"<foo@server.de> uebergeben werden.
-   * #param p_recipients Instanz der Nested Table MAIL.ADDRESS_TAB mit der Struktur
-   *        <USER_NAME>|<EMAIL>. Die Email kann analog zu P_SENDER uebergeben werden,
-   *        der Benutzername ist der Benutzername, der mit der Mailadresse verbunden
-   *        ist. Der Benutzername wird Jasper Reports zur Filterung von Berichten
-   *        uebergeben.
-   * #param p_subject Betreff der Mail. Maximale Laenge ist 1000 Zeichen (empfohlen: 78 Zeichen)
-   * #param p_message Inhalt der Mail. Innerhalb der Mail werden verschiedene Platzhalter
-   *        automatisch ersetzt. Bislang ist folgender Platzhalter vorgesehen:
-   *        #SALUTATION#: Wird ersetzt durch
-   *           Sehr geehrter Herr/geehrte Frau <Titel> <Vorname> <Nachname>
-   *        die Informationen werden aus den Benutzerstammdaten gewonnen und in
-   *        Message MAIL_SALUTATION eingefuegt.
-   *        Maximale Laenge der Mail: 32KByte.
-   * #param p_filename Name der Datei, in der das Attachment uebergeben werden soll.
-   *        Den Dateinamen mit Mime-Type angeben, typischerweise: <Berichtname>.<Mime-Type>.
-   * #param p_attachment BLOB des Attachments. Falls NULL, wird kein Attachment angefuegt.
-   *        in diesem Fall kann auch P_FILENAME NULL sein.
+  /** Procedure SEND_MAIL sends mails including attachments.
+   * %param  p_sender          Sender of the mail. 
+   *                           The address can be transferred in the form foo@server.de or "Bill Smith"<foo@server.de>.
+   * %param  p_recipients      Recipients of the mail. 
+   *                           Instance of the nested table MAIL.ADDRESS_TAB with the structure <USER_NAME>|<EMAIL>.
+   *                           The email can be passed in the same way as P_SENDER, the username is the username associated with the email address.
+   * %param  p_cc_recipients   CC-Recipients of the mail.
+   *                           Instance of the nested table MAIL.ADDRESS_TAB with the structure <USER_NAME>|<EMAIL>.
+   *                           The email can be passed in the same way as P_SENDER, the username is the username associated with the email address.
+   * %param  p_subject         Subject of the mail.
+   *                           Maximum length is 1000 characters (recommended: 78 characters)
+   * %param  p_message         Content of the mail.
+   *                           Maximum length of the mail: 32KByte.
+   * %param [p_filename]       Name of the file in which the attachment should be transferred, including the file extension. Example: foo.pdf
+   * %param [p_mime_type]      Mime type of the attachment. Example: application/pdf
+   * %param [p_attachment]     BLOB of the attachment.
+   *                           If NULL, no attachment is added. In this case P_FILENAME can also be NULL.
    */
   procedure send_mail(
     p_sender in varchar2,
@@ -46,23 +43,18 @@ as
     p_attachment in blob);
 
 
-  /* Prozedur SEND_MAIL versendet Mails inkl. Attachments.
-   * Ueberladung zur vereinfachten Verwendung
-   * #param p_sender Absender der Mail. Die Adresse kann in der Form
-   *        foo@server.de oder "Willi Schmitz"<foo@server.de> uebergeben werden.
-   * #param p_recipient Einzelne Adresse, an die die Mail gesendet werden soll.
-   * #param p_subject Betreff der Mail. Maximale Laenge ist 1000 Zeichen (empfohlen: 78 Zeichen)
-   * #param p_message Inhalt der Mail. Innerhalb der Mail werden verschiedene Platzhalter
-   *        automatisch ersetzt. Bislang ist folgender Platzhalter vorgesehen:
-   *        #SALUTATION#: Wird ersetzt durch
-   *           Sehr geehrter Herr/geehrte Frau <Titel> <Vorname> <Nachname>
-   *        die Informationen werden aus den Benutzerstammdaten gewonnen und in
-   *        Message MAIL_SALUTATION eingefuegt.
-   *        Maximale Laenge der Mail: 32KByte.
-   * #param p_filename Name der Datei, in der das Attachment uebergeben werden soll.
-   *        Den Dateinamen mit Mime-Type angeben, typischerweise: <Berichtname>.<Mime-Type>.
-   * #param p_attachment BLOB des Attachments. Falls NULL, wird kein Attachment angefuegt.
-   *        in diesem Fall kann auch P_FILENAME NULL sein.
+  /** Procedure SEND_MAIL sends mails including attachments. Overloaded to send a mail to one recipient without cc-recipients only.
+   * %param  p_sender          Sender of the mail. 
+   *                           The address can be transferred in the form foo@server.de or "Bill Smith"<foo@server.de>.
+   * %param  p_recipient       semicolon-delimited list of addresses to which the mail should be sent.
+   * %param  p_subject         Subject of the mail.
+   *                           Maximum length is 1000 characters (recommended: 78 characters)
+   * %param  p_message         Content of the mail.
+   *                           Maximum length of the mail: 32KByte.
+   * %param [p_filename]       Name of the file in which the attachment should be transferred, including the file extension. Example: foo.pdf 
+   * %param [p_mime_type]      Mime type of the attachment. Example: application/pdf
+   * %param [p_attachment]     BLOB of the attachment.
+   *                           If NULL, no attachment is added. In this case P_FILENAME can also be NULL.
    */
   procedure send_mail(
     p_sender in varchar2,
@@ -72,7 +64,6 @@ as
     p_filename in varchar2 default null,
     p_mime_type in varchar2 default null,
     p_attachment in blob default null);
-
 
   procedure initialize;
 

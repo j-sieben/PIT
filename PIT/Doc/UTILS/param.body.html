@@ -26,27 +26,27 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_PARAMETER_SETTINGS">get_parameter_settings</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure reads metadata for parameters
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_BOOL">get_bool</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Helper procedure to convert a char into a boolean value
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_PARAMETER">get_parameter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Helper method to read a row of parameter into a record
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_MULTIPLE">set_multiple</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-SETTER
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_STRING">set_string</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Validierung fehlgeschlagen, Fehler erzeugen
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_CLOB">set_clob</A>&nbsp;&nbsp;
@@ -96,7 +96,7 @@ Validierung fehlgeschlagen, Fehler erzeugen
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_STRING">get_string</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-GETTER
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_CLOB">get_clob</A>&nbsp;&nbsp;
@@ -217,7 +217,7 @@ Constants
 c_true
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_util.html#C_TRUE">c_true</A> constant parameter_group.pgr_is_modifiable%type := 'Y';
+c_true constant parameter_group.pgr_is_modifiable%type := 'Y';
 </PRE>
 <HR>
 <A NAME="C_FALSE"></A>
@@ -225,7 +225,7 @@ c_true
 c_false
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_util.html#C_FALSE">c_false</A> constant parameter_group.pgr_is_modifiable%type := 'N';
+c_false constant parameter_group.pgr_is_modifiable%type := 'N';
 </PRE>
 <HR>
 <A NAME="C_MAX_CHAR_LENGTH"></A>
@@ -281,25 +281,6 @@ Procedure get_parameter_settings(p_par_id in parameter_tab.par_id%type,
                                  p_pgr_id in parameter_group.pgr_id%type)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure reads metadata for parameters<br>
-%<A HREF="param.html">param</A> p_par_id Name of the parameter<br>
-%<A HREF="param.html">param</A> p_pgr_id Name of the parameter group<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called internally to read settings regarding modifiability etc.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="GET_BOOL"></A>
 <P CLASS="TYPE_TITLE">
@@ -310,25 +291,6 @@ Procedure get_bool(p_boolean_value in boolean,
                    p_return_value  out nocopy varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Helper procedure to convert a char into a boolean value<br>
-%<A HREF="param.html">param</A> p_boolean_value char value representign a boolean value: Y|N<br>
-%<A HREF="param.html">param</A> p_return_value boolean result true|false|null<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called internally to convert a boolea parameter into a boolean value.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="GET_PARAMETER"></A>
 <P CLASS="TYPE_TITLE">
@@ -338,32 +300,13 @@ get_parameter
 Procedure get_parameter(p_par_id in varchar2, p_pgr_id in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Helper method to read a row of parameter into a record<br>
-%<A HREF="param.html">param</A> p_par_id Name of the parameter<br>
-%<A HREF="param.html">param</A> p_pgr_id Name of the parameter group<br>
-
-<BR>
-</P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is called internally by the Getter Methods to copy a row of parameter into the global variable <A HREF=#G_PARAMETER_REC>g_parameter_rec</A>.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="SET_MULTIPLE"></A>
 <P CLASS="TYPE_TITLE">
 set_multiple
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_MULTIPLE">set_multiple</A>(p_par_id              in varchar2,
+Procedure set_multiple(p_par_id              in varchar2,
                        p_pgr_id              in varchar2,
                        p_par_string_value    in parameter_tab.par_string_value%type default null,
                        p_par_raw_value       in parameter_tab.par_raw_value%type default null,
@@ -375,34 +318,24 @@ Procedure <A HREF="param.html#SET_MULTIPLE">set_multiple</A>(p_par_id           
                        p_par_boolean_value   in boolean default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-SETTER<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="SET_STRING"></A>
 <P CLASS="TYPE_TITLE">
 set_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_STRING">set_string</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_string(p_par_id    in parameter_tab.par_id%type,
                      p_pgr_id    in parameter_group.pgr_id%type,
                      p_par_value in varchar2)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Validierung fehlgeschlagen, Fehler erzeugen<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="SET_CLOB"></A>
 <P CLASS="TYPE_TITLE">
 set_clob
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_CLOB">set_clob</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_clob(p_par_id    in parameter_tab.par_id%type,
                    p_pgr_id    in parameter_group.pgr_id%type,
                    p_par_value in parameter_tab.par_string_value%type)
 
@@ -413,7 +346,7 @@ Procedure <A HREF="param.html#SET_CLOB">set_clob</A>(p_par_id    in parameter_ta
 set_raw
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_RAW">set_raw</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_raw(p_par_id    in parameter_tab.par_id%type,
                   p_pgr_id    in parameter_group.pgr_id%type,
                   p_par_value in raw)
 
@@ -424,7 +357,7 @@ Procedure <A HREF="param.html#SET_RAW">set_raw</A>(p_par_id    in parameter_tab.
 set_blob
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_BLOB">set_blob</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_blob(p_par_id    in parameter_tab.par_id%type,
                    p_pgr_id    in parameter_group.pgr_id%type,
                    p_par_value in parameter_tab.par_raw_value%type)
 
@@ -435,7 +368,7 @@ Procedure <A HREF="param.html#SET_BLOB">set_blob</A>(p_par_id    in parameter_ta
 set_xml
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_XML">set_xml</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_xml(p_par_id    in parameter_tab.par_id%type,
                   p_pgr_id    in parameter_group.pgr_id%type,
                   p_par_value in parameter_tab.par_xml_value%type)
 
@@ -446,7 +379,7 @@ Procedure <A HREF="param.html#SET_XML">set_xml</A>(p_par_id    in parameter_tab.
 set_float
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_FLOAT">set_float</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_float(p_par_id    in parameter_tab.par_id%type,
                     p_pgr_id    in parameter_group.pgr_id%type,
                     p_par_value in parameter_tab.par_float_value%type)
 
@@ -457,7 +390,7 @@ Procedure <A HREF="param.html#SET_FLOAT">set_float</A>(p_par_id    in parameter_
 set_integer
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_INTEGER">set_integer</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_integer(p_par_id    in parameter_tab.par_id%type,
                       p_pgr_id    in parameter_group.pgr_id%type,
                       p_par_value in parameter_tab.par_integer_value%type)
 
@@ -468,7 +401,7 @@ Procedure <A HREF="param.html#SET_INTEGER">set_integer</A>(p_par_id    in parame
 set_date
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_DATE">set_date</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_date(p_par_id    in parameter_tab.par_id%type,
                    p_pgr_id    in parameter_group.pgr_id%type,
                    p_par_value in parameter_tab.par_date_value%type)
 
@@ -479,7 +412,7 @@ Procedure <A HREF="param.html#SET_DATE">set_date</A>(p_par_id    in parameter_ta
 set_timestamp
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_TIMESTAMP">set_timestamp</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_timestamp(p_par_id    in parameter_tab.par_id%type,
                         p_pgr_id    in parameter_group.pgr_id%type,
                         p_par_value in parameter_tab.par_timestamp_value%type)
 
@@ -490,7 +423,7 @@ Procedure <A HREF="param.html#SET_TIMESTAMP">set_timestamp</A>(p_par_id    in pa
 set_boolean
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#SET_BOOLEAN">set_boolean</A>(p_par_id    in parameter_tab.par_id%type,
+Procedure set_boolean(p_par_id    in parameter_tab.par_id%type,
                       p_pgr_id    in parameter_group.pgr_id%type,
                       p_par_value in boolean)
 
@@ -501,23 +434,18 @@ Procedure <A HREF="param.html#SET_BOOLEAN">set_boolean</A>(p_par_id    in parame
 get_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_STRING">get_string</A>(p_par_id in parameter_tab.par_id%type,
+Function get_string(p_par_id in parameter_tab.par_id%type,
                     p_pgr_id in parameter_group.pgr_id%type)
   return varchar2
 
 </PRE>
-<P CLASS="DESC_TEXT">
-GETTER<br>
-
-<BR>
-</P>
 <HR>
 <A NAME="GET_CLOB"></A>
 <P CLASS="TYPE_TITLE">
 get_clob
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_CLOB">get_clob</A>(p_par_id in parameter_tab.par_id%type,
+Function get_clob(p_par_id in parameter_tab.par_id%type,
                   p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_string_value%type
 
@@ -528,7 +456,7 @@ Function <A HREF="param.html#GET_CLOB">get_clob</A>(p_par_id in parameter_tab.pa
 get_raw
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_RAW">get_raw</A>(p_par_id in parameter_tab.par_id%type,
+Function get_raw(p_par_id in parameter_tab.par_id%type,
                  p_pgr_id in parameter_group.pgr_id%type) return raw
 
 </PRE>
@@ -538,7 +466,7 @@ Function <A HREF="param.html#GET_RAW">get_raw</A>(p_par_id in parameter_tab.par_
 get_blob
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_BLOB">get_blob</A>(p_par_id in parameter_tab.par_id%type,
+Function get_blob(p_par_id in parameter_tab.par_id%type,
                   p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_raw_value%type
 
@@ -549,7 +477,7 @@ Function <A HREF="param.html#GET_BLOB">get_blob</A>(p_par_id in parameter_tab.pa
 get_xml
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_XML">get_xml</A>(p_par_id in parameter_tab.par_id%type,
+Function get_xml(p_par_id in parameter_tab.par_id%type,
                  p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_xml_value%type
 
@@ -560,7 +488,7 @@ Function <A HREF="param.html#GET_XML">get_xml</A>(p_par_id in parameter_tab.par_
 get_float
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_FLOAT">get_float</A>(p_par_id in parameter_tab.par_id%type,
+Function get_float(p_par_id in parameter_tab.par_id%type,
                    p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_float_value%type
 
@@ -571,7 +499,7 @@ Function <A HREF="param.html#GET_FLOAT">get_float</A>(p_par_id in parameter_tab.
 get_integer
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_INTEGER">get_integer</A>(p_par_id in parameter_tab.par_id%type,
+Function get_integer(p_par_id in parameter_tab.par_id%type,
                      p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_integer_value%type
 
@@ -582,7 +510,7 @@ Function <A HREF="param.html#GET_INTEGER">get_integer</A>(p_par_id in parameter_
 get_date
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_DATE">get_date</A>(p_par_id in parameter_tab.par_id%type,
+Function get_date(p_par_id in parameter_tab.par_id%type,
                   p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_date_value%type
 
@@ -593,7 +521,7 @@ Function <A HREF="param.html#GET_DATE">get_date</A>(p_par_id in parameter_tab.pa
 get_timestamp
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_TIMESTAMP">get_timestamp</A>(p_par_id in parameter_tab.par_id%type,
+Function get_timestamp(p_par_id in parameter_tab.par_id%type,
                        p_pgr_id in parameter_group.pgr_id%type)
   return parameter_tab.par_timestamp_value%type
 
@@ -604,7 +532,7 @@ Function <A HREF="param.html#GET_TIMESTAMP">get_timestamp</A>(p_par_id in parame
 get_boolean
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_BOOLEAN">get_boolean</A>(p_par_id in parameter_tab.par_id%type,
+Function get_boolean(p_par_id in parameter_tab.par_id%type,
                      p_pgr_id in parameter_group.pgr_id%type)
   return boolean
 
@@ -615,7 +543,7 @@ Function <A HREF="param.html#GET_BOOLEAN">get_boolean</A>(p_par_id in parameter_
 reset_parameter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="param.html#RESET_PARAMETER">reset_parameter</A>(p_par_id in parameter_tab.par_id%type,
+Procedure reset_parameter(p_par_id in parameter_tab.par_id%type,
                           p_pgr_id in parameter_group.pgr_id%type)
 
 </PRE>
@@ -625,7 +553,7 @@ Procedure <A HREF="param.html#RESET_PARAMETER">reset_parameter</A>(p_par_id in p
 get_parameters
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="param.html#GET_PARAMETERS">get_parameters</A> return clob
+Function get_parameters return clob
 
 </PRE>
 <P>&nbsp;</P>

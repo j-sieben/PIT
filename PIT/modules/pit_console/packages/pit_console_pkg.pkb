@@ -1,6 +1,7 @@
 create or replace package body pit_console_pkg
 as
-  /* Konstanten und Variablen */
+
+  /* Constants and global Package variables */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
   C_PIT_CONSOLE constant varchar2(20) := 'PIT_CONSOLE';
   C_FIRE_THRESHOLD constant varchar2(30 char) := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
@@ -14,8 +15,9 @@ as
   g_leave_template varchar2(2000);
   g_level_indicator varchar2(10);
 
-  /* Initialization
-   * %usage Reads several parameters into global variables
+
+  /** Initialization
+   * %usage  Reads several parameters into global variables
    */
   procedure initialize
   as
@@ -26,10 +28,11 @@ as
     g_level_indicator := param.get_string(C_LEVEL_INDICATOR, C_PARAM_GROUP);
   end initialize;
 
-  /* Helper to print a message to the console
-   * %param p_message Message to print to the console
-   * %usage Called to forward a message text to the console, reducing output to 32KByte
-   *        to take limitations of dbms_output into account
+
+  /** Helper to print a message to the console
+   * %param  p_message  Message to print to the console
+   * %usage  Called to print a message text to the console, reducing output to 32KByte
+   *         to take limitations of DBMS_OUTPUT into account
    */
   procedure print(
     p_message in clob)
@@ -41,12 +44,12 @@ as
   end print;
 
 
-  /* Helper to print the content of a call stack
-   * %param p_call_stack Instance of call stack to print
-   * %param p_template Name of the template to be used to format the output.
-   * %usage Templates are defined as parameters and referenced here to control
-   *        the formatting of the call stack. After formatting, procedure PRINT
-   *        is called to print the call stack.
+  /** Helper to print the content of a call stack
+   * %param  p_call_stack  Instance of call stack to print
+   * %param  p_template    Name of the template to be used to format the output.
+   * %usage  Templates are defined as parameters and referenced here to control
+   *         the formatting of the call stack. After formatting, procedure PRINT
+   *         is called to print the call stack.
    */
   procedure print_call_stack(
     p_call_stack in call_stack_type,
@@ -59,7 +62,7 @@ as
     l_message pit_util.max_char;
     l_postfix pit_util.max_char;
     l_param varchar2(1000);
-    c_etc constant varchar2(10 char) := '...';
+    C_ETC constant varchar2(10 char) := '...'; 
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;
@@ -76,12 +79,12 @@ as
         l_param := case i when 1 then null else '; ' end 
                 || p_call_stack.params(i).p_param || '="' 
                 || case when length(p_call_stack.params(i).p_value) > 49 
-                        then substr(p_call_stack.params(i).p_value, 1, 49) || c_etc
+                        then substr(p_call_stack.params(i).p_value, 1, 49) || C_ETC
                         else p_call_stack.params(i).p_value end || '"';
         if length(l_postfix || l_param) < 2000 then
           l_postfix := l_postfix || l_param;
         else
-          l_postfix := l_postfix || c_etc;
+          l_postfix := l_postfix || C_ETC;
           exit;
         end if;
       end loop;
@@ -100,8 +103,9 @@ as
       replace(replace(replace(replace(p_template, '#MESSAGE#', l_unit_name), '#POSTFIX#', l_postfix), '#TIMING#', l_timing), '#LEVEL#', l_indent);
     print(l_message);
   end print_call_stack;
+  
 
-  /* Interface Implementierung */
+  /* Interface */
   procedure log(
     p_message in message_type)
   as

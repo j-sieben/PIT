@@ -798,7 +798,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -854,7 +854,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -910,7 +910,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -966,7 +966,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1023,7 +1023,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1087,7 +1087,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1153,7 +1153,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1272,7 +1272,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1320,7 +1320,7 @@ Procedure stop(p_message_name in varchar2 default null,
 </PRE>
 <P CLASS="DESC_TEXT">
 Exception handler that handles an <A HREF=#ERROR>error</A>, calls <A HREF=#LEAVE>leave</A> and re-raises the <A HREF=#ERROR>error</A>
-@throws P_MESSAGE_NAME exception to stop further processing<br>
+%throws P_MESSAGE_NAME exception to stop further processing<br>
 
 <BR>
 </P>
@@ -1345,7 +1345,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1922,7 +1922,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -1973,7 +1973,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2043,7 +2043,7 @@ Parameters
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_message_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2092,10 +2092,6 @@ Function get_message(p_message_name in varchar2,
 </PRE>
 <P CLASS="DESC_TEXT">
 Instantiates a <code>MESSAGE_TYPE</code> instance<br>
-%<A HREF="param.html">param</A>&nbsp; p_message_name&nbsp; Name of the Message<br>
-%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional list of message parameters<br>
-%<A HREF="param.html">param</A> [p_affected_id]&nbsp; Optional reference to an object the message relates to<br>
-%<A HREF="param.html">param</A> [p_error_code]&nbsp;&nbsp; Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 
 <BR>
 </P>
@@ -2107,6 +2103,41 @@ Usage
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Required to explicitly build an instance of MESSAGE_TYPE without directly using the type's constructor<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_message_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the Message<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional list of message parameters<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_affected_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional reference to an object the message relates to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_error_code]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 
 </TD></TR>
 </TABLE>
@@ -2168,7 +2199,7 @@ assert
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure assert(p_condition    in boolean,
-                 p_message_name in varchar2 default <A HREF="msg.html#ASSERT_TRUE">msg.ASSERT_TRUE</A>,
+                 p_message_name in varchar2 default msg.ASSERT_TRUE,
                  p_msg_args     msg_args := null,
                  p_affected_id  in varchar2 default null,
                  p_error_code   in varchar2 default null)
@@ -2207,7 +2238,7 @@ Boolean expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2239,8 +2270,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_is_null
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in varchar2,
-                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+Procedure assert_is_null(p_condition    in varchar2,
+                         p_message_name in varchar2 default msg.ASSERT_IS_NULL,
                          p_msg_args     msg_args := null,
                          p_affected_id  in varchar2 default null,
                          p_error_code   in varchar2 default null)
@@ -2279,7 +2310,7 @@ String expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2311,8 +2342,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_is_null
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in number,
-                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+Procedure assert_is_null(p_condition    in number,
+                         p_message_name in varchar2 default msg.ASSERT_IS_NULL,
                          p_msg_args     msg_args := null,
                          p_affected_id  in varchar2 default null,
                          p_error_code   in varchar2 default null)
@@ -2351,7 +2382,7 @@ Number expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2383,8 +2414,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_is_null
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_IS_NULL">assert_is_null</A>(p_condition    in date,
-                         p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NULL">msg.ASSERT_IS_NULL</A>,
+Procedure assert_is_null(p_condition    in date,
+                         p_message_name in varchar2 default msg.ASSERT_IS_NULL,
                          p_msg_args     msg_args := null,
                          p_affected_id  in varchar2 default null,
                          p_error_code   in varchar2 default null)
@@ -2423,7 +2454,7 @@ Date expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2456,7 +2487,7 @@ assert_not_null
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure assert_not_null(p_condition    in varchar2,
-                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
                           p_msg_args     msg_args := null,
                           p_affected_id  in varchar2 default null,
                           p_error_code   in varchar2 default null)
@@ -2495,7 +2526,7 @@ String expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2528,7 +2559,7 @@ assert_not_null
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure assert_not_null(p_condition    in number,
-                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
                           p_msg_args     msg_args := null,
                           p_affected_id  in varchar2 default null,
                           p_error_code   in varchar2 default null)
@@ -2567,7 +2598,7 @@ Number expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2600,7 +2631,7 @@ assert_not_null
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure assert_not_null(p_condition    in date,
-                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_IS_NOT_NULL">msg.ASSERT_IS_NOT_NULL</A>,
+                          p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
                           p_msg_args     msg_args := null,
                           p_affected_id  in varchar2 default null,
                           p_error_code   in varchar2 default null)
@@ -2639,7 +2670,7 @@ Date expression to check.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2671,8 +2702,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_exists
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_EXISTS">assert_exists</A>(p_stmt         in varchar2,
-                        p_message_name in varchar2 default <A HREF="msg.html#ASSERT_EXISTS">msg.ASSERT_EXISTS</A>,
+Procedure assert_exists(p_stmt         in varchar2,
+                        p_message_name in varchar2 default msg.ASSERT_EXISTS,
                         p_msg_args     msg_args := null,
                         p_affected_id  in varchar2 default null,
                         p_error_code   in varchar2 default null)
@@ -2711,7 +2742,7 @@ SQL-statement that either returns rows or not.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2743,8 +2774,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_exists
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_EXISTS">assert_exists</A>(p_cursor       in out nocopy sys_refcursor,
-                        p_message_name in varchar2 default <A HREF="msg.html#ASSERT_EXISTS">msg.ASSERT_EXISTS</A>,
+Procedure assert_exists(p_cursor       in out nocopy sys_refcursor,
+                        p_message_name in varchar2 default msg.ASSERT_EXISTS,
                         p_msg_args     msg_args := null,
                         p_affected_id  in varchar2 default null,
                         p_error_code   in varchar2 default null)
@@ -2783,7 +2814,7 @@ opened SYS_REFCURSOR instance that either returns rows or not.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2815,8 +2846,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_not_exists
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_NOT_EXISTS">assert_not_exists</A>(p_stmt         in varchar2,
-                            p_message_name in varchar2 default <A HREF="msg.html#ASSERT_NOT_EXISTS">msg.ASSERT_NOT_EXISTS</A>,
+Procedure assert_not_exists(p_stmt         in varchar2,
+                            p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
                             p_msg_args     msg_args := null,
                             p_affected_id  in varchar2 default null,
                             p_error_code   in varchar2 default null)
@@ -2855,7 +2886,7 @@ SQL-statement that either returns rows or not.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2887,8 +2918,8 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_not_exists
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_NOT_EXISTS">assert_not_exists</A>(p_cursor       in out nocopy sys_refcursor,
-                            p_message_name in varchar2 default <A HREF="msg.html#ASSERT_NOT_EXISTS">msg.ASSERT_NOT_EXISTS</A>,
+Procedure assert_not_exists(p_cursor       in out nocopy sys_refcursor,
+                            p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
                             p_msg_args     msg_args := null,
                             p_affected_id  in varchar2 default null,
                             p_error_code   in varchar2 default null)
@@ -2927,7 +2958,7 @@ opened SYS_REFCURSOR instance that either returns rows or not.<br>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -2959,10 +2990,10 @@ Optional <A HREF=#ERROR>error</A> code, usable by external applications<br>
 assert_datatype
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="msg.html#ASSERT_DATATYPE">assert_datatype</A>(p_value        in varchar2,
+Procedure assert_datatype(p_value        in varchar2,
                           p_type         in varchar2,
                           p_format_mask  in varchar2 default null,
-                          p_message_name in varchar2 default <A HREF="msg.html#ASSERT_DATATYPE">msg.ASSERT_DATATYPE</A>,
+                          p_message_name in varchar2 default msg.ASSERT_DATATYPE,
                           p_msg_args     msg_args := null,
                           p_affected_id  in varchar2 default null,
                           p_error_code   in varchar2 default null)
@@ -3015,7 +3046,7 @@ Optional format mask to convert P_VALUE. If NULL, session default formats are us
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 [p_message_name]&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the message. Reference to package <A HREF="msg.html">MSG</A>
+Name of the message. Reference to package MSG<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -3082,10 +3113,6 @@ Function get_trans_item_name(p_pti_pmg_name in pit_message_group.pmg_name%type,
 </PRE>
 <P CLASS="DESC_TEXT">
 Retrieves a PIT translatable item (PTI) name in the session language.<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
-%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
-%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
 
 <BR>
 </P>
@@ -3097,6 +3124,41 @@ Usage
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message group the PTI belongs to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ID of the item to retreive translations for<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_pti_pml_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle language reference<br>
 
 </TD></TR>
 </TABLE>
@@ -3128,10 +3190,6 @@ Function get_trans_item_display_name(p_pti_pmg_name in pit_message_group.pmg_nam
 </PRE>
 <P CLASS="DESC_TEXT">
 Retrieves a PIT translatable item (PTI) display name in the session language.<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
-%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
-%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
 
 <BR>
 </P>
@@ -3143,6 +3201,41 @@ Usage
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message group the PTI belongs to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ID of the item to retreive translations for<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_pti_pml_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle language reference<br>
 
 </TD></TR>
 </TABLE>
@@ -3173,10 +3266,6 @@ Function get_trans_item_description(p_pti_pmg_name in pit_message_group.pmg_name
 </PRE>
 <P CLASS="DESC_TEXT">
 Retrieves a PIT translatable item (PTI) description in the session language.<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
-%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
-%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
 
 <BR>
 </P>
@@ -3188,6 +3277,41 @@ Usage
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message group the PTI belongs to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ID of the item to retreive translations for<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_pti_pml_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle language reference<br>
 
 </TD></TR>
 </TABLE>
@@ -3219,10 +3343,6 @@ Function get_trans_item(p_pti_pmg_name in pit_message_group.pmg_name%type,
 </PRE>
 <P CLASS="DESC_TEXT">
 Retrieves a PIT translatable item (PTI) record containing name, display name and description in the session language.<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_pmg_name&nbsp; Name of the message group the PTI belongs to<br>
-%<A HREF="param.html">param</A>&nbsp; p_pti_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID of the item to retreive translations for<br>
-%<A HREF="param.html">param</A> [p_msg_args]&nbsp;&nbsp;&nbsp;&nbsp; Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
-%<A HREF="param.html">param</A> [p_pti_pml_name] Oracle language reference<br>
 
 <BR>
 </P>
@@ -3234,6 +3354,41 @@ Usage
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 This API is aimed towards PL/SQL code that needs direct access to the respective items without the need to declare a record variable. In SQL, view PIT_TRANSLATABLE_ITEM_V should be used to avoid expensive roundtrips between SQL and PL/SQL If access to more than one item is required, rather call the overloaded method returning a record.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the message group the PTI belongs to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pti_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ID of the item to retreive translations for<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_msg_args]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Optional MSG_ARGS object to adjust NAME or DISPLAY_NAME of the PTI<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_pti_pml_name]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle language reference<br>
 
 </TD></TR>
 </TABLE>
@@ -3577,7 +3732,7 @@ Usage
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-If called, the list of raised messages is examined. If at least one message of secverity C_LEVEL_FATAL is present, exception <A HREF="msg.html#PIT_BULK_FATAL">PIT_BULK_FATAL</A> is raised. If at least one message of secverity C_LEVEL_ERROR is present, exception <A HREF="msg.html#PIT_BULK_ERROR">PIT_BULK_ERROR</A> is raised. While processing these errors, use GET_COLLECTED_MESSAGES to retrieve a list of all collected messages<br>
+If called, the list of raised messages is examined. If at least one message of secverity C_LEVEL_FATAL is present, exception PIT_BULK_FATAL is raised. If at least one message of secverity C_LEVEL_ERROR is present, exception PIT_BULK_ERROR is raised. While processing these errors, use <A HREF=#GET_MESSAGE_COLLECTION>GET_MESSAGE_COLLECTION</A> to retrieve a list of all collected messages<br>
 
 </TD></TR>
 </TABLE>
@@ -3740,7 +3895,7 @@ ARGS-type, name list of the actually active modules<br>
 initialize
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="mail.html#INITIALIZE">initialize</A>
+Procedure initialize
 
 </PRE>
 <P CLASS="DESC_TEXT">
