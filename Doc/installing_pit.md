@@ -28,6 +28,21 @@ define C_FALSE="'N'";
 ```
 Using these replacement variables, you can adjust the boolean type to your local preference, may it be `1|0` or any other setting. Be aware though that this is a one time decision, as this will be burned into the table declarations. Changing these settings is only possible by completely re-installing `PIT`. This is something you have to plan, as many other packages may depend on `PIT` and the flag type you chose.
 
+### Choose your exception pre- and/or postfix
+
+A message is identified by a unique name. If the severity of this message is `ERROR` or even `FATAL_ERROR`, `PIT` automatically creates user defined exceptions for it. To distinguish them from the message, `PIT` automatically extends the name by a pre- or postfix. You can freely choose, what pre- or postix to use by setting those in the `init` file from the previous paragraph:
+
+```
+-- ADJUST THIS SETTINGS IF YOU WANT ANOTHER ERROR PRE- OR POSTFIX
+-- CAVE: Max length per setting is 3 bytes or 1 byte when using pre- and postfix
+-- This is because they will be extended by an underscore. Using pre- and postfix will add 2 underscores 
+-- and the total length is limited to 4 bytes.
+define EXCEPTION_PREFIX=
+define EXCEPTION_POSTFIX=ERR
+```
+
+The total length of pre- and postfix is 4 bytes, but you need to add one underscore for the pre- and one for the postfix. So, if you use a pre- and a postfix, only 1 byte is left for those. If you choose a pre- or postfix, there are up to 3 bytes avaiable.
+
 ## `PIT` privileges
 
 The script to install `PIT` requires administrative privileges, as it creates users shouldn't they already exist, grants system and object privileges and so forth. If your administrator needs to have an overview about the rights the `PIT` installation grants to the respective users, you will find them in file `set_grants.sql` in the installation folder plus in the modules folder for specific output modules. As an example, you will find a file named `user_grants.sql` in folder `modules/pit_file/scripts` which assigns execute rights on `utl_file` to the owner of `PIT`.
