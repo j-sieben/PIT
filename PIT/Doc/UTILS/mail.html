@@ -5,7 +5,7 @@
  <TITLE>Package mail</TITLE>
  <META name="object" content="PACKAGE">
  <META name="name" content="mail">
- <META name="description" content="Helper package to send emails">
+ <META name="description" content="Package to wrap sending mails via UTL_SMTP">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,7 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package mail</P>
-Helper package to send emails<br>
+Package to wrap sending mails via UTL_SMTP<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -25,14 +25,29 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PKG_IS_WORKING">pkg_is_working</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Getter to retrieve the package status
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_CREDENTIALS">set_credentials</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method encodes confidential data.
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SEND_MAIL">send_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure SEND_MAIL sends mails including attachments.
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SEND_MAIL2">send_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Procedure SEND_MAIL sends mails including attachments.
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SEND_MAIL3">send_mail</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
@@ -49,24 +64,12 @@ Types
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ADDRESS_REC">address_rec</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Record to store a user name and its email address
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ADDRESS_TAB">address_tab</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-</TABLE>
-<BR>
-<A NAME="Variables"></A>
-<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
-Variables
-</TD></TR></TABLE>
-<TABLE CLASS="SUB_TABLE">
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#G_PKG_IS_WORKING">g_pkg_is_working</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Nested table of address records.
 </TD></TR>
 </TABLE>
 <BR>
@@ -77,9 +80,14 @@ address_rec
 </P>
 <PRE CLASS="DECL_TEXT">
 type address_rec is record(
-  user_name pit_util.ora_name_type,
+  user_name varchar2(30),
   email varchar2(200));
 </PRE>
+<P CLASS="DESC_TEXT">
+Record to store a user name and its email address<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="ADDRESS_TAB"></A>
 <P CLASS="TYPE_TITLE">
@@ -88,14 +96,130 @@ address_tab
 <PRE CLASS="DECL_TEXT">
 type address_tab is table of address_rec;
 </PRE>
+<P CLASS="DESC_TEXT">
+Nested table of address records.<br>
+
+<BR>
+</P>
 <HR>
-<A NAME="G_PKG_IS_WORKING"></A>
+<A NAME="PKG_IS_WORKING"></A>
 <P CLASS="TYPE_TITLE">
-g_pkg_is_working
+pkg_is_working
 </P>
 <PRE CLASS="DECL_TEXT">
-g_pkg_is_working boolean;
+Function pkg_is_working return boolean
+
 </PRE>
+<P CLASS="DESC_TEXT">
+Getter to retrieve the package status<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to check whether the package works as expected. This is checked based on whether<br>
+
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+the required ACL to contact the mail server is available<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+-&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+the mail server can be contacted and logged on<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+TRUE if the package is working normally, FALSE otherwise<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="SET_CREDENTIALS"></A>
+<P CLASS="TYPE_TITLE">
+set_credentials
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_credentials(p_host     in varchar2,
+                          p_port     in pls_integer,
+                          p_user     in varchar2,
+                          p_password in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method encodes confidential data.<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+The method encodes the given parameters and stores them at parameter PIT_MAIL_CREDENTIALS CAVEAT: This is anything but secure. If in a sensitive environment, rather set up a SMTP relay<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_host&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Mail server to send mails to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_host&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Port of the Mail server<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_user&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Username at the mail server<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_password&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Password of the user.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="SEND_MAIL"></A>
 <P CLASS="TYPE_TITLE">
@@ -107,81 +231,26 @@ Procedure send_mail(p_sender        in varchar2,
                     p_cc_recipients in <A HREF=#ADDRESS_TAB>mail.address_tab</A>,
                     p_subject       in varchar2,
                     p_message       in varchar2,
-                    p_filename      in varchar2,
+                    p_file_name     in varchar2,
                     p_mime_type     in varchar2,
                     p_attachment    in blob)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure SEND_MAIL sends mails including attachments.<br>
-
-<BR>
-</P>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_sender&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Sender of the mail. The address can be transferred in the form <A HREF="MAILTO:foo@server.de">foo@server.de</A> or &quot;Bill &lt;A HREF=&quot;MAILTO:Smith&quot;&lt;foo@server.de&gt;&quot;&gt;Smith&quot;&lt;foo@server.de&gt;</A>.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_recipients&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Recipients of the mail. Instance of the nested table <A HREF=#ADDRESS_TAB>MAIL.ADDRESS_TAB</A> with the structure &lt;USER_NAME&gt;|&lt;EMAIL&gt;. The email can be passed in the same way as P_SENDER, the username is the username associated with the email address.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_cc_recipients&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-CC-Recipients of the mail. Instance of the nested table <A HREF=#ADDRESS_TAB>MAIL.ADDRESS_TAB</A> with the structure &lt;USER_NAME&gt;|&lt;EMAIL&gt;. The email can be passed in the same way as P_SENDER, the username is the username associated with the email address.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_subject&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Subject of the mail. Maximum length is 1000 characters (recommended: 78 characters)<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_message&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Content of the mail. Maximum length of the mail: 32KByte.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_filename]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the file in which the attachment should be transferred, including the file extension. Example: foo.pdf<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_mime_type]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Mime type of the attachment. Example: application/pdf<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_attachment]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-BLOB of the attachment. If NULL, no attachment is added. In this case P_FILENAME can also be NULL.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="SEND_MAIL2"></A>
+<P CLASS="TYPE_TITLE">
+send_mail
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure send_mail(p_sender        in varchar2,
+                    p_recipients    in <A HREF=#ADDRESS_TAB>mail.address_tab</A>,
+                    p_cc_recipients in <A HREF=#ADDRESS_TAB>mail.address_tab</A>,
+                    p_subject       in varchar2,
+                    p_message       in varchar2)
+
+</PRE>
+<HR>
+<A NAME="SEND_MAIL3"></A>
 <P CLASS="TYPE_TITLE">
 send_mail
 </P>
@@ -190,72 +259,11 @@ Procedure send_mail(p_sender     in varchar2,
                     p_recipient  in varchar2,
                     p_subject    in varchar2,
                     p_message    in varchar2,
-                    p_filename   in varchar2 default null,
+                    p_file_name  in varchar2 default null,
                     p_mime_type  in varchar2 default null,
                     p_attachment in blob default null)
 
 </PRE>
-<P CLASS="DESC_TEXT">
-Procedure SEND_MAIL sends mails including attachments. Overloaded to send a mail to one recipient without cc-recipients only.<br>
-
-<BR>
-</P>
-<A NAME="Parameters"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Parameters
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_sender&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Sender of the mail. The address can be transferred in the form <A HREF="MAILTO:foo@server.de">foo@server.de</A> or &quot;Bill &lt;A HREF=&quot;MAILTO:Smith&quot;&lt;foo@server.de&gt;&quot;&gt;Smith&quot;&lt;foo@server.de&gt;</A>.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_recipient&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-semicolon-delimited list of addresses to which the mail should be sent.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_subject&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Subject of the mail. Maximum length is 1000 characters (recommended: 78 characters)<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_message&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Content of the mail. Maximum length of the mail: 32KByte.<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_filename]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Name of the file in which the attachment should be transferred, including the file extension. Example: foo.pdf<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_mime_type]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Mime type of the attachment. Example: application/pdf<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-[p_attachment]&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-BLOB of the attachment. If NULL, no attachment is added. In this case P_FILENAME can also be NULL.<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <HR>
 <A NAME="INITIALIZE"></A>
 <P CLASS="TYPE_TITLE">

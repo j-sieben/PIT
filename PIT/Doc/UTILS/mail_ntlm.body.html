@@ -1,0 +1,307 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body mail_ntlm</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="mail_ntlm">
+ <META name="description" content="Package implementation to allow to authenticate to a NTLM SMTP server Disclaimer">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body mail_ntlm</P>
+Package implementation to allow to <A HREF=#AUTHENTICATE>authenticate</A> to a NTLM SMTP server Disclaimer<br>
+&nbsp; This package is a PL/SQL port from the Ntml.java, distributed under<br>
+&nbsp; GNU General Public License Version 2 only (&quot;GPL&quot;) or the Common Development<br>
+&nbsp; and Distribution License(&quot;CDDL&quot;) 1.0 (see https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html).<br>
+&nbsp; Ntlm.java is part of javamail, available at <A HREF="http://kenai.com/projects/javamail">http://kenai.com/projects/javamail</A>
+&nbsp; Authors Michael McMahon and Bill Shannon<br>
+&nbsp; Port made by Javier Martin-Ortega, under GPL v2<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#BITOR">bitor</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#BIT_SHIFT_LEFT">bit_shift_left</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#BIT_SHIFT_RIGHT">bit_shift_right</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#BINARY_OPS">binary_ops</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CREATE_DES_KEY">create_des_key</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#ADD_PARITY_BIT">add_parity_bit</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GENERATE_SECRET">generate_secret</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_UTF_LITTLE_UNMARKED">get_utf_little_unmarked</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LENGTH_IN_TWO_BYTES">length_in_two_bytes</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CALC_RESPONSE">calc_response</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CALC_LM_HASH">calc_lm_hash</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CALC_NT_HASH">calc_nt_hash</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GENERATE_FIRST_MSG">generate_first_msg</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GENERATE_SECOND_MSG">generate_second_msg</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AUTHENTICATE">authenticate</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_CRYPT_TYPE">c_crypt_type</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_MAGIC">c_magic</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_NTLM">c_ntlm</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="C_CRYPT_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+c_crypt_type
+</P>
+<PRE CLASS="DECL_TEXT">
+c_crypt_type constant pls_integer :=
+  dbms_crypto.chain_ecb + dbms_crypto.encrypt_des + dbms_crypto.pad_none;
+</PRE>
+<HR>
+<A NAME="C_MAGIC"></A>
+<P CLASS="TYPE_TITLE">
+c_magic
+</P>
+<PRE CLASS="DECL_TEXT">
+c_magic constant varchar2(16):='4b47532140232425';
+</PRE>
+<HR>
+<A NAME="C_NTLM"></A>
+<P CLASS="TYPE_TITLE">
+c_ntlm
+</P>
+<PRE CLASS="DECL_TEXT">
+c_ntlm constant varchar2(10) := 'NTLM';
+</PRE>
+<HR>
+<A NAME="BITOR"></A>
+<P CLASS="TYPE_TITLE">
+bitor
+</P>
+<PRE CLASS="DECL_TEXT">
+Function bitor(p_x in number, p_y in number) return number
+
+</PRE>
+<HR>
+<A NAME="BIT_SHIFT_LEFT"></A>
+<P CLASS="TYPE_TITLE">
+bit_shift_left
+</P>
+<PRE CLASS="DECL_TEXT">
+Function bit_shift_left(p_x in number, p_n in number) return number
+
+</PRE>
+<HR>
+<A NAME="BIT_SHIFT_RIGHT"></A>
+<P CLASS="TYPE_TITLE">
+bit_shift_right
+</P>
+<PRE CLASS="DECL_TEXT">
+Function bit_shift_right(p_x in number, p_n in number) return number
+
+</PRE>
+<HR>
+<A NAME="BINARY_OPS"></A>
+<P CLASS="TYPE_TITLE">
+binary_ops
+</P>
+<PRE CLASS="DECL_TEXT">
+Function binary_ops(p_first_byte    char,
+                    p_second_byte   char,
+                    p_first_offset  number,
+                    p_second_offset number) return char
+
+</PRE>
+<HR>
+<A NAME="CREATE_DES_KEY"></A>
+<P CLASS="TYPE_TITLE">
+create_des_key
+</P>
+<PRE CLASS="DECL_TEXT">
+Function create_des_key(p_key varchar, p_offset number) return varchar2
+
+</PRE>
+<HR>
+<A NAME="ADD_PARITY_BIT"></A>
+<P CLASS="TYPE_TITLE">
+add_parity_bit
+</P>
+<PRE CLASS="DECL_TEXT">
+Function add_parity_bit(p_des_key in varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="GENERATE_SECRET"></A>
+<P CLASS="TYPE_TITLE">
+generate_secret
+</P>
+<PRE CLASS="DECL_TEXT">
+Function generate_secret(p_des_key varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="GET_UTF_LITTLE_UNMARKED"></A>
+<P CLASS="TYPE_TITLE">
+get_utf_little_unmarked
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_utf_little_unmarked(p_text varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="LENGTH_IN_TWO_BYTES"></A>
+<P CLASS="TYPE_TITLE">
+length_in_two_bytes
+</P>
+<PRE CLASS="DECL_TEXT">
+Function length_in_two_bytes(p_data number) return varchar2
+
+</PRE>
+<HR>
+<A NAME="CALC_RESPONSE"></A>
+<P CLASS="TYPE_TITLE">
+calc_response
+</P>
+<PRE CLASS="DECL_TEXT">
+Function calc_response(p_key in varchar2, p_text in varchar2)
+  return varchar2
+
+</PRE>
+<HR>
+<A NAME="CALC_LM_HASH"></A>
+<P CLASS="TYPE_TITLE">
+calc_lm_hash
+</P>
+<PRE CLASS="DECL_TEXT">
+Function calc_lm_hash(p_password in varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="CALC_NT_HASH"></A>
+<P CLASS="TYPE_TITLE">
+calc_nt_hash
+</P>
+<PRE CLASS="DECL_TEXT">
+Function calc_nt_hash(p_password varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="GENERATE_FIRST_MSG"></A>
+<P CLASS="TYPE_TITLE">
+generate_first_msg
+</P>
+<PRE CLASS="DECL_TEXT">
+Function generate_first_msg(p_domain in varchar2, p_host in varchar2)
+  return varchar2
+
+</PRE>
+<HR>
+<A NAME="GENERATE_SECOND_MSG"></A>
+<P CLASS="TYPE_TITLE">
+generate_second_msg
+</P>
+<PRE CLASS="DECL_TEXT">
+Function generate_second_msg(p_first_reply in varchar2,
+                             p_user        in varchar2,
+                             p_password    in varchar2,
+                             p_domain      in varchar2,
+                             p_host        in varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="AUTHENTICATE"></A>
+<P CLASS="TYPE_TITLE">
+authenticate
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure authenticate(p_conn      in out nocopy utl_smtp.connection,
+                       p_host      in varchar2,
+                       p_user_name in varchar2,
+                       p_password  in varchar2)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

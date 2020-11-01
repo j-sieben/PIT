@@ -31,7 +31,7 @@ Method to convert a MESSAGE_TYPE.message into a string
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PREPARE_MAIL">prepare_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Method to prepare a mail
+Method to prepare the mail to send
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SEND_MAIL">send_mail</A>&nbsp;&nbsp;
@@ -426,27 +426,14 @@ String with a formatted message<br>
 prepare_mail
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure prepare_mail(p_message    in out nocopy clob,
-                       p_attachment out nocopy blob)
+Procedure prepare_mail(p_message in out nocopy clob, p_attachment out blob)
 
 </PRE>
 <P CLASS="DESC_TEXT">
-Method to prepare a mail<br>
+Method to prepare the mail to send<br>
 
 <BR>
 </P>
-<A NAME="Usage"></A>
-<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
-Usage
-</TD></TR></TABLE>
-<TABLE CLASS="LIST_TABLE">
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Is used to create an attachment if the length of the message is too long for a normal mail<br>
-
-</TD></TR>
-</TABLE>
-<BR>
 <A NAME="Parameters"></A>
 <TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
 Parameters
@@ -454,16 +441,16 @@ Parameters
 <TABLE CLASS="LIST_TABLE">
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_message_text&nbsp;&nbsp;
+p_message&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Text of the message to send<br>
+Message text as prepared by <A HREF=#PREPARE_MESSAGE>PREPARE_MESSAGE</A>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 p_attachment&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Out variable, is filled if P_MESSAGE_TEXT exceeds 2000 byte in length<br>
+Attachment is populated if message exceeds a certain legnth<br>
 
 </TD></TR>
 </TABLE>

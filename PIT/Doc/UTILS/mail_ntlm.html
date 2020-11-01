@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package mail_ntlm</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="mail_ntlm">
+ <META name="description" content="Package to allow to authenticate to a NTLM SMTP server Disclaimer">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package mail_ntlm</P>
+Package to allow to <A HREF=#AUTHENTICATE>authenticate</A> to a NTLM SMTP server Disclaimer<br>
+&nbsp; This package is a PL/SQL port from the Ntml.java, distributed under<br>
+&nbsp; GNU General Public License Version 2 only (&quot;GPL&quot;) or the Common Development<br>
+&nbsp; and Distribution License(&quot;CDDL&quot;) 1.0 (see https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html).<br>
+&nbsp; Ntlm.java is part of javamail, available at <A HREF="http://kenai.com/projects/javamail">http://kenai.com/projects/javamail</A>
+&nbsp; Authors Michael McMahon and Bill Shannon<br>
+&nbsp; Port made by Javier Martin-Ortega, under GPL v2<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AUTHENTICATE">authenticate</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="AUTHENTICATE"></A>
+<P CLASS="TYPE_TITLE">
+authenticate
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure authenticate(p_conn      in out nocopy utl_smtp.connection,
+                       p_host      in varchar2,
+                       p_user_name in varchar2,
+                       p_password  in varchar2)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

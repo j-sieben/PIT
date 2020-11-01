@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body mail_cram</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="mail_cram">
+ <META name="description" content="">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body mail_cram</P>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_AUTH_STRING">get_auth_string</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to create an authorization string
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AUTHENTICATE">authenticate</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="GET_AUTH_STRING"></A>
+<P CLASS="TYPE_TITLE">
+get_auth_string
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_auth_string(p_user        in varchar2,
+                         p_password    in varchar2,
+                         p_challenge   in varchar2,
+                         p_hash_method in varchar2) return varchar2
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to create an authorization string<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to form an authorization string based on the hash method chosen<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_user&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+User name<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_password&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Password of the user<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_challenge&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Password of the user<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_hash_method&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Password of the user<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Authorization string<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="AUTHENTICATE"></A>
+<P CLASS="TYPE_TITLE">
+authenticate
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure authenticate(p_conn        in out nocopy utl_smtp.connection,
+                       p_hash_method in varchar2,
+                       p_user_name   in varchar2,
+                       p_password    in varchar2)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Table PIT_MAIL_QUEUE</TITLE>
+ <META name="object" content="TABLE">
+ <META name="name" content="PIT_MAIL_QUEUE">
+ <META name="description" content="Table to buffer mail notifications for later delivery">
+ <META name="columns" content="PMQ_ID PMQ_PMS_ID PMQ_PSE_ID PMQ_MESSAGE_TEXT PMQ_LOG_DATE PMQ_IS_PROCESSED">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Table PIT_MAIL_QUEUE</P>
+Table to buffer mail notifications for later delivery
+</TD></TR></TABLE>
+<HR>
+<A NAME="Columns"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Columns
+</TD></TR></TABLE>
+<TABLE CLASS="SIMPLE_TABLE">
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Name
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Type
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Optional
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Default
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Comments
+</U>
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PMQ_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+NUMBER
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+&nbsp;
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+&nbsp;
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Flag indicating whether the message was processed
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PMQ_PMS_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+VARCHAR2(50)
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Y
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+&nbsp;
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Name of the message, used to summarize messages
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PMQ_PSE_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+NUMBER
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Y
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+&nbsp;
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Severity of the message
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PMQ_MESSAGE_TEXT
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+CLOB
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Y
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+&nbsp;
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Message text
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PMQ_LOG_DATE
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+DATE
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Y
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+sysdate
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Date when the message was set
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PMQ_IS_PROCESSED
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+CHAR(1)
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Y
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+'N'
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Flag to indicate whether the mail was successfully sent
+</TD>
+</TR>
+</TABLE>
+<HR>
+<A NAME="Primary Key"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Primary Key
+</TD></TR></TABLE>
+<TABLE CLASS="SIMPLE_TABLE">
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Name
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Columns
+</U>
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PK_PIT_MAIL_QUEUE
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMQ_ID
+</TD>
+</TR>
+</TABLE>
+<HR>
+<A NAME="Foreign Keys"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Foreign Keys
+</TD></TR></TABLE>
+<TABLE CLASS="SIMPLE_TABLE">
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Name
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Columns
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Referencing Table
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Columns
+</U>
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+FK_PMQ_PMS_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMQ_PMS_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PIT_MESSAGE
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMS_ID
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+FK_PMQ_PSE_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMQ_PSE_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PIT_MESSAGE_SEVERITY
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PSE_ID
+</TD>
+</TR>
+</TABLE>
+<HR>
+<A NAME="Indexes"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Indexes
+</TD></TR></TABLE>
+<TABLE CLASS="SIMPLE_TABLE">
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Name
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Columns
+</U>
+</TD>
+<TD VALIGN="TOP" CLASS="LIST_ITEM"><U>
+Type
+</U>
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+IDX_FK_PMQ_PMS_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMQ_PMS_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Normal
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+IDX_FK_PMQ_PSE_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMQ_PSE_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Normal
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP" CLASS="LIST_ITEM">
+PK_PIT_MAIL_QUEUE
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+PMQ_ID
+</TD>
+<TD VALIGN="TOP" CLASS="DESC_TEXT">
+Unique
+</TD>
+</TR>
+</TABLE>
+<HR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

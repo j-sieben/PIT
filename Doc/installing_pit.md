@@ -8,7 +8,25 @@
 - Client installation file, grants all necessary rights to a adifferent user to allow for centralized deployment of `PIT` for many schemas
 - APEX installation file, installs the APEX application to maintain `PIT`. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems.
 
-As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL\*Plus* to install `PIT`, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`. 
+As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL\*Plus* to install `PIT`, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`.
+
+## Adjust `PIT` to your wishes
+
+### Choose the default language
+
+It is possible to adjust some settings before installing `PIT`. First, `PIT` is designed to be internationalized from ground up. You adjust your default language by passing it in as the second parameter when installing `PIT`. It is important to understand that any message you create must exists in this default language at least. You may translate it to other languages later, but you won't be able to just have a message in a language other than the default language. So, as a best practice, choose the best language for your needs and make this the default language. `PIT` supports `AMERICAN` adn `GERMAN` as languages out of the box.
+
+### Choose your flag type
+
+As storing boolean values in a data model is no easy thing to do in Oracle, many different best practiceses are used to circumvent the lack of a boolean data type in Oracle tables. I found it cumbersome to work with more than one of these best practices at a time, so I made `PIT` adjustable in this regard. In file `PIT/PIT/init/init.sql` you will find the following replacement variables:
+
+```
+-- ADJUST THIS SETTING IF YOU WANT ANOTHER TYPE 
+define FLAG_TYPE="char(1 byte)";
+define C_TRUE="'Y'";
+define C_FALSE="'N'";
+```
+Using these replacement variables, you can adjust the boolean type to your local preference, may it be `1|0` or any other setting. Be aware though that this is a one time decision, as this will be burned into the table declarations. Changing these settings is only possible by completely re-installing `PIT`. This is something you have to plan, as many other packages may depend on `PIT` and the flag type you chose.
 
 ## `PIT` privileges
 
@@ -24,7 +42,7 @@ Starting with Oracle version 12c, a new privilege `inherit privileges` must be o
 
 You may run the installation scripts directly from a command line or use the predefined batch scripts provided for Windows and Unix. The batch scripts set the environment accordingly and ask for the respective parameters interactively.
 
-I recommend installing `PIT` in a dedicated Utility owner and grant access to other schemas using the `pit_install_client` script. This way you don't multiply your codebase. The downside to this is a certain mixture of message definitions at one database user, as all messages are stored within table `PIT_MESSAGE` within that user. Plus, as you are allowed to map an Oracle server error number to a `exception`variable only once, you have to make sure that all mappings are dealt with in a way that makes them reusable for other schemas.
+I recommend installing `PIT` in a dedicated utility owner and grant access to other schemas using the `pit_install_client` script. This way you don't multiply your codebase. The downside to this is a certain mixture of message definitions at one database user, as all messages are stored within table `PIT_MESSAGE` within that user. Plus, as you are allowed to map an Oracle server error number to a `exception` variable only once, you have to make sure that all mappings are dealt with in a way that makes them reusable for other schemas.
 
 Messages are delivered in my mother tongue, `GERMAN` and in `AMERICAN`. Messages are located in various folders under `message/<LANGUAGE>/MessageGroup_PIT.sql` and can be translated or changed as you like. You can also use the built in translation service to translate the internal messages. How to do this is described [here](https://github.com/j-sieben/PIT/blob/master/Doc/translating_messages.md).
 
@@ -41,7 +59,7 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
-set nls_lang=AMERICAN_AMERICA.AL32UTF8
+
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_install PIT_OWNER AMERICAN
 ```
@@ -55,7 +73,7 @@ To uninstall `PIT`, simply call `pit_uninstall.sql` from the installation folder
 ```
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
-set nls_lang=GERMAN_GERMANY.AL32UTF8
+
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_uninstall PIT_OWNER AMERICAN
 ```
@@ -70,9 +88,6 @@ To grant a different schema access to `PIT`, you call script `pit_install_client
 Here's an example on how to call this script:
 
 ```
-rem always make sure that the console is set to UTF-8
-set nls_lang=AMERICAN_AMERICA.AL32UTF8
-
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba 
@@ -85,7 +100,7 @@ To uninstall a `PIT` client, simply call `pit_uninstall_client.sql` with the `PI
 ```
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
-set nls_lang=GERMAN_GERMANY.AL32UTF8
+
 sqlplus <sys_credentials> as sysdba 
 SQL> @pit_uninstall_client PIT_OWNER PIT_USER
 ```
@@ -94,7 +109,7 @@ SQL> @pit_uninstall_client PIT_OWNER PIT_USER
 
 `PIT` ships with an APEX application that allows you to manage `PIT` messages and global application parameters. For some it is easier to set parameters and create messages graphically than to use PL/SQL API calls. To install the supporting APEX application, it is expected that you have an APEX workspace. The workspace schema is referenced as the `PIT_USER` lateron, as this should be a schema different to the owner of `PIT`. Basically, there is no difference in a `PIT` client user and the APEX schema user, as both are simply using `PIT`. By installing the maintenance application, the client grants and some additional grants required are set.
 
-The APEX application is available with a german UI only. I'm sorry for that, but translating the APEX application is quite some work and the result may not be satisfying. But as with all APEX applications, translations are possible and you can do this as you like. I recommend to have [DeepL](https://www.deepl.com/translator) at your side to get started.
+The APEX application is available with a German UI only. I'm sorry for that, but translating the APEX application is quite some work and the result may not be satisfying. But as with all APEX applications, translations are possible and you can do this as you like. I recommend to have [DeepL](https://www.deepl.com/translator) at your side to get started.
 
 There has been a changed approach in regard to the APEX application maintaining `PIT`. It used to be a very basic application in earlier releases. To be honest, I didn't use it too much as I normaly work with the installation files directly. But I wanted to improve the application, partly because I plan to create a second Oracle Jet-based interface for it. I want to use this small application as a proof of concept for a broader architecture problem, namely writing database applications that are UI-independent.
 
@@ -102,7 +117,7 @@ Writing APEX applications covering a wide range of APEX versions (from 5.1 to 20
 
 Therefore I decided to rely on my utilities named `UTL_TEXT` and `UTL_APEX` to sort out those issues. They will stabilze the API and remove most dependencies to APEX from the the controller logic within the APEX schema. Unfortunately, this will make installation a bit more complex. Before installing the APEX application, you need to install those utilities. I could have included them in the download, but that would have meant copying code between git repositories with all related problems such as newer versions etc. I don't want to do that.
 
-So you need to start downloading [`UTL_TEXT`](https://github.com/j-sieben/UTL_TEXT) and [`UTL_APEX`](https://github.com/j-sieben/UTL_APEX) first. I'm sure you benefit from those libraries even outside the context of `PIT`. `UTL_TEXT` for instance contains a very powerful and flexible code generator you may want to look at.
+So you need to start downloading [`UTL_TEXT`](https://github.com/j-sieben/UTL_TEXT) and [`UTL_APEX`](https://github.com/j-sieben/UTL_APEX) first. I'm sure you benefit from those libraries even outside the context of `PIT`. `UTL_TEXT` for instance contains a very powerful and flexible code generator you may want to have a look at.
 
 ### Installing `UTL_TEXT`
 
@@ -114,6 +129,7 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 
 rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_TEXT\UTL_TEXT
+
 sqlplus <sys_credentials> as sysdba 
 SQL> @utl_text_install PIT_OWNER AMERICAN
 SQL> @utl_text_install_client PIT_OWNER PIT_USER
@@ -121,9 +137,11 @@ SQL> @utl_text_install_client PIT_OWNER PIT_USER
 
 ### Installation of `UTL_APEX`
 
-`UTL_APEX` is a library to wrap some commonly required APEX related functionality. Main focus is to cnetralize dependencies from the APEX API at one place. It also stabilizes the ever changing APEX API as good as it can. So for instance there is a method call `utl_apex.UPDATING` returning a boolean flag that analyzes the request, a button action or the value of `APEX$ROW_ACTION` to find out whether APEX wants to update a record. 
+`UTL_APEX` is a library to wrap some commonly required APEX related functionality. Main focus is to centralize dependencies from the APEX API at one place. It also stabilizes the ever changing APEX API as good as it can. So for instance there is a method call `utl_apex.UPDATING` returning a boolean flag that analyzes the request, a button action or the value of `APEX$ROW_ACTION` to find out whether APEX wants to update a record.
 
-As this is an APEX library, it lives in the `PIT_USER` schema directly and does therefore not require any client grants:
+Plus, another utility called `UTL_DEV_APEX` is installed. This package is useful only on develpment machines, as it is used to generate stubs for the controller level and other utilities to help you test your code.
+
+As this is an APEX library, it lives in the `PIT_USER` schema directly and therefore does not require any client grants:
 
 ```
 rem always make sure that the console is set to UTF-8
@@ -131,6 +149,7 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 
 rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_APEX\UTL_APEX
+
 sqlplus <sys_credentials> as sysdba 
 SQL> @utl_apex_install PIT_USER AMERICAN
 ```
@@ -175,7 +194,8 @@ Here's a sample deinstallation script:
 
 ```
 cd C:\temp\PIT\PIT
-sqlplus <sys_credentials> as sysdba 
+sqlplus <sys_credentials> as sysdba
+
 SQL> @pit_uninstall_apex PIT_OWNER PIT_USER DEV_TOOLS PIT
 ```
 Deinstalling the supporting APEX application will deinstall the `PIT` client for that user, too. So if you don't want to use the supprting apex application anymore but want to have access to `PIT`, install a `PIT` client after deinstalling the supporting APEX application.

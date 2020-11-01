@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package mail_cram</TITLE>
+ <META name="object" content="PACKAGE">
+ <META name="name" content="mail_cram">
+ <META name="description" content="Package to allow to authenticate to a NTLM SMTP server Disclaimer">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package mail_cram</P>
+Package to allow to <A HREF=#AUTHENTICATE>authenticate</A> to a NTLM SMTP server Disclaimer<br>
+&nbsp; Based on a blog by Sean Stuber:<br>
+&nbsp; <A HREF="http://www.experts-exchange.com/Database/Oracle/A_5915-Extending-Oracle">http://www.experts-exchange.com/Database/Oracle/A_5915-Extending-Oracle</A>%27s-Email-functionality-with-PL-SQL-Authentication.html<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#AUTHENTICATE">authenticate</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to authenticate with a CRAM SMTP server like Exchange
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_HASH_MD5">c_hash_md5</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_HASH_SHA1">c_hash_sha1</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="C_HASH_MD5"></A>
+<P CLASS="TYPE_TITLE">
+c_hash_md5
+</P>
+<PRE CLASS="DECL_TEXT">
+c_hash_md5 constant varchar2(20) := 'CRAM-MD5';
+</PRE>
+<HR>
+<A NAME="C_HASH_SHA1"></A>
+<P CLASS="TYPE_TITLE">
+c_hash_sha1
+</P>
+<PRE CLASS="DECL_TEXT">
+c_hash_sha1 constant varchar2(20) := 'CRAM-SHA1';
+</PRE>
+<HR>
+<A NAME="AUTHENTICATE"></A>
+<P CLASS="TYPE_TITLE">
+authenticate
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure authenticate(p_conn        in out nocopy utl_SMTP.connection,
+                       p_hash_method in varchar2,
+                       p_user_name   in varchar2,
+                       p_password    in varchar2)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to authenticate with a CRAM SMTP server like Exchange<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Procedure will authenticate p_conn with the credentials provided and return the connection<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_conn&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Parameter for the actual SMTP-connection<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_hash_method&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+One of the package constants to identify the authentication method<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_user_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the user to authenticate<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_password&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Authentication users password<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>
