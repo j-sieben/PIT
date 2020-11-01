@@ -35,10 +35,10 @@ prompt &h1.Deinstall CORE Functionality
 @core/clean_up_install.sql
 
 prompt &h1.Deinstall CONTEXT Framework
-@core/context/clean_up.sql
+@context/clean_up.sql
 
 prompt &h1.Deinstall PARAMETER Framework
-@core/parameters/clean_up_install.sql
+@parameters/clean_up_install.sql
 
 prompt &h2.Revoke user rights
 @revoke_grants.sql

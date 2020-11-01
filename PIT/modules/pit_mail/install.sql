@@ -1,80 +1,38 @@
-define mail_dir=modules/pit_mail/
-define table_dir=&mail_dir.tables/
-define type_dir=&mail_dir.types/
-define script_dir=&mail_dir.scripts/
-define pkg_dir=&mail_dir.packages/
-define msg_dir=&mail_dir.messages/&DEFAULT_LANGUAGE./
-
+@init/set_folders modules/pit_mail
 prompt
 prompt &section.
 prompt &h1.Module PIT_MAIL
 
-@&mail_dir.check_prerequisites.sql
+@&install_dir.check_prerequisites.sql
 
 prompt &h2.Delete existing types and packages
-@&mail_dir.clean_up_install.sql
+@&install_dir.clean_up_install.sql
 
 prompt &h2.Grant user rights to &INSTALL_USER.
-@&mail_dir.scripts/user_grants.sql
+@&tools.run_scripts user_grants
 
 prompt &h2.Create queue table for PIT_MAIL
-@&table_dir.pit_mail_queue.tbl
+@&tools.check_has_table pit_mail_queue
+
+prompt &s1.Create parameters and messages
+@&tools.run_script ParameterGroup_PIT
+@&tools.run_script ParameterGroup_MAIL
+
+@&tools.run_language_script MessageGroup_PIT
+@&tools.run_language_script MessageGroup_MAIL
 
 prompt &h2.Create types and packages for PIT_MAIL
+@&tools.install_type_spec pit_mail
+@&tools.install_package_spec mail
+@&tools.install_package_spec mail_cram
+@&tools.install_package_spec mail_ntlm
+@&tools.install_package_spec pit_mail_pkg
 
-prompt &s1.Create PIT parameters
-@&script_dir.ParameterGroup_PIT.sql
-
-prompt &s1.Create MAIL parameters
-@&script_dir.ParameterGroup_MAIL.sql
-
-prompt &s1.Create PIT messages
-@&msg_dir.MessageGroup_PIT.sql
-
-prompt &s1.Create MAIL messages
-@&msg_dir.MessageGroup_MAIL.sql
-
-prompt &s1.Create type PIT_mail
-@&type_dir.pit_mail.tps
-show errors
-
-prompt &s1.Create package MAIL
-@&pkg_dir.mail.pks
-show errors
-
-prompt &s1.Create package MAIL_CRAM
-@&pkg_dir.mail_cram.pks
-show errors
-
-prompt &s1.Create package MAIL_NTLM
-@&pkg_dir.mail_ntlm.pks
-show errors
-
-prompt &s1.Create package PIT_MAIL_PKG
-@&pkg_dir.pit_mail_pkg.pks
-show errors
-
-prompt &s1.Create type body PIT_MAIL
-@&type_dir.pit_mail.tpb
-show errors
-
-prompt &s1.Create package body MAIL
-@&pkg_dir.mail.pkb
-show errors
-show errors
-
-prompt &s1.Create package body MAIL_NTLM
-@&pkg_dir.mail_ntlm.pkb
-show errors
-
-prompt &s1.Create package body PIT_MAIL_PKG
-@&pkg_dir.pit_mail_pkg.pkb
-show errors
-
-prompt &s1.Create package body PIT_MAIL_PKG
-@&pkg_dir.pit_mail_pkg.pkb
-show errors
-
+@&tools.install_type_body pit_mail
+@&tools.install_package_body mail
+@&tools.install_package_body mail_cram
+@&tools.install_package_body mail_ntlm
+@&tools.install_package_body pit_mail_pkg
 
 prompt ### CAVE ###
 prompt Before using PIT_MAIL, set your mail server credentials by calling MAIL.SET_CREDENTIALS

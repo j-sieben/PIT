@@ -32,6 +32,14 @@ alter session set plsql_code_type='NATIVE';
 alter session set plscope_settings='IDENTIFIERS:ALL';
 prompt
 prompt &section.
+prompt &h1.Installing parameter framework
+@parameters/install.sql
+
+prompt &section.
+prompt &h1.Installing context framework
+@context/install.sql
+
+prompt &section.
 prompt &h1.Installing core functionality
 @core/install.sql
 

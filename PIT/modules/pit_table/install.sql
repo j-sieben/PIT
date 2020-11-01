@@ -1,37 +1,23 @@
-define table_dir=modules/pit_table/
+@init/set_folders modules/pit_table
 
 prompt
 prompt &section.
 prompt &h1.Module PIT_TABLE
 prompt &h2.Clean up existing installation
-@&TABLE_DIR.clean_up_install.sql
+@&install_dir.clean_up_install.sql
 
 prompt &h2.Install module PIT_TABLE
+prompt &s1.Create tables
+@&tools.check_has_table pit_table_log
+@&tools.check_has_table pit_table_call_stack
+@&tools.check_has_table pit_table_call_params
 
-prompt &s1.Create table PIT_LOG
-@&table_dir.tables/pit_table_log.tbl
+prompt &s1.Create types and packages
+@&tools.install_type_spec pit_table
+@&tools.install_package_spec pit_table_pkg
 
-prompt &s1.Create table pit_call_stack
-@&table_dir.tables/pit_table_call_stack.tbl
-
-prompt &s1.Create table pit_call_params
-@&table_dir.tables/pit_table_call_params.tbl
-
-prompt &s1.Create type PIT_TABLE
-@&table_dir.types/pit_table.tps
-show errors
-
-prompt &s1.Create package PIT_TABLE_PKG
-@&table_dir.packages/pit_table_pkg.pks
-show errors
-
-prompt &s1.Create type body PIT_TABLE
-@&table_dir.types/pit_table.tpb
-show errors
-
-prompt &s1.Create package body PIT_TABLE_PKG
-@&table_dir.packages/pit_table_pkg.pkb
-show errors
+@&tools.install_type_body pit_table
+@&tools.install_package_body pit_table_pkg
 
 prompt &s1.Create PIT_TABLE parameters
-@&TABLE_DIR.scripts/create_parameters.sql
+@&tools.run_script create_parameters
