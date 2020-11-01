@@ -61,7 +61,7 @@ begin
     p_par_id => 'PIT_MAIL_FILE_NAME'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Name of the attachment file with the error list'
-   ,p_par_string_value => q'^notification@some_server.de^'
+   ,p_par_string_value => q'^ErrorReport.html^'
    ,p_par_pat_id => 'STRING'
   );
   

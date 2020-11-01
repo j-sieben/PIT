@@ -45,7 +45,8 @@ prompt &h1.Installing PIT output modules
 @modules/pit_table/install.sql
 @modules/pit_apex/install.sql
 @modules/pit_file/install.sql
-@modules/pit_mail/install.sql
+-- PIT_MAIL may be installed after installing UTL_TEXT
+--@modules/pit_mail/install.sql
 
 
 prompt

@@ -44,39 +44,39 @@ as
   as
     l_message clob;
   begin
+  
     l_message :=
       utl_text.bulk_replace(
-        pit.get_message_text(msg.MAIL_MESSAGE_TEMPLATE),
+        pit.get_message_text(msg.PIT_MAIL_MESSAGE_TEMPLATE),
         char_table(
           '#AMOUNT#', coalesce(to_char(p_amount), '#AMOUNT#'),
-          '#FIRST_DATE#', coalesce(to_char(p_first_date, C_DATE_FORMAT), '#FIRST_DATE#'),
-          '#LAST_DATE#', coalesce(to_char(p_last_date, C_DATE_FORMAT), '#LAST_DATE#'),
+          '#FIRST_DATE#', coalesce(to_char(p_first_date, c_date_format), '#FIRST_DATE#'),
+          '#LAST_DATE#', coalesce(to_char(p_last_date, c_date_format), '#LAST_DATE#'),
           '#SEVERITY#', to_char(p_message.severity),
-          '#MESSAGE#', dbms_lob.substr(p_message.message_text, 32000, 1),
+          '#MESSAGE#', p_message.message_text,
           '#STACK#', p_message.stack,
           '#BACKTRACE#', p_message.backtrace));
+          
     return l_message;
   end prepare_message;
 
-
-  /** Method to prepare a mail
-   * %param  p_message_text  Text of the message to send
-   * %param  p_attachment    Out variable, is filled if P_MESSAGE_TEXT exceeds 2000 byte in length
-   * %usage  Is used to create an attachment if the length of the message is too long for a normal mail
+  
+  /** Method to prepare the mail to send
+   * %param  p_message     Message text as prepared by PREPARE_MESSAGE
+   * %param  p_attachment  Attachment is populated if message exceeds a certain legnth
    */
   procedure prepare_mail(
     p_message in out nocopy clob,
-    p_attachment out nocopy blob)
+    p_attachment out blob)
   as
-    l_message pit_util.max_sql_char;
   begin
+    p_message := pit.get_message_text(msg.PIT_MAIL_MAIL_TEMPLATE, msg_args(p_message));
+    
     if dbms_lob.getlength(p_message) > 2000 then
-      l_message := pit.get_message_text(msg.MAIL_ATTACHMENT);
       p_attachment := utl_text.clob_to_blob(p_message);
-    else
-      l_message := p_message;
+      p_message := pit.get_message_text(msg.PIT_MAIL_ATTACHMENT);
     end if;
-    p_message := pit.get_message_text(msg.MAIL_MAIL_TEMPLATE, msg_args(l_message));
+    
   end prepare_mail;
 
 
@@ -89,24 +89,26 @@ as
     p_message in clob,
     p_attachment in blob)
   as
-    l_file_name pit_util.small_char;
-    l_mime_type pit_util.small_char;
-    l_attachment blob;
+    C_MIME_TYPE constant pit_util.small_char := 'text/html; charset=UTF-8';
+    l_message pit_util.max_char;
   begin
-    if dbms_lob.getlength(p_message) > 2500 then
-      l_file_name := 'Fehlermeldungen.html';
-      l_mime_type := 'text/html';
-      l_attachment := utl_text.clob_to_blob(p_message);
-    end if;
     
-    mail.send_mail(
-      p_sender => g_sender,
-      p_recipient => g_recipient,
-      p_subject => g_subject,
-      p_message => substr(p_message, 1, 2500),
-      p_filename => l_file_name,
-      p_mime_type => l_mime_type,
-      p_attachment => l_attachment);
+    if p_attachment is not null then
+      mail.send_mail(
+        p_sender => g_sender,
+        p_recipient => g_recipient,
+        p_subject => g_subject,
+        p_message => p_message,
+        p_file_name => param.get_string('PIT_MAIL_FILE_NAME', C_PARAM_GROUP),
+        p_mime_type => C_MIME_TYPE,
+        p_attachment => p_attachment);
+    else
+      mail.send_mail(
+        p_sender => g_sender,
+        p_recipient => g_recipient,
+        p_subject => g_subject,
+        p_message => p_message);
+    end if;
       
   end send_mail;
 
@@ -124,6 +126,7 @@ as
   as
     l_message clob;
     l_attachment blob;
+    l_has_message boolean := false;
     
     cursor message_mail_cur(p_threshold in number) is
       select utl_text.bulk_replace(min(to_char(pmq_message_text)), char_table(
@@ -141,12 +144,13 @@ as
     
     for msg in message_mail_cur(p_threshold) loop
       dbms_lob.append(l_message, msg.message);
+      l_has_message := true;
     end loop;
     
     -- Send mail if some were found
-    if dbms_lob.getlength(l_message) > 0 then
-      prepare_mail(l_message, l_attachment);
+    if l_has_message then
       send_mail(l_message, l_attachment);
+      
       update pit_mail_queue
          set pmq_is_processed = pit_util.C_TRUE
        where pmq_pse_id <= p_threshold

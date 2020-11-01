@@ -36,11 +36,6 @@ alter session set plscope_settings='IDENTIFIERS:ALL';
 
 prompt
 prompt &section.
-prompt &h1.Clean up installation of PIT module &MODULE.
-@&module_dir./install.sql
-
-prompt
-prompt &section.
 prompt &h1.Installing module &MODULE.
 @&module_dir./install.sql
 

@@ -7,3 +7,6 @@ prompt &s1.Grant execute on UTL_TCP
 prompt &s1.Grant execute on UTL_ENCODE
 @tools/check_has_object_privilege execute utl_encode
 
+prompt &s1.Grant execute on DBMS_CRYPTO
+@tools/check_has_object_privilege execute dbms_crypto
+
