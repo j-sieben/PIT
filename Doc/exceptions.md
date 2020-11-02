@@ -229,7 +229,7 @@ begin
   <do something>
 exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
-    pit.stop; -- or: pit.sql_excetion; raise;
+    pit.stop; -- or: pit.handle_exception; raise;
   when msg.PARAM_MUST_EXIST_ERR then
     pit.handle_exception;
 end;
