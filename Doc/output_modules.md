@@ -15,6 +15,8 @@ In order to create your own output module, you start by examining `PIT_MODULE`. 
 This method is called if a context switch was detected. It is rarely used, but I implement it in a test output module to document that changing the context does call those methods.
 - `log`
 This method is the core logging methods for all errors, warnings, debug messages and so on. If called, it passes the actual instance of `MESSAGE_TYPE` to allow you to work with the message.
+- `log`
+This overloaded method accepts a parameter of type `MSG_PARAMS` and is used to log state information. `MSG_PARAMS` is a list of `MSG_PARAM` instances, each containing a name/value pair.
 - `print`
 This method is called if a message is passed to the UI.
 - `notify`
