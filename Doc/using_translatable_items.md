@@ -56,7 +56,7 @@ Plus, this table is accessed using a primary key access anytime. It would be eve
 
 What you should not do though is accessing data from SQL using the PL/SQL-API. This will cause a roundtrip between the PL/SQL and SQL side of the database which is one main reason for bad SQL performance, especially when used in the `where` clause of a statement. It is better to join the view to your table for this purpose.
 
-Within the view, there is an analytic function that does a Top-1 search against the data. This may sound like a bad idea, but it is not, because a typical accees to a set of rows of that table will result in as many rows as you have languages for that PTI. Over this amount of data the analytic function will perform a quick window sort and give you the best possible match. It would be faster to not do it, but I couldn't think of a faster way of doing it if you have to do it anyway. So if you need to do it, here's how to do it, if you don't need to do it, you probably don't need translatable items at all.
+Within the view, there is an analytic function that does a Top-1 search against the data. This may sound like a bad idea, but it is not, because a typical access to a set of rows of that table will result in as many rows as you have languages for that PTI. Over this amount of data the analytic function will perform a quick window sort and give you the best possible match. It would be faster to not do it, but I couldn't think of a faster way of doing it if you have to do it anyway. So if you need to do it, here's how to do it, if you don't need to do it, you probably don't need translatable items at all.
 
 ## How to translate translatable items
 
