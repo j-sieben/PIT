@@ -127,7 +127,7 @@ I delegated the constructor functionality to `PIT_FILE_PKG` as well. It may be i
       -- Do NOT throw any exceptions during initalization phase!
       self.fire_threshold := pit.level_off;
       self.status := msg.PIT_FAIL_MODULE_INIT;
-      self.stack := dbms_utility.format_error_stack;
+      self.stack := pit_util.get_error_stack;
   end initialize_module;
 ```
 
