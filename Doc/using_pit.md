@@ -57,6 +57,35 @@ Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in ha
 
 As an extension, there is a method called `pit.log_state` that expects an instance of `msg_params` as described above. This method allows for easy and flexible logging of variable values within a method without the requirement to create a distinct message for it. With this method, you may pass whatever amount of information to the logging mechanism.
 
+### Extended use of parameters
+
+There is also a way to work with parameters independently from the `pit.enter` and `pit.leave` methods. You may pass parameter values at any time during a method using the `pit.log_state` method. This method expects only one parameter of type `MSG_PARAMS` and allows to debug the state of any variable during processing of code without the requirement to create a message for it. This is more flexible than the normal message approach in that it allows to extend the list of parameters easily. Thanks Sebastian Kölle for pointing me to this functionality. A sample code using this functionality may look like this:
+
+```
+begin
+  pit.set_context('DEBUG');
+  pit.enter;
+  pit.log_state(
+    msg_params(
+      msg_param('Param 1', 'Hello world'),
+      msg_param('Param 2', 'How are you?')));
+  pit.leave;
+  pit.reset_context;
+end;
+/
+
+Context set to 70|50|Y|PIT_CONSOLE.
+> .__ANONYMOUS_BLOCK
+-> State
+...Param 1: Hello world
+...Param 2: How are you?
+<- State
+< .__ANONYMOUS_BLOCK [wc=02.11.20 12:50:01,090000; e=0; e_cpu=0; t=+00 00:00:00.000000; t_cpu=0]
+
+```
+
+To allow for this functionality, the output modules must support this by implementing an overloaded `LOG` method with the `MSG_PARAMS` parameter.
+
 ### Adjusting trace level
 Method `pit.enter` provides different levels of tracing. These levels are:
 - `pit.trace_off` (10),
