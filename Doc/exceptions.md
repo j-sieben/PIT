@@ -50,9 +50,11 @@ The code to catch the exception is the same, although the way to process the err
 
 Let's see how to catch exceptions with PIT and the options we have here.
 
-There are two specialized methods to handle exceptions within PIT: `pit.sql_exception` and `pit.stop`. 
+There are two specialized methods to handle exceptions within PIT: `pit.handle_exception` and `pit.stop` respectively `pit.reraise_exception`. `pit.reraise_exception` is a synonym for `pit.stop` and can be used interchangeably.
 
-Method `pit.sql_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
+Note: In earlier releases there was a function called `pit.sql_exception`. This is now deprecated, but still available. Use `pit.handle_exception` instead. It was felt that this name is more consise and explains better what it does.
+
+Method `pit.handle_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
 
 The parameters for this method are all optional. If used in conjunction with `raise`, passing a matching message for the exception caught may make most sense, as in the following example:
 
@@ -62,15 +64,15 @@ begin
   raise msg.MY_MESSAGE_ERR;
 exception
  when msg.MY_MESSAGE_ERR then
-   pit.sql_exception(msg.MY_MESSAGE, msg_args('row', to_char(id)));
+   pit.handle_exception(msg.MY_MESSAGE, msg_args('row', to_char(id)));
 end;
 ```
 
-Method `pit.stop`, on the other hand, stops the execution of the code. The difference to `pit.sql_exception` with a following `raise;` is that `pit.stop` will throw a new exception after it has logged the original exception, overwriting the old call stack. This may come in handy if you don't want to expose all the internals to the log but rather wrap all exceptions in a newly created error.
+Method `pit.stop`, on the other hand, stops the execution of the code. The difference to `pit.handle_exception` with a following `raise;` is that `pit.stop` will throw a new exception after it has logged the original exception, overwriting the old call stack. This may come in handy if you don't want to expose all the internals to the log but rather wrap all exceptions in a newly created error.
 
 ### Passing predefined messages to PIT
 
-If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.sql_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
+If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.handle_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
 
 If you review the next code sample, you will get the idea of how this works immediately:
 
@@ -80,7 +82,7 @@ begin
   pit.error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 exception
  when msg.MY_MESSAGE_ERR then
-   pit.sql_exception;
+   pit.handle_exception;
    -- raise;
 end;
 ```
