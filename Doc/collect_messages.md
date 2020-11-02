@@ -68,6 +68,6 @@ To wrap things up, I'd like to describe the proper use of the `PIT` collect mode
 3.  In your UI package dealing with the user data entries, enrich missing data, harmonize spelling issues, provide missing default values and the like and then call the validation logic in collect mode by wrapping the call of the validation logic with calls to `PIT.start_message_collection` and `PIT.stop_message_collection`. If validation errors occur, this will throw an exception you can catch.
 4.  Handle exception `msg.PIT_BULK_FATAL_ERR` and `msg.PIT_BULK_ERROR_ERR` (exception pre- or postfix is based on your parameterization) and call your internal helper method to encapsulate the call to `PIT.get_message_collection` and map it to a list of matching »error codes to UI field«.
 
-An example of such a helper method can be found at my `UTL_APEX` helper package [here](https://github.com/j-sieben/UTL_APEX).
+An example of such a helper method can be found at my `UTL_APEX` helper package in method `handle_bulk_error` [here](https://github.com/j-sieben/UTL_APEX/blob/master/UTL_APEX/core/packages/utl_apex.pkb).
 
 This way you don't need to duplicate your validation logic but make it reusable in a user friendly manner.
