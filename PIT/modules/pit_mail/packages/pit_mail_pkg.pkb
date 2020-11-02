@@ -16,7 +16,7 @@ as
   C_FIRE_THRESHOLD constant pit_util.ora_name_type := C_MODULE_NAME || '_FIRE_THRESHOLD';
   C_FROM constant pit_util.ora_name_type := C_MODULE_NAME || '_FROM_ADDRESS';
   C_TO constant pit_util.ora_name_type := C_MODULE_NAME || '_TO_ADDRESS';
-  C_SUBJECT constant pit_util.ora_name_type := C_MODULE_NAME || '_MAIL_SUBJECT';
+  C_SUBJECT constant pit_util.ora_name_type := C_MODULE_NAME || '_SUBJECT';
   C_LIVE_THRESHOLD constant pit_util.ora_name_type := c_module_name || '_LIVE_LEVEL';
   C_DAILY_THRESHOLD constant pit_util.ora_name_type := c_module_name || '_DAILY_LEVEL';
   C_PURGE_PERIOD constant pit_util.ora_name_type := c_module_name || '_PURGE_PERIOD';

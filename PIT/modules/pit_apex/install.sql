@@ -10,7 +10,7 @@ prompt
 prompt &h2.Install module PIT_APEX
 
 prompt &s1.Create parameter for PIT_APEX
-@&tools.run_script ParameterGroup_PIT.sql
+@&tools.run_script ParameterGroup_PIT
 
 prompt &s1.Merge messages for PIT_APEX
 @&tools.run_language_script MessageGroup_PIT
