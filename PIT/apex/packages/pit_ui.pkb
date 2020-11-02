@@ -329,7 +329,7 @@ as
     pit.leave_mandatory;
   exception
     when others then
-      pit.sql_exception(msg.SQL_ERROR);
+      pit.handle_exception(msg.SQL_ERROR);
       raise;
   end export_groups;
   

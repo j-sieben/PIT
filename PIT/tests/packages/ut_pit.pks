@@ -71,26 +71,26 @@ as
   --%context(Method SQL_EXCEPTION)
 
   --%test(... captures an error)
-  procedure sql_exception_captures_error;
+  procedure handle_exception_captures_error;
 
   --%test(... passes a predefined message)
-  procedure sql_exception_passes_message;
+  procedure handle_exception_passes_message;
 
   --%test(... passes error_code if set)
-  procedure sql_exception_passes_error_code;
+  procedure handle_exception_passes_error_code;
 
   --%test(... passes affected_id if set)
-  procedure sql_exception_passes_affected_id;
+  procedure handle_exception_passes_affected_id;
 
   --%test(... closes any ENTER-calls)
-  procedure sql_exception_closes_stack;
+  procedure handle_exception_closes_stack;
 
   --%endcontext
 
   --%context(Method STOP)
 
   --%test(... throws an error)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure stop_throws_error;
 
   --%test(... passes a predefined message)
@@ -212,11 +212,11 @@ as
   procedure assert_no_error;
 
   --%test(... throws the exception passed in if the condition is not met)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure assert_with_error;
 
   --%test(... throws an error if the condition entered is NULL)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure assert_null_throws_error;
 
   --%test(... delivers the affected id passed in if the condition is not met)
@@ -233,15 +233,15 @@ as
   procedure assert_is_null_no_error;
 
   --%test(... throws an error if a non NULL string is passed in)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure assert_is_null_char_with_error;
 
   --%test(... throws an error if a non NULL number is passed in)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure assert_is_null_number_with_error;
 
   --%test(... throws an error if a non NULL date is passed in)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure assert_is_null_date_with_error;
 
   --%endcontext
@@ -258,7 +258,7 @@ as
   procedure assert_not_null_date_no_error;
 
   --%test(... throws an error if NULL is passed in)
-  --%throws(msg.SQL_ERROR_ERR)
+  --%raises(msg.SQL_ERROR_ERR)
   procedure assert_not_null_with_error;
   
   --%endcontext

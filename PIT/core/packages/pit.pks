@@ -214,8 +214,31 @@ as
    * %param [p_error_code]   Optional error code, usable by external applications
    * %param [p_params]       Instance of <code>msg_params</code> with a list of
    *                         key-value pairs representing parameter name and -value.
+   * %deprecated Use pit.handle_exception instead
    */
   procedure sql_exception(
+    p_message_name in varchar2 default null,
+    p_msg_args in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
+    p_params in msg_params default null);
+    
+    
+  /** Exception handler that handles an error and calls leave
+   * %usage  Call this procedure in EXCEPTION handlers of your code.<br>
+   *         <code>handle_exception</code> not only reports the error but handles it as well.
+   *         This means that if you pass any error that occurred to this
+   *         procedure, the error gets logged and handled.<br>
+   *         <code>handle_exception</code> includes a call to <code>leave</code>,
+   *         so there is no need to call <code>leave</code> explicitly.
+   * %param  p_message_name  Name of the message. Reference to package MSG
+   * %param [p_msg_args]     Optional list of replacement information
+   * %param [p_affected_id]  Optional id of an item a message relates to
+   * %param [p_error_code]   Optional error code, usable by external applications
+   * %param [p_params]       Instance of <code>msg_params</code> with a list of
+   *                         key-value pairs representing parameter name and -value.
+   */
+  procedure handle_exception(
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -236,9 +259,32 @@ as
    * %param [p_error_code]   Optional error code, usable by external applications
    * %param [p_params]       Instance of <code>msg_params</code> with a list of
    *                         key-value pairs representing parameter name and -value.
-   * %throws P_MESSAGE_NAME exception to stop further processing
+   * %raises P_MESSAGE_NAME exception to stop further processing
    */
   procedure stop(
+    p_message_name in varchar2 default null,
+    p_msg_args in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
+    p_params in msg_params default null);
+  
+  
+  /** Exception handler that handles an error, calls leave and re-raises the error. It is a synonym for pit.stop
+   * %usage  Call this procedure in EXCEPTION handlers of your code.<br>
+   *         <code>reraise_exception</code> not only reports the error but handles it as well.
+   *         This means that if you pass any error that occurred to this
+   *         procedure, the error gets logged and handled.<br>
+   *         <code>reraise_exception</code> includes a call to <code>leave</code>,
+   *         so there is no need to call <code>leave</code> explicitly.
+   * %param  p_message_name  Name of the message. Reference to package MSG
+   * %param [p_msg_args]     Optional list of replacement information
+   * %param [p_affected_id]  Optional id of an item a message relates to
+   * %param [p_error_code]   Optional error code, usable by external applications
+   * %param [p_params]       Instance of <code>msg_params</code> with a list of
+   *                         key-value pairs representing parameter name and -value.
+   * %raises P_MESSAGE_NAME exception to stop further processing
+   */
+  procedure reraise_exception(
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -348,7 +394,7 @@ as
    *         <code>enter_...</code> procedure to avoid call stack confusion if
    *         the trace level is set to a lower level.<br>
    *         No call to this procedure is required in <code>exception</code>-Blocks
-   *         if you called <code>sql_exception</code> or <code>stop</code> within
+   *         if you called <code>handle_exception</code> or <code>stop</code> within
    *         the exception block, as these procedures handle this call.
    * %param [p_params]      Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
@@ -366,7 +412,7 @@ as
    *         <code>enter_...</code> procedure to avoid call stack confusion if
    *         the trace level is set to a lower level.<br>
    *         No call to this procedure is required in <code>exception</code>-Blocks
-   *         if you called <code>sql_exception</code> or <code>stop</code> within
+   *         if you called <code>handle_exception</code> or <code>stop</code> within
    *         the exception block, as these procedures handle this call.
    * %param [p_params]      Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
@@ -384,7 +430,7 @@ as
    *        <code>enter_...</code> procedure to avoid call stack confusion if
    *        the trace level is set to a lower level.<br>
    *        No call to this procedure is required in <code>exception</code>-Blocks
-   *        if you called <code>sql_exception</code> or <code>stop</code> within
+   *        if you called <code>handle_exception</code> or <code>stop</code> within
    *        the exception block, as these procedures handle this call.
    * %param [p_params]      Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
@@ -399,7 +445,7 @@ as
    *         this procedure to make sure that the call stack is correctly
    *         maintained.<br>
    *         No call to this procedure is required in <code>exception</code>-Blocks
-   *         if you called <code>sql_exception</code> or <code>stop</code> within
+   *         if you called <code>handle_exception</code> or <code>stop</code> within
    *         the exception block, as these procedures handle this call.<br>
    *         Call this procedure if you don't want to distinguish between
    *         trace levels or if you want to pass a trace level as a parameter
@@ -418,7 +464,7 @@ as
    * %usage  Use this procedure to pass information about long operations to the
    *         database. If this task is completed, call this procedure with
    *         <code>p_sofar = p_total (or p_sofar = 100)</code> to allow for proper state cleansing.<br>
-   *         If you call <code>sql_exception</code> or <code>stop</code>, the
+   *         If you call <code>handle_exception</code> or <code>stop</code>, the
    *         state will be cleaned as well.
    *         This method will work only if tracing is enabled, as it takes op_name from the call stack and persists
    *         the actual index with the call stack.

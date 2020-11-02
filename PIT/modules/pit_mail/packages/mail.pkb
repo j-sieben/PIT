@@ -44,7 +44,7 @@ as
     return l_access_granted > 0;
   exception
     when others then
-      pit.sql_exception(msg.MAIL_SERVER_ACCESS_DENIED);
+      pit.handle_exception(msg.MAIL_SERVER_ACCESS_DENIED);
       return false;
   end mail_server_access_granted;
 
@@ -64,10 +64,10 @@ as
     return true;
   exception
     when utl_tcp.network_error then
-      pit.sql_exception(msg.MAIL_SERVER_UNAVAILABLE);
+      pit.handle_exception(msg.MAIL_SERVER_UNAVAILABLE);
       return (upper(sqlerrm) like '%LISTENER%');
     when others then
-      pit.sql_exception(msg.SQL_ERROR, msg_args(sqlerrm));
+      pit.handle_exception(msg.SQL_ERROR, msg_args(sqlerrm));
       return false;
   end mail_server_accessible;
 
@@ -110,7 +110,7 @@ as
     pit.leave_mandatory;
   exception
     when others then
-      pit.sql_exception(msg.MAIL_PKG_NOT_WORKING);
+      pit.handle_exception(msg.MAIL_PKG_NOT_WORKING);
       g_pkg_is_working := false;
   end initialize;
 
@@ -164,7 +164,7 @@ as
     return l_address_tab;
   exception
     when others then
-      pit.sql_exception(msg.SQL_ERROR);
+      pit.handle_exception(msg.SQL_ERROR);
   end create_address_list;
 
 
@@ -647,7 +647,7 @@ as
   exception
     when others then
       utl_tcp.close_all_connections;
-      pit.sql_exception(msg.MAIL_DELIVERY_FAILED);
+      pit.handle_exception(msg.MAIL_DELIVERY_FAILED);
   end send_mail;
 
 
@@ -697,7 +697,7 @@ as
   exception
     when others then
       utl_tcp.close_all_connections;
-      pit.sql_exception(msg.MAIL_DELIVERY_FAILED);
+      pit.handle_exception(msg.MAIL_DELIVERY_FAILED);
   end send_mail;
 
 

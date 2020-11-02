@@ -35,7 +35,7 @@ define C_FALSE="'N'";
 -- CAVE: Max length per setting is 3 bytes or 1 byte when using pre- and postfix
 -- This is because they will be extended by an underscore. Using pre- and postfix will add 2 underscores 
 -- and the total length is limited to 4 bytes.
-define EXCEPTION_PREFIX=
+define EXCEPTION_PREFIX=''
 define EXCEPTION_POSTFIX=ERR
    
 col ora_name_type new_val ORA_NAME_TYPE format a30

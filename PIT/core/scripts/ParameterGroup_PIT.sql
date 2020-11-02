@@ -62,7 +62,7 @@ begin
     p_par_id => 'ERROR_POSTFIX'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Optional postfix for exception constant names'
-   ,p_par_string_value => q'^&ERROR_POSTFIX.^'
+   ,p_par_string_value => q'^&EXCEPTION_POSTFIX.^'
    ,p_par_validation_string => q'^length(#STRING_VALUE#) < 4^'
    ,p_par_validation_message => q'^Postfix length must not exceed 3 characters^'
   );
@@ -70,7 +70,7 @@ begin
   param_admin.edit_parameter(
     p_par_id => 'ERROR_PREFIX'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_string_value => q'^&ERROR_PREFIX.^'
+   ,p_par_string_value => q'^&EXCEPTION_PREFIX.^'
    ,p_par_description => 'Optional prefix for exception constant names'
    ,p_par_validation_string => q'^length(#STRING_VALUE#) < 4^'
    ,p_par_validation_message => q'^Prefix length must not exceed 3 characters^'

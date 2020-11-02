@@ -41,7 +41,7 @@ begin
   pit.leave;
 exception
   when msg.sql_error_err then
-    pit.sql_exception(msg.sql_error, msg_args('Test'));
+    pit.handle_exception(msg.sql_error, msg_args('Test'));
   pit.reset_context;
 end test_pit;
 /

@@ -292,6 +292,19 @@ as
     pit_pkg.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
     leave;
   end sql_exception;
+  
+
+  procedure handle_exception(
+    p_message_name in varchar2 default null,
+    p_msg_args in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
+    p_params in msg_params default null)
+  as
+  begin
+    pit_pkg.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
+    leave;
+  end handle_exception;
 
 
   procedure stop(
@@ -304,6 +317,18 @@ as
   begin
     pit_pkg.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
   end stop;
+
+
+  procedure reraise_exception(
+    p_message_name in varchar2 default null,
+    p_msg_args in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_error_code in varchar2 default null,
+    p_params in msg_params default null)
+  as
+  begin
+    pit_pkg.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
+  end reraise_exception;
   
   
   /****************************** TRACING *********************************/

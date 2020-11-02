@@ -312,9 +312,9 @@ as
   end log_normal_execution;
 
   --
-  -- test sql_exception_captures_error: If an error was raised, it is possible to capture it
+  -- test handle_exception_captures_error: If an error was raised, it is possible to capture it
   --
-  procedure sql_exception_captures_error 
+  procedure handle_exception_captures_error 
   as
     l_result  number;
   begin
@@ -322,27 +322,27 @@ as
     l_result := a(0);
   exception
     when ZERO_DIVIDE then
-      pit.sql_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_error_code => sqlcode);
+      pit.handle_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_error_code => sqlcode);
       ut.expect(g_result.message.message_name).to_equal(msg.PIT_PASS_MESSAGE);
-  end sql_exception_captures_error;
+  end handle_exception_captures_error;
 
   --
-  -- test sql_exception_passes_message: If no message is passed in, it reuses the last message created
+  -- test handle_exception_passes_message: If no message is passed in, it reuses the last message created
   --
-  procedure sql_exception_passes_message 
+  procedure handle_exception_passes_message 
   as
   begin
     pit.error(msg.SQL_ERROR, msg_args('Some error'));
   exception
     when msg.SQL_ERROR_ERR then
-      pit.sql_exception;
+      pit.handle_exception;
       ut.expect(g_result.message.message_name).to_equal(msg.SQL_ERROR);
-  end sql_exception_passes_message;
+  end handle_exception_passes_message;
 
   --
-  -- test sql_exception_passes_error_code: ...
+  -- test handle_exception_passes_error_code: ...
   --
-  procedure sql_exception_passes_error_code 
+  procedure handle_exception_passes_error_code 
   as
     l_result  number;
   begin
@@ -350,14 +350,14 @@ as
     l_result := a(0);
   exception
     when ZERO_DIVIDE then
-      pit.sql_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_error_code => C_ERROR_CODE);
+      pit.handle_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_error_code => C_ERROR_CODE);
       ut.expect(g_result.message.error_code).to_equal(C_ERROR_CODE);
-  end sql_exception_passes_error_code;
+  end handle_exception_passes_error_code;
 
   --
-  -- test sql_exception_passes_affected_id: ...
+  -- test handle_exception_passes_affected_id: ...
   --
-  procedure sql_exception_passes_affected_id 
+  procedure handle_exception_passes_affected_id 
   as
     l_result  number;
   begin
@@ -365,14 +365,14 @@ as
     l_result := a(0);
   exception
     when ZERO_DIVIDE then
-      pit.sql_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_affected_id => C_AFFECTED_ID);
+      pit.handle_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_affected_id => C_AFFECTED_ID);
       ut.expect(g_result.message.affected_id).to_equal(C_AFFECTED_ID);
-  end sql_exception_passes_affected_id;
+  end handle_exception_passes_affected_id;
 
   --
-  -- test sql_exception_closes_stack: A call to SQL_EXCEPTION must maintain the call stack
+  -- test handle_exception_closes_stack: A call to SQL_EXCEPTION must maintain the call stack
   --
-  procedure sql_exception_closes_stack
+  procedure handle_exception_closes_stack
   as
     l_result  number;
   begin
@@ -381,10 +381,10 @@ as
     l_result := a(0);
   exception
     when ZERO_DIVIDE then
-      pit.sql_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_affected_id => C_AFFECTED_ID);
+      pit.handle_exception(msg.PIT_PASS_MESSAGE, msg_args(substr(sqlerrm, 12)), p_affected_id => C_AFFECTED_ID);
       ut.expect(g_result.enter_count).to_equal(3);
       ut.expect(g_result.leave_count).to_equal(g_result.enter_count);
-  end sql_exception_closes_stack;
+  end handle_exception_closes_stack;
 
 
 
@@ -431,7 +431,7 @@ as
       l_result := a(0);
     exception
       when ZERO_DIVIDE then
-        pit.sql_exception(msg.SQL_ERROR, p_error_code => C_ERROR_CODE);
+        pit.handle_exception(msg.SQL_ERROR, p_error_code => C_ERROR_CODE);
     end;
   exception
     when msg.SQL_ERROR_ERR then
@@ -1023,7 +1023,7 @@ as
     pit.assert(null, msg.SQL_ERROR, p_affected_id => C_AFFECTED_ID);
   exception
     when msg.SQL_ERROR_ERR then
-      pit.sql_exception;
+      pit.handle_exception;
       ut.expect(g_result.message.affected_id).to_equal(C_AFFECTED_ID);
   end assert_passes_affected_id;
 
@@ -1037,7 +1037,7 @@ as
     pit.assert(null, msg.SQL_ERROR, p_error_code => C_ERROR_CODE);
   exception
     when msg.SQL_ERROR_ERR then
-      pit.sql_exception;
+      pit.handle_exception;
       ut.expect(g_result.message.error_code).to_equal(C_ERROR_CODE);
   end assert_passes_error_code;
 

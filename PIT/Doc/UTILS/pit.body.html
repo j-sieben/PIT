@@ -161,7 +161,17 @@ LOGGING AND DEBUGGING
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#HANDLE_EXCEPTION">handle_exception</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#STOP">stop</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#RERAISE_EXCEPTION">reraise_exception</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -698,6 +708,19 @@ Procedure sql_exception(p_message_name in varchar2 default null,
 
 </PRE>
 <HR>
+<A NAME="HANDLE_EXCEPTION"></A>
+<P CLASS="TYPE_TITLE">
+handle_exception
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure handle_exception(p_message_name in varchar2 default null,
+                           p_msg_args     in msg_args default null,
+                           p_affected_id  in varchar2 default null,
+                           p_error_code   in varchar2 default null,
+                           p_params       in msg_params default null)
+
+</PRE>
+<HR>
 <A NAME="STOP"></A>
 <P CLASS="TYPE_TITLE">
 stop
@@ -708,6 +731,19 @@ Procedure stop(p_message_name in varchar2 default null,
                p_affected_id  in varchar2 default null,
                p_error_code   in varchar2 default null,
                p_params       in msg_params default null)
+
+</PRE>
+<HR>
+<A NAME="RERAISE_EXCEPTION"></A>
+<P CLASS="TYPE_TITLE">
+reraise_exception
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure reraise_exception(p_message_name in varchar2 default null,
+                            p_msg_args     in msg_args default null,
+                            p_affected_id  in varchar2 default null,
+                            p_error_code   in varchar2 default null,
+                            p_params       in msg_params default null)
 
 </PRE>
 <HR>

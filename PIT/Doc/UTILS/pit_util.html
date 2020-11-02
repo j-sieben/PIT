@@ -1029,9 +1029,6 @@ Procedure check_toggle_settings(p_toggle_name  in <A HREF=#ORA_NAME_TYPE>ora_nam
 </PRE>
 <P CLASS="DESC_TEXT">
 Helper to validate toggle settings<br>
-%throws <A HREF=#INVALID_SQL_NAME>pit_util.invalid_sql_name</A>&nbsp; Toggle name must adhere to the SQL naming conventions<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=#CONTEXT_MISSING>pit_util.context_missing</A>&nbsp;&nbsp; Referenced context does not exist<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=#NAME_TOO_LONG>pit_util.name_too_long</A>&nbsp;&nbsp;&nbsp;&nbsp; The maximum length of a toggle name was exceeded<br>
 
 <BR>
 </P>
@@ -1071,6 +1068,20 @@ List of code blocks which toggle context settings<br>
 p_context_name&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the named context to toggle to<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Raises"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Raises
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+<A HREF=#INVALID_SQL_NAME>pit_util.invalid_sql_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Toggle name must adhere to the SQL naming conventions <A HREF=#CONTEXT_MISSING>pit_util.context_missing</A>&nbsp;&nbsp; Referenced context does not exist <A HREF=#NAME_TOO_LONG>pit_util.name_too_long</A>&nbsp;&nbsp;&nbsp;&nbsp; The maximum length of a toggle name was exceeded<br>
 
 </TD></TR>
 </TABLE>

@@ -208,7 +208,7 @@ as
    * %param  p_module_list List of code blocks which toggle context settings
    * %param  p_context_name Name of the named context to toggle to
    * %usage  Is called from PIT_ADMIN.CREATE_CONTEXT_TOGGLE to validate settings
-   * %throws pit_util.invalid_sql_name  Toggle name must adhere to the SQL naming conventions
+   * %raises pit_util.invalid_sql_name  Toggle name must adhere to the SQL naming conventions
    *         pit_util.context_missing   Referenced context does not exist
    *         pit_util.name_too_long     The maximum length of a toggle name was exceeded
    */

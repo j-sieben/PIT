@@ -50,9 +50,9 @@ The code to catch the exception is the same, although the way to process the err
 
 Let's see how to catch exceptions with PIT and the options we have here.
 
-There are two specialized methods to handle exceptions within PIT: `pit.sql_exception` and `pit.stop`. 
+There are two specialized methods to handle exceptions within PIT: `pit.handle_exception` and `pit.stop`. 
 
-Method `pit.sql_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
+Method `pit.handle_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
 
 The parameters for this method are all optional. If used in conjunction with `raise`, passing a matching message for the exception caught may make most sense, as in the following example:
 
@@ -62,15 +62,15 @@ begin
   raise msg.MY_MESSAGE_ERR;
 exception
  when msg.MY_MESSAGE_ERR then
-   pit.sql_exception(msg.MY_MESSAGE, msg_args('row', to_char(id)));
+   pit.handle_exception(msg.MY_MESSAGE, msg_args('row', to_char(id)));
 end;
 ```
 
-Method `pit.stop`, on the other hand, stops the execution of the code. The difference to `pit.sql_exception` with a following `raise;` is that `pit.stop` will throw a new exception after it has logged the original exception, overwriting the old call stack. This may come in handy if you don't want to expose all the internals to the log but rather wrap all exceptions in a newly created error.
+Method `pit.stop`, on the other hand, stops the execution of the code. The difference to `pit.handle_exception` with a following `raise;` is that `pit.stop` will throw a new exception after it has logged the original exception, overwriting the old call stack. This may come in handy if you don't want to expose all the internals to the log but rather wrap all exceptions in a newly created error.
 
 ### Passing predefined messages to PIT
 
-If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.sql_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
+If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.handle_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
 
 If you review the next code sample, you will get the idea of how this works immediately:
 
@@ -80,7 +80,7 @@ begin
   pit.error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 exception
  when msg.MY_MESSAGE_ERR then
-   pit.sql_exception;
+   pit.handle_exception;
    -- raise;
 end;
 ```
@@ -110,7 +110,7 @@ begin
   ... some work
 exception
  when NO_DATA_FOUND then
-   pit.sql_exception(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
+   pit.handle_exception(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 end;
 ```
 
@@ -149,7 +149,7 @@ Throwing errors with this method is possible, but not it's intended use. This me
 
 ## Overview of possibilities to throw and catch exceptions in PIT
 
-Here is a brief overview of the different possibilities of throwing and catching exceptions with PIT. It is assumed that the respective messages were created upfront with a severity of 20 or 30 and a matching Oracle error number, if applicable. Catching exceptions with `pit.sql_exception` or `pit.stop` is identical syntaxwise. The only difference is that `pit.stop` will throw the error after logging it, whereas `pit.sql_exception` will not.
+Here is a brief overview of the different possibilities of throwing and catching exceptions with PIT. It is assumed that the respective messages were created upfront with a severity of 20 or 30 and a matching Oracle error number, if applicable. Catching exceptions with `pit.handle_exception` or `pit.stop` is identical syntaxwise. The only difference is that `pit.stop` will throw the error after logging it, whereas `pit.handle_exception` will not.
 
 ### Catching Oracle named exceptions
 
@@ -158,7 +158,7 @@ begin
   <do something that causes Oracle to throw a named exception>
 exception
   when NO_DATA_FOUND then
-    pit.sql_exception(msg.NO_ITEMS_IN_STOCK, msg_args(...));
+    pit.handle_exception(msg.NO_ITEMS_IN_STOCK, msg_args(...));
 end;
 ```
 
@@ -169,7 +169,7 @@ begin
   <do something that causes Oracle to throw an exception PIT has a message for>
 exception
   when msg.CHILD_RECORD_FOUND_ERR then
-    pit.sql_exception(msg.CHILD_RECORD_FOUND, msg_args(...));
+    pit.handle_exception(msg.CHILD_RECORD_FOUND, msg_args(...));
 end;
 ```
 
@@ -181,7 +181,7 @@ begin
   raise msg.PARAM_OUT_OF_RANGE_ERR
 exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
-    pit.sql_exception(msg.PARAM_OUT_OF_RANGE, msg_args(...));
+    pit.handle_exception(msg.PARAM_OUT_OF_RANGE, msg_args(...));
 end;
 ```
 
@@ -193,7 +193,7 @@ begin
   pit.error(msg.PARAM_OUT_OF_RANGE, msg_args(...));
 exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
-    pit.sql_exception;
+    pit.handle_exception;
 end;
 ```
 
@@ -208,7 +208,7 @@ exception
   when msg.ASSERT_TRUE_ERR then
     pit.stop(msg.PARAM_OUT_OF_RANGE, msg_args('P_PARAM1', to_char(p_param_1)));
   when msg.ASSERT_IS_NOT_NULL_ERR then
-    pit.sql_exception(msg.PARAM_MUST_EXIST, msg_args('P_PARAM_2'));
+    pit.handle_exception(msg.PARAM_MUST_EXIST, msg_args('P_PARAM_2'));
 end;
 ```
 
@@ -229,7 +229,7 @@ exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
     pit.stop; -- or: pit.sql_excetion; raise;
   when msg.PARAM_MUST_EXIST_ERR then
-    pit.sql_exception;
+    pit.handle_exception;
 end;
 ```
 
@@ -244,7 +244,7 @@ exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
     pit.stop(msg.PARAM_OUT_OF_RANGE, msg_args('P_PARAM1', to_char(p_param_1)));
   when msg.PARAM_MUST_EXIST_ERR then
-    pit.sql_exception(msg.PARAM_MUST_EXIST, msg_args('P_PARAM_2'));
+    pit.handle_exception(msg.PARAM_MUST_EXIST, msg_args('P_PARAM_2'));
 end;
 ```
 

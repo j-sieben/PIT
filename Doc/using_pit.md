@@ -8,7 +8,7 @@ As a best practice, provide `pit.enter` with the name of your method and your pa
 
 Let me state though that the overhead of calling the methods to retrieve package and method name starting with version 12c is minimal and should not harm your overall performance noticably. So with the exception of extreme cases you may find it sufficient to leave this information out and benefit from an even easier use of `PIT`.
 
-Please make sure that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.sql_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), PIT maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
+Please make sure that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.handle_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), PIT maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
 
 Starting with version 12c, PIT has extended its possibility of handling the call stack by utilizing `UTL_CALL_STACK`under the covers. This makes call stack maintenance more stable and reliable and allows for even less code in the application. Imagine a method `A` that calls method `B` which in turn calls method `C`. In `C`, an error is raised, but it is catched at method `A`. Normally, there would be no way to clear the call stack if not any of the methods `A`, `B` and `C` would offer an exception handler. Methods `C` and `B` would then implement a dummy handler such as 
 
@@ -53,7 +53,7 @@ begin
 end my_func;
 ```
 
-Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in handy if a method calculates values and you want to log the results. As it is also important to log the outcome of parameters in case of an exception, you may pass instances of `MSG_PARAMS` to the error handlers `pit.sql_exception` and `pit.stop` as well.
+Instances of `MSG_PARAMS` may be passed ot `pit.leave` as well. This comes in handy if a method calculates values and you want to log the results. As it is also important to log the outcome of parameters in case of an exception, you may pass instances of `MSG_PARAMS` to the error handlers `pit.handle_exception` and `pit.stop` as well.
 
 As an extension, there is a method called `pit.log_state` that expects an instance of `msg_params` as described above. This method allows for easy and flexible logging of variable values within a method without the requirement to create a distinct message for it. With this method, you may pass whatever amount of information to the logging mechanism.
 
@@ -191,11 +191,11 @@ begin
   pit.leave;
 exception
   when msg.CHILD_RECORD_FOUND_ERR then
-    pit.sql_exception(msg.CHILD_RECORD_FOUND);
+    pit.handle_exception(msg.CHILD_RECORD_FOUND);
 end;
 ```
 
-Method `pit.sql_exception` is used to achieve two goals:
+Method `pit.handle_exception` is used to achieve two goals:
 
 - It will log the error to all output modules actually parameterized
 - It will cleanly close the call stack, as it includes a call to `pit.leave`.
@@ -219,7 +219,7 @@ Messages require parameters. To pass parameters to a message, an object of type 
 ```
 -- Message: "Couldn't delete #1# with id #2#.", name: msg.DELETE_ITEM, severity: pit.error
 
-pit.sql_exception(msg.DELETE_ITEM, msg_args('row', to_char(id)));
+pit.handle_exception(msg.DELETE_ITEM, msg_args('row', to_char(id)));
 
 -- Resulting Message: "Couldn't delete row with id 12345."
 ```
