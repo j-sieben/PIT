@@ -46,6 +46,8 @@ end;
 
 The code to catch the exception is the same, although the way to process the error with PIT is different. Before we come to that, I'd like to stress that after throwing an exception with `pit.error` or `pit.fatal`, `SQLCODE` and `SQLERRM` are populated with the message you created when throwing the error. `SQLCODE` contains the Oracle error number or the custom error number assigned to the message. Therefore, to use this feature, make sure that the message has a severity of `level_error` or `level_fatal` to have PIT assign a custom error number to it. In general, `pit.error` and `pit.fatal` overwrite the message's severity with the respective method level to assure that a message of severity `level_error` will stop further execution of the code if it has been thrown by `pit.fatal`.
 
+Note: If you use `pit.error`or `pit.fatal` and a message with a severity milder than `pit.LEVEL_ERROR`, it will be still thrown as an exception with the error code `-20.000`. It is not possible though to catch this error, as no exception was defined for it in package `MSG`.
+
 ## Catching exceptions with PIT
 
 Let's see how to catch exceptions with PIT and the options we have here.
