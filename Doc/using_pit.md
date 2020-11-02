@@ -59,7 +59,7 @@ As an extension, there is a method called `pit.log_state` that expects an instan
 
 ### Extended use of parameters
 
-There is also a way to work with parameters independently from the `pit.enter` and `pit.leave` methods. You may pass parameter values at any time during method  execution using the `pit.log_state` method. This method expects only one parameter of type `MSG_PARAMS` and allows to debug the state of any variable during processing of code without the requirement to create a message for it. This is more flexible than the normal message approach in that it allows to extend the list of parameters easily. Thanks Sebastian Kölle for pointing me to this functionality. A sample code using this functionality may look like this:
+There is also a way to work with parameters independently from the `pit.enter` and `pit.leave` methods. You may pass parameter values at any time during method  execution using the `pit.log_state` method. This method expects only one parameter of type `MSG_PARAMS` and allows to debug the state of any variable during processing of code without the requirement to create a message for it. This is more flexible than the normal message approach in that it allows to extend the list of parameters easily. Thanks Sebastian Köll for pointing me to this functionality. A sample code using this functionality may look like this:
 
 ```
 begin
