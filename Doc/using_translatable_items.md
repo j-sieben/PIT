@@ -44,7 +44,7 @@ select sif_id, pti_name sif_name, pti_description sif_description
    and sif_pmg_name = pti_pmg_name;
 ```
 
-For the calling code, this view behaves exactly like a local table with the exception that it "automagically" shows the value in the correct language, if available. Keep in mind though that based on the fact that this view is a complex view, you can't write through this view but must either offer the table for writing purposes or provide a table API which in my opinion is always a good thing to do.
+For the calling code, this view behaves exactly like a local table with the exception that it "automagically" shows the value in the correct language, if available. Keep in mind though that based on the fact that this view is a complex view, you can't write through this view but must either offer the table for writing purposes or provide a transaction API (XAPI) which in my opinion is always a good thing to do.
 
 As usual, there is the possibility to maintain PTI's using an API that also allows for semi automatic exporting of translatable items. Plus, `PIT` has been extended by four methods to access a translatable item from PL/SQL. Three methods directly access one of the three translated text chunks and a forth method returns a record with all three translated text chunks. When working in SQL, it is better to directly join the `PIT_TRANSLATABLE_ITEM_V`, as this view contains all translated items and does a proper translation based on the language settings of the actual session.
 
