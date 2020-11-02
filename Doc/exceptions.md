@@ -52,7 +52,7 @@ Let's see how to catch exceptions with PIT and the options we have here.
 
 There are two specialized methods to handle exceptions within PIT: `pit.handle_exception` and `pit.stop` respectively `pit.reraise_exception`. `pit.reraise_exception` is a synonym for `pit.stop` and can be used interchangeably.
 
-Note: In earlier releases there was a function called `pit.sql_exception`. This is now deprecated, but still available. Use `pit.handle_exception` instead. It was felt that this name is more consise and explains better what it does.
+Note: In earlier releases there was a function called `pit.handle_exception`. This is now deprecated, but still available. Use `pit.handle_exception` instead. It was felt that this name is more consise and explains better what it does.
 
 Method `pit.handle_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
 
