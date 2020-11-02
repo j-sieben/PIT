@@ -3,11 +3,11 @@ Translatable items offer the possibility to maintain translatable information in
 
 To overcome this, PIT now offers PIT Translatable Items, or PTI for short. A PTI is a lightweigt alternative to messages. It lacks some of the functionality of messages but offers other benefits. First, a PTI is not attached to a severity, it does not come as an object and it is not secured by a constant at package MSG. It does allow for the integration of message parameters and exceeds messages in its possibility to store three message chunks under one name:
 
-- A `PTI_NAME` property with up to 200 characters in length and MSG_ARGS support,
-- A `PTI_DISPLAY_NAME` property with up to 200 characters in length and MSG_ARGS support and
-- A `PTI_DESCRIPTION` property of type CLOB wirthout MSG_ARGS support.
+- A `PTI_NAME` property with up to 200 characters in length and `MSG_ARGS` support,
+- A `PTI_DISPLAY_NAME` property with up to 200 characters in length and `MSG_ARGS` support and
+- A `PTI_DESCRIPTION` property of type `CLOB` wirthout `MSG_ARGS` support.
 
-The PTI_DESCRIPTION property was planned to be used for help texts and the like, therefore no support for MSG_ARGS was felt to be necessary.
+The `PTI_DESCRIPTION` property was planned to be used for help texts and the like, therefore no support for `MSG_ARGS` was felt to be necessary.
 
 Messages had the possibility to group them into message groups already, but translatable items require you to assign them to a message group. The message group is part of the primary key, allowing for an easier naming system as a name has to be unique for a message group only.
 
