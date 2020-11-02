@@ -31,13 +31,17 @@ To create your own output module, you only overwrite the methods you need. Exami
 ```
 create or replace type pit_file under pit_module(
   overriding member procedure log(
+    self in out nocopy pit_file,
     p_message in message_type),
   overriding member procedure purge(
+    self in out nocopy pit_file,
     p_purge_date in date,
     p_severity_greater_equal in integer default null),
   overriding member procedure enter(
+    self in out nocopy pit_file,
     p_call_stack in call_stack_type),
   overriding member procedure leave(
+    self in out nocopy pit_file,
     p_call_stack in call_stack_type),
   constructor function pit_file(
     self in out nocopy pit_file)
@@ -57,15 +61,17 @@ So this is the implementation of the `PIT_FILE` output module:
 create or replace type body pit_file
 as
   overriding member procedure log(
+    self in out nocopy pit_file,
     p_message in message_type)
   as
   begin
     if p_message.severity <= fire_threshold then
-      pit_file_pkg.log(p_message);
+      pit_file_pkg.log(self, p_message);
     end if;
   end log;
 
   overriding member procedure purge(
+    self in out nocopy pit_file,
     p_purge_date in date,
     p_severity_greater_equal in integer default null)
   as
@@ -74,17 +80,19 @@ as
   end purge;
 
   overriding member procedure enter(
+    self in out nocopy pit_file,
     p_call_stack in call_stack_type)
   as
   begin
-    pit_file_pkg.enter(p_call_stack);
+    pit_file_pkg.enter(self, p_call_stack);
   end enter;
 
   overriding member procedure leave(
+    self in out nocopy pit_file,
     p_call_stack in call_stack_type)
   as
   begin
-    pit_file_pkg.leave(p_call_stack);
+    pit_file_pkg.leave(self, p_call_stack);
   end leave;
 
   constructor function pit_file (
