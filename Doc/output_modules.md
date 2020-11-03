@@ -19,7 +19,7 @@ Output modules form the interface between the messages and any output channel. T
 
 As all of them are implemented as stubs doing nothing, you're free to overload only those methods you require in your inherited object. Each output module may have any number of parameters and supporting objects like tables, but at the bare minimum it should define a parameter setting the fire threshold of the output module. By defining this threshold, message of a severity less than this threshold will be ignored.
 
-All output modules require a parameterless constructor method. This method should check whether the module is available for use
+All output modules require a parameterless constructor method. This method should check whether the module is available for use. A mail output module should check whether the mail server is available and working, a file output module may check whether the directory is in place and an APEX module will check whether there is a living APEX environment.
 
 ## Predefined output modules
 
