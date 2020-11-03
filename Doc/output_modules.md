@@ -19,7 +19,7 @@ Output modules form the interface between the messages and any output channel. T
 
 As all of them are implemented as stubs doing nothing, you're free to overload only those methods you require in your inherited object. Each output module may have any number of parameters and supporting objects like tables, but at the bare minimum it should define a parameter setting the fire threshold of the output module. By defining this threshold, message of a severity less than this threshold will be ignored.
 
-All output modules require a parameterless constructor method. This method should
+All output modules require a parameterless constructor method. This method should check whether the module is available for use
 
 ## Predefined output modules
 
@@ -46,6 +46,16 @@ This module writes messages and call stack information to a trace file. In order
 This module sends mail messages containing the messages received. As this output module has to create message texts with salutations etc. it depends on helper package `UTL_TEXT` [see here](https://github.com/j-sieben/UTL_TEXT). The dependency is mild though, so if you don't want to utilize this package it will not take too long to replace it with your own utility.
 
 This module create a table named `PIT_MAIL_QUEUE`. It implements the `LOG` method only and differs between fatal and »normal« errors in that it sends a mail directly if a fatal error occurs whereas it stores message of level `pit.LEVEL_ERROR` at the mail queue. There is a functionality in the accompanying package that allows to send a report with all error messages once a day, controlled by a scheduler job.
+
+### `PIT_APEX` 
+
+This module integrates `PIT` into an APEX environment. Main task of the package is to convert messages to APEX error messages and integrate them into the APEX error or debug stack. Together with this module, a special session adapter called `PIT_APEX_ADAPTER` is created that replaces the normally used `PIT_DEFAULT_ADAPTER`. This is because in APEX the session information may not be taken from the database session but the APEX session identified by the session id contained in `USERENV`. Plus, this adapter checks whether APEX is set to debug mode. If so, the adatper recommends a context switch to a context named `CONTEXT_APEX` that switches debugging on and chooses `PIT_APEX` as the only output module.
+
+This module implements the `LOG`, `PRINT`, `NOTIFY` and `ENTER/LEAVE` methods. Method `NOTIFY` is experimental and not fully implemented yet, as the plan is to deliver messages to APEX via a WebSocket server.
+
+Setting APEX to debug does emit any `ENTER/LEAVE` call stack entries. This is bound to `LEVEL5` and upward. So to see those entries, set the debug level accordingly.
+
+The constructor will check whether APEX is usable, i.e. whether there is a living APEX session context. If not, the module will be installed, but not available.
 
 # Writing your own output module
 
