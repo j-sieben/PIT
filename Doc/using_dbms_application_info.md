@@ -37,7 +37,7 @@ Method `pit.long_op` provides a total of 5 parameters:
 - `p_target` (mandatory): Describes what is performed
 - `p_sofar` (mandatory): Defines the percentage of work done so far. As per default, the percentage is calculated relative to 100, meaning that `p_sofar => 100` means completely processed.
 - `p_total` (optional, default 100): If you require a different relation system, define what is perceived to be 100%. If you have a column count, you may set this as the 100% mark and pass the row number of the actually processed row as `p_sofar`.
-- `p_units` (optional, defaults to 'iterations'): Option to set the units. If you process rows of a table, a message is produced and shown in `V$SESSION_LONGOPS.message`. This message is create using this template: `<OPNAME>: <TARGET>: <SOFAR> out of <TOTAL> <UNITS> done'.
+- `p_units` (optional, defaults to 'iterations'): Option to set the units. If you process rows of a table, a message is produced and shown in `V$SESSION_LONGOPS.message`. The message is created using this template: `<OPNAME>: <TARGET>: <SOFAR> out of <TOTAL> <UNITS> done`.
 - `p_op_name` (optional, defaults to `<package>.<method>`): Optional information indicating the broader focus of the task to perform.
 
 Oracle utilizes the different parameter like so:
