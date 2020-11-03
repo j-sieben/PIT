@@ -1,4 +1,4 @@
-# Working with PIT in collection mode
+# Working with `PIT` in collection mode
 
 The driving factor for developing this extension to `PIT`came up when we wanted to reuse validation logic in the database layer for an APEX application. Even with APEX where all code resides within the database, it's a wise decision to carefully think about where to implement which part of the code. As a bare minimum, the APEX workspace schema should be separated from the schema containing the data and its attached validation and processing logic. This is to support future development, where you probably want to replace APEX with the new kid on the block. Wrapping all your validation and data processing logic in the vicinity of APEX will then turn out to be a desastrous idea.
 

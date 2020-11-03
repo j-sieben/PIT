@@ -1,10 +1,10 @@
-# PIT Installation
+# `PIT` Installation
 
 ## Installing `PIT`
 
  `PIT` installation is split into three installation files to make it easy to adjust `PIT` to your specific needs:
 
-- Core installation file, installs the core PIT packages and data structures. The owner of `PIT` can work with `PIT`, no additional installation is required
+- Core installation file, installs the core `PIT` packages and data structures. The owner of `PIT` can work with `PIT`, no additional installation is required
 - Client installation file, grants all necessary rights to a adifferent user to allow for centralized deployment of `PIT` for many schemas
 - APEX installation file, installs the APEX application to maintain `PIT`. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems.
 
@@ -76,7 +76,7 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_install PIT_OWNER AMERICAN
+SQL> @pit_install `PIT`_OWNER AMERICAN
 ```
 
 This example will install `PIT` within user `PIT_OWNER` and set `AMERICAN` as the default language for messages. All parameters are case insensitive.
@@ -90,7 +90,7 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_uninstall PIT_OWNER AMERICAN
+SQL> @pit_uninstall `PIT`_OWNER AMERICAN
 ```
 
 ## Granting access to `PIT` to a client
@@ -106,7 +106,7 @@ Here's an example on how to call this script:
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_install_client PIT_OWNER PIT_USER
+SQL> @pit_install_client `PIT`_OWNER `PIT`_USER
 ```
 
 ## Uninstalling `PIT` client
@@ -117,7 +117,7 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_uninstall_client PIT_OWNER PIT_USER
+SQL> @pit_uninstall_client `PIT`_OWNER `PIT`_USER
 ```
 
 ## Installing the supporting APEX application
@@ -146,8 +146,8 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_TEXT\UTL_TEXT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @utl_text_install PIT_OWNER AMERICAN
-SQL> @utl_text_install_client PIT_OWNER PIT_USER
+SQL> @utl_text_install `PIT`_OWNER AMERICAN
+SQL> @utl_text_install_client `PIT`_OWNER `PIT`_USER
 ```
 
 ### Installation of `UTL_APEX`
@@ -166,7 +166,7 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_APEX\UTL_APEX
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @utl_apex_install PIT_USER AMERICAN
+SQL> @utl_apex_install `PIT`_USER AMERICAN
 ```
 
 That's it, you're now prepared to install the `PIT` application. Obviously, the steps above are required only once for all your APEX applications of that workspace that want to make use of those libraries.
@@ -175,9 +175,9 @@ If you want to see how `UTL_APEX`can make your live easier as an APEX developer,
 
 ### Install the `PIT` maintenace application
 
-Script `pit_install_apex.sql` will install the appliation itself. The script will make sure that the schema owner of this APEX workspace is granted all necessary object rights to maintain PIT. It expects five parameters:
+Script `pit_install_apex.sql` will install the appliation itself. The script will make sure that the schema owner of this APEX workspace is granted all necessary object rights to maintain `PIT`. It expects five parameters:
 
-- `APEX_USER`: database user who owns PIT_UI (Schema of the APEX-Workspace you install into)
+- `APEX_USER`: database user who owns `PIT`_UI (Schema of the APEX-Workspace you install into)
 - `APEX_WORKSPACE`: Name of the APEX workspace
 - `ALIAS`: Alias name of the APEX-application.
 - `APP_ID`: ID of the APEX-application.
@@ -192,7 +192,7 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_install_apex PIT_USER DEV_TOOLS PIT 123 AMERICAN
+SQL> @pit_install_apex `PIT`_USER DEV_TOOLS `PIT` 123 AMERICAN
 ```
 
 Installing the supporting APEX application encloses the installation of a `PIT` client for that user. Should the `APEX_USER` match the owner name of `PIT`, no client installation takes place, as the APEX application is allowed to access all necessary database objects anyway.
@@ -211,6 +211,6 @@ Here's a sample deinstallation script:
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba
 
-SQL> @pit_uninstall_apex PIT_OWNER PIT_USER DEV_TOOLS PIT
+SQL> @pit_uninstall_apex `PIT`_OWNER `PIT`_USER DEV_TOOLS `PIT`
 ```
 Deinstalling the supporting APEX application will deinstall the `PIT` client for that user, too. So if you don't want to use the supprting apex application anymore but want to have access to `PIT`, install a `PIT` client after deinstalling the supporting APEX application.

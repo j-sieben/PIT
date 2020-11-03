@@ -1,12 +1,12 @@
-# Throwing and catching exceptions with PIT
+# Throwing and catching exceptions with `PIT`
 
-After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, PIT automatically assigns a custom error number within the range `-20,999 .. -20,000`. Exception follow a naming convention that is parameterizable. As per default, any exception is derived from `<MESSAGE_NAME>_ERR`, but you're free to set your own pre- and postfix parameters (`PIT.ERROR_PREFIX`and `PIT.ERROR_POSTFIX`) to achieve something as `X_<MESSAGE_NAME>`. The overall length of the name extension (including underscores) is limited to 4 byte, though.
+After having defined a message of severity `ERROR` or `FATAL`, package `MSG` has defined a respective message, an exception and an exception init for the given Oracle error number. If no Oracle error number has been provided, `PIT` automatically assigns a custom error number within the range `-20,999 .. -20,000`. Exception follow a naming convention that is parameterizable. As per default, any exception is derived from `<MESSAGE_NAME>_ERR`, but you're free to set your own pre- and postfix parameters (`PIT.ERROR_PREFIX`and `PIT.ERROR_POSTFIX`) to achieve something as `X_<MESSAGE_NAME>`. The overall length of the name extension (including underscores) is limited to 4 byte, though.
 
-In regard to parameterization, also note that there is a parameter called `OMIT_PIT_IN_STACK` to control whether internal PIT method calls are included in the call and error stack (if set to FALSE) or not (which is the default).
+In regard to parameterization, also note that there is a parameter called `OMIT_PIT_IN_STACK` to control whether internal `PIT` method calls are included in the call and error stack (if set to FALSE) or not (which is the default).
 
 Be aware that messages of severity `LEVEL_FATAL` and `LEVEL_ERROR` always get logged, regardless of any settings in the context. The only possibility to surpress the output of these messages is to reduce the log threshold of an output module. After all, this is not a recommended practice, as you require to be informed about errors in your code anyway.
 
-Let's have a look at how we can work with these errors in PIT.
+Let's have a look at how we can work with these errors in `PIT`.
 
 ## Throwing errors
 
@@ -44,15 +44,15 @@ exception
 end;
 ```
 
-The code to catch the exception is the same, although the way to process the error with PIT is different. Before we come to that, I'd like to stress that after throwing an exception with `pit.error` or `pit.fatal`, `SQLCODE` and `SQLERRM` are populated with the message you created when throwing the error. `SQLCODE` contains the Oracle error number or the custom error number assigned to the message. Therefore, to use this feature, make sure that the message has a severity of `level_error` or `level_fatal` to have PIT assign a custom error number to it. In general, `pit.error` and `pit.fatal` overwrite the message's severity with the respective method level to assure that a message of severity `level_error` will stop further execution of the code if it has been thrown by `pit.fatal`.
+The code to catch the exception is the same, although the way to process the error with `PIT` is different. Before we come to that, I'd like to stress that after throwing an exception with `pit.error` or `pit.fatal`, `SQLCODE` and `SQLERRM` are populated with the message you created when throwing the error. `SQLCODE` contains the Oracle error number or the custom error number assigned to the message. Therefore, to use this feature, make sure that the message has a severity of `level_error` or `level_fatal` to have `PIT` assign a custom error number to it. In general, `pit.error` and `pit.fatal` overwrite the message's severity with the respective method level to assure that a message of severity `level_error` will stop further execution of the code if it has been thrown by `pit.fatal`.
 
 Note: If you use `pit.error`or `pit.fatal` and a message with a severity milder than `pit.LEVEL_ERROR`, it will be still thrown as an exception with the error code `-20.000`. It is not possible though to catch this error, as no exception was defined for it in package `MSG`.
 
-## Catching exceptions with PIT
+## Catching exceptions with `PIT`
 
-Let's see how to catch exceptions with PIT and the options we have here.
+Let's see how to catch exceptions with `PIT` and the options we have here.
 
-There are two specialized methods to handle exceptions within PIT: `pit.handle_exception` and `pit.stop` respectively `pit.reraise_exception`. `pit.reraise_exception` is a synonym for `pit.stop` and can be used interchangeably.
+There are two specialized methods to handle exceptions within `PIT`: `pit.handle_exception` and `pit.stop` respectively `pit.reraise_exception`. `pit.reraise_exception` is a synonym for `pit.stop` and can be used interchangeably.
 
 Note: In earlier releases there was a function called `pit.handle_exception`. This is now deprecated, but still available. Use `pit.handle_exception` instead. It was felt that this name is more consise and explains better what it does.
 
@@ -72,7 +72,7 @@ end;
 
 Method `pit.stop`, on the other hand, stops the execution of the code. The difference to `pit.handle_exception` with a following `raise;` is that `pit.stop` will throw a new exception after it has logged the original exception, overwriting the old call stack. This may come in handy if you don't want to expose all the internals to the log but rather wrap all exceptions in a newly created error.
 
-### Passing predefined messages to PIT
+### Passing predefined messages to `PIT`
 
 If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.handle_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
 
@@ -107,7 +107,7 @@ Use this approach if you need to differ between many places the same error may o
 
 ## Catching named Oracle errors
 
-If you want to catch named Oracle errors such as `NO_DATA_FOUND` or `TOO_MANY_ROWS`, the way to catch them stays the same as without PIT. The only additional possibility you have is to process the exception with any custom defined message. Here's a code snippet that shows this usage:
+If you want to catch named Oracle errors such as `NO_DATA_FOUND` or `TOO_MANY_ROWS`, the way to catch them stays the same as without `PIT`. The only additional possibility you have is to process the exception with any custom defined message. Here's a code snippet that shows this usage:
 
 ```
 begin
@@ -143,7 +143,7 @@ It's also possible to pass output parameter values even in the case of exception
 
 ## Passing Error Codes
 
-Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality comes in handy if you need to maintain return codes that other application parts expose, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `P_ERROR_CODE`. This can be any information you like up to 30 char in width. Another use of this functionality is when running PIT in collection mode, as described [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages.md).
+Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality comes in handy if you need to maintain return codes that other application parts expose, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `P_ERROR_CODE`. This can be any information you like up to 30 char in width. Another use of this functionality is when running `PIT` in collection mode, as described [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages.md).
 
 If you use this feature, this error code is passed as part of the message instance, so that any output module can access  this information and do  with it whatever it has to.
 
@@ -151,9 +151,9 @@ If you use this feature, this error code is passed as part of the message instan
 
 Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. Do not use it for normal logging. 
 
-## Overview of possibilities to throw and catch exceptions in PIT
+## Overview of possibilities to throw and catch exceptions in `PIT`
 
-Here is a brief overview of the different possibilities of throwing and catching exceptions with PIT. It is assumed that the respective messages were created upfront with a severity of 20 or 30 and a matching Oracle error number, if applicable. Catching exceptions with `pit.handle_exception` or `pit.stop` is identical syntaxwise. The only difference is that `pit.stop` will throw the error after logging it, whereas `pit.handle_exception` will not.
+Here is a brief overview of the different possibilities of throwing and catching exceptions with `PIT`. It is assumed that the respective messages were created upfront with a severity of 20 or 30 and a matching Oracle error number, if applicable. Catching exceptions with `pit.handle_exception` or `pit.stop` is identical syntaxwise. The only difference is that `pit.stop` will throw the error after logging it, whereas `pit.handle_exception` will not.
 
 ### Catching Oracle named exceptions
 
@@ -170,7 +170,7 @@ end;
 
 ```
 begin
-  <do something that causes Oracle to throw an exception PIT has a message for>
+  <do something that causes Oracle to throw an exception `PIT` has a message for>
 exception
   when msg.CHILD_RECORD_FOUND_ERR then
     pit.handle_exception(msg.CHILD_RECORD_FOUND, msg_args(...));
@@ -280,5 +280,5 @@ end;
 This example shows the use of error codes. Obviously, it's impossible to provide a constant for error codes passed into a message dynamically. But if you omit it, the error code will default to the message name so that it's possible to use the exceptions in a mixed mode, with or witout error codes. The exception thrown is the same but the error codes allow for a finer distinction between error scenarios. If not used, you would have to create different messages for the same kind of exception in order to distinguish between them.
 
 If you use error codes, make sure to comment them in the package specification, as you should do with the list of exceptions a method may potentially throw.
-If you run PIT in collect mode, error codes are always populated. If you provide an explicit error code, it will be used, if not, the message name is used.
+If you run `PIT` in collect mode, error codes are always populated. If you provide an explicit error code, it will be used, if not, the message name is used.
 

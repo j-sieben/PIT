@@ -25,7 +25,7 @@ A third option is to call `pit_admin.translate_message` directly, using the same
 
 To translate messages, `pit_admin` offers a specialized method. This is because it is cumbersome and error prone to repeat the other attributes such as severity, custom error number and so forth. When translating translatable items, no such method exists. Therefore you simply copy the call to `pit_admin.merge_translatable_item` and change the parameters accordingly. The only parameter with the same value now is the group parameter which is part of the primary key anyway. Therefore a dedicated translation method is not useful.
 
-## Loading a translated PIT version
+## Loading a translated `PIT` version
 
 If you install `PIT`, you need to define a default language. Later, you can easily add a translation by calling `pit_load_trans.sql`. You need to pass in the install user and the target language (Oracle language name). At the moment, only GERMAN and AMERICAN are provided. If you want to translate into other messages, look out for folder `messages` in the `PIT`installation folder. There are several folders of that kind but the organization of these is identically: They contain a folder named after the Oracle language and script files with the respective messages.
 
