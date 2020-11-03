@@ -239,7 +239,7 @@ First, the message severity is taken from the message you pass in. So if you wan
 
 You then can decide upon the output modules to be used for this log process. Without changing any log settings, you may want to log a specific message to one output module only. This is possible by passing in the list of requested output modules as a colon-separated list into parameter `P_MODULE_LIST`. As said, this does not effect any log settings but will be set for this single log process.
 
-Imagine an application like a flow control system that needs to log status messages to a dedicated output module called `PIT`_FLOW_CONTROL. By calling `pit.log` with parameter `p_module_list => 'PIT_FLOW_CONTROL` only this output module will receive the status change message, regardless of whether logging is switch on or off. 
+Imagine an application like a flow control system that needs to log status messages to a dedicated output module called `PIT_FLOW_CONTROL`. By calling `pit.log` with parameter `p_module_list => 'PIT_FLOW_CONTROL` only this output module will receive the status change message, regardless of whether logging is switch on or off. 
 
 ## Handling message parameters
 
