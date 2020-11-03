@@ -1,6 +1,6 @@
 # Output modules
 
-Output modules form the interface between the messages and any output channel. Their task is to receive the message, format it accordingly and write it to the desired location. to work without any number of output modules without changing the core implementation of `PIT`, a concept of an abstract object type named `PIT_MODULE` and inheritance is used. Beeing an abstract object means that you can't instantiate it. But it is not final, so it's allowed to create a new object that inherits from `PIT_MODULE`. By this, two goals are achieved:
+Output modules form the interface between the messages and any output channel. Their task is to receive the message, format it accordingly and write it to the desired location. In order to be able to work with any number of output modules without changing the core implementation of `PIT`, a concept of an abstract object type named `PIT_MODULE` and inheritance is used. Beeing an abstract object means that you can't instantiate it. But it is not final, so it's allowed to create a new object that inherits from `PIT_MODULE`. By this, two goals are achieved:
 
 1.  `PIT` is able to recognize new modules automatically as they can be found in view `USER_TYPES`. They share the same attribute `PIT_MODULE` as their supertype.
 
