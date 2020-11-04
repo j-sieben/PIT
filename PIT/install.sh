@@ -1,5 +1,5 @@
 #!/bin/bash
-echo -n "Enter Connect-String without 'as sysdba' for SYS account [ENTER] "
+echo -n "Enter Connect-String for DBA account [ENTER] "
 read SYSPWD
 echo ${SYSPWD}
 
@@ -14,7 +14,7 @@ echo ${DEFAULT_LANGUAGE}
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 sqlplus /nolog<<EOF
-connect ${SYSPWD} as sysdba 
+connect ${SYSPWD}
 @pit_install ${OWNER} ${DEFAULT_LANGUAGE}
 pause
 EOF
