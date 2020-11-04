@@ -45,11 +45,11 @@ The total length of pre- and postfix is 4 bytes, but you need to add one undersc
 
 ## `PIT` privileges
 
-The script to install `PIT` requires administrative privileges, as it creates users shouldn't they already exist, grants system and object privileges and so forth. If your administrator needs to have an overview about the rights the `PIT` installation grants to the respective users, you will find them in file `set_grants.sql` in the installation folder plus in the modules folder for specific output modules. As an example, you will find a file named `user_grants.sql` in folder `modules/pit_file/scripts` which assigns execute rights on `utl_file` to the owner of `PIT`.
+The script to install `PIT` requires administrative privileges, as it creates users shouldn't they already exist, grants system and object privileges and so forth. If your administrator needs to have an overview about the rights the `PIT` installation grants to the respective users, you will find them in file `set_grants.sql` in the installation folder plus in the modules folder for specific output modules. As an example, you will find a file named `user_grants.sql` in folder `modules/pit_file/scripts` which assigns execute rights on `utl_file` to the owner of `PIT`. Plus, in script `check_user_exists.sql` system privilege `quota unlimited on tablespace users` is granted to the `PIT` owner and `PIT` user. Adjust this if you need different settings here.
 
-There were thoughts on providing a version of the `PIT` installation files that run under the privileges of the `PIT` owner. This is obviously possible only if all necessary database grants are present. I didn't examine this path until now. If somebody has done this, please let me know, I will then include a respective script.
+Additionally, `PIT` requires a publicy accessible context to store the log related information to. This is a grant that the `PIT` owner does not require, but the installing user must have in order to create it for the `PIT` owner.
 
-Additionally, in script `check_user_exists.sql` system privilege `quota unlimited on tablespace users` is granted to the `PIT` owner and `PIT` user. Adjust this if you need different settings here.
+There were thoughts on providing a version of the `PIT` installation files that run under the privileges of the `PIT` owner. This is obviously possible only if all necessary database grants are present. One of the challenges then would be to grant access to other users, as this normally includes granting the rights and creating synonyms on the client side. At the moment, this is done by calling a script file `tools/check_has_object_privilege.sql` which is called by the respecitve installation scripts. If you install as the owner of `PIT`, this will be one of the issues to address.
 
 Starting with Oracle version 12c, a new privilege `inherit privileges` must be obeyed. The installation script will grant `inherit any privilege` from `SYS` to the owner of `PIT`. This grant is revoked after installation to assure that no method of `PIT` abuses privileges if these methods are called by `SYS`.
 
@@ -75,7 +75,7 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
-sqlplus <sys_credentials> as sysdba 
+sqlplus system/syspwd@database
 SQL> @pit_install `PIT`_OWNER AMERICAN
 ```
 
