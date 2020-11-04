@@ -1,5 +1,5 @@
 #!/bin/bash
-echo -n "Enter Connect-String without 'as sysdba' for SYS account [ENTER] "
+echo -n "Enter Connect-String for DBA account [ENTER] "
 read SYSPWD
 echo ${SYSPWD}
 
@@ -26,8 +26,8 @@ echo ${DEFLANG}
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 sqlplus /nolog<<EOF
-connect ${SYSPWD} as sysdba 
-@pit_install_client.sql ${APPUSER} ${APPWD} ${APPALIAS} ${APPID} ${DEFLANG}
+connect ${SYSPWD}a 
+@pit_install_apex.sql ${APPUSER} ${APPWD} ${APPALIAS} ${APPID} ${DEFLANG}
 pause
 EOF
 
