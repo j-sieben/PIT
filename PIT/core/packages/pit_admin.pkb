@@ -1064,20 +1064,23 @@ end;
                   p_file_name file_name,
                   p_pmg_name pmg_name
              from dual)
-    select xmlelement("xliff",
-             xmlattributes(
-               '2.0' "version",
-               xmlns "xmlns",
-               source_iso_language "srcLang",
-               target_iso_language "trgLang"
-             ),
-             xmlelement("file",
+    select xmlroot(
+             xmlelement("xliff",
                xmlattributes(
-                 file_name "original",
-                 pmg_name "id"
+                 '2.0' "version",
+                 xmlns "xmlns",
+                 source_iso_language "srcLang",
+                 target_iso_language "trgLang"
                ),
-               p_xliff
-             )
+               xmlelement("file",
+                 xmlattributes(
+                   file_name "original",
+                   pmg_name "id"
+                 ),
+                 p_xliff
+               )
+             ),
+             version '1.0', standalone yes
            )
       into p_xliff
       from params;
