@@ -988,6 +988,23 @@ end;
   end create_installation_script;
   
   
+  function get_installation_script(
+    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_target in varchar2)
+    return clob
+  as
+    l_script clob;
+    l_file_name pit_util.ora_name_type;
+  begin
+    create_installation_script(
+      p_pmg_name => p_pmg_name,
+      p_target => p_target,
+      p_file_name => l_file_name,
+      p_script => l_script);
+    return l_script;
+  end get_installation_script;
+  
+  
   /*********** TRANSLATION **************/
   procedure translate_message(
     p_pms_name in pit_message.pms_name%TYPE,
@@ -1066,6 +1083,25 @@ end;
       from params;
       
   end create_translation_xml;
+  
+  
+  function get_translation_xml(
+    p_target_language in pit_message_language.pml_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_target in varchar2)
+    return clob
+  as
+    l_xliff xmltype;
+    l_file_name pit_util.ora_name_type;
+  begin
+    create_translation_xml(
+      p_target_language => p_target_language,
+      p_pmg_name => p_pmg_name,
+      p_target => p_target,
+      p_file_name => l_file_name,
+      p_xliff => l_xliff);
+    return l_xliff.getClobVal();
+  end get_translation_xml;
   
   
   procedure apply_translation(

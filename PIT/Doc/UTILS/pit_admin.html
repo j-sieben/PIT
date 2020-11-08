@@ -105,6 +105,11 @@ Procedure to create a or change a translatable item
 Method to get items of a group as a script of API calls to PIT_ADMIN package
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_INSTALLATION_SCRIPT">get_installation_script</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to get items of a group as a script of API calls to PIT_ADMIN package
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#TRANSLATE_MESSAGE">translate_message</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
@@ -113,6 +118,11 @@ Method to get items of a group as a script of API calls to PIT_ADMIN package
 <A HREF="#CREATE_TRANSLATION_XML">create_translation_xml</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_TRANSLATION_XML">get_translation_xml</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to directly create a translation XLIFF file and return it as CLOB
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#APPLY_TRANSLATION">apply_translation</A>&nbsp;&nbsp;
@@ -655,6 +665,66 @@ Out parameter that contains the SQL script created<br>
 </TABLE>
 <BR>
 <HR>
+<A NAME="GET_INSTALLATION_SCRIPT"></A>
+<P CLASS="TYPE_TITLE">
+get_installation_script
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_installation_script(p_pmg_name in pit_message_group.pmg_name%TYPE,
+                                 p_target   in varchar2) return clob
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to get items of a group as a script of API calls to PIT_ADMIN package<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Call this method to create a script file that can be used to export all items of this particular group directly from SQL.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Message group to filter output<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Type of items to translate <A HREF=#C_TARGET_PMS>C_TARGET_PMS</A> | <A HREF=#C_TARGET_PTI>C_TARGET_PTI</A> | <A HREF=#C_TARGET_PAR>C_TARGET_PAR</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CLOB instance with the installation script<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
 <A NAME="TRANSLATE_MESSAGE"></A>
 <P CLASS="TYPE_TITLE">
 translate_message
@@ -679,6 +749,74 @@ Procedure create_translation_xml(p_target_language in pit_message_language.pml_n
                                  p_xliff           out nocopy xmltype)
 
 </PRE>
+<HR>
+<A NAME="GET_TRANSLATION_XML"></A>
+<P CLASS="TYPE_TITLE">
+get_translation_xml
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_translation_xml(p_target_language in pit_message_language.pml_name%TYPE,
+                             p_pmg_name        in pit_message_group.pmg_name%TYPE default null,
+                             p_target          in varchar2) return clob
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to directly create a translation XLIFF file and return it as CLOB<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Use this method to directly create a translation XLIFF file from SQL.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target_language&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Oracle supported language name to tranlsate the items to<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pmg_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Group to filter the items to translate<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_target&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Type of items to translate <A HREF=#C_TARGET_PMS>C_TARGET_PMS</A> | <A HREF=#C_TARGET_PTI>C_TARGET_PTI</A>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Returns"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Returns
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+CLOB in format XLIFF to be opened and edited by an XLIFF-Editor<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="APPLY_TRANSLATION"></A>
 <P CLASS="TYPE_TITLE">

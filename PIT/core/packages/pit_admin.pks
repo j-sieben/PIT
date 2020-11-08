@@ -238,6 +238,19 @@ as
     p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob);
     
+  
+  /** Method to get items of a group as a script of API calls to PIT_ADMIN package
+   * %param  p_pmg_name   Message group to filter output
+   * %param  p_target     Type of items to translate C_TARGET_PMS | C_TARGET_PTI | C_TARGET_PAR
+   * %return CLOB instance with the installation script
+   * %usage  Call this method to create a script file that can be used to export all
+   *         items of this particular group directly from SQL.
+   */
+  function get_installation_script(
+    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_target in varchar2)
+    return clob;
+    
 
   /*********** TRANSLATION **************/
   /* Procedure to translate a given message
@@ -262,8 +275,7 @@ as
    * %param  p_target           Type of items to translate C_TARGET_PMS | C_TARGET_PTI
    * %param  p_file_name        Out parameter that provides the file name for the XLIFF file
    * %param  p_xliff            Out parameter that contains the XLIFF file created
-   * %return XML-instance in format XLIFF to be opened and edited by an XLIFF-Editor
-   * %usage  Call this function to create an XLIFF-File that can be used to translate
+   * %usage  Call this procedure to create an XLIFF-File that can be used to translate
    *         all members of a target type group to a target language.
    */
   procedure create_translation_xml(
@@ -272,6 +284,20 @@ as
     p_target in varchar2,
     p_file_name out nocopy pit_util.ora_name_type,
     p_xliff out nocopy xmltype);
+    
+  
+  /** Method to directly create a translation XLIFF file and return it as CLOB
+   * %param  p_target_language  Oracle supported language name to tranlsate the items to
+   * %param  p_pmg_name         Group to filter the items to translate
+   * %param  p_target           Type of items to translate C_TARGET_PMS | C_TARGET_PTI
+   * %return CLOB in format XLIFF to be opened and edited by an XLIFF-Editor
+   * %usage  Use this method to directly create a translation XLIFF file from SQL.
+   */
+  function get_translation_xml(
+    p_target_language in pit_message_language.pml_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_target in varchar2)
+    return clob;
     
 
   /* Procedure to import translated items into the database
