@@ -120,10 +120,12 @@ as
    * %param  p_trace_level  Trace level to allow for selective tracing.
    * %param  p_params       Instance of <code>msg_params</code> with a list of
    *                        key-value pairs representing parameter name and -value.
+   * %param  p_on_error     Flag to indicate whether leave method was called in connection with error handling
    */
   procedure leave(
     p_trace_level in pls_integer,
-    p_params in msg_params);  
+    p_params in msg_params,
+    p_on_error in boolean default false);  
   
   
   /** Sets dbms_application_info.

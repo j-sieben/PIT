@@ -670,6 +670,7 @@ as
     copy_context_to_global;
     
     if l_last_entry > 0 then
+      -- persist last call stack entry in out parameter
       p_call_stack := g_call_stack(l_last_entry);
       p_call_stack.params := p_params;
 
@@ -680,7 +681,9 @@ as
 
       if l_last_entry > 1 then
         l_predecessor := g_call_stack(l_last_entry - 1);
+        -- Resume time measurement
         l_predecessor.resume();
+        -- Restore last context settings
         case
         when p_call_stack.trace_settings is not null
          and l_predecessor.trace_settings is null then
@@ -1023,37 +1026,46 @@ as
 
   procedure leave(
     p_trace_level in pls_integer,
-    p_params in msg_params)
+    p_params in msg_params,
+    p_on_error in boolean default false)
   is
     l_call_stack call_stack_type;
     l_trace_me boolean;
     l_new_trace_settings pit_util.max_sql_char;
     l_module pit_util.ora_name_type;
     l_action pit_util.ora_name_type;
-    l_found_entry pls_integer;
+    l_entry_found pls_integer;
   begin
     l_trace_me := trace_me(p_trace_level);
     
     -- Do minimal tracing if context toggle is active
     if (g_context.allow_toggle or l_trace_me) and g_call_stack.last > 0 then
       $IF dbms_db_version.ver_le_11 $THEN
-      l_found_entry := g_call_stack.last;
+      l_entry_found := g_call_stack.last;
       $ELSE
-      pit_util.get_module_and_action(
-        p_module => l_module,
-        p_action => l_action);
+      if p_on_error then
+        -- it is not secured that the exception handler is at the same method as the method raising the exception.
+        -- Therefore try to find the method handling the error by name and remove any entry up to this entry
+        pit_util.get_module_and_action(
+          p_module => l_module,
+          p_action => l_action);
       
-      l_found_entry := g_call_stack.last + 1; -- Set found to a value higher max to avoid deleting entries if nothing is found
-      for i in reverse 1 .. g_call_stack.last loop
-        if coalesce(lower(l_action), 'FOO') = coalesce(lower(g_call_stack(i).method_name), 'FOO')
-        and coalesce(lower(l_module), 'FOO') = coalesce(lower(g_call_stack(i).module_name), 'FOO') then
-          l_found_entry := i;
-          exit;
-        end if;
-      end loop;
+        l_entry_found := g_call_stack.last + 1; -- Set found to a value higher max to avoid deleting entries if nothing is found
+        for i in reverse 1 .. g_call_stack.last loop
+          if coalesce(lower(l_action), 'FOO') = coalesce(lower(g_call_stack(i).method_name), 'FOO')
+          and coalesce(lower(l_module), 'FOO') = coalesce(lower(g_call_stack(i).module_name), 'FOO') then
+            l_entry_found := i;
+            exit;
+          end if;
+        end loop;
+      else
+        -- Normal tracing is assumed, including that a complete list of ENTER-LEAVE pairs is provided
+        -- Not advisable to look for named methods, as their name might be wrong based on code inlining
+        l_entry_found := g_call_stack.last;
+      end if;
       $END
       
-      for i in reverse l_found_entry .. g_call_stack.last loop
+      for i in reverse l_entry_found .. g_call_stack.last loop
         -- finalize entry in call stack and pass to output modules
         pop_stack(p_params, l_call_stack, l_new_trace_settings);
 
