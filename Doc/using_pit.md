@@ -4,13 +4,16 @@ After having installed `PIT`, it's ready to be used within your code.
 ## Trace method calls
 To start with, you may want to add a call to `pit.enter(p_action, p_module)` at the beginning and to `pit.leave` at the end of a method you want to trace. Doing so enables `PIT` to collect data about your call hierarchy, the time spent and optionally the parameters passed into the method. If you want to completely instrument your code, you may want to add the respective calls to a method template of your favourite IDE.
 
-As a best practice, provide `pit.enter` with the name of your method and your package. This way, `PIT` is able to achieve the highest performance because if you don't pass this information in, `PIT` will try to gather this information from environment or call stack information, based on the database version you're using. This in any case is slower than providing the information yourself. One recommendation to pass the package name in is to create a global package constant `C_PKG constant varchar2(30/128 byte) := $$PLSQL_UNIT;`. After having defined this constant once, you can easily pass it in without having to rewrite the package name over and over again.
+When entering a method, you may optionally set the method name as parameter `p_action` and, seldomly necessary, the package name via parameter `p_module`. This is  unnessessary in most of the cases because `PIT` makes use of the `UTL_CALL_STACK` possibilities starting with Oracle version 12. There are two exceptions of this rule:
 
-Let me state though that the overhead of calling the methods to retrieve package and method name starting with version 12c is minimal and should not harm your overall performance noticably. So with the exception of extreme cases you may find it sufficient to leave this information out and benefit from an even easier use of `PIT`.
+- You are still using version 11 of the database
+- You set your plsql optimization level to 2 or higher and code inlining took place.
 
-Please make sure that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.handle_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. As there is no easy and secure way to maintain the call stack of methods in PL/SQL (other than frequently calling `UTL_CALL_STACK` starting with Oracle 12c, that is), `PIT` maintains the call hierarchy manually by storing `enter` and `leave` calls on an internal stack. If you don't provide a proper call to `leave`, the hierarchy of the calls gets out of sync. Calling `pit.initialize` or `pit.stop` will empty the call stack to adjust those snychronitaion issues.
+The second point requires some explanation. When inlining code, the compiler effectively removes a helper method and puts its code at the point where the helper method was called. For `UTL_CALL_STACK`, the helper method does not exist anymore. Therefore it is impossible to get the original name of the helper method for logging anymore. In this case, it is advisable to pass the helper method name with the `ENTER` method to inform the call stack about that original name.
 
-Starting with version 12c, `PIT` has extended its possibility of handling the call stack by utilizing `UTL_CALL_STACK`under the covers. This makes call stack maintenance more stable and reliable and allows for even less code in the application. Imagine a method `A` that calls method `B` which in turn calls method `C`. In `C`, an error is raised, but it is catched at method `A`. Normally, there would be no way to clear the call stack if not any of the methods `A`, `B` and `C` would offer an exception handler. Methods `C` and `B` would then implement a dummy handler such as 
+Please make sure that before leaving a method a call to `pit.leave` is included. This is especially important for exception handlers (if you don't use `pit.handle_exception`, as described later), before `exit` and `return` clauses and after `case`- or `if` switches. 
+
+If you raise an exception, things are a bit more complicated, especially if the compiler used code inlining. Imagine a method `A` that calls method `B` which in turn calls method `C`. In `C`, an error is raised, but it is catched at method `A`. Normally, there would be no way to clear the call stack if not any of the methods `A`, `B` and `C` would offer an exception handler. Methods `C` and `B` would then implement a dummy handler such as 
 
 ```
 ...
@@ -21,9 +24,9 @@ exception
 end;
 ```
 
-which is rather ugly. Starting with 12c, this is not necessary anymore. Simply throw the error and catch it where you require it and `PIT` will clean the call stack up to the actual method that caught the exception.
+which is rather ugly.
 
-There is one caveat though: If you set your environment to optimize level 2 and above, the compiler may decide to inline methods rather than keeping them as separate methods. In this case, `utl_call_stack` does not give you the right information anymore but the name of the method surrounding the inlined code. To circumvent this, you may add the method name as the first parameter. If a method name is present, it will take precedence over the result of `utl_call_stack`, maintaining a clean calls stack.
+To cater for this, `PIT` tries to find the method name on the call stack and removes any entry from the call stack up to and including the found entry with the same name. Coming back to the problem of code inlining, it may not be possible to detect that name because `UTL_CALL_STACK` can't see it because of code inlining. In this rare case, more call stack entries may be removed from the call stack than expected. At the moment, I can't see how it could be possible to circumvent this. On possible solution might be to pass the method name to the `pit.handle_exception` method, but this is not yet implemented.
 
 ### Passing parameters to trace-methods
 
