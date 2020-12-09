@@ -191,11 +191,13 @@ as
   
   
   procedure log_state(
-    p_params msg_params)
+    p_params msg_params,
+    p_severity in pls_integer default LEVEL_DEBUG)
   as
   begin
     pit_pkg.log_state(
-      p_params => p_params);
+      p_params => p_params,
+      p_severity => p_severity);
   end log_state;
   
     

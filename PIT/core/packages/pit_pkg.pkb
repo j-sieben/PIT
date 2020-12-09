@@ -927,10 +927,11 @@ as
   
   
   procedure log_state(
-    p_params in msg_params)
+    p_params in msg_params,
+    p_severity in pit_message_severity.pse_id%type default null)
   as
   begin
-    if log_me(g_log_state_threshold) then
+    if log_me(coalesce(p_severity, g_log_state_threshold)) then
       raise_event(
         p_event => C_LOG_STATE_EVENT,
         p_params => p_params,

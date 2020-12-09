@@ -62,10 +62,14 @@ as
    *         variable names and their actual value. Useful if you want to log the state of
    *         variables without the context of a method call, fi to debug state within a loop.
    *         Optionally, you may add an ID to reference an item.
-   * %param  p_params       List of replacement values for the message
+   * %param  p_params    List of replacement values for the message
+   * %param [p_severity] Log level of the state message. Values get logged only if the actual
+   *                     log settings are lower (mor severe) or equal to P_SEVERITY.
+   *                     If NULL, parameter LOG_STATE_THRESHOLD controls whether the params get logged or not.
    */
   procedure log_state(
-    p_params in msg_params);
+    p_params in msg_params,
+    p_severity in pit_message_severity.pse_id%type default null);
   
 
   /** Logs messages regardless of log settings

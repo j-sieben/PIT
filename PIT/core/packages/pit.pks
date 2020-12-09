@@ -195,10 +195,15 @@ as
    * %usage  This method is useful if you want to log the state of several variables within a method.
    *         This way, you can report the status of variables without the requirement to create
    *         distinct messages for those. This adds flexibility and reduces administrative workload.
-   * %param  p_params  Instance of MSG_PARAMS, containing the variable names and values to log
+   * %param  p_params    Instance of MSG_PARAMS, containing the variable names and values to log
+   * %param [p_severity] Log level of the state message. Values get logged only if the actual
+   *                     log settings are lower (mor severe) or equal to P_SEVERITY. 
+   *                     If NULL, parameter LOG_STATE_THRESHOLD controls whether the params get logged or not
    */
   procedure log_state(
-    p_params msg_params);
+    p_params msg_params,
+    p_severity in pls_integer default null
+    );
     
     
   /** Exception handler that handles an error and calls leave
