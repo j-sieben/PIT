@@ -2111,7 +2111,8 @@ CORE<br>
 log_state
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure log_state(p_params in msg_params)
+Procedure log_state(p_params   in msg_params,
+                    p_severity in pit_message_severity.pse_id%type default null)
 
 </PRE>
 <HR>
@@ -2147,7 +2148,9 @@ Procedure enter(p_action      in pit_util.ora_name_type,
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure leave(p_trace_level in pls_integer, p_params in msg_params)
+Procedure leave(p_trace_level in pls_integer,
+                p_params      in msg_params,
+                p_on_error    in boolean default false)
 
 </PRE>
 <HR>

@@ -507,7 +507,8 @@ Additional error code, used in external applications<br>
 log_state
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure log_state(p_params in msg_params)
+Procedure log_state(p_params   in msg_params,
+                    p_severity in pit_message_severity.pse_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -537,6 +538,13 @@ Parameters
 p_params&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 List of replacement values for the message<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_severity]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Log level of the state message. Values get logged only if the actual log settings are lower (mor severe) or equal to P_SEVERITY. If NULL, parameter LOG_STATE_THRESHOLD controls whether the params get logged or not.<br>
 
 </TD></TR>
 </TABLE>
@@ -699,7 +707,9 @@ Optional info to be passed to <code>DBMS_APPLICATION_INFO</code>, applicable for
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure leave(p_trace_level in pls_integer, p_params in msg_params)
+Procedure leave(p_trace_level in pls_integer,
+                p_params      in msg_params,
+                p_on_error    in boolean default false)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -736,6 +746,13 @@ Trace level to allow for selective tracing.<br>
 p_params&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Instance of <code>msg_params</code> with a list of key-value pairs representing parameter name and -value.<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_on_error&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether leave method was called in connection with error handling<br>
 
 </TD></TR>
 </TABLE>

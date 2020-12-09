@@ -623,7 +623,8 @@ LOGGING AND DEBUGGING<br>
 log_state
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure log_state(p_params msg_params)
+Procedure log_state(p_params   msg_params,
+                    p_severity in pls_integer default <A HREF=#LEVEL_DEBUG>LEVEL_DEBUG</A>)
 
 </PRE>
 <HR>

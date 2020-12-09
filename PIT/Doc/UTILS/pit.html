@@ -1209,7 +1209,8 @@ Optional list of module names, separated by semicolon that is used to log the me
 log_state
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure log_state(p_params msg_params)
+Procedure log_state(p_params   msg_params,
+                    p_severity in pls_integer default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1239,6 +1240,13 @@ Parameters
 p_params&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Instance of MSG_PARAMS, containing the variable names and values to <A HREF=#LOG>log</A>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_severity]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+<A HREF=#LOG>Log</A> level of the state message. Values get logged only if the actual <A HREF=#LOG>log</A> settings are lower (mor severe) or equal to P_SEVERITY. If NULL, parameter LOG_STATE_THRESHOLD controls whether the params get logged or not<br>
 
 </TD></TR>
 </TABLE>
