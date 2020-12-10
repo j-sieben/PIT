@@ -1,7 +1,7 @@
 create or replace package mail_cram
   authid definer
 as
-  /** Package to allow to authenticate to a NTLM SMTP server
+  /** Package to allow to authenticate to a CRAM SMTP server
       Disclaimer
         Based on a blog by Sean Stuber:
         http://www.experts-exchange.com/Database/Oracle/A_5915-Extending-Oracle%27s-Email-functionality-with-PL-SQL-Authentication.html

@@ -1,8 +1,7 @@
 create or replace  package param
   authid current_user
 as
-  /** Package to read and write parameter values
-   */
+  /** Package to read and write parameter values */
    
   /** Sets more than one parameter value
    * %param  p_par_id         Name of the parameter

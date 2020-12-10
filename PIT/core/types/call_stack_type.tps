@@ -1,6 +1,8 @@
 create or replace type call_stack_type
   authid definer
 is object (
+  /** Core call stack type. Collects information regarding entering or leaving a method */
+  
   -- Attributes
   id integer,
   user_name &ORA_NAME_TYPE.,
@@ -25,12 +27,16 @@ is object (
   trace_level integer,
   trace_timing char(1),
   trace_settings varchar2(4000 byte),
+  /** Method to pause the clock for the actual method */
   member procedure pause(
     self in out nocopy call_stack_type),
+  /** Method resumes measuring time for the actual method */
   member procedure resume(
     self in out nocopy call_stack_type),
+  /** Method to collect timing information upon leaving the method */
   member procedure leave(
     self in out nocopy call_stack_type),
+  /** constructor function */
   constructor function call_stack_type(
     self in out nocopy call_stack_type,
     p_session_id in varchar2,

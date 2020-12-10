@@ -1,5 +1,8 @@
 create or replace type body pit_context
 as
+  /** Implementation of PIT_CONTEXT */
+  
+  /** Method casts the settings as a string */
   member function to_string
     return varchar2
   as

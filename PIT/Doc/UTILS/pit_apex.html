@@ -5,7 +5,7 @@
  <TITLE>Type pit_apex</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_apex">
- <META name="description" content="">
+ <META name="description" content="Output module for an APEX environment">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_apex</P>
+Output module for an APEX environment<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,32 +27,32 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method incorporates any log information into the APEX debug stack
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT">print</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes the message to the http stream.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method for light weigt information to the APEX application using WebSocket protocol.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method includes call stack information into the debug stack from APEX
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+APEX does not trace exiting methods.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_APEX">pit_apex</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor method.
 </TD></TR>
 </TABLE>
 <BR>
@@ -61,45 +62,72 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_APEX>pit_apex</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method incorporates any log information into the APEX debug stack<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PRINT"></A>
 <P CLASS="TYPE_TITLE">
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure print(self in out nocopy <A HREF=#PIT_APEX>pit_apex</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes the message to the http stream. This will incorporate the message text into the response<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="NOTIFY"></A>
 <P CLASS="TYPE_TITLE">
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure notify(self in out nocopy <A HREF=#PIT_APEX>pit_apex</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method for light weigt information to the APEX application using WebSocket protocol. Not implemented yet<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="ENTER"></A>
 <P CLASS="TYPE_TITLE">
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy <A HREF=#PIT_APEX>pit_apex</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method includes call stack information into the debug stack from APEX<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy <A HREF=#PIT_APEX>pit_apex</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+APEX does not trace exiting methods. This method nevertheless creates an entry in the debug stack to support showing out parameters with calculated values<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PIT_APEX"></A>
 <P CLASS="TYPE_TITLE">
@@ -109,6 +137,11 @@ pit_apex
 Function pit_apex(self in out nocopy pit_apex) return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor method. Detects whether an APEX environment is present. If not, it renders the module unusable<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

@@ -1,5 +1,8 @@
 create or replace type body pit_default_adapter
 as
+  /** Implements the adapter functionality for the APEX environment */
+  
+  /** Retrieves APEX session id and logged on user, detects whether APEX is in debug mode or not */
   member procedure get_session_details(
     self in out nocopy pit_default_adapter,
     p_user_name out nocopy varchar2,
@@ -16,6 +19,7 @@ as
     end if;
   end get_session_details;
 
+  /** Costructor method */
   constructor function pit_default_adapter(
     self in out nocopy pit_default_adapter)
     return self as result

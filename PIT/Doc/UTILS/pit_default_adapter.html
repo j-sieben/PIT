@@ -5,7 +5,7 @@
  <TITLE>Type pit_default_adapter</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_default_adapter">
- <META name="description" content="">
+ <META name="description" content="Adapter code to be injected into the PIT installation.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_default_adapter</P>
+Adapter code to be injected into the PIT installation. Detects session id and username<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -43,12 +44,12 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_SESSION_DETAILS">get_session_details</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to retrieve the session details
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_DEFAULT_ADAPTER">pit_default_adapter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor method.
 </TD></TR>
 </TABLE>
 <BR>
@@ -74,12 +75,57 @@ status char(1 byte)
 get_session_details
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_apex_adapter.html#GET_SESSION_DETAILS">get_session_details</A>(self               in out nocopy <A HREF=#PIT_DEFAULT_ADAPTER>pit_default_adapter</A>,
+Procedure get_session_details(self               in out nocopy <A HREF=#PIT_DEFAULT_ADAPTER>pit_default_adapter</A>,
                               p_user_name        out nocopy varchar2,
                               p_session_id       out nocopy varchar2,
                               p_required_context out nocopy varchar2)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to retrieve the session details<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method retrieves session related information. This adapter is used as a fallback solution if no other adapter is provided. It defaults to CLIENT_IDENTIFIER, SID and no required context<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_user_name&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+OUT parameter containing the user name&nbsp; (CLIENT_IDENTIFIER)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_session_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+OUT parameter containing the session id (SID)<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_required_context&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+OUT parameter indicating whether PIT should change context. Not used here<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="PIT_DEFAULT_ADAPTER"></A>
 <P CLASS="TYPE_TITLE">
@@ -90,6 +136,11 @@ Function pit_default_adapter(self in out nocopy pit_default_adapter)
   return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor method. Sets <A HREF=#ENVIRONMENT>ENVIRONMENT</A> to DEFAULT and <A HREF=#STATUS>STATUS</A> to TRUE<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

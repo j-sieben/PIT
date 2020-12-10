@@ -21,13 +21,13 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to wrap sending mails via UTL_SMTP</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/mail_cram.html">mail_cram</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to allow to authenticate to a NTLM SMTP server Disclaimer</TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to allow to authenticate to a CRAM SMTP server Disclaimer</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/mail_ntlm.html">mail_ntlm</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to allow to authenticate to a NTLM SMTP server Disclaimer</TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/msg.html">msg</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Generated package to provide message constants and exceptions</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/param.html">param</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to read and write parameter values</TD></TR>
@@ -36,7 +36,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to maintain settings for parameter groups</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit.html">pit</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (www.github.com/j-sieben/PIT) Descriptioon: PIT-API package.</TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>PIT-API package.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_admin.html">pit_admin</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to administer PIT.</TD></TR>
@@ -54,7 +54,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implementation package for type PIT_MAIL</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_pkg.html">pit_pkg</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Declares the core PIT logic.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_table_pkg.html">pit_table_pkg</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implementation package for type PIT_TABLE</TD></TR>
@@ -63,7 +63,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implementation package for type PIT_UT This output module is used for unit tests only and writes messages to the UT_PIT package.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_util.html">pit_util</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Generic utitilies for PIT</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/utl_context.html">utl_context</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -82,22 +82,22 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package implementation to wrap sending mails via UTL_SMTP</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/mail_cram.body.html">mail_cram</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package implements CRAM-Authentication</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/mail_ntlm.body.html">mail_ntlm</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package implementation to allow to authenticate to a NTLM SMTP server Disclaimer</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/param.body.html">param</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to read and write parameter values</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/param_admin.body.html">param_admin</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to maintain settings for parameter groups</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit.body.html">pit</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (www.github.com/j-sieben/PIT) Descriptioon: PIT-API package body.</TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>PIT-API package.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_admin.body.html">pit_admin</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Package to administer PIT.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_apex_pkg.body.html">pit_apex_pkg</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -109,10 +109,10 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_mail_pkg.body.html">pit_mail_pkg</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implementation package for type PIT_MAIL</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_pkg.body.html">pit_pkg</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Project:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIT (www.github.com/j-sieben/PIT) Descriptioon: Package body to implement the core PIT logic.</TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implements the core PIT logic.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_table_pkg.body.html">pit_table_pkg</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -121,7 +121,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_util.body.html">pit_util</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Generic utitilies for PIT</TD></TR>
 
 </TABLE>
 
@@ -137,7 +137,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/call_stack_type.html">call_stack_type</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Attributes</TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Core call stack type.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/char_table.html">char_table</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -146,52 +146,52 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/message_type.html">message_type</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Core message type.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/msg_args.html">msg_args</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Basic array of MESSAGE_TYPE parameters</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/msg_args_char.html">msg_args_char</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>CHAR based version of MSG_ARGS.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/msg_param.html">msg_param</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Type to be used as a key value pair to pass parameter or variable values along with their value</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/msg_params.html">msg_params</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>List type for MSG_PARAM</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_apex.html">pit_apex</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Output module for an APEX environment</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_apex_adapter.html">pit_apex_adapter</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_console.html">pit_console</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Output module to write to the console</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_context.html">pit_context</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Object to collect context settings</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_default_adapter.html">pit_default_adapter</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Adapter code to be injected into the PIT installation.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_file.html">pit_file</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Output module to write information to a trace file</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_mail.html">pit_mail</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_message_table.html">pit_message_table</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>List type of MESSAGE_TYPE, used to collect messages on a stack</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_module.html">pit_module</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Abstract output module for PIT.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_module_list.html">pit_module_list</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>List type of PIT_MODULE_META</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_module_meta.html">pit_module_meta</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Type provides meta information for output modules to be used in a pipelined function</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_table.html">pit_table</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -213,7 +213,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/message_type.body.html">message_type</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implements the MESSAGE_TYPE functionality</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_apex.body.html">pit_apex</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -225,10 +225,10 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_context.body.html">pit_context</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implementation of PIT_CONTEXT</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_default_adapter.body.html">pit_default_adapter</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implements the adapter functionality for the APEX environment</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_file.body.html">pit_file</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
@@ -237,7 +237,7 @@
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_module.body.html">pit_module</A>
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>Implementation of abstract output module.</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="UTILS/pit_table.body.html">pit_table</A>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%></TD></TR>

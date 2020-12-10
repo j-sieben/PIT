@@ -10,7 +10,7 @@ prompt &h2.Install module PIT_TABLE
 prompt &s1.Create tables
 @&tools.check_has_table pit_table_log
 @&tools.check_has_table pit_table_call_stack
-@&tools.check_has_table pit_table_call_params
+@&tools.check_has_table pit_table_params
 
 prompt &s1.Create types and packages
 @&tools.install_type_spec pit_table

@@ -1,10 +1,7 @@
 create or replace package body pit
 as
 
-  /** Project:      PIT (www.github.com/j-sieben/PIT)
-   *  Descriptioon: PIT-API package body. Implements all functionality that is required to use PIT.
-   *  @headcom
-   */
+  /** PIT-API package. Implements the API that is required to use PIT. */
    
    
   /*************************** PACKAGE VARIABLES ********************************/
@@ -192,7 +189,7 @@ as
   
   procedure log_state(
     p_params msg_params,
-    p_severity in pls_integer default LEVEL_DEBUG)
+    p_severity in pls_integer default null)
   as
   begin
     pit_pkg.log_state(

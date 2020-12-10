@@ -10,6 +10,14 @@ as
    */
   procedure log(
     p_message in message_type);
+    
+  
+  /** Method to write log state information to table PIT_TABLE_PARAMS
+   * %param  p_log_state  LOG_STATE_TYPE with ID, severity and an instance of MSG_PARAMS
+   * %usage  Is used to log a state of an arbitrary amount of key-value-pairs to a table.
+   */
+  procedure log(
+    p_log_state log_state_type);
   
   
   /** Method to purge log information from tables PIT_TABLE_LOG, PIT_TABLE_CALL_STACK and PIT_TABLE_PARAMS

@@ -1,0 +1,17 @@
+create table pit_table_params (
+  ptp_id number,
+  ptp_pse_id number,
+  ptp_log_date timestamp,
+  ptp_param_name &ORA_NAME_TYPE.,
+  ptp_param_value varchar2(4000 byte), 
+	constraint pk_pit_table_params primary key (ptp_id, ptp_param_name) enable,
+  constraint fk_ptp_pse_id foreign key (ptp_pse_id)
+    references pit_message_severity(pse_id)
+);
+
+comment on table pit_table_params is 'table for trace and time information';
+comment on column pit_table_params.ptp_id is 'Primary key, together with PTP_PARAM_NAME';
+comment on column pit_table_params.ptp_pse_id is 'Severity of the entry, either TRACE- or DEBUG_LEVEL';
+comment on column pit_table_params.ptp_log_date is 'Date of the row creation';
+comment on column pit_table_params.ptp_param_name is 'Name of the parameter, Primary key, together with PTP_ID';
+comment on column pit_table_params.ptp_param_value is 'Parameter value, limited to 4000 byte';

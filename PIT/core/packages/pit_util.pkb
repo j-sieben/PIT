@@ -1,6 +1,8 @@
 create or replace package body pit_util
 as
 
+  /** Generic utitilies for PIT */
+
   /**** CONSTANTS ****/
   C_PKG constant ora_name_type := $$PLSQL_UNIT;
   C_NAME_TOO_LONG constant varchar2(200) := 'Toggle name is too long. Please use a maximum of #MAX_LENGTH# byte';

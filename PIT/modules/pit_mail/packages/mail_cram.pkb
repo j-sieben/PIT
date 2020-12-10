@@ -1,6 +1,8 @@
 create or replace package body mail_cram
 as
 
+  /** Package implements CRAM-Authentication */
+
   /** Method to create an authorization string
    * %param  p_user         User name
    * %param  p_password     Password of the user

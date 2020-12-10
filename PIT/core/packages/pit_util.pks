@@ -2,6 +2,8 @@ create or replace package pit_util
   authid definer
 as
 
+  /** Generic utitilies for PIT */
+
   /** TYPE DECLARATIONS */
   c_max_length constant binary_integer := &ORA_MAX_LENGTH.;
   subtype ora_name_type is &ORA_NAME_TYPE.;

@@ -1,6 +1,7 @@
 create or replace package pit_admin
 authid definer
 as 
+
   /**
     Package to administer PIT. Provides methods to create or maintain messages.
   */

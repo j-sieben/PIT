@@ -5,7 +5,7 @@
  <TITLE>Type body pit_default_adapter</TITLE>
  <META name="object" content="TYPE BODY">
  <META name="name" content="pit_default_adapter">
- <META name="description" content="">
+ <META name="description" content="Implements the adapter functionality for the APEX environment">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type body pit_default_adapter</P>
+Implements the adapter functionality for the APEX environment<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,12 +27,12 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_SESSION_DETAILS">get_session_details</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Retrieves APEX session id and logged on user, detects whether APEX is in debug mode or not
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_DEFAULT_ADAPTER">pit_default_adapter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Costructor method
 </TD></TR>
 </TABLE>
 <BR>
@@ -41,22 +42,32 @@ Program units
 get_session_details
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_apex_adapter.html#GET_SESSION_DETAILS">get_session_details</A>(self               in out nocopy <A HREF=#PIT_DEFAULT_ADAPTER>pit_default_adapter</A>,
+Procedure get_session_details(self               in out nocopy <A HREF=#PIT_DEFAULT_ADAPTER>pit_default_adapter</A>,
                               p_user_name        out nocopy varchar2,
                               p_session_id       out nocopy varchar2,
                               p_required_context out nocopy varchar2)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Retrieves APEX session id and logged on user, detects whether APEX is in debug mode or not<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PIT_DEFAULT_ADAPTER"></A>
 <P CLASS="TYPE_TITLE">
 pit_default_adapter
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_default_adapter.html#PIT_DEFAULT_ADAPTER">pit_default_adapter</A>(self in out nocopy <A HREF="pit_default_adapter.html#PIT_DEFAULT_ADAPTER">pit_default_adapter</A>)
+Function pit_default_adapter(self in out nocopy pit_default_adapter)
   return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Costructor method<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

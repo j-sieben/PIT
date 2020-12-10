@@ -29,6 +29,11 @@ Program units
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PURGE">purge</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_MAIL">pit_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
@@ -41,7 +46,18 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_MAIL>pit_mail</A>, p_message in message_type)
+
+</PRE>
+<HR>
+<A NAME="PURGE"></A>
+<P CLASS="TYPE_TITLE">
+purge
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure purge(self                     in out nocopy <A HREF=#PIT_MAIL>pit_mail</A>,
+                p_purge_date             in date,
+                p_severity_greater_equal in integer default null)
 
 </PRE>
 <HR>
@@ -50,7 +66,7 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html
 pit_mail
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_mail.html#PIT_MAIL">pit_mail</A>(self in out nocopy <A HREF="pit_mail.html#PIT_MAIL">pit_mail</A>) return self as result
+Function pit_mail(self in out nocopy pit_mail) return self as result
 
 </PRE>
 <P>&nbsp;</P>

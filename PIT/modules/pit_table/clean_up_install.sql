@@ -5,7 +5,7 @@ declare
      where object_name in (
            'PIT_TABLE', -- Typen
            'PIT_TABLE_PKG', -- Packages
-           'PIT_TABLE_LOG', 'PIT_TABLE_CALL_STACK', 'PIT_TABLE_CALL_PARAMS', -- Tabellen
+           'PIT_TABLE_LOG', 'PIT_TABLE_CALL_STACK', 'PIT_TABLE_PARAMS', -- Tabellen
            '' -- Sequenzen
            )
        and object_type not like '%BODY'

@@ -1,6 +1,8 @@
 create or replace package body param
 as
 
+  /** Package to read and write parameter values */
+
   c_true constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
   c_false constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
   c_max_char_length constant number := 32767;

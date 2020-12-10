@@ -1,14 +1,10 @@
 create or replace package pit_pkg
   authid definer
-  -- accessible by (package PIT)
 as
-  /** Project:      PIT (www.github.com/j-sieben/PIT)
-   *  Descriptioon: Package to implement the core PIT logic. 
-   *                This package is called by PIT as the API for PIT_PKG only.
-   *  @headcom
-   */    
+
+  /** Declares the core PIT logic. This package is called by PIT as the API for PIT_PKG only. */    
   
-  /** CONSTANTS */
+  /* CONSTANTS */
   C_LEVEL_OFF constant pls_integer := 10;
   C_LEVEL_FATAL constant pls_integer := 20;
   C_LEVEL_ERROR constant pls_integer := 30;

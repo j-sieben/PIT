@@ -1,10 +1,8 @@
 create or replace package pit
   authid current_user 
 as
-  /** Project:      PIT (www.github.com/j-sieben/PIT)
-   *  Descriptioon: PIT-API package. Implements all functionality that is required to use PIT.
-   *  @headcom
-   */
+
+  /** PIT-API package. Declares the API that is required to use PIT. */
    
   /* PACKAGE VARIABLE GETTER */
   /** Constant level_off

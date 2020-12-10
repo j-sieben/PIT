@@ -1,5 +1,8 @@
 create or replace type body pit_module 
 as
+  /** Implementation of abstract output module. Implements stubs for all methods only */
+  
+  
   member procedure context_changed(
     self in out nocopy pit_module,
     p_ctx in pit_context)
@@ -18,7 +21,7 @@ as
   
   member procedure log (
     self in out nocopy pit_module,
-    p_params in msg_params)
+    p_log_state in log_state_type)
   as
   begin
     null;

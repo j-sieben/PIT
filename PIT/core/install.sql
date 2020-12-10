@@ -44,6 +44,7 @@ prompt &h2.Create type declarations
 @&tools.install_type_spec message_type
 @&tools.install_type_spec pit_message_table
 @&tools.install_type_spec call_stack_type
+@&tools.install_type_spec log_state_type
 @&tools.install_type_spec pit_default_adapter
 @&tools.install_type_spec pit_context
 @&tools.install_type_spec pit_module
@@ -83,6 +84,7 @@ prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
 prompt &h2.Create type bodies
 @&tools.install_type_body message_type
 @&tools.install_type_body call_stack_type
+@&tools.install_type_body log_state_type
 @&tools.install_type_body pit_default_adapter
 @&tools.install_type_body pit_module
 

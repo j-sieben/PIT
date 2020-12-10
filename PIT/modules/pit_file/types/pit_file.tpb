@@ -1,5 +1,8 @@
 create or replace type body pit_file
 as
+  /** Implementation of output module PIT_FILE */
+  
+  
   overriding member procedure log(
     self in out nocopy pit_file,
     p_message in message_type)

@@ -1,5 +1,8 @@
 create or replace type body call_stack_type
 as
+  /** Implements the call stack type functionality */
+
+  /** Method to pause the measurement of timing information */
   member procedure pause(
     self in out nocopy call_stack_type)
   as
@@ -16,6 +19,7 @@ as
     end if;
   end pause;
 
+  /** Method to resume the measurement of timing information */
   member procedure resume(
     self in out nocopy call_stack_type)
   as
@@ -26,6 +30,7 @@ as
     end if;
   end resume;
 
+  /** Method to collect timing information upon leaving a method */
   member procedure leave(
     self in out nocopy call_stack_type)
   as
@@ -47,6 +52,7 @@ as
     end if;
   end leave;
 
+  /** constructor function */
   constructor function call_stack_type(
     self in out nocopy call_stack_type,
     p_session_id in varchar2,

@@ -6,6 +6,10 @@ create or replace type pit_apex_adapter under pit_default_adapter(
    * %param  p_required_context  If APEX is set to debug, this parameter will contain the name of a context
    *                             as given by PIT_APEX_PKG.GET_APEX_TRIGGERED_CONTEXT.
    *                             This way, PIT will switch on logging for the actual session if APEX mandates for it
+   * %usage  This method detects the APEX session id, logged on user and debug status.
+   *         If no APEX environment is preset, this method is in unusable state and PIT falls back to the default adapter.
+   *         If APEX is in debug mode, PIT will switch on debuggin as well. The settings can be controlled by setting
+   *         the respective PIT_APEX_TRG... parameters.
    */
   overriding member procedure get_session_details(
     p_user_name out varchar2,

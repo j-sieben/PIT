@@ -56,7 +56,7 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_FILE>pit_file</A>, p_message in message_type)
 
 </PRE>
 <HR>
@@ -65,7 +65,8 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html
 purge
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_purge_date             in date,
+Procedure purge(self                     in out nocopy <A HREF=#PIT_FILE>pit_file</A>,
+                p_purge_date             in date,
                 p_severity_greater_equal in integer default null)
 
 </PRE>
@@ -75,7 +76,8 @@ Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_purge_date             i
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy <A HREF=#PIT_FILE>pit_file</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -84,7 +86,8 @@ Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in <A HREF="call_stack
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy <A HREF=#PIT_FILE>pit_file</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -93,7 +96,7 @@ Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in <A HREF="call_stack
 pit_file
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_file.html#PIT_FILE">pit_file</A>(self in out nocopy <A HREF="pit_file.html#PIT_FILE">pit_file</A>) return self as result
+Function pit_file(self in out nocopy pit_file) return self as result
 
 </PRE>
 <P>&nbsp;</P>

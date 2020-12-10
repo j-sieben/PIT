@@ -1,6 +1,8 @@
 create or replace
 package body pit_mail_pkg
 as
+
+  /** Implementation package for type PIT_MAIL */
   
   g_sender pit_util.max_char;
   g_recipient pit_util.max_char;

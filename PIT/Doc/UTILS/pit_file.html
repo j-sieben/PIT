@@ -5,7 +5,7 @@
  <TITLE>Type pit_file</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_file">
- <META name="description" content="">
+ <META name="description" content="Output module to write information to a trace file">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_file</P>
+Output module to write information to a trace file<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,27 +27,27 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes logging or debugging information to the file
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PURGE">purge</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method purges a trace file.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes entering a method to the file, including input parameters
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes leaving a method to the file, including output parameters
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_FILE">pit_file</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor method.
 </TD></TR>
 </TABLE>
 <BR>
@@ -56,37 +57,60 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_FILE>pit_file</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes logging or debugging information to the file<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PURGE"></A>
 <P CLASS="TYPE_TITLE">
 purge
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_purge_date             in date,
+Procedure purge(self                     in out nocopy <A HREF=#PIT_FILE>pit_file</A>,
+                p_purge_date             in date,
                 p_severity_greater_equal in integer default null)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method purges a trace file. It will purge the file completely, no filters are applied<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="ENTER"></A>
 <P CLASS="TYPE_TITLE">
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy <A HREF=#PIT_FILE>pit_file</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes entering a method to the file, including input parameters<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy <A HREF=#PIT_FILE>pit_file</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes leaving a method to the file, including output parameters<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PIT_FILE"></A>
 <P CLASS="TYPE_TITLE">
@@ -96,6 +120,11 @@ pit_file
 Function pit_file(self in out nocopy pit_file) return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor method. If the directory is not accessible, it will render the module unusable<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

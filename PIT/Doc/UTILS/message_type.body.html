@@ -5,7 +5,7 @@
  <TITLE>Type body message_type</TITLE>
  <META name="object" content="TYPE BODY">
  <META name="name" content="message_type">
- <META name="description" content="">
+ <META name="description" content="Implements the MESSAGE_TYPE functionality">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type body message_type</P>
+Implements the MESSAGE_TYPE functionality<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,7 +27,7 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MESSAGE_TYPE">message_type</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Contructor method.
 </TD></TR>
 </TABLE>
 <BR>
@@ -36,16 +37,21 @@ Program units
 message_type
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>(self               in out nocopy <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>,
+Function message_type(self               in out nocopy message_type,
                       p_message_name     in varchar2,
                       p_message_language in varchar2,
                       p_affected_id      in varchar2,
                       p_error_code       in varchar2,
                       p_session_id       in varchar2,
                       p_user_name        in varchar2,
-                      p_arg_list         <A HREF="msg_args.html">msg_args</A>) return self as result
+                      p_arg_list         msg_args) return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Contructor method. Auto detects the required language<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

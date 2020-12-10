@@ -9,7 +9,7 @@ prompt &h2.Delete existing types and packages
 @&install_dir.clean_up_install.sql
 
 prompt &h2.Grant user rights to &INSTALL_USER.
-@&tools.run_scripts user_grants
+@&tools.run_script user_grants
 
 prompt &h2.Create queue table for PIT_MAIL
 @&tools.check_has_table pit_mail_queue

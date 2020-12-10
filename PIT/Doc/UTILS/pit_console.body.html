@@ -66,7 +66,7 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_params in <A HREF="msg_params.html">msg_params</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_params in msg_params)
 
 </PRE>
 <HR>
@@ -75,7 +75,7 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_params in <A HREF="msg_params.html">m
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure print(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_message in message_type)
 
 </PRE>
 <HR>
@@ -84,7 +84,7 @@ Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure notify(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_message in message_type)
 
 </PRE>
 <HR>
@@ -93,7 +93,8 @@ Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_typ
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>,
+                p_call_stack call_stack_type)
 
 </PRE>
 <HR>
@@ -102,7 +103,8 @@ Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack <A HREF="call_stack_ty
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>,
+                p_call_stack call_stack_type)
 
 </PRE>
 <HR>
@@ -111,7 +113,8 @@ Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack <A HREF="call_stack_ty
 context_changed
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>(p_ctx in <A HREF="pit_context.html">pit_context</A>)
+Procedure context_changed(self  in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>,
+                          p_ctx in pit_context)
 
 </PRE>
 <HR>
@@ -120,7 +123,7 @@ Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>(p_c
 pit_console
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_console.html#PIT_CONSOLE">pit_console</A>(self in out nocopy <A HREF="pit_console.html#PIT_CONSOLE">pit_console</A>) return self as result
+Function pit_console(self in out nocopy pit_console) return self as result
 
 </PRE>
 <P>&nbsp;</P>

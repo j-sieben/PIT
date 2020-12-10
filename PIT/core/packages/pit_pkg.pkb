@@ -1,10 +1,7 @@
 create or replace package body pit_pkg
 as
-  /** Project:      PIT (www.github.com/j-sieben/PIT)
-   *  Descriptioon: Package body to implement the core PIT logic. 
-   *                This package is called by PIT as the API for PIT_PKG only.
-   *  @headcom
-   */
+
+  /** Implements the core PIT logic. This package is called by PIT as the API for PIT_PKG only. */    
    
   /************************* TYPE DECLARATIONS ********************************/
   
@@ -94,9 +91,9 @@ as
   /************************* FORWARD DECLARATION ******************************/
   procedure raise_event(
     p_event in pls_integer,
-    p_event_focus in varchar2,
+    p_message in message_type default null,
     p_call_stack in call_stack_type default null,
-    p_params in msg_params default null,
+    p_log_state in log_state_type default null,
     p_context in pit_util.context_type default null,
     p_date_before in date default null,
     p_severity_lower_equal in pls_integer default null);
@@ -258,24 +255,16 @@ as
     p_context_name in varchar2 default null)
   as
     l_args args;
-    l_required_context pit_util.ora_name_type;
     l_actual_context pit_util.context_type;
   begin
-  
-    -- start by reading the actual session details 
-    g_active_adapter.get_session_details(
-      p_user_name => g_user_name, 
-      p_session_id => g_client_id, 
-      p_required_context => l_required_context);
-    
     -- load settings from global context
     -- If session adapter mandates for a context, this has precedence over local settings
-    g_context := read_best_matching_context(args(l_required_context, p_context_name));
-    l_actual_context := read_best_matching_context;
-      
+    g_context := read_best_matching_context(args(p_context_name));        
     g_active_modules := get_modules_by_name(g_context.module_list);
+    
+    l_actual_context := read_best_matching_context;
     g_context.ctx_changed := g_context.settings != l_actual_context.settings;
-  
+      
   end copy_context_to_global;
   
   
@@ -283,7 +272,7 @@ as
    * %usage  Is called from <code>pit.SET_CONTEXT</code> to actually persist
    *         the required settings in the global context and raise a context switch event
    * %param  p_context   New context settings, instance of pit_util.context_type
-   * %usage  This method examins whether a context change has happened by comparing 
+   * %usage  This method examines whether a context change has happened by comparing 
    *         the context settings with the latest stored settings from G_CONTEXT.
    *         If a change has occurred, it stores the new values
    *         - at the globally accessed context to propagate the settings to other sessions
@@ -293,7 +282,6 @@ as
   procedure set_context_if_changed(
     p_context in pit_util.context_type)
   as
-    l_raise_focus pit_util.ora_name_type;
   begin
     
     -- If it has not been decided whether the new settings differ from actual settings, do so here
@@ -312,15 +300,8 @@ as
       g_active_modules := get_modules_by_name(p_context.module_list);
       
       -- Raise event
-      case 
-        when g_context.broadcast_context_switch then
-          l_raise_focus := C_EVENT_FOCUS_ALL;
-        else 
-          l_raise_focus := C_EVENT_FOCUS_ACTIVE;
-      end case;
       raise_event(
-        p_event => C_CONTEXT_EVENT, 
-        p_event_focus => l_raise_focus, 
+        p_event => C_CONTEXT_EVENT,  
         p_context => p_context);
     end if;
     
@@ -744,17 +725,15 @@ as
   /** Central method to distribute any message to all actively parameterized output modules
    * %usage  Called internally as a generic helper to throw messages to output modules
    * %param  p_event Integer indicating the type of "event" (i.e. LOG|PRINT|ENTER etc.) thrown by PIT
-   * %param  p_event_focus Flag to indicate whether the message is to be broadcasted to all
-   *         available modules or only to active ones.
    * %param  p_call_stack Instance of the actual call stack in the event of ENTER|LEAVE
    * %param  p_date_before Date indicating the point in time, up to when the log is to be purged
    * %param  p_message Instance of the message to raise
    */
   procedure raise_event(
     p_event in pls_integer,
-    p_event_focus in varchar2,
+    p_message in message_type default null,
     p_call_stack in call_stack_type default null,
-    p_params in msg_params default null,
+    p_log_state in log_state_type default null,
     p_context in pit_util.context_type default null,
     p_date_before in date default null,
     p_severity_lower_equal in pls_integer default null)
@@ -765,13 +744,14 @@ as
     l_modules module_list_type;
     l_trace_timing pit_util.flag_type;
   begin
-
-    if p_event_focus = C_EVENT_FOCUS_ALL then
+  
+    -- Adjust list of output modules
+    if p_event = C_CONTEXT_EVENT and g_context.broadcast_context_switch then
       l_modules := g_available_modules;
-    else
+    else 
       l_modules := g_active_modules;
     end if;
-
+    
     -- propagate event to output modules
     l_idx := l_modules.first;
     while l_idx is not null loop
@@ -781,19 +761,19 @@ as
           l_context := pit_context(p_context.log_level, p_context.trace_level, l_trace_timing, p_context.module_list);
           l_modules(l_idx).context_changed(l_context);
         when C_LOG_EVENT then
-          l_modules(l_idx).log(g_active_message);
+          l_modules(l_idx).log(p_message);
         when C_PURGE_EVENT then
           l_modules(l_idx).purge(p_date_before, p_severity_lower_equal);
         when C_PRINT_EVENT then
-          l_modules(l_idx).print(g_active_message);
+          l_modules(l_idx).print(p_message);
         when C_NOTIFY_EVENT then
-          l_modules(l_idx).notify(g_active_message);
+          l_modules(l_idx).notify(p_message);
         when C_ENTER_EVENT then
           l_modules(l_idx).enter(p_call_stack);
         when C_LEAVE_EVENT then
           l_modules(l_idx).leave(p_call_stack);
         when C_LOG_STATE_EVENT then
-          l_modules(l_idx).log(p_params);
+          l_modules(l_idx).log(p_log_state);
         else
           null;
       end case;
@@ -920,7 +900,7 @@ as
       else
         raise_event(
           p_event => C_LOG_EVENT,
-          p_event_focus => C_EVENT_FOCUS_ACTIVE);
+          p_message => g_active_message);
       end if;
     end if;
   end log_event;
@@ -934,8 +914,7 @@ as
     if log_me(coalesce(p_severity, g_log_state_threshold)) then
       raise_event(
         p_event => C_LOG_STATE_EVENT,
-        p_params => p_params,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE);
+        p_log_state => log_state_type(p_severity, p_params));
     end if;
   end log_state;
 
@@ -963,7 +942,7 @@ as
         
       raise_event(
         p_event => C_LOG_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE);
+        p_message => g_active_message);
         
       reset_temporarily_set_context(l_old_context);
     end if;
@@ -1015,7 +994,6 @@ as
     if l_trace_me then
       raise_event(
         p_event => C_ENTER_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE,
         p_call_stack => g_call_stack(g_call_stack.last));
     end if;
     
@@ -1075,7 +1053,6 @@ as
           l_call_stack.id := pit_log_seq.nextval;
           raise_event(
             p_event => C_LEAVE_EVENT,
-            p_event_focus => C_EVENT_FOCUS_ACTIVE,
             p_call_stack => l_call_stack);
         end if;
     
@@ -1150,8 +1127,8 @@ as
     if p_message_name is not null then
       g_active_message := get_message(p_message_name, p_msg_args, null, null);
       raise_event(
-         p_event => C_PRINT_EVENT,
-         p_event_focus => C_EVENT_FOCUS_ACTIVE);
+        p_event => C_PRINT_EVENT,
+        p_message => g_active_message);
     else
       log_event(C_LEVEL_WARN, C_FAIL_MESSAGE_CREATION, msg_args('NULL'));
     end if;
@@ -1184,7 +1161,7 @@ as
 
       raise_event(
         p_event => C_NOTIFY_EVENT,
-        p_event_focus => C_EVENT_FOCUS_ACTIVE);
+        p_message => g_active_message);
         
       reset_temporarily_set_context(l_old_context);
     end if;
@@ -1244,7 +1221,6 @@ as
   begin
     raise_event(
           p_event => C_PURGE_EVENT,
-          p_event_focus => C_EVENT_FOCUS_ACTIVE,
           p_date_before => p_date_before,
           p_severity_lower_equal => p_severity_lower_equal);
     exception
@@ -1415,9 +1391,16 @@ as
     p_context in pit_util.context_type)
   as
     l_context pit_util.context_type;
+    l_required_context pit_util.ora_name_type;
   begin
     -- Initialize
     l_context := p_context;
+    
+    -- start by reading the actual session details 
+    g_active_adapter.get_session_details(
+      p_user_name => g_user_name, 
+      p_session_id => g_client_id, 
+      p_required_context => l_required_context);
     
     case when l_context.context_name is not null and l_context.settings is null then
       -- Context name passed in, this is the default behaviour
@@ -1428,19 +1411,19 @@ as
         from global_context
        where namespace = C_GLOBAL_CONTEXT
          and attribute = l_context.context_name;
-      
-      if l_context.context_name = C_CONTEXT_DEFAULT then
-        reset_active_context;
-      else
-        copy_context_to_global(l_context.context_name);
-        set_context_if_changed(g_context);
-      end if;
     else
       -- Explicit context settings without a context name passed in.
       -- Don't try to read context settings from global context, leave context_name to NULL
       -- to force SET_CONTEXT_IF_CHANGED to check whether new settings apply
-      l_context := p_context;
       l_context.settings := pit_util.context_type_to_string(l_context);
+    end case;
+    
+    case when l_context.context_name = C_CONTEXT_DEFAULT then
+      reset_active_context;
+    when l_context.context_name is not null then
+      copy_context_to_global(coalesce(l_required_context, l_context.context_name));
+      set_context_if_changed(g_context);
+    else
       set_context_if_changed(l_context);
     end case;
     
@@ -1454,15 +1437,15 @@ as
 
   procedure reset_active_context
   as
-    l_raise_focus pit_util.ora_name_type;
     l_required_context pit_util.ora_name_type;
   begin
     g_active_adapter.get_session_details(g_user_name, g_client_id, l_required_context);
 
     utl_context.clear_value(C_GLOBAL_CONTEXT, C_CONTEXT_ACTIVE, g_client_id);
     copy_context_to_global;
-    l_raise_focus := case when g_context.broadcast_context_switch then C_EVENT_FOCUS_ALL else C_EVENT_FOCUS_ACTIVE end;
-    raise_event(C_CONTEXT_EVENT, l_raise_focus);
+    raise_event(
+      p_event => C_CONTEXT_EVENT,
+      p_context => g_context);
   end reset_active_context;
 
 

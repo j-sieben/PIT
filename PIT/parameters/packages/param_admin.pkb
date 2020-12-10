@@ -1,5 +1,7 @@
 create or replace package body param_admin
 as
+
+  /** Package to maintain settings for parameter groups */
   
   c_true constant &FLAG_TYPE. := &C_TRUE.;
   c_false constant &FLAG_TYPE. := &C_FALSE.;

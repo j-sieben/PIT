@@ -5,7 +5,7 @@
  <TITLE>Type pit_module</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_module">
- <META name="description" content="">
+ <META name="description" content="Abstract output module for PIT.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_module</P>
+Abstract output module for PIT.<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -48,47 +49,42 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CONTEXT_CHANGED">context_changed</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#CONTEXT_CHANGED2">context_changed</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method is raised if the context settings have changed
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method is called for debugging, error handling and the like
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG2">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Overloaded logging method to log the state of variables passed in
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT">print</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to print a message to the target.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to notify changes.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method is called if PIT recognizes that the code entered a method
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method is called if PIT recognizes that the code left a method
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PURGE">purge</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method is called to purge a message <A HREF=#STACK>stack</A>.
 </TD></TR>
 </TABLE>
 <BR>
@@ -106,7 +102,7 @@ fire_threshold integer
 status
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="pit_default_adapter.html#STATUS">status</A> varchar2(128 byte)
+status varchar2(128 byte)
 </PRE>
 <HR>
 <A NAME="STACK"></A>
@@ -114,7 +110,7 @@ status
 stack
 </P>
 <PRE CLASS="DECL_TEXT">
-<A HREF="message_type.html#STACK">stack</A> varchar2(2000 byte)
+stack varchar2(2000 byte)
 </PRE>
 <HR>
 <A NAME="CONTEXT_CHANGED"></A>
@@ -122,82 +118,117 @@ stack
 context_changed
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>(p_ctx in <A HREF="pit_context.html">pit_context</A>)
+Procedure context_changed(self  in out nocopy pit_module,
+                          p_ctx in pit_context)
 
 </PRE>
-<HR>
-<A NAME="CONTEXT_CHANGED2"></A>
-<P CLASS="TYPE_TITLE">
-context_changed
+<P CLASS="DESC_TEXT">
+Method is raised if the context settings have changed<br>
+
+<BR>
 </P>
-<PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>
-
-</PRE>
 <HR>
 <A NAME="LOG"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy pit_module, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method is called for debugging, error handling and the like<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LOG2"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_params in <A HREF="msg_params.html">msg_params</A>)
+Procedure log(self in out nocopy pit_module, p_params in msg_params)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Overloaded logging method to log the state of variables passed in<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PRINT"></A>
 <P CLASS="TYPE_TITLE">
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure print(self in out nocopy pit_module, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to print a message to the target. Is not fenced in by <A HREF=#LOG>log</A> or trace settings<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="NOTIFY"></A>
 <P CLASS="TYPE_TITLE">
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure notify(self in out nocopy pit_module, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to notify changes. Aimed towards state changes and other leight weight messages<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="ENTER"></A>
 <P CLASS="TYPE_TITLE">
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy pit_module,
+                p_call_stack call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method is called if PIT recognizes that the code entered a method<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy pit_module,
+                p_call_stack call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method is called if PIT recognizes that the code left a method<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PURGE"></A>
 <P CLASS="TYPE_TITLE">
 purge
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_purge_date             in date default null,
+Procedure purge(self                     in out nocopy pit_module,
+                p_purge_date             in date default null,
                 p_severity_greater_equal in integer default null)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method is called to purge a message <A HREF=#STACK>stack</A>. Useful for output modules persisting messages<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

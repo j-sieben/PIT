@@ -13,12 +13,12 @@ as
     
     
   /** Method to write state information to the console
-   * %param  p_params Instance of MSG_PARAMS
-   * %usage  Method implements the LOG member procedure overload for MSG_PARAMS of type PIT_CONSOLE and
+   * %param  p_log_state Instance of LOG_STATE_TYPE
+   * %usage  Method implements the LOG member procedure overload for LOG_STATE_TYPE and
    *         writes the key value pairs of MSG_PARAM to the console.
    */
   procedure log (
-    p_params in msg_params);
+    p_log_state in log_state_type);
 
 
   /** Method to write call stack information on enter to the console

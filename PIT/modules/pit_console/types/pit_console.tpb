@@ -1,5 +1,8 @@
 create or replace type body pit_console 
 as
+  /** Implementation of PIT CONSOLE output module */
+  
+  
   overriding member procedure log(
     self in out nocopy pit_console,
     p_message in message_type)
@@ -13,10 +16,10 @@ as
   
   overriding member procedure log(
     self in out nocopy pit_console,
-    p_params in msg_params)
+    p_log_state log_state_type)
   as
   begin
-    pit_console_pkg.log(p_params);
+    pit_console_pkg.log(p_log_state);
   end log;
   
   

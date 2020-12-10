@@ -5,7 +5,7 @@
  <TITLE>Type pit_console</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_console">
- <META name="description" content="">
+ <META name="description" content="Output module to write to the console">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_console</P>
+Output module to write to the console<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,42 +27,42 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method logs entries to the console.
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG2">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes variable state to the console
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PRINT">print</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes informational messages to the console
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#NOTIFY">notify</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes lightweigt notifications to the console
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes entering a method to the console, including parameter values
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method writes leaving a method to the console, including out parameter values
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CONTEXT_CHANGED">context_changed</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method logs if a context is changed
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_CONSOLE">pit_console</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor function
 </TD></TR>
 </TABLE>
 <BR>
@@ -71,63 +72,101 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method logs entries to the console.<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LOG2"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_params in <A HREF="msg_params.html">msg_params</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_params in msg_params)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes variable state to the console<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PRINT"></A>
 <P CLASS="TYPE_TITLE">
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure print(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes informational messages to the console<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="NOTIFY"></A>
 <P CLASS="TYPE_TITLE">
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure notify(self in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes lightweigt notifications to the console<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="ENTER"></A>
 <P CLASS="TYPE_TITLE">
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>,
+                p_call_stack call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes entering a method to the console, including parameter values<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>,
+                p_call_stack call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method writes leaving a method to the console, including out parameter values<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="CONTEXT_CHANGED"></A>
 <P CLASS="TYPE_TITLE">
 context_changed
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>(p_ctx in pit_context)
+Procedure context_changed(self  in out nocopy <A HREF=#PIT_CONSOLE>pit_console</A>,
+                          p_ctx in pit_context)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method logs if a context is changed<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PIT_CONSOLE"></A>
 <P CLASS="TYPE_TITLE">
@@ -137,6 +176,11 @@ pit_console
 Function pit_console(self in out nocopy pit_console) return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor function<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

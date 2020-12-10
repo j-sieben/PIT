@@ -1,4 +1,5 @@
 create or replace type message_type force is object(
+  /** Core message type. Is used to collect the message, severity and other useful information around messages */
   id number,
   message_name &ORA_NAME_TYPE.,
   affected_id varchar2(50 char),

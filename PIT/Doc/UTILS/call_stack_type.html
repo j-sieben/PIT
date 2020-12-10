@@ -5,7 +5,7 @@
  <TITLE>Type call_stack_type</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="call_stack_type">
- <META name="description" content="Attributes">
+ <META name="description" content="Core call stack type.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,7 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type call_stack_type</P>
-Attributes<br>
+Core call stack type. Collects information regarding entering or leaving a method<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -149,22 +149,22 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PAUSE">pause</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to pause the clock for the actual method
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#RESUME">resume</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method resumes measuring time for the actual method
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to collect timing information upon leaving the method
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#CALL_STACK_TYPE">call_stack_type</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+constructor function
 </TD></TR>
 </TABLE>
 <BR>
@@ -361,6 +361,11 @@ pause
 Procedure pause(self in out nocopy <A HREF=#CALL_STACK_TYPE>call_stack_type</A>)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to pause the clock for the actual method<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="RESUME"></A>
 <P CLASS="TYPE_TITLE">
@@ -370,15 +375,25 @@ resume
 Procedure resume(self in out nocopy <A HREF=#CALL_STACK_TYPE>call_stack_type</A>)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method resumes measuring time for the actual method<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(self in out nocopy <A HREF=#CALL_STACK_TYPE>call_stack_type</A>)
+Procedure leave(self in out nocopy <A HREF=#CALL_STACK_TYPE>call_stack_type</A>)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to collect timing information upon leaving the method<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="CALL_STACK_TYPE"></A>
 <P CLASS="TYPE_TITLE">
@@ -401,6 +416,11 @@ Function call_stack_type(self             in out nocopy call_stack_type,
   return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+constructor function<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

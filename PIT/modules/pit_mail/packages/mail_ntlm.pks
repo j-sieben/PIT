@@ -1,7 +1,7 @@
 create or replace package mail_ntlm
   authid definer
 as
-  /** Package to allow to authenticate to a NTLM SMTP server
+  /** Package to allow to authenticate to a NTLM SMTP server<br>
       Disclaimer
         This package is a PL/SQL port from the Ntml.java, distributed under
         GNU General Public License Version 2 only ("GPL") or the Common Development

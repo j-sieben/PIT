@@ -1,6 +1,10 @@
 create or replace package body pit_admin
 as
 
+  /**
+    Package to administer PIT. Provides methods to create or maintain messages.
+  */
+
   /************************* TYPE DEFINITIONS *********************************/    
   type predefined_error_rec is record(
     source_type pit_util.ora_name_type,
@@ -818,7 +822,7 @@ end;
     C_PACKAGE_NAME  constant varchar2(30) := 'msg';
     C_R constant varchar2(2) := chr(10);
 
-    l_sql_text clob := 'create or replace package ' || C_PACKAGE_NAME || ' as' || C_R;
+    l_sql_text clob := 'create or replace package ' || C_PACKAGE_NAME || ' as' || C_R || '  /** Generated package to provide message constants and exceptions*/' || C_R;
     l_constant_template varchar2(200) :=
       q'~  #CONSTANT# constant pit_util.ora_name_type := '#CONSTANT#';~' || C_R;
     l_exception_template varchar2(200) :=

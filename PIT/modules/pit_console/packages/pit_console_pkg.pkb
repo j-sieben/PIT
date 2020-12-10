@@ -119,13 +119,13 @@ as
   
   
   procedure log(
-    p_params in msg_params)
+    p_log_state in log_state_type)
   as
   begin
-    if p_params.count > 0 then
+    if p_log_state.params.count > 0 then
       dbms_output.put_line('-> State');
-      for i in 1 .. p_params.count loop
-        dbms_output.put_line('...' || p_params(i).p_param || ': ' || p_params(i).p_value);
+      for i in 1 .. p_log_state.params.count loop
+        dbms_output.put_line('...' || p_log_state.params(i).p_param || ': ' || p_log_state.params(i).p_value);
       end loop;
       dbms_output.put_line('<- State');
     end if;

@@ -1,5 +1,8 @@
 create or replace type body message_type
 as
+  /** Implements the MESSAGE_TYPE functionality */
+  
+  /** Contructor method. Auto detects the required language */
   constructor function message_type(
     self in out nocopy message_type,
     p_message_name in varchar2,

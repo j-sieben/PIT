@@ -5,7 +5,7 @@
  <TITLE>Type body pit_module</TITLE>
  <META name="object" content="TYPE BODY">
  <META name="name" content="pit_module">
- <META name="description" content="">
+ <META name="description" content="Implementation of abstract output module.">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type body pit_module</P>
+Implementation of abstract output module. Implements stubs for all methods only<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -23,6 +24,11 @@
 Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONTEXT_CHANGED">context_changed</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
@@ -53,20 +59,25 @@ Program units
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#CONTEXT_CHANGED">context_changed</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
 </TABLE>
 <BR>
+<HR>
+<A NAME="CONTEXT_CHANGED"></A>
+<P CLASS="TYPE_TITLE">
+context_changed
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure context_changed(self  in out nocopy pit_module,
+                          p_ctx in pit_context)
+
+</PRE>
 <HR>
 <A NAME="LOG"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_params in <A HREF="msg_params.html">msg_params</A>)
+Procedure log(self in out nocopy pit_module, p_params in msg_params)
 
 </PRE>
 <HR>
@@ -75,7 +86,7 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_params in <A HREF="msg_params.html">m
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure print(self in out nocopy pit_module, p_message in message_type)
 
 </PRE>
 <HR>
@@ -84,7 +95,7 @@ Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure notify(self in out nocopy pit_module, p_message in message_type)
 
 </PRE>
 <HR>
@@ -93,7 +104,8 @@ Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_typ
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy pit_module,
+                p_call_stack call_stack_type)
 
 </PRE>
 <HR>
@@ -102,7 +114,8 @@ Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack <A HREF="call_stack_ty
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy pit_module,
+                p_call_stack call_stack_type)
 
 </PRE>
 <HR>
@@ -111,17 +124,9 @@ Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack <A HREF="call_stack_ty
 purge
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_file_pkg.html#PURGE">purge</A>(p_purge_date             in date := null,
+Procedure purge(self                     in out nocopy pit_module,
+                p_purge_date             in date := null,
                 p_severity_greater_equal in integer := null)
-
-</PRE>
-<HR>
-<A NAME="CONTEXT_CHANGED"></A>
-<P CLASS="TYPE_TITLE">
-context_changed
-</P>
-<PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit_console_pkg.html#CONTEXT_CHANGED">context_changed</A>
 
 </PRE>
 <P>&nbsp;</P>

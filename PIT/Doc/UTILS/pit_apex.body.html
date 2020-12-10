@@ -61,7 +61,7 @@ Program units
 log
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure log(self in out nocopy <A HREF=#PIT_APEX>pit_apex</A>, p_message in message_type)
 
 </PRE>
 <HR>
@@ -70,7 +70,7 @@ Procedure <A HREF="pit.html#LOG">log</A>(p_message in <A HREF="message_type.html
 print
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure print(self in out nocopy <A HREF=#PIT_APEX>pit_apex</A>, p_message in message_type)
 
 </PRE>
 <HR>
@@ -79,7 +79,7 @@ Procedure <A HREF="pit.html#PRINT">print</A>(p_message in <A HREF="message_type.
 notify
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_type.html#MESSAGE_TYPE">message_type</A>)
+Procedure notify(self in out nocopy <A HREF=#PIT_APEX>pit_apex</A>, p_message in message_type)
 
 </PRE>
 <HR>
@@ -88,7 +88,8 @@ Procedure <A HREF="pit.html#NOTIFY">notify</A>(p_message in <A HREF="message_typ
 enter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure enter(self         in out nocopy <A HREF=#PIT_APEX>pit_apex</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -97,7 +98,8 @@ Procedure <A HREF="pit.html#ENTER">enter</A>(p_call_stack in <A HREF="call_stack
 leave
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in <A HREF="call_stack_type.html#CALL_STACK_TYPE">call_stack_type</A>)
+Procedure leave(self         in out nocopy <A HREF=#PIT_APEX>pit_apex</A>,
+                p_call_stack in call_stack_type)
 
 </PRE>
 <HR>
@@ -106,7 +108,7 @@ Procedure <A HREF="pit.html#LEAVE">leave</A>(p_call_stack in <A HREF="call_stack
 pit_apex
 </P>
 <PRE CLASS="DECL_TEXT">
-Function <A HREF="pit_apex.html#PIT_APEX">pit_apex</A>(self in out nocopy <A HREF="pit_apex.html#PIT_APEX">pit_apex</A>) return self as result
+Function pit_apex(self in out nocopy pit_apex) return self as result
 
 </PRE>
 <P>&nbsp;</P>

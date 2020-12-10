@@ -1,10 +1,23 @@
 create or replace type body pit_table as
+
+  /** Implementation of PIT_TABLE output module functionality */
+  
+  
   overriding member procedure log(
     p_message in message_type)
   as
   begin
     if p_message.severity <= fire_threshold then
        pit_table_pkg.log(p_message);
+    end if;
+  end log;
+    
+  overriding member procedure log(
+    p_log_state in log_state_type)
+  as
+  begin
+    if p_log_state.severity <= fire_threshold then
+       pit_table_pkg.log(p_log_state);
     end if;
   end log;
   
