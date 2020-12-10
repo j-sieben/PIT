@@ -5,7 +5,7 @@
  <TITLE>Type pit_mail</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_mail">
- <META name="description" content="">
+ <META name="description" content="Output module to send debug messages per mail">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_mail</P>
+Output module to send debug messages per mail<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,17 +27,17 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to send messages with a severity higher than the <A HREF=#PIT_MAIL>PIT_MAIL</A> fire threshold per mail
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PURGE">purge</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to purge any unsent messages from the mail queue
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_MAIL">pit_mail</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor function.
 </TD></TR>
 </TABLE>
 <BR>
@@ -49,6 +50,23 @@ log
 Procedure log(self in out nocopy <A HREF=#PIT_MAIL>pit_mail</A>, p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to send messages with a severity higher than the <A HREF=#PIT_MAIL>PIT_MAIL</A> fire threshold per mail<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+The implementation ignores anything including than or milder than LEVE_WARNING. Fatal messages get sent by mail directly, whereas errors will be persisted in a table to be sent to the administrator based on a database job<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="PURGE"></A>
 <P CLASS="TYPE_TITLE">
@@ -60,6 +78,11 @@ Procedure purge(self                     in out nocopy <A HREF=#PIT_MAIL>pit_mai
                 p_severity_greater_equal in integer default null)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to purge any unsent messages from the mail queue<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PIT_MAIL"></A>
 <P CLASS="TYPE_TITLE">
@@ -69,6 +92,11 @@ pit_mail
 Function pit_mail(self in out nocopy pit_mail) return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor function. If the mail server is unreachable, it renders the module unusable<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

@@ -1,4 +1,6 @@
 create or replace type pit_ut under pit_module(
+  /** output module for unit test of PIT */
+
   overriding member procedure log(
     self in out nocopy pit_ut,
     p_message in message_type),

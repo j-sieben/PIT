@@ -5,7 +5,7 @@
  <TITLE>Type pit_table</TITLE>
  <META name="object" content="TYPE">
  <META name="name" content="pit_table">
- <META name="description" content="">
+ <META name="description" content="Output module to write messages to a table">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Type pit_table</P>
+Output module to write messages to a table<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -26,27 +27,32 @@ Program units
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to insert debug and error message into table PIT_TABLE_LOG
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG2">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to insert state information into table PIT_TABLE_PARAMS
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#ENTER">enter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LEAVE">leave</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PURGE">purge</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Method to clean up <A HREF=#LOG>log</A> tables based on purge date and/or severity
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#PIT_TABLE">pit_table</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
+Constructor function
 </TD></TR>
 </TABLE>
 <BR>
@@ -59,6 +65,25 @@ log
 Procedure log(p_message in message_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to insert debug and error message into table PIT_TABLE_LOG<br>
+
+<BR>
+</P>
+<HR>
+<A NAME="LOG2"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure log(p_log_state in log_state_type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to insert state information into table PIT_TABLE_PARAMS<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="ENTER"></A>
 <P CLASS="TYPE_TITLE">
@@ -68,6 +93,11 @@ enter
 Procedure enter(p_call_stack call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="LEAVE"></A>
 <P CLASS="TYPE_TITLE">
@@ -77,6 +107,11 @@ leave
 Procedure leave(p_call_stack call_stack_type)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PURGE"></A>
 <P CLASS="TYPE_TITLE">
@@ -87,6 +122,11 @@ Procedure purge(p_purge_date             in date,
                 p_severity_greater_equal in integer default null)
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Method to clean up <A HREF=#LOG>log</A> tables based on purge date and/or severity<br>
+
+<BR>
+</P>
 <HR>
 <A NAME="PIT_TABLE"></A>
 <P CLASS="TYPE_TITLE">
@@ -96,6 +136,11 @@ pit_table
 Function pit_table(self in out nocopy pit_table) return self as result
 
 </PRE>
+<P CLASS="DESC_TEXT">
+Constructor function<br>
+
+<BR>
+</P>
 <P>&nbsp;</P>
 <P>&nbsp;</P>
 </BODY>

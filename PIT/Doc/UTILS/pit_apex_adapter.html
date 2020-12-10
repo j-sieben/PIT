@@ -17,6 +17,18 @@
 Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX<br>
 
 <BR>
+<A NAME="Usage"></A>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="MAIN_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+This method detects the APEX session id, logged on user and debug status. If no APEX environment is preset, this method is in unusable state and PIT falls back to the default adapter. If APEX is in debug mode, PIT will switch on debuggin as well. The settings can be controlled by setting the respective PIT_APEX_TRG... parameters.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <A NAME="Parameters"></A>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="LIST_TITLE">
 Parameters

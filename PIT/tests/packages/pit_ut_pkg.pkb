@@ -10,7 +10,7 @@ as
   C_FIRE_THRESHOLD constant name_type := C_PIT_UT || '_FIRE_THRESHOLD';
   
 
-  /* Initialization
+  /** Initialization
    * %usage Reads several parameters into global variables
    */
   procedure initialize
