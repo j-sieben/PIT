@@ -14,7 +14,7 @@ prompt &section.Uninstalling PIT Client &REMOTE_USER.
 
 prompt
 prompt &section.
-prompt &h1.Unnstalling PIT output modules
+prompt &h1.Uninstalling PIT output modules
 @modules/pit_console/clean_up_client.sql
 @modules/pit_table/clean_up_client.sql
 @modules/pit_apex/clean_up_client.sql
@@ -30,7 +30,7 @@ alter session set current_schema=&REMOTE_USER.;
 prompt
 prompt &h1.Uninstalling PARAM objects in schema &REMOTE_USER.
 alter session set current_schema=&REMOTE_USER.;
-@core/parameters/clean_up_client.sql
+@parameters/clean_up_client.sql
 
 prompt
 prompt &h1.PIT client successfully deinstalled

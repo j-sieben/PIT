@@ -25,7 +25,7 @@ alter session set current_schema=&INSTALL_USER.;
 
 prompt
 prompt &h2.Grant access to PARAM installation
-@core/parameters/install_client.sql
+@parameters/install_client.sql
 
 prompt
 prompt &h2.Grant access to PIT core installation

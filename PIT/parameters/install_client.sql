@@ -1,4 +1,4 @@
-define param_dir=core/parameters/
+define param_dir=parameters/
 
 prompt
 prompt &h2.Granting access to parameter package to &REMOTE_USER.

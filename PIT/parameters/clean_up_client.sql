@@ -44,4 +44,4 @@ end;
 /
 
 prompt &s1. revoking client rights
-@core/parameters/revoke_client_rights.sql
+@parameters/revoke_client_rights.sql
