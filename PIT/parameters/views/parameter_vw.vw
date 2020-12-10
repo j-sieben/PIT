@@ -70,3 +70,4 @@ select par_id,
                  from &INSTALL_USER..parameter_tab))
  where par_rank = 1;
  
+comment on table parameter_vw is 'Client View to combine default and local parameters. Local parameters take precedence over default parameters';

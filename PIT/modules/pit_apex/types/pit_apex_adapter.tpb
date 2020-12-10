@@ -1,5 +1,8 @@
 create or replace type body pit_apex_adapter
 as
+
+  /** Implements the adapter functionality for the APEX environment */
+
   overriding member procedure get_session_details(
     p_user_name out varchar2,
     p_session_id out varchar2,
@@ -21,9 +24,9 @@ as
   begin
     if apex_application.get_session_id is not null then
       self.environment := 'APEX';
-      self.status := &C_TRUE.;
+      self.status := pit_util.C_TRUE;
     else
-      self.status := &C_FALSE.;
+      self.status := pit_util.C_FALSE;
     end if;
     return;
   end pit_apex_adapter;

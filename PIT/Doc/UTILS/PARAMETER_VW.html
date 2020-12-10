@@ -5,7 +5,7 @@
  <TITLE>View PARAMETER_VW</TITLE>
  <META name="object" content="VIEW">
  <META name="name" content="PARAMETER_VW">
- <META name="description" content="">
+ <META name="description" content="View to combine default and local parameters.">
  <META name="columns" content="PAR_ID PAR_PGR_ID PAR_DESCRIPTION PAR_STRING_VALUE PAR_RAW_VALUE PAR_XML_VALUE PAR_INTEGER_VALUE PAR_FLOAT_VALUE PAR_DATE_VALUE PAR_TIMESTAMP_VALUE PAR_BOOLEAN_VALUE PAR_IS_MODIFIABLE PAR_PAT_ID PAR_VALIDATION_STRING PAR_VALIDATION_MESSAGE">
 </HEAD>
 <BODY>
@@ -15,7 +15,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">View PARAMETER_VW</P>
-
+View to combine default and local parameters. Local parameters take precedence over default parameters
 </TD></TR></TABLE>
 <HR>
 <A NAME="Columns"></A>
@@ -47,7 +47,7 @@ Comments
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_ID</A>
+PAR_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -64,7 +64,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_PGR_ID</A>
+PAR_PGR_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -81,7 +81,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_DESCRIPTION</A>
+PAR_DESCRIPTION
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(800)
@@ -98,7 +98,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_STRING_VALUE</A>
+PAR_STRING_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CLOB
@@ -115,7 +115,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_RAW_VALUE</A>
+PAR_RAW_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 BLOB
@@ -132,7 +132,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_XML_VALUE</A>
+PAR_XML_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 SYS.XMLTYPE
@@ -149,7 +149,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_INTEGER_VALUE</A>
+PAR_INTEGER_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 NUMBER(38)
@@ -166,7 +166,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_FLOAT_VALUE</A>
+PAR_FLOAT_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 NUMBER
@@ -183,7 +183,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_DATE_VALUE</A>
+PAR_DATE_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 DATE
@@ -200,7 +200,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_TIMESTAMP_VALUE</A>
+PAR_TIMESTAMP_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 TIMESTAMP(6) WITH TIME ZONE
@@ -217,7 +217,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_BOOLEAN_VALUE</A>
+PAR_BOOLEAN_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CHAR(1)
@@ -234,7 +234,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_IS_MODIFIABLE</A>
+PAR_IS_MODIFIABLE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CHAR(1)
@@ -251,7 +251,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_PAT_ID</A>
+PAR_PAT_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -268,7 +268,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_VALIDATION_STRING</A>
+PAR_VALIDATION_STRING
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(4000)
@@ -285,7 +285,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PARAMETER_TAB.html">PAR_VALIDATION_MESSAGE</A>
+PAR_VALIDATION_MESSAGE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(4000)
@@ -307,76 +307,77 @@ Y
 SQL
 </TD></TR></TABLE><PRE CLASS="DECL_TEXT">
 create or replace view parameter_vw as
-select <A HREF="PARAMETER_TAB.html">par_id</A>,
-       <A HREF="PARAMETER_TAB.html">par_pgr_id</A>,
-       <A HREF="PARAMETER_TAB.html">par_description</A>,
-       <A HREF="PARAMETER_TAB.html">par_string_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_raw_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_xml_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_integer_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_float_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_date_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_timestamp_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_boolean_value</A>,
-       <A HREF="PARAMETER_TAB.html">par_is_modifiable</A>,
-       <A HREF="PARAMETER_TAB.html">par_pat_id</A>,
-       <A HREF="PARAMETER_TAB.html">par_validation_string</A>,
-       <A HREF="PARAMETER_TAB.html">par_validation_message</A>
-  from (select <A HREF="PARAMETER_TAB.html">par_id</A>,
-               <A HREF="PARAMETER_TAB.html">par_pgr_id</A>,
-               <A HREF="PARAMETER_TAB.html">par_description</A>,
-               <A HREF="PARAMETER_TAB.html">par_string_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_raw_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_xml_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_integer_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_float_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_date_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_timestamp_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_boolean_value</A>,
-               <A HREF="PARAMETER_TAB.html">par_is_modifiable</A>,
-               <A HREF="PARAMETER_TAB.html">par_pat_id</A>,
-               <A HREF="PARAMETER_TAB.html">par_validation_string</A>,
-               <A HREF="PARAMETER_TAB.html">par_validation_message</A>,
-               rank() over (partition by <A HREF="PARAMETER_TAB.html">par_id</A> order by order_seq) par_rank
+select par_id,
+       par_pgr_id,
+       par_description,
+       par_string_value,
+       par_raw_value,
+       par_xml_value,
+       par_integer_value,
+       par_float_value,
+       par_date_value,
+       par_timestamp_value,
+       par_boolean_value,
+       par_is_modifiable,
+       par_pat_id,
+       par_validation_string,
+       par_validation_message
+  from (select par_id,
+               par_pgr_id,
+               par_description,
+               par_string_value,
+               par_raw_value,
+               par_xml_value,
+               par_integer_value,
+               par_float_value,
+               par_date_value,
+               par_timestamp_value,
+               par_boolean_value,
+               par_is_modifiable,
+               par_pat_id,
+               par_validation_string,
+               par_validation_message,
+               rank() over (partition by par_id order by order_seq) par_rank
          from (select 1 order_seq,
-                      l.pal_id <A HREF="PARAMETER_TAB.html">par_id</A>,
-                      l.pal_pgr_id <A HREF="PARAMETER_TAB.html">par_pgr_id</A>,
+                      l.pal_id par_id,
+                      l.pal_pgr_id par_pgr_id,
                       z.par_description,
-                      l.pal_string_value <A HREF="PARAMETER_TAB.html">par_string_value</A>,
-                      l.pal_raw_value <A HREF="PARAMETER_TAB.html">par_raw_value</A>,
-                      l.pal_xml_value <A HREF="PARAMETER_TAB.html">par_xml_value</A>,
-                      l.pal_integer_value <A HREF="PARAMETER_TAB.html">par_integer_value</A>,
-                      l.pal_float_value <A HREF="PARAMETER_TAB.html">par_float_value</A>,
-                      l.pal_date_value <A HREF="PARAMETER_TAB.html">par_date_value</A>,
-                      l.pal_timestamp_value <A HREF="PARAMETER_TAB.html">par_timestamp_value</A>,
-                      l.pal_boolean_value <A HREF="PARAMETER_TAB.html">par_boolean_value</A>,
+                      l.pal_string_value par_string_value,
+                      l.pal_raw_value par_raw_value,
+                      l.pal_xml_value par_xml_value,
+                      l.pal_integer_value par_integer_value,
+                      l.pal_float_value par_float_value,
+                      l.pal_date_value par_date_value,
+                      l.pal_timestamp_value par_timestamp_value,
+                      l.pal_boolean_value par_boolean_value,
                       z.par_is_modifiable,
                       z.par_pat_id,
                       z.par_validation_string,
                       z.par_validation_message
-                 from <A HREF="PARAMETER_LOCAL.html">parameter_local</A> l
-                 join <A HREF="PARAMETER_TAB.html">parameter_tab</A> z
+                 from parameter_local l
+                 join parameter_tab z
                    on l.pal_id = z.par_id
                   and l.pal_pgr_id = z.par_pgr_id
                 union all
                select 2,
-                      <A HREF="PARAMETER_TAB.html">par_id</A>,
-                      <A HREF="PARAMETER_TAB.html">par_pgr_id</A>,
-                      <A HREF="PARAMETER_TAB.html">par_description</A>,
-                      <A HREF="PARAMETER_TAB.html">par_string_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_raw_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_xml_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_integer_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_float_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_date_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_timestamp_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_boolean_value</A>,
-                      <A HREF="PARAMETER_TAB.html">par_is_modifiable</A>,
-                      <A HREF="PARAMETER_TAB.html">par_pat_id</A>,
-                      <A HREF="PARAMETER_TAB.html">par_validation_string</A>,
-                      <A HREF="PARAMETER_TAB.html">par_validation_message</A>
-                 from <A HREF="PARAMETER_TAB.html">parameter_tab</A>))
+                      par_id,
+                      par_pgr_id,
+                      par_description,
+                      par_string_value,
+                      par_raw_value,
+                      par_xml_value,
+                      par_integer_value,
+                      par_float_value,
+                      par_date_value,
+                      par_timestamp_value,
+                      par_boolean_value,
+                      par_is_modifiable,
+                      par_pat_id,
+                      par_validation_string,
+                      par_validation_message
+                 from parameter_tab))
  where par_rank = 1;
+comment on table PARAMETER_VW is 'View to combine default and local parameters. Local parameters take precedence over default parameters';
 </PRE>
 <P>&nbsp;</P>
 <P>&nbsp;</P>

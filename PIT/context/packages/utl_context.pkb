@@ -1,5 +1,8 @@
 create or replace package body utl_context
 as
+
+  /** Implementation of the UTL_CONTEXT functionality */
+
   /* PACKAGE CONSTANTS */
   -- Global Constants
   C_PACKAGE_NAME constant ora_name_type := $$PLSQL_UNIT;

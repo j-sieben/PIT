@@ -1096,9 +1096,9 @@ raise_event
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure raise_event(p_event                in pls_integer,
-                      p_event_focus          in varchar2,
+                      p_message              in message_type default null,
                       p_call_stack           in call_stack_type default null,
-                      p_params               in msg_params default null,
+                      p_log_state            in log_state_type default null,
                       p_context              in pit_util.context_type default null,
                       p_date_before          in date default null,
                       p_severity_lower_equal in pls_integer default null)
@@ -1319,7 +1319,7 @@ Is called from <code>pit.SET_CONTEXT</code> to actually persist the required set
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-This method examins whether a context change has happened by comparing the context settings with the latest stored settings from <A HREF=#G_CONTEXT>G_CONTEXT</A>. If a change has occurred, it stores the new values - at the globally accessed context to propagate the settings to other sessions - within global variable <A HREF=#G_CONTEXT>G_CONTEXT</A> to allow for a comparison later It also loads the active output modules.<br>
+This method examines whether a context change has happened by comparing the context settings with the latest stored settings from <A HREF=#G_CONTEXT>G_CONTEXT</A>. If a change has occurred, it stores the new values - at the globally accessed context to propagate the settings to other sessions - within global variable <A HREF=#G_CONTEXT>G_CONTEXT</A> to allow for a comparison later It also loads the active output modules.<br>
 
 </TD></TR>
 </TABLE>
@@ -1874,9 +1874,9 @@ raise_event
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure raise_event(p_event                in pls_integer,
-                      p_event_focus          in varchar2,
+                      p_message              in message_type default null,
                       p_call_stack           in call_stack_type default null,
-                      p_params               in msg_params default null,
+                      p_log_state            in log_state_type default null,
                       p_context              in pit_util.context_type default null,
                       p_date_before          in date default null,
                       p_severity_lower_equal in pls_integer default null)
@@ -1909,13 +1909,6 @@ Parameters
 p_event&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Integer indicating the type of &quot;event&quot; (i.e. LOG|PRINT|ENTER etc.) thrown by PIT<br>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_event_focus&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-Flag to indicate whether the message is to be broadcasted to all available modules or only to active ones.<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>

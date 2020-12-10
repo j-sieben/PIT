@@ -1,5 +1,7 @@
 create or replace package body pit_console_pkg
 as
+  
+  /** Implementation of PIT_CONSOLE output module */
 
   /* Constants and global Package variables */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';

@@ -1,0 +1,472 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
+ <TITLE>Package body utl_context</TITLE>
+ <META name="object" content="PACKAGE BODY">
+ <META name="name" content="utl_context">
+ <META name="description" content="Implementation of the UTL_CONTEXT functionality">
+</HEAD>
+<BODY>
+<TABLE WIDTH="100%"><TR>
+<TD><P ALIGN="LEFT"><STRONG><SMALL></SMALL></STRONG></TD>
+<TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
+</TR></TABLE>
+<TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
+<P CLASS="MAIN_TITLE">Package body utl_context</P>
+Implementation of the UTL_CONTEXT functionality<br>
+
+<BR>
+</TD></TR></TABLE>
+<HR>
+<A NAME="Program units"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Program units
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CHECK_PARAM">check_param</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#READ_SETTINGS">read_settings</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_USER_NAME">get_user_name</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_CLIENT_ID">get_client_id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#INITIALIZE">initialize</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#SET_VALUE">set_value</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_WITH_CLIENT_ID">get_with_client_id</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_VALUE">get_value</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CLEAR_VALUE">clear_value</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_FIRST_MATCH">get_first_match</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#RESET_CONTEXT">reset_context</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Types"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Types
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONTEXT_SETTING_REC">context_setting_rec</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#CONTEXT_SETTINGS_TAB">context_settings_tab</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Variables"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Variables
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_CONTEXT_SETTINGS">g_context_settings</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_CONTEXT_SETTING">g_context_setting</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#G_USER">g_user</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Constants"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Constants
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PACKAGE_NAME">C_PACKAGE_NAME</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_TRUE">C_TRUE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_FALSE">C_FALSE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PARAMETER_GROUP_ID">C_PARAMETER_GROUP_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PARAMETER_POSTFIX">C_PARAMETER_POSTFIX</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_PARAMETER_TYPE">C_PARAMETER_TYPE</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_VALIDATION_STRING">C_VALIDATION_STRING</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_ENV">C_ENV</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_CLIENT_ID">C_CLIENT_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_SESSION_ID">C_SESSION_ID</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_CONTEXT">C_CONTEXT</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_NO_CONTEXT_MSG">C_NO_CONTEXT_MSG</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_INVALID_CONTEXT_MSG">C_INVALID_CONTEXT_MSG</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="C_PACKAGE_NAME"></A>
+<P CLASS="TYPE_TITLE">
+C_PACKAGE_NAME
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PACKAGE_NAME constant ora_name_type := $$PLSQL_UNIT;
+</PRE>
+<HR>
+<A NAME="C_TRUE"></A>
+<P CLASS="TYPE_TITLE">
+C_TRUE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_TRUE constant flag_type := 'Y';
+</PRE>
+<HR>
+<A NAME="C_FALSE"></A>
+<P CLASS="TYPE_TITLE">
+C_FALSE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_FALSE constant flag_type := 'N';
+</PRE>
+<HR>
+<A NAME="C_PARAMETER_GROUP_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_PARAMETER_GROUP_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PARAMETER_GROUP_ID constant ora_name_type := 'CONTEXT';
+</PRE>
+<HR>
+<A NAME="C_PARAMETER_POSTFIX"></A>
+<P CLASS="TYPE_TITLE">
+C_PARAMETER_POSTFIX
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PARAMETER_POSTFIX constant ora_name_type := '_TYPE';
+</PRE>
+<HR>
+<A NAME="C_PARAMETER_TYPE"></A>
+<P CLASS="TYPE_TITLE">
+C_PARAMETER_TYPE
+</P>
+<PRE CLASS="DECL_TEXT">
+C_PARAMETER_TYPE constant ora_name_type := 'STRING';
+</PRE>
+<HR>
+<A NAME="C_VALIDATION_STRING"></A>
+<P CLASS="TYPE_TITLE">
+C_VALIDATION_STRING
+</P>
+<PRE CLASS="DECL_TEXT">
+C_VALIDATION_STRING constant small_char :=
+  q'[string_value in (
+     'GLOBAL', 'FORCE_USER','FORCE_CLIENT_ID',
+     'FORCE_USER_CLIENT_ID', 'PREFER_CLIENT_ID',
+     'PREFER_USER_CLIENT_ID', 'SESSION')]';
+</PRE>
+<HR>
+<A NAME="C_ENV"></A>
+<P CLASS="TYPE_TITLE">
+C_ENV
+</P>
+<PRE CLASS="DECL_TEXT">
+C_ENV constant ora_name_type := 'USERENV';
+</PRE>
+<HR>
+<A NAME="C_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_CLIENT_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_CLIENT_ID constant ora_name_type := 'CLIENT_IDENTIFIER';
+</PRE>
+<HR>
+<A NAME="C_SESSION_ID"></A>
+<P CLASS="TYPE_TITLE">
+C_SESSION_ID
+</P>
+<PRE CLASS="DECL_TEXT">
+C_SESSION_ID constant ora_name_type := 'SESSIONID';
+</PRE>
+<HR>
+<A NAME="C_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+C_CONTEXT
+</P>
+<PRE CLASS="DECL_TEXT">
+C_CONTEXT constant ora_name_type := '#CONTEXT#';
+</PRE>
+<HR>
+<A NAME="C_NO_CONTEXT_MSG"></A>
+<P CLASS="TYPE_TITLE">
+C_NO_CONTEXT_MSG
+</P>
+<PRE CLASS="DECL_TEXT">
+C_NO_CONTEXT_MSG constant small_char :=
+ 'Context cannot be null.
+  Please provide a valid context name.';
+</PRE>
+<HR>
+<A NAME="C_INVALID_CONTEXT_MSG"></A>
+<P CLASS="TYPE_TITLE">
+C_INVALID_CONTEXT_MSG
+</P>
+<PRE CLASS="DECL_TEXT">
+C_INVALID_CONTEXT_MSG constant small_char :=
+     ': Context '
+  || <A HREF=#C_CONTEXT>C_CONTEXT</A>
+  || ' does not exist. Please provide a valid context name that is controlled by '
+  || <A HREF=#C_PACKAGE_NAME>C_PACKAGE_NAME</A>
+  || '.';
+</PRE>
+<HR>
+<A NAME="CONTEXT_SETTING_REC"></A>
+<P CLASS="TYPE_TITLE">
+context_setting_rec
+</P>
+<PRE CLASS="DECL_TEXT">
+type context_setting_rec is record(
+  is_global boolean,
+  with_user_name boolean,
+  with_client_id boolean,
+  with_session_id boolean,
+  with_fallback boolean
+);
+</PRE>
+<HR>
+<A NAME="CONTEXT_SETTINGS_TAB"></A>
+<P CLASS="TYPE_TITLE">
+context_settings_tab
+</P>
+<PRE CLASS="DECL_TEXT">
+type context_settings_tab is table of <A HREF=#CONTEXT_SETTING_REC>context_setting_rec</A>
+  index by ora_name_type;
+</PRE>
+<HR>
+<A NAME="G_CONTEXT_SETTINGS"></A>
+<P CLASS="TYPE_TITLE">
+g_context_settings
+</P>
+<PRE CLASS="DECL_TEXT">
+g_context_settings context_settings_tab;
+</PRE>
+<HR>
+<A NAME="G_CONTEXT_SETTING"></A>
+<P CLASS="TYPE_TITLE">
+g_context_setting
+</P>
+<PRE CLASS="DECL_TEXT">
+g_context_setting context_setting_rec;
+</PRE>
+<HR>
+<A NAME="G_USER"></A>
+<P CLASS="TYPE_TITLE">
+g_user
+</P>
+<PRE CLASS="DECL_TEXT">
+g_user ora_name_type;
+</PRE>
+<HR>
+<A NAME="CHECK_PARAM"></A>
+<P CLASS="TYPE_TITLE">
+check_param
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure check_param(p_context in varchar2)
+
+</PRE>
+<HR>
+<A NAME="READ_SETTINGS"></A>
+<P CLASS="TYPE_TITLE">
+read_settings
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure read_settings(p_context in varchar2)
+
+</PRE>
+<HR>
+<A NAME="GET_USER_NAME"></A>
+<P CLASS="TYPE_TITLE">
+get_user_name
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_user_name return varchar2
+
+</PRE>
+<HR>
+<A NAME="GET_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+get_client_id
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_client_id(p_client_id varchar2 default null) return varchar2
+
+</PRE>
+<HR>
+<A NAME="INITIALIZE"></A>
+<P CLASS="TYPE_TITLE">
+initialize
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure initialize
+
+</PRE>
+<HR>
+<A NAME="SET_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+set_value
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure set_value(p_context   in varchar2,
+                    p_attribute in varchar2,
+                    p_value     in varchar2,
+                    p_client_id varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="GET_WITH_CLIENT_ID"></A>
+<P CLASS="TYPE_TITLE">
+get_with_client_id
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_with_client_id(p_context   in varchar2,
+                            p_attribute in varchar2,
+                            p_client_id in varchar2) return varchar2
+
+</PRE>
+<HR>
+<A NAME="GET_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+get_value
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_value(p_context   in varchar2,
+                   p_attribute in varchar2,
+                   p_client_id varchar2 default null) return varchar2
+
+</PRE>
+<HR>
+<A NAME="CLEAR_VALUE"></A>
+<P CLASS="TYPE_TITLE">
+clear_value
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure clear_value(p_context   in varchar2,
+                      p_attribute in varchar2,
+                      p_client_id varchar2 default null)
+
+</PRE>
+<HR>
+<A NAME="GET_FIRST_MATCH"></A>
+<P CLASS="TYPE_TITLE">
+get_first_match
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_first_match(p_context        in varchar2,
+                         p_attribute_list in args,
+                         p_with_name      in boolean default false,
+                         p_client_id      varchar2 default null)
+  return varchar2
+
+</PRE>
+<HR>
+<A NAME="RESET_CONTEXT"></A>
+<P CLASS="TYPE_TITLE">
+reset_context
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure reset_context(p_context in varchar2)
+
+</PRE>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+</BODY>
+</HTML>

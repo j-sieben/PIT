@@ -5,7 +5,7 @@
  <TITLE>View PIT_TRANSLATABLE_ITEM_V</TITLE>
  <META name="object" content="VIEW">
  <META name="name" content="PIT_TRANSLATABLE_ITEM_V">
- <META name="description" content="">
+ <META name="description" content="Provides access to translatable items in the actual session language if possible and to the default language otherwise">
  <META name="columns" content="PTI_PMG_NAME PTI_ID PTI_NAME PTI_DISPLAY_NAME PTI_DESCRIPTION">
 </HEAD>
 <BODY>
@@ -15,7 +15,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">View PIT_TRANSLATABLE_ITEM_V</P>
-
+Provides access to translatable items in the actual session language if possible and to the default language otherwise
 </TD></TR></TABLE>
 <HR>
 <A NAME="Columns"></A>
@@ -47,7 +47,7 @@ Comments
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_TRANSLATABLE_ITEM.html">PTI_PMG_NAME</A>
+PTI_PMG_NAME
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -64,7 +64,7 @@ VARCHAR2(128)
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_TRANSLATABLE_ITEM.html">PTI_ID</A>
+PTI_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -81,7 +81,7 @@ VARCHAR2(128)
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_TRANSLATABLE_ITEM.html">PTI_NAME</A>
+PTI_NAME
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(800)
@@ -98,7 +98,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_TRANSLATABLE_ITEM.html">PTI_DISPLAY_NAME</A>
+PTI_DISPLAY_NAME
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(800)
@@ -115,7 +115,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_TRANSLATABLE_ITEM.html">PTI_DESCRIPTION</A>
+PTI_DESCRIPTION
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CLOB
@@ -137,17 +137,18 @@ Y
 SQL
 </TD></TR></TABLE><PRE CLASS="DECL_TEXT">
 create or replace view pit_translatable_item_v as
-select <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_pmg_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_id</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_display_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_description</A>
-  from (select <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_pmg_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_id</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_display_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_description</A>,
-               rank() over (order by <A HREF="PIT_MESSAGE_LANGUAGE.html">pml_default_order</A> desc) ranking
-          from <A HREF="PIT_TRANSLATABLE_ITEM.html">pit_translatable_item</A>
-          join <A HREF="PIT_MESSAGE_LANGUAGE.html">pit_message_language</A>
-            on <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_pml_name</A> = <A HREF="PIT_MESSAGE_LANGUAGE.html">pml_name</A>
+select pti_pmg_name, pti_id, pti_name, pti_display_name, pti_description
+  from (select pti_pmg_name, pti_id, pti_name, pti_display_name, pti_description,
+               rank() over (order by pml_default_order desc) ranking
+          from pit_translatable_item
+          join pit_message_language
+            on pti_pml_name = pml_name
          where -- try to find available translation or fallback to default language
-               <A HREF="PIT_MESSAGE_LANGUAGE.html">pml_name</A> = substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1)
-            or <A HREF="PIT_MESSAGE_LANGUAGE.html">pml_default_order</A> = 10)
+               pml_name = substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1)
+            or pml_default_order = 10)
  where ranking = 1
 ;
+comment on table PIT_TRANSLATABLE_ITEM_V is 'Provides access to translatable items in the actual session language if possible and to the default language otherwise';
 </PRE>
 <P>&nbsp;</P>
 <P>&nbsp;</P>

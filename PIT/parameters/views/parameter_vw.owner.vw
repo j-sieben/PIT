@@ -70,3 +70,5 @@ select par_id,
                  from parameter_tab))
  where par_rank = 1;
  
+comment on table parameter_vw is 'View to combine default and local parameters. Local parameters take precedence over default parameters';
+ 

@@ -5,7 +5,7 @@
  <TITLE>View PIT_MESSAGE_V</TITLE>
  <META name="object" content="VIEW">
  <META name="name" content="PIT_MESSAGE_V">
- <META name="description" content="">
+ <META name="description" content="PIT_MESSAGE values in the actual session language or default language, if no translation exists">
  <META name="columns" content="PMS_NAME PMS_TEXT PMS_PSE_ID">
 </HEAD>
 <BODY>
@@ -15,7 +15,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">View PIT_MESSAGE_V</P>
-
+PIT_MESSAGE values in the actual session language or default language, if no translation exists
 </TD></TR></TABLE>
 <HR>
 <A NAME="Columns"></A>
@@ -47,7 +47,7 @@ Comments
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_MESSAGE.html">PMS_NAME</A>
+PMS_NAME
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -64,7 +64,7 @@ VARCHAR2(128)
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_MESSAGE.html">PMS_TEXT</A>
+PMS_TEXT
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CLOB
@@ -81,7 +81,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_MESSAGE.html">PMS_PSE_ID</A>
+PMS_PSE_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 NUMBER(3)
@@ -103,10 +103,11 @@ Y
 SQL
 </TD></TR></TABLE><PRE CLASS="DECL_TEXT">
 create or replace view pit_message_v as
-select <A HREF="PIT_MESSAGE.html">pms_name</A>, <A HREF="PIT_MESSAGE.html">pms_text</A>, <A HREF="PIT_MESSAGE.html">pms_pse_id</A>
-  from <A HREF="PIT_MESSAGE.html">pit_message</A> m
-  join <A HREF="PIT_MESSAGE_LANGUAGE_V.html">pit_message_language_v</A> v
+select pms_name, pms_text, pms_pse_id
+  from pit_message m
+  join pit_message_language_v v
     on m.pms_pml_name = v.pml_name;
+comment on table PIT_MESSAGE_V is 'PIT_MESSAGE values in the actual session language or default language, if no translation exists';
 </PRE>
 <P>&nbsp;</P>
 <P>&nbsp;</P>

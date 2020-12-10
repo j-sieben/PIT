@@ -5,3 +5,5 @@ select pml_name, pml_default_order
 union all
 select substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1), 100
   from dual;
+    
+comment on table pit_message_language_v is 'PIT_MESSAGE_LANGUAGE values with all available translations and default language';

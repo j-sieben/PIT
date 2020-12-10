@@ -1,4 +1,6 @@
 create or replace type body pit_apex as
+
+  /** Implementation of type PIT_APEX */
    
    overriding member procedure log(
     self in out nocopy pit_apex,

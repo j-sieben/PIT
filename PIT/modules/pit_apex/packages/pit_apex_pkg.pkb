@@ -1,6 +1,8 @@
 create or replace package body pit_apex_pkg
 as
 
+  /** Implementation of PIT_APEX output module */
+
   /* CONSTANTS AND VARIABLES */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
   C_APEX_CONTEXT constant pit_util.ora_name_type := 'CONTEXT_APEX';

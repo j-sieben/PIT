@@ -1,7 +1,10 @@
 create or replace
 package body pit_file_pkg
 as
-  /* Konstanten und Variablen */
+
+  /** Implementation of PIT_FILE output module */
+  
+  /* Constants and global variables */
   type param_tab is table of pit_util.ora_name_type
     index by pit_util.ora_name_type;
   g_param_list param_tab;

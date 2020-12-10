@@ -9,3 +9,5 @@ select pti_pmg_name, pti_id, pti_name, pti_display_name, pti_description
                pml_name = substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1)
             or pml_default_order = 10)
  where ranking = 1;
+ 
+comment on table pit_translatable_item_v is 'Provides access to translatable items in the actual session language if possible and to the default language otherwise';

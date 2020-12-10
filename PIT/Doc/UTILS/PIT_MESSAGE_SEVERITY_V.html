@@ -5,7 +5,7 @@
  <TITLE>View PIT_MESSAGE_SEVERITY_V</TITLE>
  <META name="object" content="VIEW">
  <META name="name" content="PIT_MESSAGE_SEVERITY_V">
- <META name="description" content="">
+ <META name="description" content="PIT_MESSAGE_SEVERITY values with translated name, display_name and description">
  <META name="columns" content="PSE_ID PSE_NAME PSE_DISPLAY_NAME PSE_DESCRIPTION">
 </HEAD>
 <BODY>
@@ -15,7 +15,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">View PIT_MESSAGE_SEVERITY_V</P>
-
+PIT_MESSAGE_SEVERITY values with translated name, display_name and description
 </TD></TR></TABLE>
 <HR>
 <A NAME="Columns"></A>
@@ -47,7 +47,7 @@ Comments
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_MESSAGE_SEVERITY.html">PSE_ID</A>
+PSE_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 NUMBER
@@ -64,7 +64,7 @@ NUMBER
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-<A HREF="PIT_MESSAGE_SEVERITY.html">PSE_NAME</A>
+PSE_NAME
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -120,10 +120,11 @@ Y
 SQL
 </TD></TR></TABLE><PRE CLASS="DECL_TEXT">
 create or replace view pit_message_severity_v as
-select <A HREF="PIT_MESSAGE_SEVERITY.html">pse_id</A>, <A HREF="PIT_MESSAGE_SEVERITY.html">pse_name</A>, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_display_name</A> pse_display_name, <A HREF="PIT_TRANSLATABLE_ITEM.html">pti_description</A> pse_description
-  from <A HREF="PIT_MESSAGE_SEVERITY.html">pit_message_severity</A>
+select pse_id, pse_name, pti_display_name pse_display_name, pti_description pse_description
+  from pit_message_severity
   join pit_translatable_item_v
-    on <A HREF="PIT_MESSAGE_SEVERITY.html">pse_pti_id</A> = pti_id;
+    on pse_pti_id = pti_id;
+comment on table PIT_MESSAGE_SEVERITY_V is 'PIT_MESSAGE_SEVERITY values with translated name, display_name and description';
 </PRE>
 <P>&nbsp;</P>
 <P>&nbsp;</P>

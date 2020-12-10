@@ -5,7 +5,7 @@
  <TITLE>Package body pit_table_pkg</TITLE>
  <META name="object" content="PACKAGE BODY">
  <META name="name" content="pit_table_pkg">
- <META name="description" content="">
+ <META name="description" content="Implementation of PIT_TABLE output module">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,6 +14,7 @@
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
 <P CLASS="MAIN_TITLE">Package body pit_table_pkg</P>
+Implementation of PIT_TABLE output module<br>
 
 <BR>
 </TD></TR></TABLE>
@@ -24,7 +25,17 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PERSIST_PARAMS">persist_params</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Helper method to write to table PIT_TABLE_PARAMS
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#LOG">log</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#LOG2">log</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -84,12 +95,77 @@ C_PARAM_GROUP
 C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
 </PRE>
 <HR>
+<A NAME="PERSIST_PARAMS"></A>
+<P CLASS="TYPE_TITLE">
+persist_params
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure persist_params(p_id     in pit_table_params.ptp_id%type,
+                         p_pse_id in pit_table_params.ptp_pse_id%type,
+                         p_params in msg_params)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Helper method to write to table PIT_TABLE_PARAMS<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to wrap the insert operation on PIT_TABLE_PARAMS, as it is used by several methods<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ID of the entry, taken from CALL_STACK or LOG_STATE<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pse_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Severity of the entry. 70 if CALL_STACK entry<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_params&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Instance of MSG_PARAMS<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
 <A NAME="LOG"></A>
 <P CLASS="TYPE_TITLE">
 log
 </P>
 <PRE CLASS="DECL_TEXT">
 Procedure log(p_message in message_type)
+
+</PRE>
+<HR>
+<A NAME="LOG2"></A>
+<P CLASS="TYPE_TITLE">
+log
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure log(p_log_state log_state_type)
 
 </PRE>
 <HR>
