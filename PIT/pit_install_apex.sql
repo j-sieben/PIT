@@ -6,6 +6,8 @@
   Prerequisites:
   -- PIT must be accessible by the schema you install APEX into. Either becase it is directly installed into that schema
      or because you ran PIT_INSTALL_CLIENT.SQL to grant access to the target schema.
+  -- UTL_TEXT must be accessible by the schema you install APEX into. Either becase it is directly installed into that schema
+     or because you ran PIT_INSTALL_CLIENT.SQL to grant access to the target schema.
   -- UTL_APEX must be installed. As this installation needs access to PIT as well, requirement 1 is satisfied
   
   Parameters:

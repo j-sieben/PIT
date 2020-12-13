@@ -268,13 +268,15 @@ as
    * %param  p_value        Value to check
    * %param  p_type         Expected data type. One of the C_TYPE_... constants
    * %param  p_format_mask  Format mask to convert a string to the target value. May be NULL.
+   * %param  p_accept_null  Define whether a value must exist. If set to TRUE, a NULL value returns TRUE and FALSE otherwise.
    * %return Flag to indicate whether the varchar2 string is of the expected type (TRUE) or not (FALSE)
    * %usage  Is used to implement assert_datatype method
    */
   function check_datatype(
     p_value in varchar2,
     p_type in varchar2,
-    p_format_mask in varchar2)
+    p_format_mask in varchar2,
+    p_accept_null in boolean)
     return boolean;
    
     

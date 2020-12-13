@@ -268,6 +268,23 @@ as
   end copy_context_to_global;
   
   
+  /** Retrieves the actually valid context settings and copies it to G_CONTEXT
+   * %usage  Is used as a wrapper around COPY_CONTEXT_TO_GLOBAL that add reading the actual context.
+   */
+  procedure copy_actual_context_to_global
+  as
+    l_required_context pit_util.ora_name_type;
+  begin
+    -- start by reading the actual session details 
+    g_active_adapter.get_session_details(
+      p_user_name => g_user_name, 
+      p_session_id => g_client_id, 
+      p_required_context => l_required_context);
+      
+    copy_context_to_global(l_required_context);
+  end copy_actual_context_to_global;
+  
+  
   /** Sets new context settings for PIT at the context and raises CONTEXT_CHANGED event
    * %usage  Is called from <code>pit.SET_CONTEXT</code> to actually persist
    *         the required settings in the global context and raise a context switch event
@@ -600,7 +617,7 @@ as
     -- Initialize
     l_last_entry := g_call_stack.count;
     l_next_entry := l_last_entry + 1;
-    copy_context_to_global;
+    copy_actual_context_to_global;
 
     -- maintain timing
     if l_last_entry > 0 then
@@ -648,7 +665,7 @@ as
     l_actual_entry call_stack_type;
   begin
     l_last_entry := g_call_stack.last;
-    copy_context_to_global;
+    copy_actual_context_to_global;
     
     if l_last_entry > 0 then
       -- persist last call stack entry in out parameter
@@ -795,7 +812,7 @@ as
     return boolean
   as
   begin
-    copy_context_to_global;
+    copy_actual_context_to_global;
     return p_severity <= greatest(g_context.log_level, C_LEVEL_ERROR);
   exception
     when no_data_found then
@@ -814,7 +831,7 @@ as
     return boolean
   as
   begin
-    copy_context_to_global;
+    copy_actual_context_to_global;
     return p_trace_level <= g_context.trace_level;
   end trace_me;
   
@@ -1267,7 +1284,8 @@ as
   function check_datatype(
     p_value in varchar2,
     p_type in varchar2,
-    p_format_mask in varchar2)
+    p_format_mask in varchar2,
+    p_accept_null in boolean)
     return boolean
   as
     C_INTEGER_REGEXP constant pit_util.ora_name_type := '^[0-9]+$';
@@ -1277,51 +1295,57 @@ as
     l_date date;
     l_timestamp timestamp with time zone;
     l_xml xmltype;
+    l_perform_check boolean;
   begin
     l_format_mask := p_format_mask;
     
-    case p_type
-    when C_TYPE_INTEGER then
-      l_result := regexp_like(p_value, C_INTEGER_REGEXP);
-    when C_TYPE_NUMBER then
-      begin
-        l_format_mask := coalesce(l_format_mask, '999999999999999999D999999999');
-        l_number := to_number(p_value, l_format_mask);
-      exception
-        when others then
-          l_result := false;
-      end;
-    when C_TYPE_DATE then
-      begin
-        l_format_mask := coalesce(l_format_mask, sys_context('USERENV', 'NLS_DATE_FORMAT'));
-        l_date := to_date(p_value, p_format_mask);
-      exception
-        when others then
-          l_result := false;
-      end;
-    when C_TYPE_TIMESTAMP then
-      begin
-        if l_format_mask is null then
-          select value
-            into l_format_mask
-            from v$nls_parameters
-           where parameter = 'NLS_TIMESTAMP_FORMAT';
-        end if;
-        l_timestamp := to_timestamp(p_value, l_format_mask);
-      exception
-        when others then
-          l_result := false;
-      end;
-    when C_TYPE_XML then
-      begin
-        l_xml := xmltype(p_value);
-      exception
-        when others then
-          l_result := false;
-      end;
-    else
-      null;
-    end case;
+    l_perform_check := p_value is not null or not p_accept_null;
+    
+    if l_perform_check then
+      case p_type
+      when C_TYPE_INTEGER then
+        l_result := regexp_like(p_value, C_INTEGER_REGEXP);
+      when C_TYPE_NUMBER then
+        begin
+          l_format_mask := coalesce(l_format_mask, '999999999999999999D999999999');
+          l_number := to_number(p_value, l_format_mask);
+        exception
+          when others then
+            l_result := false;
+        end;
+      when C_TYPE_DATE then
+        begin
+          l_format_mask := coalesce(l_format_mask, sys_context('USERENV', 'NLS_DATE_FORMAT'));
+          l_date := to_date(p_value, p_format_mask);
+        exception
+          when others then
+            l_result := false;
+        end;
+      when C_TYPE_TIMESTAMP then
+        begin
+          if l_format_mask is null then
+            select value
+              into l_format_mask
+              from v$nls_parameters
+             where parameter = 'NLS_TIMESTAMP_FORMAT';
+          end if;
+          l_timestamp := to_timestamp(p_value, l_format_mask);
+        exception
+          when others then
+            l_result := false;
+        end;
+      when C_TYPE_XML then
+        begin
+          l_xml := xmltype(p_value);
+        exception
+          when others then
+            l_result := false;
+        end;
+      else
+        null;
+      end case;
+    end if;
+    
     return l_result;
   end check_datatype;
 
@@ -1380,9 +1404,9 @@ as
   /** CONTEXT MAINTENANCE */
   function get_context
     return pit_util.context_type
-  is
+  as
   begin
-    copy_context_to_global;
+    copy_actual_context_to_global;
     return g_context;
   end get_context;
 
@@ -1540,7 +1564,7 @@ as
   begin
     if g_all_modules.count > 0 then
       -- initialize
-      copy_context_to_global;
+      copy_actual_context_to_global;
       l_idx := g_all_modules.first;
       
       while l_idx is not null loop
@@ -1568,7 +1592,7 @@ as
     l_idx pit_util.ora_name_type;
   begin
     -- initialize
-    copy_context_to_global;
+    copy_actual_context_to_global;
     l_idx := g_active_modules.first;
     
     while l_idx is not null loop
@@ -1593,7 +1617,7 @@ as
     l_idx pit_util.ora_name_type;
   begin
     -- initialize
-    copy_context_to_global;
+    copy_actual_context_to_global;
     l_idx := g_available_modules.first;
     
     while l_idx is not null loop

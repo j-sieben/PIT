@@ -98,7 +98,24 @@ begin
     p_pti_pmg_name => 'PIT',
     p_pti_name => 'Tracing aus',
     p_pti_display_name => 'Tracing aus',
-    p_pti_description => 'Unterdrückt die Ausgabe von Tracing-Informationen');
+    p_pti_description => 'Unterdrückt die Ausgabe von Tracing-Informationen');    
+
+  pit_admin.merge_translatable_item(
+    p_pti_id => 'BOOLEAN_' || replace(&C_TRUE., ''''),
+    p_pti_pml_name => 'GERMAN',
+    p_pti_pmg_name => 'PIT',
+    p_pti_name => &C_TRUE.,
+    p_pti_display_name => 'Ja',
+    p_pti_description => 'Boolescher Wert für WAHR');
+
+  pit_admin.merge_translatable_item(
+    p_pti_id => 'BOOLEAN_' || replace(&C_FALSE., ''''),
+    p_pti_pml_name => 'GERMAN',
+    p_pti_pmg_name => 'PIT',
+    p_pti_name => &C_FALSE.,
+    p_pti_display_name => 'Nein',
+    p_pti_description => 'Boolescher Wert für FALSCH');
+    
     
   commit;
 end;

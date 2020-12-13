@@ -747,7 +747,8 @@ as
      p_message_name in varchar2 default msg.ASSERT_DATATYPE,
      p_msg_args msg_args := null,
      p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null)
+     p_error_code in varchar2 default null,
+     p_accept_null in boolean default true)
   as
     l_msg_args msg_args;
   begin
@@ -758,7 +759,7 @@ as
     end if;
     
     assert(
-      p_condition => pit_pkg.check_datatype(p_value, p_type, p_format_mask),
+      p_condition => pit_pkg.check_datatype(p_value, p_type, p_format_mask, p_accept_null),
       p_message_name => p_message_name,
       p_msg_args => l_msg_args,
       p_affected_id => p_affected_id,
@@ -887,6 +888,14 @@ as
       pit_pkg.reset_context;
     end if;
   end reset_context;
+  
+  
+  function get_context
+    return pit_util.context_type
+  as
+  begin
+    return pit_pkg.get_context;
+  end get_context;
   
   
   procedure start_message_collection

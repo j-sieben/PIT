@@ -32,6 +32,8 @@ as
   procedure copy_edit_pms
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_PMS');
     g_edit_pms_row.pms_pmg_name := utl_apex.get(g_page_values, 'pms_pmg_name');
     g_edit_pms_row.pms_name := utl_apex.get(g_page_values, 'pms_name');
@@ -40,15 +42,21 @@ as
     g_edit_pms_row.pms_description := utl_apex.get(g_page_values, 'pms_description');
     g_edit_pms_row.pms_pse_id := to_number(utl_apex.get(g_page_values, 'pms_pse_id'), 'fm9999999999990d99999999');
     g_edit_pms_row.pms_custom_error := to_number(utl_apex.get(g_page_values, 'pms_custom_error'), 'fm9999999999990d99999999');
+    
+    pit.leave_detailed;
   end copy_edit_pms;
   
   
   procedure copy_edit_pmg
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_PMG');
     g_edit_pmg_row.pmg_name := utl_apex.get(g_page_values, 'pmg_name');
     g_edit_pmg_row.pmg_description := utl_apex.get(g_page_values, 'pmg_description');
+    
+    pit.leave_detailed;
   end copy_edit_pmg;
   
   
@@ -69,8 +77,9 @@ as
   procedure copy_edit_par
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_PAR');
-    g_edit_par_row.row_id := utl_apex.get(g_page_values, 'row_id');
     g_edit_par_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
     g_edit_par_row.par_pgr_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_pgr_id'));
     g_edit_par_row.par_description := utl_apex.get(g_page_values, 'par_description');
@@ -85,23 +94,31 @@ as
     g_edit_par_row.par_validation_string := utl_apex.get(g_page_values, 'par_validation_string');
     g_edit_par_row.par_validation_message := utl_apex.get(g_page_values, 'par_validation_message');
     g_edit_par_row.par_xml_value := utl_apex.get(g_page_values, 'par_xml_value');
+    
+    pit.leave_detailed;
   end copy_edit_par;
   
   
   procedure copy_export
   as
   begin
+    pit.enter_detailed;
+    
     utl_text.string_to_table(utl_apex.get_value('pms_pmg_list'), g_export_row.pms_pmg_list);
     g_export_row.pms_pml_name := utl_apex.get_value('pms_pml_name');
     utl_text.string_to_table(utl_apex.get_value('pti_pmg_list'), g_export_row.pti_pmg_list);
     g_export_row.pti_pml_name := utl_apex.get_value('pti_pml_name');
     utl_text.string_to_table(utl_apex.get_value('par_pgr_list'), g_export_row.par_pgr_list);
+    
+    pit.leave_detailed;
   end copy_export;
   
   
   procedure copy_edit_module
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_MODULE');
     g_edit_module_row.par_id := utl_apex.get(g_page_values, 'par_id');
     g_edit_module_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
@@ -111,13 +128,17 @@ as
     g_edit_module_row.par_boolean_value := utl_apex.get(g_page_values, 'par_boolean_value');
     g_edit_module_row.par_integer_value := to_number(utl_apex.get(g_page_values, 'par_integer_value'), '9999999999990');
     g_edit_module_row.par_float_value := to_number(utl_apex.get(g_page_values, 'par_float_value'), '9999999999990d99999999');
+    
+    pit.leave_detailed;
   end copy_edit_module;
   
   
   procedure copy_edit_context
   as
   begin
-    g_page_values := utl_apex.get_page_values;
+    pit.enter_detailed;
+    
+    g_page_values := utl_apex.get_page_values('EDIT_CONTEXT');
     g_edit_context_row.par_id := utl_apex.get(g_page_values, 'PAR_ID');
     g_edit_context_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
     g_edit_context_row.pse_id := to_number(utl_apex.get(g_page_values, 'pse_id'), 'fm00');
@@ -126,17 +147,23 @@ as
     g_edit_context_row.par_description := utl_apex.get(g_page_values, 'par_description');
     g_edit_context_row.ctx_output_modules := utl_apex.get(g_page_values, 'ctx_output_modules');
     g_edit_context_row.ctx_timing := utl_apex.get(g_page_values, 'ctx_timing');
+    
+    pit.leave_detailed;
   end copy_edit_context;
   
   
   procedure copy_edit_toggle
   as
   begin
-    g_page_values := utl_apex.get_page_values;
+    pit.enter_detailed;
+    
+    g_page_values := utl_apex.get_page_values('EDIT_TOGGLE');
     g_edit_toggle_row.par_id := utl_apex.get(g_page_values, 'par_id');
     g_edit_toggle_row.par_description := utl_apex.get(g_page_values, 'par_description');
     g_edit_toggle_row.toggle_context_name := utl_apex.get(g_page_values, 'toggle_context_name');
     g_edit_toggle_row.toggle_module_list := utl_apex.get(g_page_values, 'toggle_module_list');
+    
+    pit.leave_detailed;
   end copy_edit_toggle;
   
   
@@ -158,7 +185,7 @@ as
     pit.enter_detailed;
     
     utl_apex.assert_not_null(
-        p_condition => g_edit_pmg_row.pmg_name, 
+        p_condition => p_name, 
         p_page_item => p_item_name,
         p_region_id => p_region_id);
         
@@ -356,7 +383,52 @@ as
   as
   begin
     return pit.get_default_language;
-  end get_default_language;    
+  end get_default_language;
+  
+  
+  function get_active_context
+    return varchar2
+  as
+    l_context pit_util.context_type;
+    l_stmt utl_apex.max_char;
+    l_context_template constant utl_apex.max_sql_char := q'^with params as (
+       select '#DEBUG_LEVEL#' debug_level,
+              '#TRACE_LEVEL#' trace_level,
+              '#TRACE_TIMING#' trace_timing,
+              '#LOG_MODULES#' log_modules
+         from dual),
+     trace_settings as(
+       select ptl_display_name
+         from pit_trace_level_v
+         join params
+           on ptl_id = trace_level),
+     trace_timing as(
+       select pti_display_name
+         from pit_translatable_item_v
+         join params
+           on pti_name = trace_timing
+          and pti_pmg_name = 'PIT'
+          and pti_id like 'BOOLEAN%'),
+     debug_settings as(
+       select pse_display_name
+         from pit_message_severity_v
+         join params
+           on pse_id = debug_level)
+select pse_display_name debug_level, ptl_display_name trace_level, pti_display_name trace_timing, log_modules
+  from params
+ cross join trace_settings
+ cross join debug_settings
+ cross join trace_timing;^';
+  begin
+    l_context := pit.get_context;
+    
+    return utl_text.bulk_replace(l_context_template, char_table(
+             'DEBUG_LEVEL', l_context.log_level,
+             'TRACE_LEVEL', l_context.trace_level,
+             'TRACE_TIMING', utl_apex.get_bool(l_context.trace_timing),
+             'LOG_MODULES', l_context.module_list));
+    
+  end get_active_context;
   
   
   procedure harmonize_sql_name(
@@ -565,7 +637,7 @@ as
     
     copy_edit_par;
     
-    g_edit_par_row.par_id := check_name(g_edit_par_row.par_id, 'PGR_ID', 'EDIT_PAR');
+    g_edit_par_row.par_id := check_name(g_edit_par_row.par_id, 'PAR_ID', 'EDIT_PAR');
     
     utl_apex.assert_datatype(
       p_value => g_edit_par_row.par_integer_value, 
@@ -592,7 +664,9 @@ as
       p_type => pit.type_xml,
       p_page_item => 'PAR_XML_VALUE');
     
-    utl_apex.assert_not_null(g_edit_par_row.par_pgr_id, 'PAR_PGR_ID');
+    utl_apex.assert_not_null(
+      p_condition => g_edit_par_row.par_pgr_id, 
+      p_page_item => 'PAR_PGR_ID');
       
     pit.leave_mandatory;
     return true;

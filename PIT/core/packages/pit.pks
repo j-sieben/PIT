@@ -811,6 +811,8 @@ as
    * %param [p_msg_args]     Optional list of replacement information
    * %param [p_affected_id]  Optional id of an item a message relates to
    * %param [p_error_code]   Optional error code, usable by external applications
+   * %param [p_accept_null]  Optional flag to indicate whether a value must be present. Defaults to TRUE, allowing NULL values.
+   *                         If set to FALSE, P_VALUE must contain a value, otherwise the method returns FALSE.
    */
    procedure assert_datatype(
      p_value in varchar2,
@@ -819,7 +821,8 @@ as
      p_message_name in varchar2 default msg.ASSERT_DATATYPE,
      p_msg_args msg_args := null,
      p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null);
+     p_error_code in varchar2 default null,
+     p_accept_null in boolean default true);
   
     
   /****************************** INTERNATIONALIZATION *********************************/
@@ -988,6 +991,15 @@ as
    */
   procedure reset_context(
     p_active_session_only in boolean default true);
+    
+  
+  /** Gets the actually set context as an instance of pit_util.CONTEXT_TYPE
+   * %usage  Call this method to get the actually set context settings. Useful to check whether
+   *         context switches were performed
+   * %return Instance of pit_util.CONTEXT_TYPE with the actual context settings
+   */
+  function get_context
+    return pit_util.context_type;
     
   
   /** Switches PIT collection mode on
