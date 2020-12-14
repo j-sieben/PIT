@@ -24,7 +24,7 @@ begin
     p_par_pgr_id => 'PIT',
     p_par_description => 'Loglevel of output module PIT_APEX',
     p_par_integer_value => 70,
-    p_par_validation_string => '#INTEGER_VALUE# in (10,20,30,40,50,60,70)',
+    p_par_validation_string => '#INTEGER# in (10,20,30,40,50,60,70)',
     p_par_validation_message => 'Allowed values: 10,20,30,40,50,60,70'
   );
 
@@ -33,7 +33,7 @@ begin
     p_par_pgr_id => 'PIT',
     p_par_description => 'Log level of output module PIT_APEX, if DEBUG was requested by APEX.',
     p_par_integer_value => 70,
-    p_par_validation_string => '#INTEGER_VALUE# in (10,20,30,40,50,60,70)',
+    p_par_validation_string => '#INTEGER# in (10,20,30,40,50,60,70)',
     p_par_validation_message => 'Allowed values: 10,20,30,40,50,60,70'
   );
 
@@ -49,7 +49,7 @@ begin
     p_par_pgr_id => 'PIT',
     p_par_description => 'Trace level of the module PIT_APEX, if DEBUG was requested by APEX.',
     p_par_integer_value => 50,
-    p_par_validation_string => '#INTEGER_VALUE# in (10,20,30,40,50)',
+    p_par_validation_string => '#INTEGER# in (10,20,30,40,50)',
     p_par_validation_message => 'Allowed values: 10,20,30,40,50'
   );
 

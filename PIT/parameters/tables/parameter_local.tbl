@@ -1,6 +1,7 @@
 create table parameter_local(
    pal_id &ORA_NAME_TYPE.,
    pal_pgr_id &ORA_NAME_TYPE.,
+   pal_pre_id &ORA_NAME_TYPE.,
    pal_string_value clob,
    pal_raw_value blob,
    pal_xml_value xmltype,
@@ -11,12 +12,14 @@ create table parameter_local(
    pal_boolean_value &FLAG_TYPE.,
    constraint parameter_local_pk primary key (pal_id, pal_pgr_id),
    constraint pal_pgr_id_fk foreign key (pal_pgr_id) references &INSTALL_USER..parameter_group(pgr_id),
+   constraint pal_pre_id_fk foreign key (pal_pre_id) references &INSTALL_USER..parameter_realm(pre_id),
    constraint pal_boolean_value_chk check (pal_boolean_value in (&C_TRUE., &C_FALSE.))
 );
 
 comment on table parameter_local is 'Local table to store overwritten parameters';
 comment on column parameter_local.pal_id is 'Primary key';
 comment on column parameter_local.pal_pgr_id is 'Primary key, reference to &INSTALL_USER..parameter_group(pal_pgr_id)';
+comment on column parameter_local.pal_pre_id is 'Reference to &INSTALL_USER..parameter_realm(pre_id)';
 comment on column parameter_local.pal_string_value is 'CLOB parameter value';
 comment on column parameter_local.pal_raw_value is 'BLOB parameter value';
 comment on column parameter_local.pal_xml_value is 'XML parameter value';

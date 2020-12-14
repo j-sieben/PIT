@@ -63,7 +63,7 @@ begin
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Optional postfix for exception constant names'
    ,p_par_string_value => q'^&EXCEPTION_POSTFIX.^'
-   ,p_par_validation_string => q'^length(#STRING_VALUE#) < 4^'
+   ,p_par_validation_string => q'^coalesce(length('#STRING#'), 0) < 4^'
    ,p_par_validation_message => q'^Postfix length must not exceed 3 characters^'
   );
 
@@ -72,7 +72,7 @@ begin
    ,p_par_pgr_id => 'PIT'
    ,p_par_string_value => q'^&EXCEPTION_PREFIX.^'
    ,p_par_description => 'Optional prefix for exception constant names'
-   ,p_par_validation_string => q'^length(#STRING_VALUE#) < 4^'
+   ,p_par_validation_string => q'^coalesce(length('#STRING#'), 0) < 4^'
    ,p_par_validation_message => q'^Prefix length must not exceed 3 characters^'
   );
 
@@ -91,7 +91,7 @@ begin
    ,p_par_string_value => q'^LOWER^'
    ,p_par_boolean_value => null
    ,p_par_is_modifiable => null
-   ,p_par_validation_string => q'^#STRING_VALUE# in ('LOWER', 'UPER', 'UNCHANGED')^'
+   ,p_par_validation_string => q'^'#STRING#' in ('LOWER', 'UPER', 'UNCHANGED')^'
    ,p_par_validation_message => q'^Allowed values are LOWER|UPPER|UNCHANGED^'
   );
 
@@ -128,7 +128,7 @@ Level Error#    Message
   param_admin.edit_parameter(
     p_par_id => 'PIT_TABLE_FIRE_THRESHOLD'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Loglevel für das Modul PIT_TABLE'
+   ,p_par_description => 'Log level for output module PIT_TABLE'
    ,p_par_integer_value => 70
    ,p_par_boolean_value => null
    ,p_par_is_modifiable => null
@@ -137,7 +137,7 @@ Level Error#    Message
   param_admin.edit_parameter(
     p_par_id => 'PIT_WEB_SOCKET_SERVER'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'WebSocket-Server zum Pushen von Nachrichten an PIT_APEX'
+   ,p_par_description => 'WebSocket server for pushing messages to PIT_APEX'
    ,p_par_string_value => q'^http://localhost:8880^'
    ,p_par_boolean_value => null
    ,p_par_is_modifiable => null

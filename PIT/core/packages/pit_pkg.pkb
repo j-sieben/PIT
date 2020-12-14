@@ -456,7 +456,7 @@ as
     -- store information as a default setting without reference to a client id, unless context type requires to do so
     if param.get_string(
          p_par_id => C_CONTEXT_TYPE, 
-         p_pgr_id => C_CONTEXT_GROUP) not in (
+         p_par_pgr_id => C_CONTEXT_GROUP) not in (
          utl_context.c_session,
          utl_context.c_force_client_id,
          utl_context.c_force_user_client_id)
@@ -507,7 +507,7 @@ as
     l_adapter_list := pit_util.string_to_table(
                         p_string_value => param.get_string(
                                             p_par_id => C_ADAPTER_PREFERENCE, 
-                                            p_pgr_id => C_PARAM_GROUP));
+                                            p_par_pgr_id => C_PARAM_GROUP));
     
     l_idx := l_adapter_list.first;
     
@@ -858,17 +858,17 @@ as
     -- Read static parameters
     g_context.allow_toggle := param.get_boolean(
                                 p_par_id => C_ALLOW_TOGGLE, 
-                                p_pgr_id => C_PARAM_GROUP);
+                                p_par_pgr_id => C_PARAM_GROUP);
     g_context.broadcast_context_switch := param.get_boolean(
                                             p_par_id => C_BROADCAST_CONTEXT_SWITCH, 
-                                            p_pgr_id => C_PARAM_GROUP);
+                                            p_par_pgr_id => C_PARAM_GROUP);
     g_warn_if_unusable_modules := param.get_boolean(
                                     p_par_id => C_WARN_IF_UNUSABLE_MODULES, 
-                                    p_pgr_id => C_PARAM_GROUP);
+                                    p_par_pgr_id => C_PARAM_GROUP);
                                     
     g_log_state_threshold := param.get_integer(
                                p_par_id => C_LOG_STATE_THRESHOLD,
-                               p_pgr_id => C_PARAM_GROUP);
+                               p_par_pgr_id => C_PARAM_GROUP);
     g_collect_mode := false;
     
     -- Empty collections

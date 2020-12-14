@@ -8,6 +8,7 @@ prompt &h2.Clean up existing installations
 
 prompt &h2.Create parameter tables
 @&tools.check_has_table parameter_group
+@&tools.check_has_table parameter_realm
 @&tools.check_has_table parameter_type
 @&tools.check_has_table parameter_tab
 @&tools.check_has_table parameter_local
@@ -22,5 +23,6 @@ prompt &h2.Create parameter packages
 @&tools.install_package_body param
 @&tools.install_package_body param_admin
 
-prompt &h2.Create default parameters
-@&tools.run_script create_parameters
+prompt &h2.Load data
+@&tools.run_script merge_parameter_realm
+@&tools.run_script merge_parameter_type

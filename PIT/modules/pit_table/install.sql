@@ -20,4 +20,4 @@ prompt &s1.Create types and packages
 @&tools.install_package_body pit_table_pkg
 
 prompt &s1.Create PIT_TABLE parameters
-@&tools.run_script create_parameters
+@&tools.run_script ParameterGroup_PIT
