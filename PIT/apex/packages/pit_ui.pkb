@@ -864,7 +864,8 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
       when utl_apex.updating then
         param.set_multiple(
           p_par_id => g_edit_module_row.par_id, 
-          p_pgr_id => g_edit_module_row.par_pgr_id, 
+          p_par_pgr_id => g_edit_module_row.par_pgr_id,
+          p_par_pre_id => null,
           p_par_string_value => g_edit_module_row.par_string_value,
           p_par_date_value => g_edit_module_row.par_date_value,
           p_par_timestamp_value => g_edit_module_row.par_timestamp_value,
@@ -874,7 +875,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
       when utl_apex.deleting then
         param.reset_parameter(
           p_par_id => g_edit_module_row.par_id, 
-          p_pgr_id => g_edit_module_row.par_pgr_id);
+          p_par_pgr_id => g_edit_module_row.par_pgr_id);
       else
         utl_apex.set_error(
           p_page_item => null,

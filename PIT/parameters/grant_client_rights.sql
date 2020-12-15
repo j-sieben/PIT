@@ -4,6 +4,8 @@
 
 @tools/grant_access.sql select PARAMETER_GROUP
 @tools/grant_access.sql references PARAMETER_GROUP
+@tools/grant_access.sql select PARAMETER_REALM
+@tools/grant_access.sql references PARAMETER_REALM
 @tools/grant_access.sql select PARAMETER_TAB
 @tools/grant_access.sql references PARAMETER_TAB
 @tools/grant_access.sql select PARAMETER_TYPE
