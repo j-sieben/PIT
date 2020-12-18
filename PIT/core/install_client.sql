@@ -8,26 +8,26 @@ prompt &h2.Granting access to PIT to &REMOTE_USER.
 
 prompt &h3.Grant rights and create synonyms
 -- Types
-@tools/grant_access.sql execute CHAR_TABLE
-@tools/grant_access.sql execute CLOB_TABLE
-@tools/grant_access.sql execute MESSAGE_TYPE
-@tools/grant_access.sql execute PIT_MESSAGE_TABLE
-@tools/grant_access.sql execute MSG
-@tools/grant_access.sql execute MSG_ARGS
-@tools/grant_access.sql execute MSG_ARGS_CHAR
-@tools/grant_access.sql execute MSG_PARAM
-@tools/grant_access.sql execute MSG_PARAMS
-@tools/grant_access.sql execute PIT
-@tools/grant_access.sql execute PIT_PKG
-@tools/grant_access.sql execute PIT_ADMIN
-@tools/grant_access.sql execute PIT_UTIL
-@tools/grant_access.sql execute UTL_CONTEXT
+@tools/grant_access.sql execute char_table
+@tools/grant_access.sql execute clob_table
+@tools/grant_access.sql execute message_type
+@tools/grant_access.sql execute pit_message_table
+@tools/grant_access.sql execute msg
+@tools/grant_access.sql execute msg_args
+@tools/grant_access.sql execute msg_args_char
+@tools/grant_access.sql execute msg_param
+@tools/grant_access.sql execute msg_params
+@tools/grant_access.sql execute pit
+@tools/grant_access.sql execute pit_pkg
+@tools/grant_access.sql execute pit_admin
+@tools/grant_access.sql execute pit_util
+@tools/grant_access.sql execute utl_context
 
 -- Tables and Views
-@tools/grant_access.sql select PIT_CALL_STACK
-@tools/grant_access.sql select PIT_LOG
-@tools/grant_access.sql "select, references" PIT_MESSAGE
-@tools/grant_access.sql select PIT_MESSAGE_LANGUAGE
-@tools/grant_access.sql select PIT_MESSAGE_LANGUAGE_V
-@tools/grant_access.sql "select, references" PIT_TRANSLATABLE_ITEM
-@tools/grant_access.sql select PIT_TRANSLATABLE_ITEM_V
+@tools/grant_access.sql select pit_call_stack
+@tools/grant_access.sql select pit_log
+@tools/grant_access.sql "select, references" pit_message
+@tools/grant_access.sql select pit_message_language
+@tools/grant_access.sql select pit_message_language_v
+@tools/grant_access.sql "select, references" pit_translatable_item
+@tools/grant_access.sql select pit_translatable_item_v

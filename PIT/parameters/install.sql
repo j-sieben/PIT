@@ -14,7 +14,9 @@ prompt &h2.Create parameter tables
 @&tools.check_has_table parameter_local
 
 prompt &h2.Create parameter view
+@&tools.install_view parameter_core_vw
 @&tools.install_view parameter_vw.owner
+@&tools.install_view parameter_realm_vw
 
 prompt &h2.Create parameter packages
 @&tools.install_package_spec param

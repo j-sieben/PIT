@@ -1,10 +1,10 @@
 
-@tools/revoke_access.sql execute PARAM
-@tools/revoke_access.sql execute PARAM_ADMIN
+@tools/revoke_access.sql execute param
+@tools/revoke_access.sql execute param_admin
 
-@tools/revoke_access.sql select PARAMETER_GROUP
-@tools/revoke_access.sql references PARAMETER_GROUP
-@tools/revoke_access.sql select PARAMETER_TAB
-@tools/revoke_access.sql references PARAMETER_TAB
-@tools/revoke_access.sql select PARAMETER_TYPE
-@tools/revoke_access.sql references PARAMETER_TYPE
+@tools/revoke_access.sql "select, references" parameter_group
+@tools/revoke_access.sql "select, references" parameter_realm
+@tools/revoke_access.sql "select, references" parameter_tab
+@tools/revoke_access.sql "select, references" parameter_type
+@tools/revoke_access.sql select parameter_core_vw
+@tools/revoke_access.sql select parameter_realm_vw

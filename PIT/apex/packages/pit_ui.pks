@@ -96,6 +96,18 @@ as
   procedure process_edit_par;
   
   
+  function validate_edit_par_realm
+    return boolean;
+  
+  procedure process_edit_par_realm;
+  
+  
+  function validate_edit_pre
+    return boolean;
+  
+  procedure process_edit_pre;
+  
+  
   function validate_export
     return boolean;
   

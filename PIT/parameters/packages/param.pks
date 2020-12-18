@@ -288,11 +288,13 @@ as
   /** Method to reset a parameter to its default value
    * %param  p_par_id  Name of the parameter
    * %param  p_par_pgr_id  Name of the parameter group
+   * %param  p_par_pre_id  Name of the parameter realm
    * %usage  Is used to remove a local setting. If removed, the default parameter value is active again.
    */
   procedure reset_parameter(
     p_par_id in parameter_vw.par_id%type,
-    p_par_pgr_id in parameter_group.pgr_id%type);
+    p_par_pgr_id in parameter_group.pgr_id%type,
+    p_par_pre_id in parameter_realm.pre_id%type default null);
     
   
   /** Method to create an installation script for the locally defined parameters

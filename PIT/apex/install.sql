@@ -1,116 +1,64 @@
 define apex_dir=apex/
 define apex_version_dir=&apex_dir.apex_&APEX_VERSION.
+define view_dir=&apex_dir.views/
+define tools=tools/
 
 prompt &h2.Installation in Schema &REMOTE_USER.
 prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 
 -- Packages
-@tools/grant_access.sql execute MAIL
-@tools/grant_access.sql execute PIT_APEX_PKG
-@tools/grant_access.sql execute PIT_CONSOLE_PKG
-@tools/grant_access.sql execute PIT_FILE_PKG
-@tools/grant_access.sql execute PIT_MAIL_PKG
-@tools/grant_access.sql execute PIT_TABLE_PKG
-@tools/grant_access.sql execute PIT_MODULE_META
+@&tools.grant_access.sql execute MAIL
+@&tools.grant_access.sql execute PIT_APEX_PKG
+@&tools.grant_access.sql execute PIT_CONSOLE_PKG
+@&tools.grant_access.sql execute PIT_FILE_PKG
+@&tools.grant_access.sql execute PIT_MAIL_PKG
+@&tools.grant_access.sql execute PIT_TABLE_PKG
+@&tools.grant_access.sql execute PIT_MODULE_META
 
 -- Tables and Views
-@tools/grant_access.sql select PIT_MESSAGE
-@tools/grant_access.sql select PIT_MESSAGE_GROUP
-@tools/grant_access.sql select PIT_MESSAGE_LANGUAGE
-@tools/grant_access.sql select PIT_MESSAGE_SEVERITY
-@tools/grant_access.sql select PIT_MESSAGE_SEVERITY_V
-@tools/grant_access.sql select PIT_TRACE_LEVEL
-@tools/grant_access.sql select PIT_TRACE_LEVEL_V
-@tools/grant_access.sql select PIT_MESSAGE_LANGUAGE_V
-@tools/grant_access.sql select PIT_MESSAGE_V
+@&tools.grant_access.sql select PIT_MESSAGE
+@&tools.grant_access.sql select PIT_MESSAGE_GROUP
+@&tools.grant_access.sql select PIT_MESSAGE_LANGUAGE
+@&tools.grant_access.sql select PIT_MESSAGE_SEVERITY
+@&tools.grant_access.sql select PIT_MESSAGE_SEVERITY_V
+@&tools.grant_access.sql select PIT_TRACE_LEVEL
+@&tools.grant_access.sql select PIT_TRACE_LEVEL_V
+@&tools.grant_access.sql select PIT_MESSAGE_LANGUAGE_V
+@&tools.grant_access.sql select PIT_MESSAGE_V
 
 alter session set current_schema=&REMOTE_USER.;
 
 prompt &h3.Create UI-VIEWS
-prompt &s1.View APEX_UI_LIST_MENU
-@&apex_dir.views/apex_ui_list_menu.vw
-
-prompt &s1.View PIT_UI_ADMIN_PMS
-@&apex_dir.views/pit_ui_admin_pms.vw
-
-prompt &s1.View PIT_UI_ADMIN_PAR
-@&apex_dir.views/pit_ui_admin_par.vw
-
-prompt &s1.View PIT_UI_EDIT_PGR
-@&apex_dir.views/pit_ui_edit_pgr.vw
-
-prompt &s1.View PIT_UI_ADMIN_PIT_CONTEXT
-@&apex_dir.views/pit_ui_admin_pit_context.vw
-
-prompt &s1.View PIT_UI_ADMIN_PIT_MODULE
-@&apex_dir.views/pit_ui_admin_pit_module.vw
-
-prompt &s1.View PIT_UI_ADMIN_PIT_TOGGLE
-@&apex_dir.views/pit_ui_admin_pit_toggle.vw
-
-prompt &s1.View PIT_UI_ADMIN_PIT_MODULE
-@&apex_dir.views/pit_ui_admin_pit_module.vw
-
-prompt &s1.View PIT_UI_EDIT_CONTEXT
-@&apex_dir.views/pit_ui_edit_context.vw
-
-prompt &s1.View PIT_UI_EDIT_MESSAGE_TRANS
-@&apex_dir.views/pit_ui_edit_message_trans.vw
-
-prompt &s1.View PIT_UI_EDIT_MODULE
-@&apex_dir.views/pit_ui_edit_module.vw
-
-prompt &s1.View PIT_UI_EDIT_PAR
-@&apex_dir.views/pit_ui_edit_par.vw
-
-prompt &s1.View PIT_UI_EDIT_PGR
-@&apex_dir.views/pit_ui_edit_pgr.vw
-
-prompt &s1.View PIT_UI_EDIT_PMG
-@&apex_dir.views/pit_ui_edit_pmg.vw
-
-prompt &s1.View PIT_UI_EDIT_PMS
-@&apex_dir.views/pit_ui_edit_pms.vw
-
-prompt &s1.View PIT_UI_EDIT_TOGGLE
-@&apex_dir.views/pit_ui_edit_toggle.vw
-
-prompt &s1.View PIT_UI_LANG_SETTINGS_DEFAULT
-@&apex_dir.views/pit_ui_lang_settings_default.vw
-
-prompt &s1.View PIT_UI_LIST_ACTIVE_FOR_PAGE
-@&apex_dir.views/pit_ui_list_active_for_page.vw
-
-prompt &s1.View PIT_UI_LOV_AVAILABLE_PACKAGES
-@&apex_dir.views/pit_ui_lov_available_packages.vw
-
-prompt &s1.View PIT_UI_LOV_BOOLEAN_TRI_STATE
-@&apex_dir.views/pit_ui_lov_boolean_tri_state.vw
-
-prompt &s1.View PIT_UI_LOV_CONTEXT
-@&apex_dir.views/pit_ui_lov_context.vw
-
-prompt &s1.View PIT_UI_LOV_MESSAGE_GROUP
-@&apex_dir.views/pit_ui_lov_message_group.vw
-
-prompt &s1.View PIT_UI_LOV_MESSAGE_LANGUAGE
-@&apex_dir.views/pit_ui_lov_message_language.vw
-
-prompt &s1.View PIT_UI_LOV_MESSAGE_SEVERITY
-@&apex_dir.views/pit_ui_lov_message_severity.vw
-
-prompt &s1.View PIT_UI_LOV_OUTPUT_MODULES
-@&apex_dir.views/pit_ui_lov_output_modules.vw
-
-prompt &s1.View PIT_UI_LOV_PARAMETER_GROUP
-@&apex_dir.views/pit_ui_lov_parameter_group.vw
-
-prompt &s1.View PIT_UI_LOV_PARAMETER_TYPE
-@&apex_dir.views/pit_ui_lov_parameter_type.vw
-
-prompt &s1.View PIT_UI_LOV_TRACE_LEVEL
-@&apex_dir.views/pit_ui_lov_trace_level.vw
-
+@&tools.install_view apex_ui_list_menu
+@&tools.install_view pit_ui_admin_pms
+@&tools.install_view pit_ui_admin_par
+@&tools.install_view pit_ui_edit_pgr
+@&tools.install_view pit_ui_admin_pit_context
+@&tools.install_view pit_ui_admin_pit_module
+@&tools.install_view pit_ui_admin_pit_toggle
+@&tools.install_view pit_ui_admin_pit_module
+@&tools.install_view pit_ui_edit_context
+@&tools.install_view pit_ui_edit_message_trans
+@&tools.install_view pit_ui_edit_module
+@&tools.install_view pit_ui_edit_par
+@&tools.install_view pit_ui_edit_par_realm
+@&tools.install_view pit_ui_edit_pgr
+@&tools.install_view pit_ui_edit_pmg
+@&tools.install_view pit_ui_edit_pms
+@&tools.install_view pit_ui_edit_toggle
+@&tools.install_view pit_ui_lang_settings_default
+@&tools.install_view pit_ui_list_active_for_page
+@&tools.install_view pit_ui_lov_available_packages
+@&tools.install_view pit_ui_lov_boolean_tri_state
+@&tools.install_view pit_ui_lov_context
+@&tools.install_view pit_ui_lov_message_group
+@&tools.install_view pit_ui_lov_message_language
+@&tools.install_view pit_ui_lov_message_severity
+@&tools.install_view pit_ui_lov_output_modules
+@&tools.install_view pit_ui_lov_parameter_group
+@&tools.install_view pit_ui_lov_parameter_realm
+@&tools.install_view pit_ui_lov_parameter_type
+@&tools.install_view pit_ui_lov_trace_level
 
 prompt &h3.Create UI-MESSAGES
 @@&apex_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT_UI.sql

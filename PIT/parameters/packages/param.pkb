@@ -12,48 +12,6 @@ as
   g_parameter_rec parameter_vw%rowtype;
 
   /* Helper */  
-  /* Procedure reads metadata for parameters
-   * %param  p_par_id      Name of the parameter
-   * %param  p_par_pgr_id  Name of the parameter group
-   * %usage  Is called internally to read settings regarding modifiability etc.
-   */
-  procedure get_parameter_settings(
-    p_par_id in parameter_vw.par_id%type,
-    p_pgr_id in parameter_group.pgr_id%type)
-  as
-    l_pgr_is_modifiable parameter_group.pgr_is_modifiable%type := C_FALSE;
-  begin
-    select -- If group cannot be modified, override individual setting, otherwise parameter setting
-           par_id,
-           par_pgr_id,
-           case
-             when pg.pgr_is_modifiable = C_TRUE then
-               coalesce(p.par_is_modifiable, C_TRUE)
-             else
-               C_FALSE
-           end is_modifiable,
-           par_validation_string,
-           par_validation_message
-      into g_parameter_rec.par_id, 
-           g_parameter_rec.par_pgr_id,
-           g_parameter_rec.par_is_modifiable,
-           g_parameter_rec.par_validation_string,
-           g_parameter_rec.par_validation_message
-      from parameter_group pg
-      left join
-           (select *
-              from parameter_vw p
-             where par_id = p_par_id) p
-        on pg.pgr_id = p.par_pgr_id
-     where pg.pgr_id = p_pgr_id;
-  exception
-    when no_data_found then
-      g_parameter_rec.par_is_modifiable := C_FALSE;
-      g_parameter_rec.par_validation_string := null;
-      g_parameter_rec.par_validation_message := null;
-      raise;
-  end get_parameter_settings;
-
 
   /* Helper procedure to convert a char into a boolean value
    * %param  p_boolean_value char value representign a boolean value: Y|N
@@ -64,7 +22,7 @@ as
     p_boolean_value in boolean)
     return varchar2
   as
-    l_boolean &FLAG_TYPE.;
+    l_boolean parameter_vw.par_boolean_value%type;
   begin
     case
       when p_boolean_value is null then
@@ -114,13 +72,13 @@ as
     p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null)
   as
-    l_boolean_value &FLAG_TYPE.;
+    l_boolean_value parameter_vw.par_boolean_value%type;
     l_is_modifiable boolean;
   begin
   
-    get_parameter_settings(
-      p_par_id => p_par_id,
-      p_pgr_id => p_par_pgr_id);
+    g_parameter_rec := param_admin.get_parameter_settings(
+                         p_par_id => p_par_id,
+                         p_pgr_id => p_par_pgr_id);
     
     l_is_modifiable := g_parameter_rec.par_id is not null and g_parameter_rec.par_is_modifiable = C_TRUE;
     
@@ -173,38 +131,50 @@ as
       p_par_timestamp_value => p_par_timestamp_value,
       p_par_boolean_value => p_par_boolean_value);
     
-    merge into parameter_local t
-    using (select g_parameter_rec.par_id pal_id,
-                  g_parameter_rec.par_pgr_id pal_pgr_id,
-                  p_par_pre_id pal_pre_id,
-                  g_parameter_rec.par_string_value pal_string_value,
-                  g_parameter_rec.par_raw_value pal_raw_value,
-                  g_parameter_rec.par_xml_value pal_xml_value,
-                  g_parameter_rec.par_integer_value pal_integer_value,
-                  g_parameter_rec.par_float_value pal_float_value,
-                  g_parameter_rec.par_date_value pal_date_value,
-                  g_parameter_rec.par_timestamp_value pal_timestamp_value,
-                  g_parameter_rec.par_boolean_value pal_boolean_value
-             from dual) s
-       on (t.pal_id = s.pal_id
-       and t.pal_pgr_id = s.pal_pgr_id
-           -- realm may or may not be set
-       and decode(t.pal_pre_id, s.pal_pre_id, 0, 1) = 0)
-     when matched then update set
-          t.pal_string_value = s.pal_string_value,
-          t.pal_raw_value = s.pal_raw_value,
-          t.pal_xml_value = s.pal_xml_value,
-          t.pal_integer_value = s.pal_integer_value,
-          t.pal_float_value = s.pal_float_value,
-          t.pal_date_value = s.pal_date_value,
-          t.pal_timestamp_value = s.pal_timestamp_value,
-          t.pal_boolean_value = s.pal_boolean_value
-     when not matched then insert
-          (pal_id, pal_pgr_id, pal_pre_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
-           pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
-          values
-          (s.pal_id, s.pal_pgr_id, s.pal_pre_id, s.pal_string_value, s.pal_raw_value, s.pal_xml_value, s.pal_integer_value, 
-           s.pal_float_value, s.pal_date_value, s.pal_timestamp_value, s.pal_boolean_value);
+    if p_par_pre_id is null then
+      merge into parameter_local t
+      using (select g_parameter_rec.par_id pal_id,
+                    g_parameter_rec.par_pgr_id pal_pgr_id,
+                    g_parameter_rec.par_string_value pal_string_value,
+                    g_parameter_rec.par_raw_value pal_raw_value,
+                    g_parameter_rec.par_xml_value pal_xml_value,
+                    g_parameter_rec.par_integer_value pal_integer_value,
+                    g_parameter_rec.par_float_value pal_float_value,
+                    g_parameter_rec.par_date_value pal_date_value,
+                    g_parameter_rec.par_timestamp_value pal_timestamp_value,
+                    g_parameter_rec.par_boolean_value pal_boolean_value
+               from dual) s
+         on (t.pal_id = s.pal_id
+         and t.pal_pgr_id = s.pal_pgr_id)
+       when matched then update set
+            t.pal_string_value = s.pal_string_value,
+            t.pal_raw_value = s.pal_raw_value,
+            t.pal_xml_value = s.pal_xml_value,
+            t.pal_integer_value = s.pal_integer_value,
+            t.pal_float_value = s.pal_float_value,
+            t.pal_date_value = s.pal_date_value,
+            t.pal_timestamp_value = s.pal_timestamp_value,
+            t.pal_boolean_value = s.pal_boolean_value
+       when not matched then insert
+            (pal_id, pal_pgr_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
+             pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
+            values
+            (s.pal_id, s.pal_pgr_id, s.pal_string_value, s.pal_raw_value, s.pal_xml_value, s.pal_integer_value, 
+             s.pal_float_value, s.pal_date_value, s.pal_timestamp_value, s.pal_boolean_value);
+    else
+      param_admin.edit_realm_parameter(  
+        p_par_id => p_par_id,
+        p_par_pgr_id => p_par_pgr_id,
+        p_par_pre_id => p_par_pre_id,
+        p_par_string_value => p_par_string_value,
+        p_par_raw_value => p_par_raw_value,
+        p_par_xml_value => p_par_xml_value,
+        p_par_integer_value => p_par_integer_value,
+        p_par_float_value => p_par_float_value,
+        p_par_date_value => p_par_date_value,
+        p_par_timestamp_value => p_par_timestamp_value,
+        p_par_boolean_value => p_par_boolean_value);
+    end if;
   end set_multiple;
   
   
@@ -453,12 +423,14 @@ as
   
   procedure reset_parameter(
     p_par_id in parameter_vw.par_id%type,
-    p_par_pgr_id in parameter_group.pgr_id%type)
+    p_par_pgr_id in parameter_group.pgr_id%type,
+    p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
     delete from parameter_local
      where pal_pgr_id = p_par_pgr_id
-       and pal_id = p_par_id;
+       and pal_id = p_par_id
+       and decode(pal_pre_id, p_par_pre_id, 0, 1) = 0;
   end reset_parameter;
   
   

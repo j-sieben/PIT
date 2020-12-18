@@ -5,6 +5,8 @@ as
   
   c_true constant &FLAG_TYPE. := &C_TRUE.;
   c_false constant &FLAG_TYPE. := &C_FALSE.;
+  
+  g_parameter_rec parameter_vw%rowtype;
 
   /** Helper method to cast a boolean value into the given FLAG_TYPE
    * %param  p_value  Boolean value to cast
@@ -24,6 +26,48 @@ as
   end convert_boolean;
   
   /* INTERFACE */
+  function get_parameter_settings(
+    p_par_id in parameter_vw.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_vw%rowtype
+  as
+    l_row parameter_vw%rowtype;
+    l_pgr_is_modifiable parameter_group.pgr_is_modifiable%type := C_FALSE;
+  begin
+    select -- If group cannot be modified, override individual setting, otherwise parameter setting
+           par_id,
+           par_pgr_id,
+           case
+             when pg.pgr_is_modifiable = C_TRUE then
+               coalesce(p.par_is_modifiable, C_TRUE)
+             else
+               C_FALSE
+           end is_modifiable,
+           par_validation_string,
+           par_validation_message
+      into l_row.par_id, 
+           l_row.par_pgr_id,
+           l_row.par_is_modifiable,
+           l_row.par_validation_string,
+           l_row.par_validation_message
+      from parameter_group pg
+      left join
+           (select *
+              from parameter_vw p
+             where par_id = p_par_id) p
+        on pg.pgr_id = p.par_pgr_id
+     where pg.pgr_id = p_pgr_id;
+     
+     return l_row;
+  exception
+    when no_data_found then
+      l_row.par_is_modifiable := C_FALSE;
+      l_row.par_validation_string := null;
+      l_row.par_validation_message := null;
+      raise;
+  end get_parameter_settings;
+  
+  
   procedure validate_parameter_group(
     p_row in parameter_group%rowtype)
   as
@@ -303,6 +347,111 @@ as
      where par_id = p_par_id
        and par_pgr_id = p_par_pgr_id;
   end delete_parameter;
+  
+  
+  procedure validate_realm_parameter(
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_string_value in parameter_vw.par_string_value%type default null,
+    p_par_raw_value in parameter_vw.par_raw_value%type default null,
+    p_par_xml_value in parameter_vw.par_xml_value%type default null,
+    p_par_integer_value in parameter_vw.par_integer_value%type default null,
+    p_par_float_value in parameter_vw.par_float_value%type default null,
+    p_par_date_value in parameter_vw.par_date_value%type default null,
+    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_boolean_value in boolean default null)
+  as
+    l_boolean_value parameter_vw.par_boolean_value%type;
+    l_is_modifiable boolean;
+  begin
+  
+    g_parameter_rec := get_parameter_settings(
+                         p_par_id => p_par_id,
+                         p_pgr_id => p_par_pgr_id);
+    
+    l_is_modifiable := g_parameter_rec.par_id is not null and g_parameter_rec.par_is_modifiable = C_TRUE;
+    
+    if l_is_modifiable then
+      g_parameter_rec.par_string_value := p_par_string_value;
+      g_parameter_rec.par_raw_value := p_par_raw_value;
+      g_parameter_rec.par_xml_value := p_par_xml_value;
+      g_parameter_rec.par_integer_value := p_par_integer_value;
+      g_parameter_rec.par_float_value := p_par_float_value;
+      g_parameter_rec.par_date_value := p_par_date_value;
+      g_parameter_rec.par_timestamp_value := p_par_timestamp_value;
+      g_parameter_rec.par_boolean_value := convert_boolean(p_par_boolean_value);
+      
+      param_admin.validate_parameter(g_parameter_rec);
+    else
+      if g_parameter_rec.par_id is not null then
+        raise_application_error(-20000, 'Parameter not existing');
+      else
+        raise_application_error(-20000, 'Parameter not modifiable');
+      end if;
+    end if;
+    
+  end validate_realm_parameter;
+  
+  
+  procedure edit_realm_parameter(
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_pre_id in parameter_realm.pre_id%type,
+    p_par_string_value in parameter_vw.par_string_value%type default null,
+    p_par_raw_value in parameter_vw.par_raw_value%type default null,
+    p_par_xml_value in parameter_vw.par_xml_value%type default null,
+    p_par_integer_value in parameter_vw.par_integer_value%type default null,
+    p_par_float_value in parameter_vw.par_float_value%type default null,
+    p_par_date_value in parameter_vw.par_date_value%type default null,
+    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_boolean_value in boolean default null)
+  as
+  begin    
+    validate_realm_parameter(
+      p_par_id => p_par_id,
+      p_par_pgr_id => p_par_pgr_id,
+      p_par_string_value => p_par_string_value,
+      p_par_raw_value => p_par_raw_value,
+      p_par_xml_value => p_par_xml_value,
+      p_par_integer_value => p_par_integer_value,
+      p_par_float_value => p_par_float_value,
+      p_par_date_value => p_par_date_value,
+      p_par_timestamp_value => p_par_timestamp_value,
+      p_par_boolean_value => p_par_boolean_value);
+    
+    merge into parameter_local t
+    using (select g_parameter_rec.par_id pal_id,
+                  g_parameter_rec.par_pgr_id pal_pgr_id,
+                  p_par_pre_id pal_pre_id,
+                  g_parameter_rec.par_string_value pal_string_value,
+                  g_parameter_rec.par_raw_value pal_raw_value,
+                  g_parameter_rec.par_xml_value pal_xml_value,
+                  g_parameter_rec.par_integer_value pal_integer_value,
+                  g_parameter_rec.par_float_value pal_float_value,
+                  g_parameter_rec.par_date_value pal_date_value,
+                  g_parameter_rec.par_timestamp_value pal_timestamp_value,
+                  g_parameter_rec.par_boolean_value pal_boolean_value
+             from dual) s
+       on (t.pal_id = s.pal_id
+       and t.pal_pgr_id = s.pal_pgr_id
+           -- realm may or may not be set
+       and decode(t.pal_pre_id, s.pal_pre_id, 0, 1) = 0)
+     when matched then update set
+          t.pal_string_value = s.pal_string_value,
+          t.pal_raw_value = s.pal_raw_value,
+          t.pal_xml_value = s.pal_xml_value,
+          t.pal_integer_value = s.pal_integer_value,
+          t.pal_float_value = s.pal_float_value,
+          t.pal_date_value = s.pal_date_value,
+          t.pal_timestamp_value = s.pal_timestamp_value,
+          t.pal_boolean_value = s.pal_boolean_value
+     when not matched then insert
+          (pal_id, pal_pgr_id, pal_pre_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
+           pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
+          values
+          (s.pal_id, s.pal_pgr_id, s.pal_pre_id, s.pal_string_value, s.pal_raw_value, s.pal_xml_value, s.pal_integer_value, 
+           s.pal_float_value, s.pal_date_value, s.pal_timestamp_value, s.pal_boolean_value);
+  end edit_realm_parameter;
   
   
   function get_parameter_group(

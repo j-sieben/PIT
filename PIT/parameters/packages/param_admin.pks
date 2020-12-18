@@ -8,6 +8,21 @@ as
   param_value_invalid_err exception;
   pragma exception_init(param_value_invalid_err, -20000);
   
+  
+  /* Procedure reads metadata for parameters
+   * %param  p_par_id      Name of the parameter
+   * %param  p_par_pgr_id  Name of the parameter group
+   * %return Instance of PARAMETER_VW that contains all parameter related data
+   *         with the exception of the concreate parameter values
+   * %usage  Is called to read settings regarding modifiability etc. Is used internally
+   *         and from PARAM pkg
+   */
+  function get_parameter_settings(
+    p_par_id in parameter_vw.par_id%type,
+    p_pgr_id in parameter_group.pgr_id%type)
+    return parameter_vw%rowtype;
+    
+  
   /** Method to validate a parameter group
    * %param  p_row  PARAMETER_GROUP record to validate
    * %usage  Is used to validate a parameter_group entry prior to writing it to db
@@ -151,6 +166,47 @@ as
   procedure delete_parameter(
     p_par_id in parameter_tab.par_id%type,
     p_par_pgr_id in parameter_tab.par_pgr_id%type);
+    
+  
+  /** Method to validate a realm based parameter if a validation string exists
+   * %param  p_parameter  Parameter to check
+   * %throws {*} - param_value_invalid_err, if validation failed or parameter does not exist or parameter is not modifiable
+   */
+  procedure validate_realm_parameter(
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_string_value in parameter_vw.par_string_value%type default null,
+    p_par_raw_value in parameter_vw.par_raw_value%type default null,
+    p_par_xml_value in parameter_vw.par_xml_value%type default null,
+    p_par_integer_value in parameter_vw.par_integer_value%type default null,
+    p_par_float_value in parameter_vw.par_float_value%type default null,
+    p_par_date_value in parameter_vw.par_date_value%type default null,
+    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_boolean_value in boolean default null);
+   
+   
+  /** Sets more than one parameter value
+   * %param  p_par_id      Name of the parameter
+   * %param  p_par_pgr_id  Name of the parameter group
+   * %param  p_par_pre_id      Name of the parameter realm
+   * %param [p_string_value..p_boolean_value] Value of the parameter
+   * %usage  Is called to persist realm related parameters
+   *         These parameters contrast local parameters in that they have different values
+   *         per "realm", i.e. for a dev, test or production environment.
+   *         As such, those parameters are persisted centrally
+   */
+  procedure edit_realm_parameter(
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_pre_id in parameter_realm.pre_id%type,
+    p_par_string_value in parameter_vw.par_string_value%type default null,
+    p_par_raw_value in parameter_vw.par_raw_value%type default null,
+    p_par_xml_value in parameter_vw.par_xml_value%type default null,
+    p_par_integer_value in parameter_vw.par_integer_value%type default null,
+    p_par_float_value in parameter_vw.par_float_value%type default null,
+    p_par_date_value in parameter_vw.par_date_value%type default null,
+    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_boolean_value in boolean default null);
     
     
   /* Return all parameters within a parameter group as a clob instance
