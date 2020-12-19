@@ -25,17 +25,17 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#GET_PARAMETER_SETTINGS">get_parameter_settings</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_BOOL">get_bool</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#GET_PARAMETER">get_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VALIDATE_PARAMETER">validate_parameter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -156,18 +156,6 @@ Program units
 </TD></TR>
 </TABLE>
 <BR>
-<A NAME="Types"></A>
-<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
-Types
-</TD></TR></TABLE>
-<TABLE CLASS="SUB_TABLE">
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#PARAM_REC">param_rec</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-</TABLE>
-<BR>
 <A NAME="Variables"></A>
 <TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
 Variables
@@ -175,11 +163,6 @@ Variables
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#G_PARAMETER_REC">g_parameter_rec</A>&nbsp;&nbsp;
-</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
-
-</TD></TR>
-<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#G_PARAM">g_param</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -191,12 +174,12 @@ Constants
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#C_TRUE">c_true</A>&nbsp;&nbsp;
+<A HREF="#C_TRUE">C_TRUE</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
-<A HREF="#C_FALSE">c_false</A>&nbsp;&nbsp;
+<A HREF="#C_FALSE">C_FALSE</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
@@ -210,23 +193,28 @@ Constants
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#C_DEFAULT_REALM">C_DEFAULT_REALM</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
 <A NAME="C_TRUE"></A>
 <P CLASS="TYPE_TITLE">
-c_true
+C_TRUE
 </P>
 <PRE CLASS="DECL_TEXT">
-c_true constant parameter_group.pgr_is_modifiable%type := 'Y';
+C_TRUE constant parameter_group.pgr_is_modifiable%type := 'Y';
 </PRE>
 <HR>
 <A NAME="C_FALSE"></A>
 <P CLASS="TYPE_TITLE">
-c_false
+C_FALSE
 </P>
 <PRE CLASS="DECL_TEXT">
-c_false constant parameter_group.pgr_is_modifiable%type := 'N';
+C_FALSE constant parameter_group.pgr_is_modifiable%type := 'N';
 </PRE>
 <HR>
 <A NAME="C_MAX_CHAR_LENGTH"></A>
@@ -245,42 +233,20 @@ c_max_raw_length
 c_max_raw_length constant number := 2000;
 </PRE>
 <HR>
+<A NAME="C_DEFAULT_REALM"></A>
+<P CLASS="TYPE_TITLE">
+C_DEFAULT_REALM
+</P>
+<PRE CLASS="DECL_TEXT">
+C_DEFAULT_REALM constant parameter_local.pal_pre_id%type := 'DEFAULT';
+</PRE>
+<HR>
 <A NAME="G_PARAMETER_REC"></A>
 <P CLASS="TYPE_TITLE">
 g_parameter_rec
 </P>
 <PRE CLASS="DECL_TEXT">
-g_parameter_rec parameter_tab%rowtype;
-</PRE>
-<HR>
-<A NAME="PARAM_REC"></A>
-<P CLASS="TYPE_TITLE">
-param_rec
-</P>
-<PRE CLASS="DECL_TEXT">
-type param_rec is record(
-  is_modifiable boolean,
-  is_existing boolean,
-  validation_string parameter_tab.par_validation_string%type,
-  validation_message parameter_tab.par_validation_message%type);
-</PRE>
-<HR>
-<A NAME="G_PARAM"></A>
-<P CLASS="TYPE_TITLE">
-g_param
-</P>
-<PRE CLASS="DECL_TEXT">
-g_param param_rec;
-</PRE>
-<HR>
-<A NAME="GET_PARAMETER_SETTINGS"></A>
-<P CLASS="TYPE_TITLE">
-get_parameter_settings
-</P>
-<PRE CLASS="DECL_TEXT">
-Procedure get_parameter_settings(p_par_id in parameter_tab.par_id%type,
-                                 p_pgr_id in parameter_group.pgr_id%type)
-
+g_parameter_rec parameter_vw%rowtype;
 </PRE>
 <HR>
 <A NAME="GET_BOOL"></A>
@@ -288,8 +254,7 @@ Procedure get_parameter_settings(p_par_id in parameter_tab.par_id%type,
 get_bool
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure get_bool(p_boolean_value in boolean,
-                   p_return_value  out nocopy varchar2)
+Function get_bool(p_boolean_value in boolean) return varchar2
 
 </PRE>
 <HR>
@@ -298,7 +263,25 @@ Procedure get_bool(p_boolean_value in boolean,
 get_parameter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure get_parameter(p_par_id in varchar2, p_pgr_id in varchar2)
+Procedure get_parameter(p_par_id in varchar2, p_par_pgr_id in varchar2)
+
+</PRE>
+<HR>
+<A NAME="VALIDATE_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+validate_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure validate_parameter(p_par_id              parameter_vw.par_id%type,
+                             p_par_pgr_id          parameter_vw.par_pgr_id%type,
+                             p_par_string_value    in parameter_vw.par_string_value%type default null,
+                             p_par_raw_value       in parameter_vw.par_raw_value%type default null,
+                             p_par_xml_value       in parameter_vw.par_xml_value%type default null,
+                             p_par_integer_value   in parameter_vw.par_integer_value%type default null,
+                             p_par_float_value     in parameter_vw.par_float_value%type default null,
+                             p_par_date_value      in parameter_vw.par_date_value%type default null,
+                             p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+                             p_par_boolean_value   in boolean default null)
 
 </PRE>
 <HR>
@@ -307,15 +290,16 @@ Procedure get_parameter(p_par_id in varchar2, p_pgr_id in varchar2)
 set_multiple
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_multiple(p_par_id              in varchar2,
-                       p_pgr_id              in varchar2,
-                       p_par_string_value    in parameter_tab.par_string_value%type default null,
-                       p_par_raw_value       in parameter_tab.par_raw_value%type default null,
-                       p_par_xml_value       in xmltype default null,
-                       p_par_integer_value   in number default null,
-                       p_par_float_value     in number default null,
-                       p_par_date_value      in date default null,
-                       p_par_timestamp_value in timestamp with time zone default null,
+Procedure set_multiple(p_par_id              parameter_vw.par_id%type,
+                       p_par_pgr_id          parameter_vw.par_pgr_id%type,
+                       p_par_pre_id          in parameter_realm.pre_id%type,
+                       p_par_string_value    in parameter_vw.par_string_value%type default null,
+                       p_par_raw_value       in parameter_vw.par_raw_value%type default null,
+                       p_par_xml_value       in parameter_vw.par_xml_value%type default null,
+                       p_par_integer_value   in parameter_vw.par_integer_value%type default null,
+                       p_par_float_value     in parameter_vw.par_float_value%type default null,
+                       p_par_date_value      in parameter_vw.par_date_value%type default null,
+                       p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
                        p_par_boolean_value   in boolean default null)
 
 </PRE>
@@ -325,9 +309,10 @@ Procedure set_multiple(p_par_id              in varchar2,
 set_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_string(p_par_id    in parameter_tab.par_id%type,
-                     p_pgr_id    in parameter_group.pgr_id%type,
-                     p_par_value in varchar2)
+Procedure set_string(p_par_id     in parameter_vw.par_id%type,
+                     p_par_pgr_id in parameter_group.pgr_id%type,
+                     p_par_value  in varchar2,
+                     p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -336,9 +321,10 @@ Procedure set_string(p_par_id    in parameter_tab.par_id%type,
 set_clob
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_clob(p_par_id    in parameter_tab.par_id%type,
-                   p_pgr_id    in parameter_group.pgr_id%type,
-                   p_par_value in parameter_tab.par_string_value%type)
+Procedure set_clob(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type,
+                   p_par_value  in parameter_vw.par_string_value%type,
+                   p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -347,9 +333,10 @@ Procedure set_clob(p_par_id    in parameter_tab.par_id%type,
 set_raw
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_raw(p_par_id    in parameter_tab.par_id%type,
-                  p_pgr_id    in parameter_group.pgr_id%type,
-                  p_par_value in raw)
+Procedure set_raw(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type,
+                  p_par_value  in raw,
+                  p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -358,9 +345,10 @@ Procedure set_raw(p_par_id    in parameter_tab.par_id%type,
 set_blob
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_blob(p_par_id    in parameter_tab.par_id%type,
-                   p_pgr_id    in parameter_group.pgr_id%type,
-                   p_par_value in parameter_tab.par_raw_value%type)
+Procedure set_blob(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type,
+                   p_par_pre_id in parameter_realm.pre_id%type,
+                   p_par_value  in parameter_vw.par_raw_value%type)
 
 </PRE>
 <HR>
@@ -369,9 +357,10 @@ Procedure set_blob(p_par_id    in parameter_tab.par_id%type,
 set_xml
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_xml(p_par_id    in parameter_tab.par_id%type,
-                  p_pgr_id    in parameter_group.pgr_id%type,
-                  p_par_value in parameter_tab.par_xml_value%type)
+Procedure set_xml(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type,
+                  p_par_value  in parameter_vw.par_xml_value%type,
+                  p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -380,9 +369,10 @@ Procedure set_xml(p_par_id    in parameter_tab.par_id%type,
 set_float
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_float(p_par_id    in parameter_tab.par_id%type,
-                    p_pgr_id    in parameter_group.pgr_id%type,
-                    p_par_value in parameter_tab.par_float_value%type)
+Procedure set_float(p_par_id     in parameter_vw.par_id%type,
+                    p_par_pgr_id in parameter_group.pgr_id%type,
+                    p_par_value  in parameter_vw.par_float_value%type,
+                    p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -391,9 +381,10 @@ Procedure set_float(p_par_id    in parameter_tab.par_id%type,
 set_integer
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_integer(p_par_id    in parameter_tab.par_id%type,
-                      p_pgr_id    in parameter_group.pgr_id%type,
-                      p_par_value in parameter_tab.par_integer_value%type)
+Procedure set_integer(p_par_id     in parameter_vw.par_id%type,
+                      p_par_pgr_id in parameter_group.pgr_id%type,
+                      p_par_value  in parameter_vw.par_integer_value%type,
+                      p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -402,9 +393,10 @@ Procedure set_integer(p_par_id    in parameter_tab.par_id%type,
 set_date
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_date(p_par_id    in parameter_tab.par_id%type,
-                   p_pgr_id    in parameter_group.pgr_id%type,
-                   p_par_value in parameter_tab.par_date_value%type)
+Procedure set_date(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type,
+                   p_par_value  in parameter_vw.par_date_value%type,
+                   p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -413,9 +405,10 @@ Procedure set_date(p_par_id    in parameter_tab.par_id%type,
 set_timestamp
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_timestamp(p_par_id    in parameter_tab.par_id%type,
-                        p_pgr_id    in parameter_group.pgr_id%type,
-                        p_par_value in parameter_tab.par_timestamp_value%type)
+Procedure set_timestamp(p_par_id     in parameter_vw.par_id%type,
+                        p_par_pgr_id in parameter_group.pgr_id%type,
+                        p_par_value  in parameter_vw.par_timestamp_value%type,
+                        p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -424,9 +417,10 @@ Procedure set_timestamp(p_par_id    in parameter_tab.par_id%type,
 set_boolean
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_boolean(p_par_id    in parameter_tab.par_id%type,
-                      p_pgr_id    in parameter_group.pgr_id%type,
-                      p_par_value in boolean)
+Procedure set_boolean(p_par_id     in parameter_vw.par_id%type,
+                      p_par_pgr_id in parameter_group.pgr_id%type,
+                      p_par_value  in boolean,
+                      p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>
@@ -435,8 +429,8 @@ Procedure set_boolean(p_par_id    in parameter_tab.par_id%type,
 get_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_string(p_par_id in parameter_tab.par_id%type,
-                    p_pgr_id in parameter_group.pgr_id%type)
+Function get_string(p_par_id     in parameter_vw.par_id%type,
+                    p_par_pgr_id in parameter_group.pgr_id%type)
   return varchar2
 
 </PRE>
@@ -446,9 +440,9 @@ Function get_string(p_par_id in parameter_tab.par_id%type,
 get_clob
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_clob(p_par_id in parameter_tab.par_id%type,
-                  p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_string_value%type
+Function get_clob(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_string_value%type
 
 </PRE>
 <HR>
@@ -457,8 +451,8 @@ Function get_clob(p_par_id in parameter_tab.par_id%type,
 get_raw
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_raw(p_par_id in parameter_tab.par_id%type,
-                 p_pgr_id in parameter_group.pgr_id%type) return raw
+Function get_raw(p_par_id     in parameter_vw.par_id%type,
+                 p_par_pgr_id in parameter_group.pgr_id%type) return raw
 
 </PRE>
 <HR>
@@ -467,9 +461,9 @@ Function get_raw(p_par_id in parameter_tab.par_id%type,
 get_blob
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_blob(p_par_id in parameter_tab.par_id%type,
-                  p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_raw_value%type
+Function get_blob(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_raw_value%type
 
 </PRE>
 <HR>
@@ -478,9 +472,9 @@ Function get_blob(p_par_id in parameter_tab.par_id%type,
 get_xml
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_xml(p_par_id in parameter_tab.par_id%type,
-                 p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_xml_value%type
+Function get_xml(p_par_id     in parameter_vw.par_id%type,
+                 p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_xml_value%type
 
 </PRE>
 <HR>
@@ -489,9 +483,9 @@ Function get_xml(p_par_id in parameter_tab.par_id%type,
 get_float
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_float(p_par_id in parameter_tab.par_id%type,
-                   p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_float_value%type
+Function get_float(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_float_value%type
 
 </PRE>
 <HR>
@@ -500,9 +494,9 @@ Function get_float(p_par_id in parameter_tab.par_id%type,
 get_integer
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_integer(p_par_id in parameter_tab.par_id%type,
-                     p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_integer_value%type
+Function get_integer(p_par_id     in parameter_vw.par_id%type,
+                     p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_integer_value%type
 
 </PRE>
 <HR>
@@ -511,9 +505,9 @@ Function get_integer(p_par_id in parameter_tab.par_id%type,
 get_date
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_date(p_par_id in parameter_tab.par_id%type,
-                  p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_date_value%type
+Function get_date(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_date_value%type
 
 </PRE>
 <HR>
@@ -522,9 +516,9 @@ Function get_date(p_par_id in parameter_tab.par_id%type,
 get_timestamp
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_timestamp(p_par_id in parameter_tab.par_id%type,
-                       p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_timestamp_value%type
+Function get_timestamp(p_par_id     in parameter_vw.par_id%type,
+                       p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_timestamp_value%type
 
 </PRE>
 <HR>
@@ -533,8 +527,8 @@ Function get_timestamp(p_par_id in parameter_tab.par_id%type,
 get_boolean
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_boolean(p_par_id in parameter_tab.par_id%type,
-                     p_pgr_id in parameter_group.pgr_id%type)
+Function get_boolean(p_par_id     in parameter_vw.par_id%type,
+                     p_par_pgr_id in parameter_group.pgr_id%type)
   return boolean
 
 </PRE>
@@ -544,8 +538,9 @@ Function get_boolean(p_par_id in parameter_tab.par_id%type,
 reset_parameter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure reset_parameter(p_par_id in parameter_tab.par_id%type,
-                          p_pgr_id in parameter_group.pgr_id%type)
+Procedure reset_parameter(p_par_id     in parameter_vw.par_id%type,
+                          p_par_pgr_id in parameter_group.pgr_id%type,
+                          p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <HR>

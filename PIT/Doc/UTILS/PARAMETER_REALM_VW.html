@@ -2,11 +2,11 @@
 <HTML>
  <HEAD>
  <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
- <TITLE>View PARAMETER_VW</TITLE>
+ <TITLE>View PARAMETER_REALM_VW</TITLE>
  <META name="object" content="VIEW">
- <META name="name" content="PARAMETER_VW">
- <META name="description" content="View to combine default, realm and local parameters.">
- <META name="columns" content="PAR_ID PAR_PGR_ID PAR_PRE_ID PAR_DESCRIPTION PAR_STRING_VALUE PAR_RAW_VALUE PAR_XML_VALUE PAR_INTEGER_VALUE PAR_FLOAT_VALUE PAR_DATE_VALUE PAR_TIMESTAMP_VALUE PAR_BOOLEAN_VALUE PAR_IS_MODIFIABLE PAR_PAT_ID PAR_VALIDATION_STRING PAR_VALIDATION_MESSAGE">
+ <META name="name" content="PARAMETER_REALM_VW">
+ <META name="description" content="Provides access to realm overwrites for existing parameters">
+ <META name="columns" content="PRE_PAR_ID PRE_PGR_ID PRE_ID PRE_STRING_VALUE PRE_INTEGER_VALUE PRE_FLOAT_VALUE PRE_DATE_VALUE PRE_TIMESTAMP_VALUE PRE_BOOLEAN_VALUE">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,8 +14,8 @@
 <TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
-<P CLASS="MAIN_TITLE">View PARAMETER_VW</P>
-View to combine default, realm and local parameters. Local parameters take precedence over default parameters
+<P CLASS="MAIN_TITLE">View PARAMETER_REALM_VW</P>
+Provides access to realm overwrites for existing parameters
 </TD></TR></TABLE>
 <HR>
 <A NAME="Columns"></A>
@@ -47,7 +47,7 @@ Comments
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_ID
+PRE_PAR_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -64,7 +64,7 @@ VARCHAR2(128)
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_PGR_ID
+PRE_PGR_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
@@ -81,30 +81,13 @@ VARCHAR2(128)
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_PRE_ID
+PRE_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 VARCHAR2(128)
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
 &nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_DESCRIPTION
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-VARCHAR2(800)
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 &nbsp;
@@ -115,7 +98,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_STRING_VALUE
+PRE_STRING_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CLOB
@@ -132,27 +115,10 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_RAW_VALUE
+PRE_INTEGER_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
-BLOB
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_XML_VALUE
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-SYS.XMLTYPE
+NUMBER(38)
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 Y
@@ -166,7 +132,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_INTEGER_VALUE
+PRE_FLOAT_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 NUMBER
@@ -183,24 +149,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_FLOAT_VALUE
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-NUMBER
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_DATE_VALUE
+PRE_DATE_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 DATE
@@ -217,7 +166,7 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_TIMESTAMP_VALUE
+PRE_TIMESTAMP_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 TIMESTAMP(6) WITH TIME ZONE
@@ -234,78 +183,10 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_BOOLEAN_VALUE
+PRE_BOOLEAN_VALUE
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 CHAR(1)
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_IS_MODIFIABLE
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-CHAR(1)
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_PAT_ID
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-VARCHAR2(128)
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_VALIDATION_STRING
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-VARCHAR2(4000)
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-Y
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-&nbsp;
-</TD>
-</TR>
-<TR>
-<TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_VALIDATION_MESSAGE
-</TD>
-<TD VALIGN="TOP" CLASS="DESC_TEXT">
-VARCHAR2(4000)
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 Y
@@ -323,25 +204,12 @@ Y
 <TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
 SQL
 </TD></TR></TABLE><PRE CLASS="DECL_TEXT">
-create or replace view parameter_vw as
-select par_id,
-       par_pgr_id,
-       par_pre_id,
-       par_description,
-       par_string_value,
-       par_raw_value,
-       par_xml_value,
-       par_integer_value,
-       par_float_value,
-       par_date_value,
-       par_timestamp_value,
-       par_boolean_value,
-       par_is_modifiable,
-       par_pat_id,
-       par_validation_string,
-       par_validation_message
-  from parameter_core_vw;
-comment on table PARAMETER_VW is 'View to combine default, realm and local parameters. Local parameters take precedence over default parameters';
+create or replace view parameter_realm_vw as
+select pal_id pre_par_id, pal_pgr_id pre_pgr_id, pal_pre_id pre_id,
+       pal_string_value pre_string_value, pal_integer_value pre_integer_value, pal_float_value pre_float_value,
+       pal_date_value pre_date_value, pal_timestamp_value pre_timestamp_value, pal_boolean_value pre_boolean_value
+  from parameter_local;
+comment on table PARAMETER_REALM_VW is 'Provides access to realm overwrites for existing parameters';
 </PRE>
 <P>&nbsp;</P>
 <P>&nbsp;</P>

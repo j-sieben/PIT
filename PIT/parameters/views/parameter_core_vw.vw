@@ -27,7 +27,7 @@ select par_id, par_pgr_id, par_description, r.pal_pre_id par_pre_id,
        -- Other local parameters
        select *
          from parameter_local
-        where pal_pre_id is not null) l
+        where pal_pre_id is null) l
     on par_id = l.pal_id
    and par_pgr_id = l.pal_pgr_id;
  

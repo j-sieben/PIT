@@ -2,11 +2,11 @@
 <HTML>
  <HEAD>
  <LINK REL="STYLESHEET" TYPE="text/css" HREF="../plsqldoc.css">
- <TITLE>View PARAMETER_VW</TITLE>
+ <TITLE>View PARAMETER_CORE_VW</TITLE>
  <META name="object" content="VIEW">
- <META name="name" content="PARAMETER_VW">
+ <META name="name" content="PARAMETER_CORE_VW">
  <META name="description" content="View to combine default, realm and local parameters.">
- <META name="columns" content="PAR_ID PAR_PGR_ID PAR_PRE_ID PAR_DESCRIPTION PAR_STRING_VALUE PAR_RAW_VALUE PAR_XML_VALUE PAR_INTEGER_VALUE PAR_FLOAT_VALUE PAR_DATE_VALUE PAR_TIMESTAMP_VALUE PAR_BOOLEAN_VALUE PAR_IS_MODIFIABLE PAR_PAT_ID PAR_VALIDATION_STRING PAR_VALIDATION_MESSAGE">
+ <META name="columns" content="PAR_ID PAR_PGR_ID PAR_DESCRIPTION PAR_PRE_ID PAR_STRING_VALUE PAR_RAW_VALUE PAR_XML_VALUE PAR_INTEGER_VALUE PAR_FLOAT_VALUE PAR_DATE_VALUE PAR_TIMESTAMP_VALUE PAR_BOOLEAN_VALUE PAR_IS_MODIFIABLE PAR_PAT_ID PAR_VALIDATION_STRING PAR_VALIDATION_MESSAGE">
 </HEAD>
 <BODY>
 <TABLE WIDTH="100%"><TR>
@@ -14,8 +14,8 @@
 <TD><P ALIGN="RIGHT"><STRONG><SMALL><A HREF="../index.html">index</A></SMALL></STRONG></TD>
 </TR></TABLE>
 <TABLE CLASS="MAIN_TABLE"><TR><TD CLASS="DESC_TEXT">
-<P CLASS="MAIN_TITLE">View PARAMETER_VW</P>
-View to combine default, realm and local parameters. Local parameters take precedence over default parameters
+<P CLASS="MAIN_TITLE">View PARAMETER_CORE_VW</P>
+View to combine default, realm and local parameters. Published to allow a client to read realm parameters
 </TD></TR></TABLE>
 <HR>
 <A NAME="Columns"></A>
@@ -81,10 +81,10 @@ VARCHAR2(128)
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_PRE_ID
+PAR_DESCRIPTION
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
-VARCHAR2(128)
+VARCHAR2(800)
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 Y
@@ -98,10 +98,10 @@ Y
 </TR>
 <TR>
 <TD VALIGN="TOP" CLASS="LIST_ITEM">
-PAR_DESCRIPTION
+PAR_PRE_ID
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
-VARCHAR2(800)
+VARCHAR2(128)
 </TD>
 <TD VALIGN="TOP" CLASS="DESC_TEXT">
 Y
@@ -323,25 +323,40 @@ Y
 <TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
 SQL
 </TD></TR></TABLE><PRE CLASS="DECL_TEXT">
-create or replace view parameter_vw as
-select par_id,
-       par_pgr_id,
-       par_pre_id,
-       par_description,
-       par_string_value,
-       par_raw_value,
-       par_xml_value,
-       par_integer_value,
-       par_float_value,
-       par_date_value,
-       par_timestamp_value,
-       par_boolean_value,
+create or replace view parameter_core_vw as
+select par_id, par_pgr_id, par_description, r.pal_pre_id par_pre_id,
+       coalesce(l.pal_string_value, r.pal_string_value, par_string_value) par_string_value,
+       coalesce(l.pal_raw_value, r.pal_raw_value, par_raw_value) par_raw_value,
+       coalesce(l.pal_xml_value, r.pal_xml_value, par_xml_value) par_xml_value,
+       coalesce(l.pal_integer_value, r.pal_integer_value, par_integer_value) par_integer_value,
+       coalesce(l.pal_float_value, r.pal_float_value, par_float_value) par_float_value,
+       coalesce(l.pal_date_value, r.pal_date_value, par_date_value) par_date_value,
+       coalesce(l.pal_timestamp_value, r.pal_timestamp_value, par_timestamp_value) par_timestamp_value,
+       coalesce(l.pal_boolean_value, r.pal_boolean_value, par_boolean_value) par_boolean_value,
        par_is_modifiable,
        par_pat_id,
        par_validation_string,
        par_validation_message
-  from parameter_core_vw;
-comment on table PARAMETER_VW is 'View to combine default, realm and local parameters. Local parameters take precedence over default parameters';
+  from parameter_tab
+  left join (
+       -- REALM parameters
+       select l.*
+         from parameter_local l
+         join parameter_tab
+           on pal_pre_id = to_char(par_string_value)
+        where par_id = 'REALM'
+          and par_pgr_id = 'PIT') r
+    on par_id = r.pal_id
+   and par_pgr_id = r.pal_pgr_id
+  left join (
+       -- Other local parameters
+       select *
+         from parameter_local
+        where pal_pre_id is null) l
+    on par_id = l.pal_id
+   and par_pgr_id = l.pal_pgr_id
+;
+comment on table PARAMETER_CORE_VW is 'View to combine default, realm and local parameters. Published to allow a client to read realm parameters';
 </PRE>
 <P>&nbsp;</P>
 <P>&nbsp;</P>

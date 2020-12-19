@@ -8,7 +8,7 @@ with session_state as(
               utl_apex.get_true is_true
          from dual)
 select /*+ no_merge (s)*/
-       par.rowid row_id, par.par_id, pgr.pgr_id, pgr.pgr_description, par.par_description, pat.pat_description,
+       par.par_id, pgr.pgr_id, pgr.pgr_description, par.par_description, pat.pat_description,
        ltrim (
          decode(to_char(dbms_lob.substr(par.par_string_value, 100, 1)), null, null, 'String: ' || to_char(dbms_lob.substr(par.par_string_value, 100, 1))) ||
          decode(to_char(dbms_lob.substr(par.par_xml_value.getClobVal(), 100, 1)), null, null, ', XML: ' || to_char(dbms_lob.substr(par.par_xml_value.getClobVal(), 100, 1))) ||
@@ -20,10 +20,15 @@ select /*+ no_merge (s)*/
          ', ') par_value,
        case coalesce(par.par_is_modifiable, pgr.pgr_is_modifiable) when 'Y' then s.flg_true else flg_false end par_is_modifiable,
        par.par_validation_string
-  from parameter_tab par
+  from parameter_vw par
   join parameter_group pgr
     on par.par_pgr_id = pgr.pgr_id
   join session_state s
     on pgr.pgr_id = s.pgr_id
   left join parameter_type pat
-    on par.par_pat_id = pat.pat_id;
+    on par.par_pat_id = pat.pat_id
+       -- exclude REALM parameter to allow for separate maintenance
+ where not(par_id = 'REALM' and par_pgr_id = 'PIT');
+ 
+ 
+comment on table pit_ui_admin_par is 'View to prepare the data for page ADMIN_PAR(arameter)';

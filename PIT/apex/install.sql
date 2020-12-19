@@ -32,6 +32,7 @@ prompt &h3.Create UI-VIEWS
 @&tools.install_view apex_ui_list_menu
 @&tools.install_view pit_ui_admin_pms
 @&tools.install_view pit_ui_admin_par
+@&tools.install_view pit_ui_admin_par_realm
 @&tools.install_view pit_ui_edit_pgr
 @&tools.install_view pit_ui_admin_pit_context
 @&tools.install_view pit_ui_admin_pit_module
@@ -45,6 +46,7 @@ prompt &h3.Create UI-VIEWS
 @&tools.install_view pit_ui_edit_pgr
 @&tools.install_view pit_ui_edit_pmg
 @&tools.install_view pit_ui_edit_pms
+@&tools.install_view pit_ui_edit_realm
 @&tools.install_view pit_ui_edit_toggle
 @&tools.install_view pit_ui_lang_settings_default
 @&tools.install_view pit_ui_list_active_for_page

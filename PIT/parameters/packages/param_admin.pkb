@@ -99,19 +99,19 @@ as
     
     validate_parameter_group(p_row);
     
-    merge into parameter_group p
+    merge into parameter_group t
     using (select p_row.pgr_id pgr_id,
                   p_row.pgr_description pgr_description,
                   p_row.pgr_is_modifiable pgr_is_modifiable
-             from dual) v
-       on (p.pgr_id = v.pgr_id)
+             from dual) s
+       on (t.pgr_id = s.pgr_id)
      when matched then update set
-          pgr_description = v.pgr_description,
-          pgr_is_modifiable = v.pgr_is_modifiable
+          pgr_description = s.pgr_description,
+          pgr_is_modifiable = s.pgr_is_modifiable
      when not matched then insert
           (pgr_id, pgr_description, pgr_is_modifiable)
           values
-          (v.pgr_id, v.pgr_description, v.pgr_is_modifiable);
+          (s.pgr_id, s.pgr_description, s.pgr_is_modifiable);
           
   end edit_parameter_group;
   
@@ -196,17 +196,17 @@ as
 	  p_pat_description parameter_type.pat_description%type) 
   as
   begin
-    merge into parameter_type p
+    merge into parameter_type t
     using (select p_pat_id pat_id,
                   p_pat_description pat_description
-             from dual) v
-       on (p.pat_id = v.pat_id)
+             from dual) s
+       on (t.pat_id = s.pat_id)
      when matched then update set
-          pat_description = v.pat_description
+          pat_description = s.pat_description
      when not matched then insert
           (pat_id, pat_description)
           values
-          (v.pat_id, v.pat_description);
+          (s.pat_id, s.pat_description);
   end edit_parameter_type;
   
   
@@ -254,7 +254,7 @@ as
   procedure edit_parameter(
     p_par_id in parameter_tab.par_id%type,
     p_par_pgr_id in parameter_tab.par_pgr_id%type,
-	  p_par_description in parameter_tab.par_description%type,
+	  p_par_description in parameter_tab.par_description%type default null,
     p_par_string_value in parameter_tab.par_string_value%type default null,
     p_par_xml_value in parameter_tab.par_xml_value%type default null,
     p_par_integer_value in parameter_tab.par_integer_value%type default null,
@@ -296,7 +296,7 @@ as
   begin
     validate_parameter(p_row);
     
-    merge into parameter_tab p
+    merge into parameter_tab t
     using (select p_row.par_id par_id,
                   p_row.par_pgr_id par_pgr_id,
                   p_row.par_description par_description,
@@ -311,30 +311,30 @@ as
                   p_row.par_pat_id par_pat_id,
                   p_row.par_validation_string par_validation_string,
                   p_row.par_validation_message par_validation_message
-             from dual) v
-       on (p.par_id = v.par_id
-       and p.par_pgr_id = v.par_pgr_id)
+             from dual) s
+       on (t.par_id = s.par_id
+       and t.par_pgr_id = s.par_pgr_id)
      when matched then update set
-          par_description = v.par_description,
-          par_string_value = v.par_string_value,
-          par_xml_value = v.par_xml_value,
-          par_integer_value = v.par_integer_value,
-          par_float_value = v.par_float_value,
-          par_date_value = v.par_date_value,
-          par_timestamp_value = v.par_timestamp_value,
-          par_boolean_value = v.par_boolean_value,
-          par_is_modifiable = v.par_is_modifiable,
-          par_pat_id = v.par_pat_id,
-          par_validation_string = v.par_validation_string,
-          par_validation_message = v.par_validation_message          
+          par_description = coalesce(s.par_description, t.par_description),
+          par_string_value = s.par_string_value,
+          par_xml_value = s.par_xml_value,
+          par_integer_value = s.par_integer_value,
+          par_float_value = s.par_float_value,
+          par_date_value = s.par_date_value,
+          par_timestamp_value = s.par_timestamp_value,
+          par_boolean_value = s.par_boolean_value,
+          par_is_modifiable = s.par_is_modifiable,
+          par_pat_id = s.par_pat_id,
+          par_validation_string = s.par_validation_string,
+          par_validation_message = s.par_validation_message          
      when not matched then insert
           (par_id, par_pgr_id, par_description, par_string_value, 
            par_xml_value, par_integer_value, par_float_value, par_date_value, par_timestamp_value,
            par_boolean_value, par_is_modifiable, par_pat_id, par_validation_string, par_validation_message)
           values
-          (v.par_id, v.par_pgr_id, v.par_description, v.par_string_value, 
-           v.par_xml_value, v.par_integer_value, v.par_float_value, v.par_date_value, v.par_timestamp_value,
-           v.par_boolean_value, v.par_is_modifiable, v.par_pat_id, v.par_validation_string, v.par_validation_message);
+          (s.par_id, s.par_pgr_id, s.par_description, s.par_string_value, 
+           s.par_xml_value, s.par_integer_value, s.par_float_value, s.par_date_value, s.par_timestamp_value,
+           s.par_boolean_value, s.par_is_modifiable, s.par_pat_id, s.par_validation_string, s.par_validation_message);
 
   end edit_parameter;
 
@@ -451,7 +451,20 @@ as
           values
           (s.pal_id, s.pal_pgr_id, s.pal_pre_id, s.pal_string_value, s.pal_raw_value, s.pal_xml_value, s.pal_integer_value, 
            s.pal_float_value, s.pal_date_value, s.pal_timestamp_value, s.pal_boolean_value);
-  end edit_realm_parameter;
+  end edit_realm_parameter;  
+  
+  
+  procedure delete_realm_parameter(
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_pre_id in parameter_realm.pre_id%type)
+  as
+  begin
+    delete from parameter_local
+     where pal_id = p_par_id
+       and pal_pgr_id = p_par_pgr_id
+       and pal_pre_id = p_par_pre_id;
+  end delete_realm_parameter;
   
   
   function get_parameter_group(

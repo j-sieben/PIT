@@ -9,6 +9,7 @@ as
   g_edit_pmg_row pit_ui_edit_pmg%rowtype;
   g_edit_pgr_row pit_ui_edit_pgr%rowtype;  
   g_edit_par_row pit_ui_edit_par%rowtype;  
+  g_edit_realm_row pit_ui_edit_realm%rowtype;
   g_edit_par_realm_row pit_ui_edit_par_realm%rowtype;  
   g_edit_module_row pit_ui_edit_module%rowtype;
   g_edit_context_row pit_ui_edit_context%rowtype;
@@ -124,7 +125,17 @@ as
     g_edit_par_realm_row.pre_date_value := to_date(utl_apex.get(g_page_values, 'pre_date_value'), 'dd.mm.yyyy');
     g_edit_par_realm_row.pre_timestamp_value := utl_apex.get(g_page_values, 'pre_timestamp_value');
     g_edit_par_realm_row.pre_boolean_value := utl_apex.get(g_page_values, 'pre_boolean_value');
-  end copy_edit_par_realm;
+  end copy_edit_par_realm;  
+  
+  
+  procedure copy_edit_realm
+  as
+  begin
+    g_page_values := utl_apex.get_page_values('EDIT_REALM');
+    g_edit_realm_row.par_id := utl_apex.get(g_page_values, 'par_id');
+    g_edit_realm_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
+    g_edit_realm_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+  end copy_edit_realm;
   
   
   procedure copy_export
@@ -512,7 +523,10 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
   procedure set_allow_toggles
   as
   begin
-    param.set_boolean('ALLOW_TOGGLE', 'PIT', utl_apex.get_value('ALLOW_TOGGLE') = utl_apex.C_TRUE);
+    param_admin.edit_parameter(
+      p_par_id => 'ALLOW_TOGGLE', 
+      p_par_pgr_id => 'PIT', 
+      p_par_boolean_value => utl_apex.get_value('ALLOW_TOGGLE') = utl_apex.C_TRUE);
   end set_allow_toggles;
   
   
@@ -767,6 +781,39 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     pit.leave_mandatory;
   end process_edit_par;
   
+    
+  function validate_edit_realm
+    return boolean
+  as
+  begin
+    pit.enter_mandatory;
+    
+    -- copy_edit_realm;
+    -- validation logic goes here. If it exists, uncomment COPY function
+    
+    pit.leave_mandatory;
+    return true;
+  end validate_edit_realm;
+  
+  
+  procedure process_edit_realm
+  as
+  begin
+    pit.enter_mandatory;
+    
+    copy_edit_realm;
+    case when utl_apex.updating then
+      param_admin.edit_parameter(
+        p_par_id => g_edit_realm_row.par_id,
+        p_par_pgr_id => g_edit_realm_row.par_pgr_id,
+        p_par_string_value => g_edit_realm_row.par_string_value);
+    else
+      null;
+    end case;
+    
+    pit.leave_mandatory;
+  end process_edit_realm;
+  
   
   function validate_edit_par_realm
     return boolean
@@ -777,7 +824,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     copy_edit_par_realm;
     
     pit.start_message_collection;
-    param.validate_parameter(
+    param_admin.validate_realm_parameter(
       p_par_id => g_edit_par_realm_row.pre_par_id,
       p_par_pgr_id => g_edit_par_realm_row.pre_pgr_id,
       p_par_string_value => g_edit_par_realm_row.pre_string_value,
@@ -808,7 +855,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     copy_edit_par_realm;
     
     if utl_apex.inserting or utl_apex.updating then
-      param.set_multiple(
+      param_admin.edit_realm_parameter(
         p_par_id => g_edit_par_realm_row.pre_par_id,
         p_par_pgr_id => g_edit_par_realm_row.pre_pgr_id,
         p_par_pre_id => g_edit_par_realm_row.pre_id,
@@ -819,7 +866,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
         p_par_timestamp_value => g_edit_par_realm_row.pre_timestamp_value,
         p_par_boolean_value => g_edit_par_realm_row.pre_boolean_value = utl_apex.C_TRUE);
     else
-      param.reset_parameter(
+      param_admin.delete_realm_parameter(
         p_par_id => g_edit_par_realm_row.pre_par_id,
         p_par_pgr_id => g_edit_par_realm_row.pre_pgr_id,
         p_par_pre_id => g_edit_par_realm_row.pre_id);
@@ -980,10 +1027,9 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     
     case 
       when utl_apex.updating then
-        param.set_multiple(
+        param_admin.edit_parameter(
           p_par_id => g_edit_module_row.par_id, 
           p_par_pgr_id => g_edit_module_row.par_pgr_id,
-          p_par_pre_id => null,
           p_par_string_value => g_edit_module_row.par_string_value,
           p_par_date_value => g_edit_module_row.par_date_value,
           p_par_timestamp_value => g_edit_module_row.par_timestamp_value,
@@ -991,7 +1037,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
           p_par_integer_value => g_edit_module_row.par_integer_value,
           p_par_float_value => g_edit_module_row.par_float_value);
       when utl_apex.deleting then
-        param.reset_parameter(
+        param_admin.delete_parameter(
           p_par_id => g_edit_module_row.par_id, 
           p_par_pgr_id => g_edit_module_row.par_pgr_id);
       else

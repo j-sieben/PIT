@@ -25,6 +25,11 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VALIDATE_PARAMETER">validate_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to validate a parameter if a validation string exists
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#SET_MULTIPLE">set_multiple</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Sets more than one parameter value
@@ -142,20 +147,59 @@ Method to create an installation script for the locally defined parameters
 </TABLE>
 <BR>
 <HR>
+<A NAME="VALIDATE_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+validate_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure validate_parameter(p_par_id              parameter_vw.par_id%type,
+                             p_par_pgr_id          parameter_vw.par_pgr_id%type,
+                             p_par_string_value    in parameter_vw.par_string_value%type default null,
+                             p_par_raw_value       in parameter_vw.par_raw_value%type default null,
+                             p_par_xml_value       in parameter_vw.par_xml_value%type default null,
+                             p_par_integer_value   in parameter_vw.par_integer_value%type default null,
+                             p_par_float_value     in parameter_vw.par_float_value%type default null,
+                             p_par_date_value      in parameter_vw.par_date_value%type default null,
+                             p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+                             p_par_boolean_value   in boolean default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to validate a parameter if a validation string exists<br>
+%throws <LI CLASS="DESC_TEXT"> - param_value_invalid_err, if validation failed or parameter does not exist or parameter is not modifiable</LI>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_parameter&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Parameter to check<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
 <A NAME="SET_MULTIPLE"></A>
 <P CLASS="TYPE_TITLE">
 set_multiple
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_multiple(p_par_id              in varchar2,
-                       p_pgr_id              in varchar2,
-                       p_par_string_value    in parameter_tab.par_string_value%type default null,
-                       p_par_raw_value       in parameter_tab.par_raw_value%type default null,
-                       p_par_xml_value       in xmltype default null,
-                       p_par_integer_value   in number default null,
-                       p_par_float_value     in number default null,
-                       p_par_date_value      in date default null,
-                       p_par_timestamp_value in timestamp with time zone default null,
+Procedure set_multiple(p_par_id              parameter_vw.par_id%type,
+                       p_par_pgr_id          parameter_vw.par_pgr_id%type,
+                       p_par_pre_id          in parameter_realm.pre_id%type,
+                       p_par_string_value    in parameter_vw.par_string_value%type default null,
+                       p_par_raw_value       in parameter_vw.par_raw_value%type default null,
+                       p_par_xml_value       in parameter_vw.par_xml_value%type default null,
+                       p_par_integer_value   in parameter_vw.par_integer_value%type default null,
+                       p_par_float_value     in parameter_vw.par_float_value%type default null,
+                       p_par_date_value      in parameter_vw.par_date_value%type default null,
+                       p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
                        p_par_boolean_value   in boolean default null)
 
 </PRE>
@@ -190,9 +234,16 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_pre_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
@@ -210,9 +261,10 @@ Value of the parameter<br>
 set_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_string(p_par_id    in parameter_tab.par_id%type,
-                     p_pgr_id    in parameter_group.pgr_id%type,
-                     p_par_value in varchar2)
+Procedure set_string(p_par_id     in parameter_vw.par_id%type,
+                     p_par_pgr_id in parameter_group.pgr_id%type,
+                     p_par_value  in varchar2,
+                     p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -246,7 +298,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -258,6 +310,13 @@ p_par_value&nbsp;&nbsp;
 Value of the parameter<br>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
@@ -266,9 +325,10 @@ Value of the parameter<br>
 set_clob
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_clob(p_par_id    in parameter_tab.par_id%type,
-                   p_pgr_id    in parameter_group.pgr_id%type,
-                   p_par_value in parameter_tab.par_string_value%type)
+Procedure set_clob(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type,
+                   p_par_value  in parameter_vw.par_string_value%type,
+                   p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -302,7 +362,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -314,6 +374,13 @@ p_par_value&nbsp;&nbsp;
 Value of the parameter<br>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
@@ -322,9 +389,10 @@ Value of the parameter<br>
 set_raw
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_raw(p_par_id    in parameter_tab.par_id%type,
-                  p_pgr_id    in parameter_group.pgr_id%type,
-                  p_par_value in raw)
+Procedure set_raw(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type,
+                  p_par_value  in raw,
+                  p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -358,7 +426,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -370,6 +438,13 @@ p_par_value&nbsp;&nbsp;
 Value of the parameter<br>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
@@ -378,9 +453,10 @@ Value of the parameter<br>
 set_blob
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_blob(p_par_id    in parameter_tab.par_id%type,
-                   p_pgr_id    in parameter_group.pgr_id%type,
-                   p_par_value in parameter_tab.par_raw_value%type)
+Procedure set_blob(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type,
+                   p_par_pre_id in parameter_realm.pre_id%type,
+                   p_par_value  in parameter_vw.par_raw_value%type)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -414,7 +490,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -426,6 +502,13 @@ p_par_value&nbsp;&nbsp;
 Value of the parameter<br>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
@@ -434,9 +517,10 @@ Value of the parameter<br>
 set_xml
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_xml(p_par_id    in parameter_tab.par_id%type,
-                  p_pgr_id    in parameter_group.pgr_id%type,
-                  p_par_value in parameter_tab.par_xml_value%type)
+Procedure set_xml(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type,
+                  p_par_value  in parameter_vw.par_xml_value%type,
+                  p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -470,7 +554,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -480,6 +564,13 @@ Name of the parameter group<br>
 p_par_value&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Value of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 </TABLE>
@@ -490,9 +581,10 @@ Value of the parameter<br>
 set_float
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_float(p_par_id    in parameter_tab.par_id%type,
-                    p_pgr_id    in parameter_group.pgr_id%type,
-                    p_par_value in parameter_tab.par_float_value%type)
+Procedure set_float(p_par_id     in parameter_vw.par_id%type,
+                    p_par_pgr_id in parameter_group.pgr_id%type,
+                    p_par_value  in parameter_vw.par_float_value%type,
+                    p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -526,7 +618,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -536,6 +628,13 @@ Name of the parameter group<br>
 p_par_value&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Value of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 </TABLE>
@@ -546,9 +645,10 @@ Value of the parameter<br>
 set_integer
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_integer(p_par_id    in parameter_tab.par_id%type,
-                      p_pgr_id    in parameter_group.pgr_id%type,
-                      p_par_value in parameter_tab.par_integer_value%type)
+Procedure set_integer(p_par_id     in parameter_vw.par_id%type,
+                      p_par_pgr_id in parameter_group.pgr_id%type,
+                      p_par_value  in parameter_vw.par_integer_value%type,
+                      p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -582,7 +682,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -592,6 +692,13 @@ Name of the parameter group<br>
 p_par_value&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Value of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 </TABLE>
@@ -602,9 +709,10 @@ Value of the parameter<br>
 set_date
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_date(p_par_id    in parameter_tab.par_id%type,
-                   p_pgr_id    in parameter_group.pgr_id%type,
-                   p_par_value in parameter_tab.par_date_value%type)
+Procedure set_date(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type,
+                   p_par_value  in parameter_vw.par_date_value%type,
+                   p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -638,7 +746,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -648,6 +756,13 @@ Name of the parameter group<br>
 p_par_value&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Value of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 </TABLE>
@@ -658,9 +773,10 @@ Value of the parameter<br>
 set_timestamp
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_timestamp(p_par_id    in parameter_tab.par_id%type,
-                        p_pgr_id    in parameter_group.pgr_id%type,
-                        p_par_value in parameter_tab.par_timestamp_value%type)
+Procedure set_timestamp(p_par_id     in parameter_vw.par_id%type,
+                        p_par_pgr_id in parameter_group.pgr_id%type,
+                        p_par_value  in parameter_vw.par_timestamp_value%type,
+                        p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -694,7 +810,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -704,6 +820,13 @@ Name of the parameter group<br>
 p_par_value&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Value of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 </TABLE>
@@ -714,9 +837,10 @@ Value of the parameter<br>
 set_boolean
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure set_boolean(p_par_id    in parameter_tab.par_id%type,
-                      p_pgr_id    in parameter_group.pgr_id%type,
-                      p_par_value in boolean)
+Procedure set_boolean(p_par_id     in parameter_vw.par_id%type,
+                      p_par_pgr_id in parameter_group.pgr_id%type,
+                      p_par_value  in boolean,
+                      p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -750,7 +874,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -762,6 +886,13 @@ p_par_value&nbsp;&nbsp;
 Value of the parameter<br>
 
 </TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_par_pre_id]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
 </TABLE>
 <BR>
 <HR>
@@ -770,8 +901,8 @@ Value of the parameter<br>
 get_string
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_string(p_par_id in parameter_tab.par_id%type,
-                    p_pgr_id in parameter_group.pgr_id%type)
+Function get_string(p_par_id     in parameter_vw.par_id%type,
+                    p_par_pgr_id in parameter_group.pgr_id%type)
   return varchar2
 
 </PRE>
@@ -806,7 +937,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -831,9 +962,9 @@ VARCHAR2 value, size limite 32KByte<br>
 get_clob
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_clob(p_par_id in parameter_tab.par_id%type,
-                  p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_string_value%type
+Function get_clob(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_string_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -867,7 +998,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -892,8 +1023,8 @@ CLOB value<br>
 get_raw
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_raw(p_par_id in parameter_tab.par_id%type,
-                 p_pgr_id in parameter_group.pgr_id%type) return raw
+Function get_raw(p_par_id     in parameter_vw.par_id%type,
+                 p_par_pgr_id in parameter_group.pgr_id%type) return raw
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -927,7 +1058,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -952,9 +1083,9 @@ RAW value<br>
 get_blob
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_blob(p_par_id in parameter_tab.par_id%type,
-                  p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_raw_value%type
+Function get_blob(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_raw_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -988,7 +1119,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1013,9 +1144,9 @@ RAW value<br>
 get_xml
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_xml(p_par_id in parameter_tab.par_id%type,
-                 p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_xml_value%type
+Function get_xml(p_par_id     in parameter_vw.par_id%type,
+                 p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_xml_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1049,7 +1180,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1074,9 +1205,9 @@ XMLType value<br>
 get_float
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_float(p_par_id in parameter_tab.par_id%type,
-                   p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_float_value%type
+Function get_float(p_par_id     in parameter_vw.par_id%type,
+                   p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_float_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1110,7 +1241,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1135,9 +1266,9 @@ Number value<br>
 get_integer
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_integer(p_par_id in parameter_tab.par_id%type,
-                     p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_integer_value%type
+Function get_integer(p_par_id     in parameter_vw.par_id%type,
+                     p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_integer_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1171,7 +1302,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1196,9 +1327,9 @@ Integer value<br>
 get_date
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_date(p_par_id in parameter_tab.par_id%type,
-                  p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_date_value%type
+Function get_date(p_par_id     in parameter_vw.par_id%type,
+                  p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_date_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1232,7 +1363,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1257,9 +1388,9 @@ Date value<br>
 get_timestamp
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_timestamp(p_par_id in parameter_tab.par_id%type,
-                       p_pgr_id in parameter_group.pgr_id%type)
-  return parameter_tab.par_timestamp_value%type
+Function get_timestamp(p_par_id     in parameter_vw.par_id%type,
+                       p_par_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw.par_timestamp_value%type
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1293,7 +1424,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1318,8 +1449,8 @@ Timestamp with time zone value<br>
 get_boolean
 </P>
 <PRE CLASS="DECL_TEXT">
-Function get_boolean(p_par_id in parameter_tab.par_id%type,
-                     p_pgr_id in parameter_group.pgr_id%type)
+Function get_boolean(p_par_id     in parameter_vw.par_id%type,
+                     p_par_pgr_id in parameter_group.pgr_id%type)
   return boolean
 
 </PRE>
@@ -1354,7 +1485,7 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
 
@@ -1379,8 +1510,9 @@ Boolean value<br>
 reset_parameter
 </P>
 <PRE CLASS="DECL_TEXT">
-Procedure reset_parameter(p_par_id in parameter_tab.par_id%type,
-                          p_pgr_id in parameter_group.pgr_id%type)
+Procedure reset_parameter(p_par_id     in parameter_vw.par_id%type,
+                          p_par_pgr_id in parameter_group.pgr_id%type,
+                          p_par_pre_id in parameter_realm.pre_id%type default null)
 
 </PRE>
 <P CLASS="DESC_TEXT">
@@ -1414,9 +1546,16 @@ Name of the parameter<br>
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
 </TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
-p_pgr_id&nbsp;&nbsp;
+p_par_pgr_id&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 Name of the parameter group<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_pre_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
 
 </TD></TR>
 </TABLE>

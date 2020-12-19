@@ -25,9 +25,24 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#GET_PARAMETER_SETTINGS">get_parameter_settings</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VALIDATE_PARAMETER_GROUP">validate_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to validate a parameter group
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#EDIT_PARAMETER_GROUP">edit_parameter_group</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_GROUP2">edit_parameter_group</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to change the definition of a parameter group
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_PARAMETER_GROUP">delete_parameter_group</A>&nbsp;&nbsp;
@@ -35,9 +50,29 @@ Program units
 Procedure to delete a parameter group
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_REALM">edit_parameter_realm</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER_REALM2">edit_parameter_realm</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_PARAMETER_REALM">delete_parameter_realm</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to delete a parameter realm
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#EDIT_PARAMETER_TYPE">edit_parameter_type</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VALIDATE_PARAMETER">validate_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to validate a parameter if a validation string exists
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#EDIT_PARAMETER">edit_parameter</A>&nbsp;&nbsp;
@@ -45,9 +80,29 @@ Procedure to delete a parameter group
 
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_PARAMETER2">edit_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Record overloaded version
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#DELETE_PARAMETER">delete_parameter</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#VALIDATE_REALM_PARAMETER">validate_realm_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Method to validate a realm based parameter if a validation string exists
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#EDIT_REALM_PARAMETER">edit_realm_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Sets a realm parameter value
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#DELETE_REALM_PARAMETER">delete_realm_parameter</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Resets a realm parameter to the default value
 </TD></TR>
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#EXPORT_PARAMETER_GROUP">export_parameter_group</A>&nbsp;&nbsp;
@@ -57,6 +112,77 @@ Procedure to delete a parameter group
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#WRITE_PARAMETER_FILES">write_parameter_files</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Exceptions"></A>
+<TABLE CLASS="SUB_TABLE"><TR><TD CLASS="SUB_TITLE">
+Exceptions
+</TD></TR></TABLE>
+<TABLE CLASS="SUB_TABLE">
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#PARAM_VALUE_INVALID_ERR">param_value_invalid_err</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="PARAM_VALUE_INVALID_ERR"></A>
+<P CLASS="TYPE_TITLE">
+param_value_invalid_err
+</P>
+<PRE CLASS="DECL_TEXT">
+param_value_invalid_err exception;
+</PRE>
+<HR>
+<A NAME="GET_PARAMETER_SETTINGS"></A>
+<P CLASS="TYPE_TITLE">
+get_parameter_settings
+</P>
+<PRE CLASS="DECL_TEXT">
+Function get_parameter_settings(p_par_id in parameter_vw.par_id%type,
+                                p_pgr_id in parameter_group.pgr_id%type)
+  return parameter_vw%rowtype
+
+</PRE>
+<HR>
+<A NAME="VALIDATE_PARAMETER_GROUP"></A>
+<P CLASS="TYPE_TITLE">
+validate_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure validate_parameter_group(p_row in parameter_group%rowtype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to validate a parameter group<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to validate a parameter_group entry prior to writing it to db<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_row&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+PARAMETER_GROUP record to validate<br>
 
 </TD></TR>
 </TABLE>
@@ -72,6 +198,46 @@ Procedure edit_parameter_group(p_pgr_id            in parameter_group.pgr_id%typ
                                p_pgr_is_modifiable in boolean default true)
 
 </PRE>
+<HR>
+<A NAME="EDIT_PARAMETER_GROUP2"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_group
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_group(p_row in parameter_group%rowtype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to change the definition of a parameter group<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called by the developer to maintain the settings of a parameter group. May be used to create a new parameter group as well.<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_row&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+PARAMETER_GROUP record to validate<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="DELETE_PARAMETER_GROUP"></A>
 <P CLASS="TYPE_TITLE">
@@ -121,6 +287,74 @@ Optional flag to indicate whether all referencing parameters should be deleted (
 </TABLE>
 <BR>
 <HR>
+<A NAME="EDIT_PARAMETER_REALM"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_realm
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_realm(p_pre_id          in parameter_realm.pre_id%type,
+                               p_pre_description in parameter_realm.pre_description%type,
+                               p_pre_is_active   in boolean default true)
+
+</PRE>
+<HR>
+<A NAME="EDIT_PARAMETER_REALM2"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter_realm
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter_realm(p_row in parameter_realm%rowtype)
+
+</PRE>
+<HR>
+<A NAME="DELETE_PARAMETER_REALM"></A>
+<P CLASS="TYPE_TITLE">
+delete_parameter_realm
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure delete_parameter_realm(p_pre_id in parameter_realm.pre_id%type,
+                                 p_force  in boolean default false)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to delete a parameter realm<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is used to remove a parameter realm<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_pre_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+ID of the parameter realm to delete<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_force]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Flag to indicate whether local parameters of this realm are to be deleted (TRUE) or whether an error is thrown if the realm is in use (FALSE)<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
 <A NAME="EDIT_PARAMETER_TYPE"></A>
 <P CLASS="TYPE_TITLE">
 edit_parameter_type
@@ -131,6 +365,35 @@ Procedure edit_parameter_type(p_pat_id          in parameter_type.pat_id%type,
 
 </PRE>
 <HR>
+<A NAME="VALIDATE_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+validate_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure validate_parameter(p_row in parameter_vw%rowtype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to validate a parameter if a validation string exists<br>
+%throws <A HREF=#PARAM_VALUE_INVALID_ERR>param_value_invalid_err</A>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_parameter&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Parameter to check<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
 <A NAME="EDIT_PARAMETER"></A>
 <P CLASS="TYPE_TITLE">
 edit_parameter
@@ -138,7 +401,7 @@ edit_parameter
 <PRE CLASS="DECL_TEXT">
 Procedure edit_parameter(p_par_id                 in parameter_tab.par_id%type,
                          p_par_pgr_id             in parameter_tab.par_pgr_id%type,
-                         p_par_description        in parameter_tab.par_description%type,
+                         p_par_description        in parameter_tab.par_description%type default null,
                          p_par_string_value       in parameter_tab.par_string_value%type default null,
                          p_par_xml_value          in parameter_tab.par_xml_value%type default null,
                          p_par_integer_value      in parameter_tab.par_integer_value%type default null,
@@ -153,6 +416,20 @@ Procedure edit_parameter(p_par_id                 in parameter_tab.par_id%type,
 
 </PRE>
 <HR>
+<A NAME="EDIT_PARAMETER2"></A>
+<P CLASS="TYPE_TITLE">
+edit_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_parameter(p_row in parameter_vw%rowtype)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Record overloaded version<br>
+
+<BR>
+</P>
+<HR>
 <A NAME="DELETE_PARAMETER"></A>
 <P CLASS="TYPE_TITLE">
 delete_parameter
@@ -162,6 +439,171 @@ Procedure delete_parameter(p_par_id     in parameter_tab.par_id%type,
                            p_par_pgr_id in parameter_tab.par_pgr_id%type)
 
 </PRE>
+<HR>
+<A NAME="VALIDATE_REALM_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+validate_realm_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure validate_realm_parameter(p_par_id              parameter_vw.par_id%type,
+                                   p_par_pgr_id          parameter_vw.par_pgr_id%type,
+                                   p_par_string_value    in parameter_vw.par_string_value%type default null,
+                                   p_par_raw_value       in parameter_vw.par_raw_value%type default null,
+                                   p_par_xml_value       in parameter_vw.par_xml_value%type default null,
+                                   p_par_integer_value   in parameter_vw.par_integer_value%type default null,
+                                   p_par_float_value     in parameter_vw.par_float_value%type default null,
+                                   p_par_date_value      in parameter_vw.par_date_value%type default null,
+                                   p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+                                   p_par_boolean_value   in boolean default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Method to validate a realm based parameter if a validation string exists<br>
+%throws <LI CLASS="DESC_TEXT"> - <A HREF=#PARAM_VALUE_INVALID_ERR>param_value_invalid_err</A>, if validation failed or parameter does not exist or parameter is not modifiable</LI>
+
+<BR>
+</P>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_parameter&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Parameter to check<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="EDIT_REALM_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+edit_realm_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure edit_realm_parameter(p_par_id              parameter_vw.par_id%type,
+                               p_par_pgr_id          parameter_vw.par_pgr_id%type,
+                               p_par_pre_id          in parameter_realm.pre_id%type,
+                               p_par_string_value    in parameter_vw.par_string_value%type default null,
+                               p_par_raw_value       in parameter_vw.par_raw_value%type default null,
+                               p_par_xml_value       in parameter_vw.par_xml_value%type default null,
+                               p_par_integer_value   in parameter_vw.par_integer_value%type default null,
+                               p_par_float_value     in parameter_vw.par_float_value%type default null,
+                               p_par_date_value      in parameter_vw.par_date_value%type default null,
+                               p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+                               p_par_boolean_value   in boolean default null)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Sets a realm parameter value<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to persist realm related parameters These parameters contrast local parameters in that they have different values per &quot;realm&quot;, i.e. for a dev, test or production environment. As such, those parameters are persisted centrally<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_pgr_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter group<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_pre_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+[p_string_value..p_boolean_value]&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Value of the parameter<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<HR>
+<A NAME="DELETE_REALM_PARAMETER"></A>
+<P CLASS="TYPE_TITLE">
+delete_realm_parameter
+</P>
+<PRE CLASS="DECL_TEXT">
+Procedure delete_realm_parameter(p_par_id     parameter_vw.par_id%type,
+                                 p_par_pgr_id parameter_vw.par_pgr_id%type,
+                                 p_par_pre_id in parameter_realm.pre_id%type)
+
+</PRE>
+<P CLASS="DESC_TEXT">
+Resets a realm parameter to the default value<br>
+
+<BR>
+</P>
+<A NAME="Usage"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Usage
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Is called to remove a realm related parameter<br>
+
+</TD></TR>
+</TABLE>
+<BR>
+<A NAME="Parameters"></A>
+<TABLE CLASS="LIST_TABLE"><TR><TD CLASS="LIST_TITLE">
+Parameters
+</TD></TR></TABLE>
+<TABLE CLASS="LIST_TABLE">
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_pgr_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter group<br>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+</TD><TD VALIGN="TOP" CLASS="LIST_ITEM" WIDTH=1%>
+p_par_pre_id&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+Name of the parameter realm<br>
+
+</TD></TR>
+</TABLE>
+<BR>
 <HR>
 <A NAME="EXPORT_PARAMETER_GROUP"></A>
 <P CLASS="TYPE_TITLE">

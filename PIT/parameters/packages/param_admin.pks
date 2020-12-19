@@ -122,24 +122,24 @@ as
   /* Procedure to edit a parameter
    * %param  p_par_id                  Name of the parameter
    * %param  p_par_pgr_id              Name of the parameter group   
-   * %param  p_par_description         Optional description of the parameter
-   * %param  p_par_string_value        CLOB parameter value
-   * %param  p_par_xml_value           XML parameter value
-   * %param  p_par_integer_value       Integer parameter value
-   * %param  p_par_float_value         Float parameter value
-   * %param  p_par_date_value          Date parameter value
-   * %param  p_par_timestamp_value     Timestamp with time zone parameter value
-   * %param  p_par_boolean_value       Boolean parameter value
-   * %param  p_pgr_is_modifiable       Flag indicating whether this parameter is modifiable by the end user
-   * %param  p_par_pat_id              String type of the parameter, Reference to PARAMETER_TYPE.
-   * %param  p_par_validation_string   PL/SQL-chunk to validate a parameter value entered. Is used to validate parameter values
-   * %param  p_par_validation_message  Name of a Message that is thrown if a validation of the parameter fails.
+   * %param [p_par_description]        Optional description of the parameter
+   * %param [p_par_string_value]       CLOB parameter value
+   * %param [p_par_xml_value]          XML parameter value
+   * %param [p_par_integer_value]      Integer parameter value
+   * %param [p_par_float_value]        Float parameter value
+   * %param [p_par_date_value]         Date parameter value
+   * %param [p_par_timestamp_value]    Timestamp with time zone parameter value
+   * %param [p_par_boolean_value]      Boolean parameter value
+   * %param [p_pgr_is_modifiable]      Flag indicating whether this parameter is modifiable by the end user
+   * %param [p_par_pat_id]             String type of the parameter, Reference to PARAMETER_TYPE.
+   * %param [p_par_validation_string]  PL/SQL-chunk to validate a parameter value entered. Is used to validate parameter values
+   * %param [p_par_validation_message] Name of a Message that is thrown if a validation of the parameter fails.
    * %usage  Is called from the developer to create or change a parameter.
    */
   procedure edit_parameter(
     p_par_id in parameter_tab.par_id%type,
     p_par_pgr_id in parameter_tab.par_pgr_id%type,
-	  p_par_description in parameter_tab.par_description%type,
+	  p_par_description in parameter_tab.par_description%type default null,
     p_par_string_value in parameter_tab.par_string_value%type default null,
     p_par_xml_value in parameter_tab.par_xml_value%type default null,
     p_par_integer_value in parameter_tab.par_integer_value%type default null,
@@ -185,7 +185,7 @@ as
     p_par_boolean_value in boolean default null);
    
    
-  /** Sets more than one parameter value
+  /** Sets a realm parameter value
    * %param  p_par_id      Name of the parameter
    * %param  p_par_pgr_id  Name of the parameter group
    * %param  p_par_pre_id      Name of the parameter realm
@@ -207,6 +207,18 @@ as
     p_par_date_value in parameter_vw.par_date_value%type default null,
     p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null);
+    
+  
+  /** Resets a realm parameter to the default value
+   * %param  p_par_id      Name of the parameter
+   * %param  p_par_pgr_id  Name of the parameter group
+   * %param  p_par_pre_id      Name of the parameter realm
+   * %usage  Is called to remove a realm related parameter
+   */
+  procedure delete_realm_parameter(
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_pre_id in parameter_realm.pre_id%type);   
     
     
   /* Return all parameters within a parameter group as a clob instance

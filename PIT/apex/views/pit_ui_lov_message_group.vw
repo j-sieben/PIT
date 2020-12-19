@@ -19,3 +19,6 @@ select pmg.pmg_description d, pmg.pmg_name r, coalesce(m.has_message, 0) has_mes
                where pti_pmg_name = pmg_name)
         group by pmg_name) t
     on pmg.pmg_name = t.pmg_name;
+
+
+comment on table pit_ui_lov_message_group is 'LOV-View for PIT message groups';
