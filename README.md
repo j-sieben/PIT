@@ -169,6 +169,10 @@ As this package, along with a generic parameter table, is accessible outside `PI
 
 A second component that might be reused is a component to maintain globally managed contexts. In order to store parameters in a way that they are accessible cross-session, you need a globally accessed context. Whereas this type of context is very nice in that access to its information does not incur context switches from neither PL/SQL nor SQL, it's not all intuitive to use. A separate package `UTL_CONTEXT` allows for a smoother utilization of globally accessible contexts. Being a separate package it's easy to reuse this package for your own context requirements.
 
+### APEX administration app for various APEX versions
+
+`PIT` ships with an administrative APEX application to easily create and maintain parameters, messages and `PIT` related settings such as contexts or context toggles. An export page allows you to export parameters, messages and translatable items as ZIP files. You may export as many message or paramter groups as you like. For messages and translatable items, there is also a possibility to generate and import XLIFF translation files in any Oracle supported target language.
+
 ## Further reading
 
 If you need assistance in installing `PIT`, read [Installing `PIT`](https://github.com/j-sieben/PIT/blob/master/Doc/installing_pit.md)
