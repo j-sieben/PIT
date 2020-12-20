@@ -23,7 +23,7 @@ The code is free to use and I hope that you'll enjoy doing so. Should any errors
 feel free to describe them here, I'll do my best to remove them.
 
 ## Usage
-The use of `PIT` is straightforward. I took care to create a dense and short interface for working with `PIT`, as I know that nobody likes to write long package and method names, especially in code areas that you need repeatidly. On the other side, I provide enough explicit methods not to bother you with repeated parameters like severity of a message or similar. Here's a code snippet of a minimal usage of `PIT``:
+The use of `PIT` is straightforward. I took care to create a dense and short interface for working with `PIT`, as I know that nobody likes to write long package and method names, especially in code areas that you need repeatidly. On the other side, I provide enough explicit methods not to bother you with repeated parameters like severity of a message or similar. Here's a code snippet of a minimal usage of `PIT`:
 ```plsql
 procedure my_proc(
   p_param1 in varchar2)
