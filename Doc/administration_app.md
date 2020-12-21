@@ -33,3 +33,60 @@ Finally, report »Current debug settings« shows the currently active settings f
 
 ![Report shows current debug settings](images/current_debug.png)
 
+### Administer messages
+
+The next application area allows to maintain and create messages. The following screenshot shows the main screen of that area:
+
+![PIT message administration screen](images/administer_messages.png)
+
+The report shows all available messages and their translations, if available. You may filter the view by selecting a message group and/or a language. You can also search for a specific message by entering parts of the message name into the search field. 
+
+By clicking on the edit pencil, a dialog to edit the selected message appears:
+
+![PIT message edit dialog](images/edit_message.png)
+
+Note that the name and message group cannot be changed as they are technical keys.
+
+By clicking on button »Edit Message Groups« it is possible to maintain the list of message groups. 
+
+![PIT message edit dialog](images/edit_message_group.png)
+
+Once again, this is an editable grid that allows you to edit, create or delete the message groups. Remember though that you can't delete a message group that contains messages. You will have to first remove the messages (or use the PL/SQL method `PIT_ADMIN.delete_message_group` with the parameter `p_force`set to `TRUE`to remove all messages within that group in one go.
+
+### Administer Parameter
+
+The next application area allows to maintain parameters. The following screenshot shows the main screen of that area:
+
+![PIT message administration screen](images/administer_param_group.png)
+
+On this screen, you have to select a parameter group to display. The report then shows all parameters of that group, giving you the option to edit one parameter using the pencil link. Analogous to the administer messages screen, you can create new parameters, edit or delete existing parameters and maintain the parameter group list using the button »Administer Parameter Group«.
+
+If you edit or create an existing parameter, a dialog box is shown that enables you to edit the details of a parameter:
+
+![PIT message administration screen](images/edit_parameter.png)
+
+This dialog is split into two areas. The upper area allows you to set the different aspects of a parameter. If the parameter is existing already, you can't change it's name or group, as those are technical keys. If the parameter group allows to edit the parameter values, this can be overriden on a per parameter basis. 
+
+#### Validation expression and error message
+
+You can provide the parameter with a PL/SQL snippet that checks the parameter value entered. If set, this code will be run against the parameter value. You can reference the string, integer, float or boolean values by utilizing text anchors (see the help text of item »Validation expression« for a list of available anchors). If this test fails, error message is raised, giving the end user an indication on the allowed values.
+
+#### Parameter Realm
+
+Despite the mandator awareness of parameters (they can be overwritten by a mandator without changing the default parameter value), it is sometimes useful to be able to maintain different parameter values per deployment target. This is referred to as a »realm«. Setting different parameter values per realm allows to maintain fi. a URL differently for development, test and prduction machines.
+
+In the lower half of the dialog there is a editable grid, allowing you to select a realm and the respective value.
+
+### Master Data
+
+The last area of the APEX administration UI is dedicated to exporting and translating master data. The following screenshot shows the main screen of that area:
+
+![PIT message administration screen](images/admin_master_data.png)
+
+In the different areas you can do very similar things: 
+- Select the groups of messages, parameters or translatable items you want to work with by moving them to the right hand side of the toggle controls
+- Export the groups as zip files containing a file per selected group
+- In the case of messages and translatable items, you can also select to create an XLIFF file for translation or to import an XLIFF file with the translated items
+
+By importing a translated XLIFF file into the database, all messages or translatable items get translated immediately.
+
