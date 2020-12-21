@@ -28,7 +28,7 @@ prompt APPLICATION 120 - PIT-Administration
 -- Application Export:
 --   Application:     120
 --   Name:            PIT-Administration
---   Date and Time:   16:26 Monday December 21, 2020
+--   Date and Time:   17:19 Monday December 21, 2020
 --   Exported By:     APP_ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -63,7 +63,7 @@ prompt APPLICATION 120 - PIT-Administration
 --         Shortcuts:              1
 --         Plug-ins:               1
 --       Globalization:
---         Messages:              12
+--         Messages:              16
 --       Reports:
 --       E-Mail:
 --     Supporting Objects:  Included
@@ -114,7 +114,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_friendly_url=>'N'
 ,p_last_updated_by=>'APP_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20201221161756'
+,p_last_upd_yyyymmddhh24miss=>'20201221171827'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_ui_type_name => null
@@ -304,9 +304,7 @@ wwv_flow_api.create_plugin_setting(
 ,p_plugin_type=>'ITEM TYPE'
 ,p_plugin=>'NATIVE_YES_NO'
 ,p_attribute_01=>'Y'
-,p_attribute_02=>'Ja'
 ,p_attribute_03=>'N'
-,p_attribute_04=>'Nein'
 ,p_attribute_05=>'SWITCH_CB'
 );
 wwv_flow_api.create_plugin_setting(
@@ -17461,18 +17459,6 @@ wwv_flow_api.create_translation(
 ,p_translate_from_text=>'N'
 );
 wwv_flow_api.create_translation(
- p_id=>wwv_flow_api.id(17301025458944485)
-,p_translated_flow_id=>12001
-,p_translate_to_id=>wwv_flow_api.id(47062519754416647.12001)
-,p_translate_from_id=>wwv_flow_api.id(47062519754416647)
-,p_translate_column_id=>299
-,p_translate_to_lang_code=>'en'
-,p_translation_specific_to_item=>'NO'
-,p_template_translatable=>'N'
-,p_translate_to_text=>'Yes'
-,p_translate_from_text=>'Ja'
-);
-wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17301227370944487)
 ,p_translated_flow_id=>12001
 ,p_translate_to_id=>wwv_flow_api.id(47062519754416647.12001)
@@ -17495,18 +17481,6 @@ wwv_flow_api.create_translation(
 ,p_template_translatable=>'N'
 ,p_translate_to_text=>'#VALUE#'
 ,p_translate_from_text=>'#VALUE#'
-);
-wwv_flow_api.create_translation(
- p_id=>wwv_flow_api.id(17301654554944489)
-,p_translated_flow_id=>12001
-,p_translate_to_id=>wwv_flow_api.id(47062519754416647.12001)
-,p_translate_from_id=>wwv_flow_api.id(47062519754416647)
-,p_translate_column_id=>301
-,p_translate_to_lang_code=>'en'
-,p_translation_specific_to_item=>'NO'
-,p_template_translatable=>'N'
-,p_translate_to_text=>'No'
-,p_translate_from_text=>'Nein'
 );
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17301852561944492)
@@ -17611,9 +17585,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'N'
 ,p_translate_from_text=>'N'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17303405609944503)
 ,p_page_id=>12
@@ -17640,6 +17611,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'N'
 ,p_translate_from_text=>'N'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17303858011944503)
 ,p_page_id=>101
@@ -18568,9 +18542,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Language ID'
 ,p_translate_from_text=>'Sprache-ID'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17318088374944701)
 ,p_page_id=>6
@@ -18597,6 +18568,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Parameter value'
 ,p_translate_from_text=>'Parameterwert'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17318482553944701)
 ,p_page_id=>7
@@ -18893,8 +18867,8 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'1'
-,p_translate_from_text=>'1'
+,p_translate_to_text=>'APPLICATION'
+,p_translate_from_text=>'APPLICATION'
 );
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17323006456944704)
@@ -19546,9 +19520,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'right'
 ,p_translate_from_text=>'right'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17333045708944714)
 ,p_page_id=>8
@@ -19575,6 +19546,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'N'
 ,p_translate_from_text=>'N'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17333422842944714)
 ,p_page_id=>7
@@ -20278,19 +20252,6 @@ wwv_flow_api.create_translation(
 ,p_translate_from_text=>unistr('- bitte w\00E4hlen')
 );
 wwv_flow_api.create_translation(
- p_id=>wwv_flow_api.id(17344255205944764)
-,p_page_id=>11
-,p_translated_flow_id=>12001
-,p_translate_to_id=>wwv_flow_api.id(36842531164604989.12001)
-,p_translate_from_id=>wwv_flow_api.id(36842531164604989)
-,p_translate_column_id=>450
-,p_translate_to_lang_code=>'en'
-,p_translation_specific_to_item=>'NO'
-,p_template_translatable=>'N'
-,p_translate_to_text=>'-'
-,p_translate_from_text=>'-'
-);
-wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(17344473366944765)
 ,p_page_id=>2
 ,p_translated_flow_id=>12001
@@ -20368,6 +20329,31 @@ end;
 /
 begin
 wwv_flow_api.create_message(
+ p_id=>wwv_flow_api.id(17700828536437293)
+,p_name=>'BOOLEAN_N'
+,p_message_language=>'de'
+,p_message_text=>'Nein'
+);
+wwv_flow_api.create_message(
+ p_id=>wwv_flow_api.id(17701774404457467)
+,p_name=>'BOOLEAN_N'
+,p_message_text=>'No'
+);
+wwv_flow_api.create_message(
+ p_id=>wwv_flow_api.id(17700661071436468)
+,p_name=>'BOOLEAN_Y'
+,p_message_language=>'de'
+,p_message_text=>'Ja'
+);
+wwv_flow_api.create_message(
+ p_id=>wwv_flow_api.id(17701603194457467)
+,p_name=>'BOOLEAN_Y'
+,p_message_text=>'Yes'
+);
+end;
+/
+begin
+wwv_flow_api.create_message(
  p_id=>wwv_flow_api.id(17104504605851482)
 ,p_name=>'HELP_CONTEXT'
 ,p_message_language=>'de'
@@ -20376,7 +20362,7 @@ wwv_flow_api.create_message(
 ||unistr('CTIVE\00AB werden intern verwendet und sind daher nicht erlaubt.</p>')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(17601923252161931)
+ p_id=>wwv_flow_api.id(17701282735457467)
 ,p_name=>'HELP_CONTEXT'
 ,p_message_text=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<p>A context summarizes the debug and trace behavior of PIT under one name.</p><p>.',
@@ -20392,7 +20378,7 @@ wwv_flow_api.create_message(
 ||unistr('b es bei der Installation des Ausgabemoduls Probleme gab oder ob das Modul einsatzbereit ist.<br>Spalte \00BBaktiv\00AB zeigt an, ob das Modul aktuell zur Ausgabe von Meldungen verwendet wird.</p>')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(17601861171161931)
+ p_id=>wwv_flow_api.id(17701131548457467)
 ,p_name=>'HELP_OUTPUT_MODULES'
 ,p_message_text=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'Output modules are used to send messages from PIT to tables, files, APEX or any other destination.',
@@ -20408,7 +20394,7 @@ wwv_flow_api.create_message(
 ||unistr('jeweils ein benannter Kontext zugeordnet wird.<br>Wird eines dieser Packages ausgef\00FChrt, schaltet PIT den zugeordneten Kontext aktiv. Wird das Package verlassen, wird wieder der vorherige Kontext aktiv.')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(17602009640161931)
+ p_id=>wwv_flow_api.id(17701317658457467)
 ,p_name=>'HELP_TOGGLE'
 ,p_message_text=>'Debugging can be set globally for all application packages by using contexts.<br>In addition, it is possible to enable or disable logging for individual packages. To do this, a list of packages is managed, to each of which a named context is assigned'
 ||'.<br>If one of these packages is executed, PIT activates the assigned context. If the package is left, the previous context becomes active again.'
@@ -20423,7 +20409,7 @@ wwv_flow_api.create_message(
 ,p_message_text=>unistr('Falls Sie die Meldungen \00FCbersetzen m\00F6chten, w\00E4hlen Sie eine Zielsprache.')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(17602139093161931)
+ p_id=>wwv_flow_api.id(17701456272457467)
 ,p_name=>'HINT_PMS'
 ,p_message_text=>'If you want to translate the messages, select a target language.'
 );
@@ -20434,7 +20420,7 @@ wwv_flow_api.create_message(
 ,p_message_text=>unistr('Falls Sie die Begriffe \00FCbersetzen m\00F6chten, w\00E4hlen Sie eine Zielsprache.')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(17602240876161931)
+ p_id=>wwv_flow_api.id(17701518245457467)
 ,p_name=>'HINT_PTI'
 ,p_message_text=>'If you want to translate the translatable items, select a target language.'
 );
@@ -20451,7 +20437,7 @@ wwv_flow_api.create_message(
 ||'Exception-Block des Codes fangen Sie dann den benannten Oracle-Fehler und geben die spezifische Nachricht aus.</p>'
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(17602352854161931)
+ p_id=>wwv_flow_api.id(17701899866457467)
 ,p_name=>'ORACLE_ERROR_HINT'
 ,p_message_text=>'<h2>Oracle error mapping</h2><p>If you want to map an Oracle error to a PIT message, please note:</p><ul><li>Apredefined errors cannot be overwritten (e.g. NO_DATA_FOUND)</li><li>Oracle error numbers can only be overwritten once by PIT</li></ul><p>Si'
 ||'nce Oracle errors can only be mapped once, the identifier should be chosen as generically as possible. <br>Use a naming convention with schema or area prefixes. Note that these error mappings must be used across all errors and therefore require an ap'
@@ -25439,7 +25425,7 @@ wwv_flow_api.create_page(
 ,p_dialog_width=>'1200'
 ,p_help_text=>unistr('F\00FCr diese Seite ist keine Hilfe verf\00FCgbar.')
 ,p_last_updated_by=>'APP_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20201219100636'
+,p_last_upd_yyyymmddhh24miss=>'20201221171303'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(36590967691909935)
@@ -25725,18 +25711,13 @@ wwv_flow_api.create_region_column(
 ,p_source_expression=>'PAR_BOOLEAN_VALUE'
 ,p_data_type=>'VARCHAR2'
 ,p_is_query_only=>false
-,p_item_type=>'NATIVE_CHECKBOX'
+,p_item_type=>'NATIVE_YES_NO'
 ,p_heading=>'Flag'
 ,p_heading_alignment=>'CENTER'
 ,p_display_sequence=>120
 ,p_value_alignment=>'CENTER'
-,p_attribute_01=>'1'
+,p_attribute_01=>'APPLICATION'
 ,p_is_required=>false
-,p_lov_type=>'STATIC'
-,p_lov_source=>'STATIC:Ja;Y,Nein;N'
-,p_lov_display_extra=>false
-,p_lov_display_null=>true
-,p_lov_null_text=>'-'
 ,p_enable_filter=>true
 ,p_filter_operators=>'C:S:CASE_INSENSITIVE:REGEXP'
 ,p_filter_is_required=>false
@@ -25751,7 +25732,6 @@ wwv_flow_api.create_region_column(
 ,p_is_primary_key=>false
 ,p_duplicate_value=>true
 ,p_include_in_export=>true
-,p_escape_on_http_output=>true
 );
 wwv_flow_api.create_region_column(
  p_id=>wwv_flow_api.id(36917343471045797)

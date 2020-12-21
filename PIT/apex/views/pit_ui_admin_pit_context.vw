@@ -6,7 +6,10 @@ create or replace force view pit_ui_admin_pit_context as
               par_description context_description,
               to_number(regexp_substr(par_string_value, '[^|]+', 1, 1)) pse_id,
               to_number(regexp_substr(par_string_value, '[^|]+', 1, 2)) ptl_id,
-              case regexp_substr(to_char(par_string_value), '[^|]+', 1, 3) when 'Y' then 'Ja' else 'Nein' end timing_on,
+              (select pti_display_name
+                 from pit_translatable_item_v
+                where pti_id = 'BOOLEAN_' || regexp_substr(to_char(par_string_value), '[^|]+', 1, 3)
+                  and pti_pmg_name = 'PIT') timing_on,
               replace(regexp_substr(par_string_value, '[^|]+', 1, 4), ':', ', ') output_modules
          from parameter_tab
         where par_pgr_id = 'PIT'
@@ -19,3 +22,5 @@ select p.row_id, p.par_id, p.context_name, p.context_description,
   from params p
   join pit_message_severity_v pse on p.pse_id = pse.pse_id
   join pit_trace_level_v ptl on p.ptl_id = ptl.ptl_id;
+  
+comment on table pit_ui_admin_pit_context is ' View to prepare the context setting data for the UI';
