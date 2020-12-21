@@ -23,7 +23,7 @@ The code is free to use and I hope that you'll enjoy doing so. Should any errors
 feel free to describe them here, I'll do my best to remove them.
 
 ## Usage
-The use of `PIT` is straightforward. I took care to create a dense and short interface for working with `PIT`, as I know that nobody likes to write long package and method names, especially in code areas that you need repeatidly. On the other side, I provide enough explicit methods not to bother you with repeated parameters like severity of a message or similar. Here's a code snippet of a minimal usage of `PIT``:
+The use of `PIT` is straightforward. I took care to create a dense and short interface for working with `PIT`, as I know that nobody likes to write long package and method names, especially in code areas that you need repeatidly. On the other side, I provide enough explicit methods not to bother you with repeated parameters like severity of a message or similar. Here's a code snippet of a minimal usage of `PIT`:
 ```plsql
 procedure my_proc(
   p_param1 in varchar2)
@@ -168,6 +168,10 @@ PIT makes havy use of parameters. Parameters are organized in parameter groups o
 As this package, along with a generic parameter table, is accessible outside `PIT`, the parameter package may be used to organize all of your application parameters as well. The administrative package once again allows you to create and maintain parameters and to export parameters by reating a group of parameter files with all parameters and their values in a file per parameter group. Read more about parameter support [using parameters](https://github.com/j-sieben/PIT/blob/master/Doc/parameters.md)
 
 A second component that might be reused is a component to maintain globally managed contexts. In order to store parameters in a way that they are accessible cross-session, you need a globally accessed context. Whereas this type of context is very nice in that access to its information does not incur context switches from neither PL/SQL nor SQL, it's not all intuitive to use. A separate package `UTL_CONTEXT` allows for a smoother utilization of globally accessible contexts. Being a separate package it's easy to reuse this package for your own context requirements.
+
+### APEX administration app for various APEX versions
+
+`PIT` ships with an administrative APEX application to easily create and maintain parameters, messages and `PIT` related settings such as contexts or context toggles. An export page allows you to export parameters, messages and translatable items as ZIP files. You may export as many message or paramter groups as you like. For messages and translatable items, there is also a possibility to generate and import XLIFF translation files in any Oracle supported target language.
 
 ## Further reading
 
