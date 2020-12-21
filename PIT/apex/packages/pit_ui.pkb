@@ -445,9 +445,8 @@ as
        select pti_display_name
          from pit_translatable_item_v
          join params
-           on pti_name = trace_timing
-          and pti_pmg_name = 'PIT'
-          and pti_id like 'BOOLEAN%'),
+           on pti_pmg_name = 'PIT'
+          and pti_id = 'BOOLEAN_' || trace_timing),
      debug_settings as(
        select pse_display_name
          from pit_message_severity_v
