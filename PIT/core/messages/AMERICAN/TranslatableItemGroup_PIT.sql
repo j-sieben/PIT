@@ -111,7 +111,24 @@ begin
     p_pti_name => 'Tracing off',
     p_pti_display_name => 'Tracing off',
     p_pti_description => 'Suppresses the output of tracing information'
-  );
+  );   
+
+  pit_admin.merge_translatable_item(
+    p_pti_id => 'BOOLEAN_' || replace(&C_TRUE., ''''),
+    p_pti_pml_name => 'AMERICAN',
+    p_pti_pmg_name => 'PIT',
+    p_pti_name => &C_TRUE.,
+    p_pti_display_name => 'Yes',
+    p_pti_description => 'Boolean value for TRUE');
+
+  pit_admin.merge_translatable_item(
+    p_pti_id => 'BOOLEAN_' || replace(&C_FALSE., ''''),
+    p_pti_pml_name => 'AMERICAN',
+    p_pti_pmg_name => 'PIT',
+    p_pti_name => &C_FALSE.,
+    p_pti_display_name => 'No',
+    p_pti_description => 'Boolean value for FALSE');
+    
 
   commit;
 end;
