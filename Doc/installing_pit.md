@@ -63,7 +63,7 @@ Messages are delivered in my mother tongue, `GERMAN` and in `AMERICAN`. Messages
 
 The installation scripts expects two parameters:
 
-- `PIT_OWNER`: database user who owns `PIT_UI` (Schema of the APEX-Workspace you install into)
+- `PIT_OWNER`: database user who owns `PIT` (ideally a dedicated utility owner)
 - `DEFAULT_LANGUAGE`: Oracle language name of the default language for all messages.
 
 So here's an example on how to install `PIT` on a windows system:
@@ -76,7 +76,7 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
 sqlplus system/syspwd@database
-SQL> @pit_install `PIT`_OWNER AMERICAN
+SQL> @pit_install PIT_OWNER AMERICAN
 ```
 
 This example will install `PIT` within user `PIT_OWNER` and set `AMERICAN` as the default language for messages. All parameters are case insensitive.
@@ -90,7 +90,7 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_uninstall `PIT`_OWNER AMERICAN
+SQL> @pit_uninstall PIT_OWNER AMERICAN
 ```
 
 ## Granting access to `PIT` to a client
@@ -106,7 +106,7 @@ Here's an example on how to call this script:
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_install_client `PIT`_OWNER `PIT`_USER
+SQL> @pit_install_client `PIT`_OWNER PIT_USER
 ```
 
 ## Uninstalling `PIT` client
@@ -117,16 +117,16 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_uninstall_client `PIT`_OWNER `PIT`_USER
+SQL> @pit_uninstall_client PIT_OWNER `PIT`_USER
 ```
 
 ## Installing the supporting APEX application
 
-`PIT` ships with an APEX application that allows you to manage `PIT` messages and global application parameters. For some it is easier to set parameters and create messages graphically than to use PL/SQL API calls. To install the supporting APEX application, it is expected that you have an APEX workspace. The workspace schema is referenced as the `PIT_USER` lateron, as this should be a schema different to the owner of `PIT`. Basically, there is no difference in a `PIT` client user and the APEX schema user, as both are simply using `PIT`. By installing the maintenance application, the client grants and some additional grants required are set.
+`PIT` ships with an APEX application that allows you to manage `PIT` messages and global application parameters. For some it is easier to set parameters and create messages graphically than to use PL/SQL API calls. To install the supporting APEX application, it is expected that you have an APEX workspace. The workspace schema is referenced as the `PIT_APP` lateron, as this should be a schema different to the owner of `PIT`. Basically, there is no difference in a `PIT` client user and the APEX schema user, as both are simply using `PIT`. By installing the maintenance application, the client grants and some additional grants required are set.
 
-The APEX application is available with a German UI only. I'm sorry for that, but translating the APEX application is quite some work and the result may not be satisfying. But as with all APEX applications, translations are possible and you can do this as you like. I recommend to have [DeepL](https://www.deepl.com/translator) at your side to get started.
+The APEX application is available with a German UI and an American UI for the APEX version 20.2 only. I'm sorry for that, but translating the APEX application is quite some work and the result may not be satisfying. But as with all APEX applications, translations are possible and you can do this as you like. I recommend to have [DeepL](https://www.deepl.com/translator) at your side to get started.
 
-There has been a changed approach in regard to the APEX application maintaining `PIT`. It used to be a very basic application in earlier releases. To be honest, I didn't use it too much as I normaly work with the installation files directly. But I wanted to improve the application, partly because I plan to create a second Oracle Jet-based interface for it. I want to use this small application as a proof of concept for a broader architecture problem, namely writing database applications that are UI-independent.
+There has been a changed approach in regard to the APEX application maintaining `PIT`. It used to be a very basic application in earlier releases. To be honest, I didn't use it too much as I normaly work with the installation files directly. But I wanted to improve on the application, partly because I plan to create a second Oracle Jet-based interface for it. I want to use this small application as a proof of concept for a broader architecture problem, namely writing database applications that are UI-independent.
 
 Writing APEX applications covering a wide range of APEX versions (from 5.1 to 20.x) is a challenge for developers. The reason is that APIs change, new functions appear while others disappear. A possible solution would be to use only functions that were already available in version 5.1 and just leave the application as it is. But if you want to use newer functions of APEX, such as new form regions from version 19.1 on, the challenge will be that your API won't work the way it used to. This is especially true if you don't have direct write access to tables but use a `XAPI` based approach instead. This makes all DML-processes built into APEX useless as they require direct write access. The problem for you as a developer: The way to get access to the session state changes, forcing you to recode your controller packages.
 
@@ -146,8 +146,8 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_TEXT\UTL_TEXT
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @utl_text_install `PIT`_OWNER AMERICAN
-SQL> @utl_text_install_client `PIT`_OWNER `PIT`_USER
+SQL> @utl_text_install PIT_OWNER AMERICAN
+SQL> @utl_text_install_client PIT_OWNER PIT_USER
 ```
 
 ### Installation of `UTL_APEX`
@@ -156,7 +156,7 @@ SQL> @utl_text_install_client `PIT`_OWNER `PIT`_USER
 
 Plus, another utility called `UTL_DEV_APEX` is installed. This package is useful only on develpment machines, as it is used to generate stubs for the controller level and other utilities to help you test your code.
 
-As this is an APEX library, it lives in the `PIT_USER` schema directly and therefore does not require any client grants:
+As this is an APEX library, it lives in the `PIT_APP` schema directly and therefore does not require any client grants:
 
 ```
 rem always make sure that the console is set to UTF-8
@@ -166,24 +166,26 @@ rem switch to the directory where you copied the git repository to
 cd C:\temp\UTL_APEX\UTL_APEX
 
 sqlplus <sys_credentials> as sysdba 
-SQL> @utl_apex_install `PIT`_USER AMERICAN
+SQL> @utl_apex_install PIT_APP AMERICAN
 ```
+
+If you want to separate the `PIT_USER` schema from the APEX workspace schema, you can. Simply make sure that the APEX workspace schema (`APEX_APP` in our case) also has access to `PIT` and `UTL_TEXT` by running the client scripts for this user.
 
 That's it, you're now prepared to install the `PIT` application. Obviously, the steps above are required only once for all your APEX applications of that workspace that want to make use of those libraries.
 
 If you want to see how `UTL_APEX`can make your live easier as an APEX developer, have a look a the controller package `pit_ui`. This package interacts with the pages based on their page alias, so for each page there is a matching method that reads the user entered data and controls how to write those to the `XAPI` layer owned by the `PIT` owner. Also note that no code is placed on the APEX pages directly other than calls to this package.
 
-### Install the `PIT` maintenace application
+### Install the `PIT` administration application
 
 Script `pit_install_apex.sql` will install the appliation itself. The script will make sure that the schema owner of this APEX workspace is granted all necessary object rights to maintain `PIT`. It expects five parameters:
 
-- `APEX_USER`: database user who owns `PIT`_UI (Schema of the APEX-Workspace you install into)
+- `APEX_USER`: database user who has access to  `PIT` and `UTL_TEXT`, owns `UTL_APEX` and is the schema of the APEX-Workspace you install into
 - `APEX_WORKSPACE`: Name of the APEX workspace
-- `ALIAS`: Alias name of the APEX-application.
-- `APP_ID`: ID of the APEX-application.
-- `DEFAULT_LANGUAGE`: Oracle language name of the default language for all messages.
+- `ALIAS`: Alias name of the APEX-application
+- `APP_ID`: ID of the APEX-application
+- `DEFAULT_LANGUAGE`: Oracle language name of the default language for all messages
 
-Here's an example on how to install the supporting APEX application:
+Here's an example on how to install the supporting APEX application for user `PIT_APP` in Workspace `DEV_TOOLS`. The application will be available at http://<your_apex_server>/ords/f?p=PIT:
 
 ```
 rem always make sure that the console is set to UTF-8
@@ -192,10 +194,10 @@ set nls_lang=AMERICAN_AMERICA.AL32UTF8
 rem switch to the directory where you copied the git repository to
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba 
-SQL> @pit_install_apex `PIT`_USER DEV_TOOLS `PIT` 123 AMERICAN
+SQL> @pit_install_apex PIT_APP DEV_TOOLS `PIT` 123 AMERICAN
 ```
 
-Installing the supporting APEX application encloses the installation of a `PIT` client for that user. Should the `APEX_USER` match the owner name of `PIT`, no client installation takes place, as the APEX application is allowed to access all necessary database objects anyway.
+Installing the supporting APEX application extends the installation of a `PIT` client for that user if necessary. If you install the APEX application in the same user that owns `PIT`, all grants are in place naturally.
 
 ## Uninstalling the supporting APEX application
 To uninstall the supporting APEX application, call `pit_uninstall_apex` with a total of  four parameters:
@@ -211,6 +213,6 @@ Here's a sample deinstallation script:
 cd C:\temp\PIT\PIT
 sqlplus <sys_credentials> as sysdba
 
-SQL> @pit_uninstall_apex `PIT`_OWNER `PIT`_USER DEV_TOOLS `PIT`
+SQL> @pit_uninstall_apex PIT PIT_APP DEV_TOOLS PIT
 ```
 Deinstalling the supporting APEX application will deinstall the `PIT` client for that user, too. So if you don't want to use the supprting apex application anymore but want to have access to `PIT`, install a `PIT` client after deinstalling the supporting APEX application.
