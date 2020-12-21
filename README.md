@@ -171,7 +171,7 @@ A second component that might be reused is a component to maintain globally mana
 
 ### APEX administration app for various APEX versions
 
-`PIT` ships with an administrative APEX application to easily create and maintain parameters, messages and `PIT` related settings such as contexts or context toggles. An export page allows you to export parameters, messages and translatable items as ZIP files. You may export as many message or paramter groups as you like. For messages and translatable items, there is also a possibility to generate and import XLIFF translation files in any Oracle supported target language.
+`PIT` ships with an administrative APEX application to easily create and maintain parameters, messages and `PIT` related settings such as contexts or context toggles. An export page allows you to export parameters, messages and translatable items as ZIP files. You may export as many message or paramter groups as you like. For messages and translatable items, there is also a possibility to generate and import XLIFF translation files in any Oracle supported target language. For a brief introduction to the APEX application, continue reading [here](Doc/installing_pit.md)
 
 ## Further reading
 
