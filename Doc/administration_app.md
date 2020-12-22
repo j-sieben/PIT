@@ -2,14 +2,12 @@
 
 `PIT` ships with an APEX application that allows you to maintain parameters, messages and `PIT` administration by a GUI. It also allows to export any number of parameter or message groups as a zip file. These files contain script files in SQL that allow to deploy the parameters or messages to other environments.
 
-## Overview of the application
-
-`PIT` ships with APEX applications for various APEX versions. It starts with a version for APEX 5.1, continues with a version for APEX 18.1 and a new version for APEX 20.2. The latest version also includes a translation of the application to English, whereas the older applications are only available in German.
+`PIT` ships with APEX applications for various APEX versions. It starts with a version for APEX 5.1, continues with a version for APEX 19.1 and a new version for APEX 20.2. The latest version also includes a translation of the application to English, whereas the older applications are only available in German.
 
 ![Homescreen of the APEX application](images/app_home.png)
 On the home screen of the application you can navigate to the respective application areas
 
-### Administer PIT
+## Administer PIT
 
 The first application area controls the actually valid settings for `PIT`. In this area, you can adjust context settings, toggles and the like. The following screenshot shows the main screen of that area:
 
@@ -33,7 +31,7 @@ Finally, report »Current debug settings« shows the currently active settings f
 
 ![Report shows current debug settings](images/current_debug.png)
 
-### Administer messages
+## Administer messages
 
 The next application area allows to maintain and create messages. The following screenshot shows the main screen of that area:
 
@@ -53,13 +51,15 @@ By clicking on button »Edit Message Groups« it is possible to maintain the lis
 
 Once again, this is an editable grid that allows you to edit, create or delete the message groups. Remember though that you can't delete a message group that contains messages. You will have to first remove the messages (or use the PL/SQL method `PIT_ADMIN.delete_message_group` with the parameter `p_force`set to `TRUE`to remove all messages within that group in one go.
 
-### Administer Parameter
+## Administer Parameter
 
 The next application area allows to maintain parameters. The following screenshot shows the main screen of that area:
 
 ![PIT message administration screen](images/administer_param_group.png)
 
 On this screen, you have to select a parameter group to display. The report then shows all parameters of that group, giving you the option to edit one parameter using the pencil link. Analogous to the administer messages screen, you can create new parameters, edit or delete existing parameters and maintain the parameter group list using the button »Administer Parameter Group«.
+
+### Maintain Parameters
 
 If you edit or create an existing parameter, a dialog box is shown that enables you to edit the details of a parameter:
 
@@ -77,7 +77,17 @@ Despite the mandator awareness of parameters (they can be overwritten by a manda
 
 In the lower half of the dialog there is a editable grid, allowing you to select a realm and the respective value.
 
-### Master Data
+### Maintain parameter groups
+
+To maintain the list of parameter groups, click on button »Eidt Parameter Groups«. An editable grid allows you to change settings of parameter groups or create new groups. Keep in mind though that you can't delete a parameter group if it is in use. Make sure to delete the parameters of this group first.
+
+### Maintain Realms
+
+Realms can be maintained in two different ways: First, by clicking on the button »Set Realm«, you can set the actually valid realm value for your environment. This will have an immediate effect on all parameter values, as the realm parameter overwrites will become active.
+
+If you want to maintain the list of realms, click on button »Administer Realms« to open an editable grid and change the values there.
+
+## Master Data
 
 The last area of the APEX administration UI is dedicated to exporting and translating master data. The following screenshot shows the main screen of that area:
 
