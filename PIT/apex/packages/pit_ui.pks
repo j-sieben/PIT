@@ -88,7 +88,9 @@ as
     return boolean;
   
   procedure process_edit_pgr;
+    
   
+  procedure initialize_edit_par;
   
   function validate_edit_par
     return boolean;
@@ -100,6 +102,12 @@ as
     return boolean;
   
   procedure process_edit_realm;
+  
+  
+  function validate_set_realm
+    return boolean;
+  
+  procedure process_set_realm;
   
   
   function validate_edit_par_realm

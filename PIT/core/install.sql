@@ -65,7 +65,7 @@ prompt &s1.Create default parameters
 @&tools.run_script ParameterGroup_CONTEXT
 
 prompt &s1.Create translatable items
-@&tools.run_language_script TranslatableItemsGroup_PIT
+@&tools.run_language_script TranslatableItemGroup_PIT
 
 prompt &s1.Merge trace levels and message severities
 @&tools.run_script merge_levels_and_severities

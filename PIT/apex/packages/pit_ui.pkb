@@ -10,6 +10,7 @@ as
   g_edit_pgr_row pit_ui_edit_pgr%rowtype;  
   g_edit_par_row pit_ui_edit_par%rowtype;  
   g_edit_realm_row pit_ui_edit_realm%rowtype;
+  g_set_realm_row pit_ui_set_realm%rowtype;
   g_edit_par_realm_row pit_ui_edit_par_realm%rowtype;  
   g_edit_module_row pit_ui_edit_module%rowtype;
   g_edit_context_row pit_ui_edit_context%rowtype;
@@ -80,10 +81,14 @@ as
   procedure copy_edit_pre
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_PRE');
     g_edit_pre_row.pre_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pre_id'));
     g_edit_pre_row.pre_description := utl_apex.get(g_page_values, 'pre_description');
     g_edit_pre_row.pre_is_active := utl_apex.get(g_page_values, 'pre_is_active');
+    
+    pit.leave_detailed;
   end copy_edit_pre;
   
 
@@ -115,6 +120,8 @@ as
   procedure copy_edit_par_realm
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_PAR_REALM');
     g_edit_par_realm_row.pre_par_id := utl_apex.get_value('P7_PAR_ID');
     g_edit_par_realm_row.pre_pgr_id := utl_apex.get_value('P7_PAR_PGR_ID');
@@ -125,17 +132,37 @@ as
     g_edit_par_realm_row.pre_date_value := to_date(utl_apex.get(g_page_values, 'pre_date_value'), 'dd.mm.yyyy');
     g_edit_par_realm_row.pre_timestamp_value := utl_apex.get(g_page_values, 'pre_timestamp_value');
     g_edit_par_realm_row.pre_boolean_value := utl_apex.get(g_page_values, 'pre_boolean_value');
-  end copy_edit_par_realm;  
+    
+    pit.leave_detailed;
+  end copy_edit_par_realm;    
   
   
   procedure copy_edit_realm
   as
   begin
+    pit.enter_detailed;
+    
     g_page_values := utl_apex.get_page_values('EDIT_REALM');
-    g_edit_realm_row.par_id := utl_apex.get(g_page_values, 'par_id');
-    g_edit_realm_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
-    g_edit_realm_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    g_edit_realm_row.pre_id := utl_apex.get(g_page_values, 'pre_id');
+    g_edit_realm_row.pre_description := utl_apex.get(g_page_values, 'pre_description');
+    g_edit_realm_row.pre_is_active := utl_apex.get(g_page_values, 'pre_is_active');
+    
+    pit.leave_detailed;
   end copy_edit_realm;
+  
+  
+  procedure copy_set_realm
+  as
+  begin
+    pit.enter_detailed;
+    
+    g_page_values := utl_apex.get_page_values('SET_REALM');
+    g_set_realm_row.par_id := utl_apex.get(g_page_values, 'par_id');
+    g_set_realm_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
+    g_set_realm_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    
+    pit.leave_detailed;
+  end copy_set_realm;
   
   
   procedure copy_export
@@ -479,7 +506,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
       p_params => msg_params(msg_param('p_item_name', p_item_name)));
     
     l_name := utl_apex.get_value(p_item_name);
-    l_name := pit_util.harmonize_sql_name(l_name);
+    l_name := pit_util.harmonize_sql_name(l_name, p_prefix);
     utl_apex.set_value(p_item_name, l_name);
     
     pit.leave_mandatory(
@@ -699,6 +726,27 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
   end process_edit_pre;
   
   
+  procedure initialize_edit_par
+  as
+    l_pgr_id parameter_group.pgr_id%type;
+    l_pgr_is_modifiable parameter_group.pgr_is_modifiable%type;
+  begin
+    pit.enter_mandatory;
+    
+    l_pgr_id := v('P6_PGR_ID');
+    
+    select pgr_is_modifiable
+      into l_pgr_is_modifiable
+      from parameter_group
+     where pgr_id = l_pgr_id;
+    
+    utl_apex.set_value('P7_PAR_PGR_ID', l_pgr_id);
+    utl_apex.set_value('P7_PGR_IS_MODIFIABLE', l_pgr_is_modifiable);
+    
+    pit.leave_mandatory;
+  end initialize_edit_par;
+  
+  
   function validate_edit_par
     return boolean
   as
@@ -780,16 +828,16 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     pit.leave_mandatory;
   end process_edit_par;
   
-    
+  
   function validate_edit_realm
     return boolean
   as
   begin
     pit.enter_mandatory;
-    
+  
     -- copy_edit_realm;
     -- validation logic goes here. If it exists, uncomment COPY function
-    
+  
     pit.leave_mandatory;
     return true;
   end validate_edit_realm;
@@ -799,19 +847,51 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
   as
   begin
     pit.enter_mandatory;
-    
+  
     copy_edit_realm;
+    case when utl_apex.inserting or utl_apex.updating then
+      param_admin.edit_parameter_realm(g_edit_realm_row);
+    when utl_apex.deleting then
+      param_admin.delete_parameter_realm(g_edit_realm_row.pre_id);
+    else
+      null;
+    end case;
+  
+    pit.leave_mandatory;
+  end process_edit_realm;
+  
+    
+  function validate_set_realm
+    return boolean
+  as
+  begin
+    pit.enter_mandatory;
+    
+    -- copy_set_realm;
+    -- validation logic goes here. If it exists, uncomment COPY function
+    
+    pit.leave_mandatory;
+    return true;
+  end validate_set_realm;
+  
+  
+  procedure process_set_realm
+  as
+  begin
+    pit.enter_mandatory;
+    
+    copy_set_realm;
     case when utl_apex.updating then
       param_admin.edit_parameter(
-        p_par_id => g_edit_realm_row.par_id,
-        p_par_pgr_id => g_edit_realm_row.par_pgr_id,
-        p_par_string_value => g_edit_realm_row.par_string_value);
+        p_par_id => g_set_realm_row.par_id,
+        p_par_pgr_id => g_set_realm_row.par_pgr_id,
+        p_par_string_value => g_set_realm_row.par_string_value);
     else
       null;
     end case;
     
     pit.leave_mandatory;
-  end process_edit_realm;
+  end process_set_realm;
   
   
   function validate_edit_par_realm

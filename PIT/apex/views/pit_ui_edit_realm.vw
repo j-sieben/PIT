@@ -1,7 +1,5 @@
 create or replace view pit_ui_edit_realm as
-select par_id, par_pgr_id, par_string_value
-  from parameter_vw
- where par_id = 'REALM'
-   and par_pgr_id = 'PIT';
+select pre_id, pre_description, pre_is_active
+  from parameter_realm;
     
 comment on table pit_ui_edit_realm is 'UI-View for APEX page EDIT_REALM';

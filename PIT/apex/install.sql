@@ -47,6 +47,7 @@ prompt &h3.Create UI-VIEWS
 @&tools.install_view pit_ui_edit_pmg
 @&tools.install_view pit_ui_edit_pms
 @&tools.install_view pit_ui_edit_realm
+@&tools.install_view pit_ui_set_realm
 @&tools.install_view pit_ui_edit_toggle
 @&tools.install_view pit_ui_lang_settings_default
 @&tools.install_view pit_ui_list_active_for_page

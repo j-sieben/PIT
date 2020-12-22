@@ -6,3 +6,10 @@ select pmg_name, pmg_description, coalesce(pmg_amount, 0) pmg_amount, case when 
          from pit_message
         group by pms_pmg_name)
     on pmg_name = pms_pmg_name;
+
+comment on table pit_ui_edit_pmg is 'UI-View for application page EDIT_PMG';
+
+
+select *
+  from all_tables
+ where owner = 'UTILS';
