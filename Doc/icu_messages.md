@@ -31,8 +31,8 @@ An ICU message takes more information into account than a normal message. As an 
       other {{host} invites {guest} and # other people to their party.}}}}
 ```
 
-The messages expects an anchor named `gender_of_host`. Based on the value of that anchor, one of the three select options are taken: `female`, `male` or `other`.
-Within the respective tree, anchor `num_guests` is evaluated, looking for a plural selection. Values are 0, 1, 2 or higher. Based on these values, different messages are returned. Anchors `host` and `guest` are taken as simple string and included in the resulting message.
+The message provides an anchor named `gender_of_host`. Based on the value of that anchor, one of the three select options are taken: `female`, `male` or `other`.
+Within the respective tree, anchor `num_guests` is evaluated, looking for a plural selection. Values are `0`, `1`, `2` or higher. Based on these values, different messages are returned. Anchors `host` and `guest` are taken as simple string and included in the resulting message.
 
 The special sign `#` refers to the anchor that is actually being examined, `num_guests` in our case.
 
