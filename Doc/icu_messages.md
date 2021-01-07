@@ -47,6 +47,8 @@ If you pass in
 ```
 ICU will calculate `Maria invites Tamer and one other person to her party.` as the resulting message.
 
+For a more in depth introduction to this message format, you may want to check out [this tutorial](https://phrase.com/blog/posts/guide-to-the-icu-message-format/).
+
 ## Working with ICU messages in `PIT`
 
 To distinguish a »normal« `PIT` message from an ICU message, I've decided to base it on a convention rather than extending the API. The convention says that the first message argument you pass in must be the constant `PIT.FORMAT_ICU` (or the string `FORMAT_ICU`). 
