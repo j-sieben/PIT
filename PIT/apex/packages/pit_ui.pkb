@@ -36,7 +36,7 @@ as
   procedure copy_edit_pms
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_pms');
     
     g_page_values := utl_apex.get_page_values('EDIT_PMS');
     g_edit_pms_row.pms_pmg_name := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pms_pmg_name'));
@@ -54,7 +54,7 @@ as
   procedure copy_edit_pmg
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_pmg');
     
     g_page_values := utl_apex.get_page_values('EDIT_PMG');
     g_edit_pmg_row.pmg_name := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pmg_name'));
@@ -67,7 +67,7 @@ as
   procedure copy_edit_pgr
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_pgr');
     
     g_page_values := utl_apex.get_page_values('EDIT_PGR');
     g_edit_pgr_row.pgr_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pgr_id'));
@@ -81,7 +81,7 @@ as
   procedure copy_edit_pre
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_pre');
     
     g_page_values := utl_apex.get_page_values('EDIT_PRE');
     g_edit_pre_row.pre_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pre_id'));
@@ -95,7 +95,7 @@ as
   procedure copy_edit_par
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_par');
     
     g_page_values := utl_apex.get_page_values('EDIT_PAR');
     g_edit_par_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
@@ -120,7 +120,7 @@ as
   procedure copy_edit_par_realm
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_par_realm');
     
     g_page_values := utl_apex.get_page_values('EDIT_PAR_REALM');
     g_edit_par_realm_row.pre_par_id := utl_apex.get_value('P7_PAR_ID');
@@ -140,7 +140,7 @@ as
   procedure copy_edit_realm
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_realm');
     
     g_page_values := utl_apex.get_page_values('EDIT_REALM');
     g_edit_realm_row.pre_id := utl_apex.get(g_page_values, 'pre_id');
@@ -154,7 +154,7 @@ as
   procedure copy_set_realm
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_set_realm');
     
     g_page_values := utl_apex.get_page_values('SET_REALM');
     g_set_realm_row.par_id := utl_apex.get(g_page_values, 'par_id');
@@ -168,7 +168,7 @@ as
   procedure copy_export
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_export');
     
     utl_text.string_to_table(utl_apex.get_value('pms_pmg_list'), g_export_row.pms_pmg_list);
     g_export_row.pms_pml_name := utl_apex.get_value('pms_pml_name');
@@ -183,7 +183,7 @@ as
   procedure copy_edit_module
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_module');
     
     g_page_values := utl_apex.get_page_values('EDIT_MODULE');
     g_edit_module_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
@@ -202,7 +202,7 @@ as
   procedure copy_edit_context
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_context');
     
     g_page_values := utl_apex.get_page_values('EDIT_CONTEXT');
     g_edit_context_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'PAR_ID'));
@@ -221,7 +221,7 @@ as
   procedure copy_edit_toggle
   as
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('copy_edit_toggle');
     
     g_page_values := utl_apex.get_page_values('EDIT_TOGGLE');
     g_edit_toggle_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
@@ -248,7 +248,7 @@ as
   as
     l_harmonized_name pit_util.ora_name_type;
   begin
-    pit.enter_detailed;
+    pit.enter_detailed('check_name');
     
     utl_apex.assert_not_null(
         p_condition => p_name, 
@@ -294,6 +294,7 @@ as
     l_zip_file blob;
   begin
     pit.enter_mandatory(
+      p_action => 'translate_groups',
       p_params => msg_params(
                     msg_param('p_target', p_target),
                     msg_param('p_target_language', p_target_language)));
@@ -335,6 +336,7 @@ as
     l_page_item utl_apex.ora_name_type;
   begin
     pit.enter_mandatory(
+      p_action => 'import_translation',
       p_params => msg_params(
                     msg_param('p_target', p_target)));
                     
@@ -387,6 +389,7 @@ as
     l_zip_file blob;
   begin
     pit.enter_mandatory(
+      p_action => 'expor_groups',
       p_params => msg_params(
                     msg_param('p_target', p_target)));
                     
@@ -433,7 +436,7 @@ as
   procedure export_local_parameters
   as
   begin
-    pit.enter_mandatory;
+    pit.enter_mandatory('export_local_parameters');
                  
     utl_apex.download_clob(
       p_clob => param.get_parameters,
@@ -485,14 +488,18 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
  cross join debug_settings
  cross join trace_timing;^';
   begin
+    pit.enter_mandatory;
+    
     l_context := pit.get_context;
     
-    return utl_text.bulk_replace(l_context_template, char_table(
-             'DEBUG_LEVEL', l_context.log_level,
-             'TRACE_LEVEL', l_context.trace_level,
-             'TRACE_TIMING', utl_apex.get_bool(l_context.trace_timing),
-             'LOG_MODULES', l_context.module_list));
+    l_stmt := utl_text.bulk_replace(l_context_template, char_table(
+                'DEBUG_LEVEL', l_context.log_level,
+                'TRACE_LEVEL', l_context.trace_level,
+                'TRACE_TIMING', utl_apex.get_bool(l_context.trace_timing),
+                'LOG_MODULES', l_context.module_list));
     
+    pit.leave_mandatory;
+    return l_stmt;
   end get_active_context;
   
   
@@ -523,11 +530,14 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
   as
     l_result number;
   begin
+    pit.enter_mandatory;
+    
     select count(*)
       into l_result
       from pit_translatable_item
      where rownum = 1;
            
+    pit.leave_mandatory;
     return l_result = 1;
   end has_translatable_items;
   
@@ -537,11 +547,14 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
   as
     l_result number;
   begin
+    pit.enter_mandatory;
+    
     select count(*)
       into l_result
       from parameter_local
      where rownum = 1;
-           
+    
+    pit.leave_mandatory;
     return l_result = 1;
   end has_local_parameters;
   
@@ -549,27 +562,58 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
   procedure set_allow_toggles
   as
   begin
+    pit.enter_mandatory;
+    
     param_admin.edit_parameter(
       p_par_id => 'ALLOW_TOGGLE', 
       p_par_pgr_id => 'PIT', 
       p_par_boolean_value => utl_apex.get_value('ALLOW_TOGGLE') = utl_apex.C_TRUE);
+    
+    pit.leave_mandatory;
   end set_allow_toggles;
   
   
   function is_default_context
     return boolean
   as
+    l_result boolean;
   begin
-    return utl_apex.get_value('PAR_ID') = pit_util.C_DEFAULT_CONTEXT;
+    pit.enter_mandatory;
+    
+    l_result := utl_apex.get_value('PAR_ID') = pit_util.C_DEFAULT_CONTEXT;
+    
+    pit.leave_mandatory;
+    return l_result;
   end is_default_context;
   
   
   function allows_toggles
     return utl_apex.flag_type
   as
+    l_flag utl_apex.flag_type;
   begin
-    return utl_apex.get_bool(param.get_boolean('ALLOW_TOGGLE', 'PIT'));
+    pit.enter_mandatory;
+    
+    l_flag := utl_apex.get_bool(param.get_boolean('ALLOW_TOGGLE', 'PIT'));
+    
+    pit.leave_mandatory(
+      p_params => msg_params(msg_param('Result', l_flag)));
+    return l_flag;
   end allows_toggles;
+    
+  
+  procedure set_language_settings(
+    p_pml_list in pit_util.max_sql_char)
+  as
+  begin
+    pit.enter_mandatory(
+      p_params => msg_params(
+                    msg_param('p_pml_list', p_pml_list)));
+    
+    pit_admin.set_language_settings(p_pml_list);
+    
+    pit.leave_mandatory;
+  end set_language_settings;
   
   
   function validate_edit_pmg
@@ -1222,20 +1266,6 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     
     pit.leave_mandatory;
   end process_edit_toggle;
-    
-  
-  procedure set_language_settings(
-    p_pml_list in pit_util.max_sql_char)
-  as
-  begin
-    pit.enter_mandatory(
-      p_params => msg_params(
-                    msg_param('p_pml_list', p_pml_list)));
-    
-    pit_admin.set_language_settings(p_pml_list);
-    
-    pit.leave_mandatory;
-  end set_language_settings;
   
 end pit_ui;
 /

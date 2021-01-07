@@ -36,10 +36,14 @@ as
 
     -- replace anchors with msg params
     if p_arg_list is not null then
-      for i in p_arg_list.first..p_arg_list.last loop
-        self.message_text :=
-          replace(self.message_text, '#' || i || '#', p_arg_list(i));
-      end loop;
+      if upper(p_arg_list(1)) = 'FORMAT_ICU' then
+        self.message_text := message_type.format_icu(self.message_text, p_arg_list(2));
+      else
+        for i in p_arg_list.first..p_arg_list.last loop
+          self.message_text :=
+            replace(self.message_text, '#' || i || '#', p_arg_list(i));
+        end loop;
+      end if;
     end if;
     
     return;

@@ -1,13 +1,6 @@
 create or replace package pit_ui
   authid definer
 as 
-
-  /* TODO Funktionen für
-     - Erzeugen, Editieren, Uebersetzen und Loeschen von Meldungen
-     - Erzeugen, Editieren, Loeschen von benannten Kontexten
-     - Erzeugen, Editieren und Loeschen von Parametern / Parametergruppen
-     - Export von Nachrichten, Kontexten, Parametern
-   */
    
   /** Getter method to retrieve the default PIT language. This language is defined upon installation of PIT and cannot be changed.
    * %return Default language
@@ -67,6 +60,17 @@ as
    */
   function is_default_context
     return boolean;
+   
+   
+  /* Prozedur zur Verwaltung der Standardsprachen
+   * %param p_pml_list Liste der Sprachen in der Reihenfolge ihrer Verwendung
+   * %usage Wird verwendet, um die Spracheinstellungen fuer PIT einzustellen.
+   *        Die Standardsprache kann hier nicht geaendert werden, die wurde bei 
+   *        der Installation von PIT festgelegt. Hier kann nur definiert werden,
+   *        Welce Uebersetzungen mit welchem Vorrang verwendet werden sollen.
+   */
+  procedure set_language_settings(
+    p_pml_list in pit_util.max_sql_char);
     
     
   /** Procedure to validate or process application pages
@@ -144,17 +148,6 @@ as
     return boolean;
   
   procedure process_edit_toggle;
-   
-   
-  /* Prozedur zur Verwaltung der Standardsprachen
-   * %param p_pml_list Liste der Sprachen in der Reihenfolge ihrer Verwendung
-   * %usage Wird verwendet, um die Spracheinstellungen fuer PIT einzustellen.
-   *        Die Standardsprache kann hier nicht geaendert werden, die wurde bei 
-   *        der Installation von PIT festgelegt. Hier kann nur definiert werden,
-   *        Welce Uebersetzungen mit welchem Vorrang verwendet werden sollen.
-   */
-  procedure set_language_settings(
-    p_pml_list in pit_util.max_sql_char);
    
 end pit_ui;
 /

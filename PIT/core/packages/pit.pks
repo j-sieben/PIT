@@ -2,6 +2,8 @@ create or replace package pit
   authid current_user 
 as
 
+  format_icu constant varchar2(128 byte) := 'FORMAT_ICU';
+
   /** PIT-API package. Declares the API that is required to use PIT. */
    
   /* PACKAGE VARIABLE GETTER */
