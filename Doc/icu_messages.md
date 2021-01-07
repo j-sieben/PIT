@@ -114,6 +114,8 @@ SQL> Maria invites Tamer and 4 other people to her party.
 
 This is obviously more complicated than a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message.
 
+Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases.
+
 ## Installing the ICU extension
 
 `PIT` supports ICU messages after some preparational work. You have to load three java libraries into the database at the `PIT` owner schema. These libraries are:
