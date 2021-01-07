@@ -91,7 +91,7 @@ declare
   l_num_guests pls_integer;
   l_host varchar2(128 byte);
   l_guest varchar2(128 byte);
-  l_param_temlate constant varchar2(200) := q'^{'gender_of_host':'#GENDER#','num_guests',#NUM_GUESTS#,'host':'#HOST#','guest':'#GUEST#'}^';
+  l_param_template constant varchar2(200) := q'^{'gender_of_host':'#GENDER#','num_guests':#NUM_GUESTS#,'host':'#HOST#','guest':'#GUEST#'}^';
   l_json_params varchar2(2000);
 begin
   l_gender := 'female';
@@ -103,11 +103,11 @@ begin
                      'NUM_GUESTS', l_num_guests,
                      'HOST', l_host,
                      'GUEST', l_guest));
-                     
   pit.print(msg.ICU_TEST, msg_args(pit.FORMAT_ICU, l_json_params));
-  
 end;
 /
+
+SQL> Maria invites Tamer and 4 other people to her party.
 ```
 
 This is obviously more complicated than a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message.
