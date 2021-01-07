@@ -78,7 +78,11 @@ begin
               =2 {{host} invites {guest} and one other person to their party.}
               other {{host} invites {guest} and # other people to his party.}}}}',
     p_pms_pse_id => 70,
-    p_pms_description => 'Test of ICU messages',
+    p_pms_description => 'Anchors used in this message are:
+    - NUM_GUESTS: Number of guests invited to the party
+    - GENDER_OF_HOST: Gender of the hosting person, valid values are male|female
+    - HOST: Name of the hosting person
+    - GUEST: Name of the most relevant guest',
     p_pms_pmg_name => 'PIT'); 
 
   pit_admin.create_message_package;
