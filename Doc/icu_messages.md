@@ -90,7 +90,9 @@ end;
 /
 ```
 
+To make it easier for both, the developer and the translator, to work with this message, you may think about putting the anchor names and a short description into the message description tag.
 You call the message this way:
+
 ```
 declare
   l_gender varchar2(10 byte);
