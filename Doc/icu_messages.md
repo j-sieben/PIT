@@ -2,7 +2,7 @@
 
 ICU (International Components for Unicode) is an open-source project of mature C/C++ and Java libraries for Unicode support, software internationalization, and software globalization. ICU is widely portable to many operating systems and environments. It gives applications the same results on all platforms and between C, C++, and Java software. The ICU project is a technical committee of the Unicode Consortium and sponsored, supported, and used by IBM and many other companies.
 
---- [International Components for Unicode. In Wikipedia, The Free Encyclopedia. Retrieved 11:39, January 07, 2021](https://stackoverflow.com/questions/2002120/citing-the-author-of-a-blockquote-using-markdown-syntax)
+--- [International Components for Unicode. In Wikipedia, The Free Encyclopedia. Retrieved 11:39, January 07, 2021](https://en.wikipedia.org/wiki/International_Components_for_Unicode)
 
 In regard to messages, ICU puts normal `PIT` messages on steroids. It solves problems you can't address using simple `PIT` messages, such as plural, gender, selective messages based upon quantity and others. Let's look at an example.
 
