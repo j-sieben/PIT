@@ -8,7 +8,7 @@ In regard to messages, ICU puts normal `PIT` messages on steroids. It solves pro
 
 ## Example of an ICU message
 
-An ICU message takes more information into account than a normal message. As an example, I've copied a message from the [ICU Documentation(http://userguide.icu-project.org/formatparse/messages). The aim of this message is to provide different messages based on the gender of the host and the amount of guests:
+An ICU message takes more information into account than a normal message. As an example, I've copied a message from the [ICU Documentation](http://userguide.icu-project.org/formatparse/messages). The aim of this message is to provide different messages based on the gender of the host and the amount of guests:
 
 ```
 {
