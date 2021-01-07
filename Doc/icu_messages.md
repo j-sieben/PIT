@@ -124,5 +124,10 @@ Using this convention, you can mix »normal« and ICU messages without any setup
 - orgJson, [Version 20201115](https://jar-download.com/artifacts/org.json)
 - A small ICU.jar, provided at folder `PIT/core/java/ICU.jar`
 
-`PIT` already supports the ICU extension, even if the jar files are not loaded into the database. As the code is missing, calling messages with the `FORMAT_ICU` switch will lead to an exception unless the jar files are loaded into the database.
+To load a jar file into the database, use the `loadjava` utility. An example usage could be like so:
 
+```
+loadjava.bat ICU.jar -oci -force -resolve -verbose -user <PIT_OWNER>/<PIT_PWD>@<database>
+```
+
+`PIT` already supports the ICU extension, even if the jar files are not loaded into the database. As the code is missing, calling messages with the `FORMAT_ICU` switch will lead to an exception unless the jar files are loaded into the database.
