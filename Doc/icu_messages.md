@@ -110,7 +110,7 @@ end;
 /
 ```
 
-This is obviously more complicated that a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message.
+This is obviously more complicated than a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message.
 
 ## Installing the ICU extension
 
