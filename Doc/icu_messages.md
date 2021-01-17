@@ -120,7 +120,7 @@ SQL> Maria invites Tamer and 4 other people to her party.
 
 This is obviously more complicated than a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message. The code snippet uses `utl_text.bulk_replace`, a method from by [UTL_TEXT](https://github.com/j-sieben/UTL_TEXT) library. You may use any method you like but you have to make sure that you pass in a varchar/clob value, not a JSON object for example.
 
-Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases.
+Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases. If you're interested in some more background, you may want to read [my blog](https://j-sieben.github.io/blog/posts/2021-01-07-ICU-messages) on this topic as well.
 
 ## Installing the ICU extension
 
