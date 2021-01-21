@@ -159,6 +159,27 @@ Date and DateTime values must be in the ISO/XML date format convention, namely `
 
 If you follow these conventions, all formatting that is possible with dates and numbers in ICU is applicable.
 
+The follwing code shows a message with date and number replacement anchors:
+```
+[Merssage: "At {on_datetime, time, ::jmm} on {on_datetime, date, ::dMMMM}, there was {event} on planet {planet_number,number,integer}."]
+
+select pit.get_message_text(
+         'ICU_TEST_2', 
+         msg_args('FORMAT_ICU', 
+                  'planet_number', '25', 
+                  'on_datetime', '2020-05-12T10:03:25', 
+                  'event', 'a disturbance in the Force')) message
+  from dual;
+  
+SQL> At 10:03 on 12 May, there was a disturbance in the Force on planet 25.
+ 
+SQL> alter session set nls_language=GERMAN;
+SQL> r
+SQL> Am 12. Mai um 10:03 trat das Ereignis "a disturbance in the Force" auf dem Planeten 25 auf.
+```
+
+The example shows very nicely that it is not enough to internationalise only the messages, but that the data must also be treated accordingly. This can be done within `PIT` through translatable items.
+
 ## Installing the ICU extension
 
 `PIT` supports ICU messages after some preparational work. You have to load three java libraries into the database at the `PIT` owner schema. These libraries are:
