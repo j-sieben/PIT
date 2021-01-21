@@ -57,11 +57,7 @@ as
               if i > 2 then
                 l_json_parameters := l_json_parameters || ',';
               end if;
-              if regexp_like(p_arg_list(i+1), '^[0-9\.]+$') then
-                l_json_parameters := l_json_parameters || '"' || p_arg_list(i) || '":' || p_arg_list(i+1);
-              else
-                l_json_parameters := l_json_parameters || '"' || p_arg_list(i) || '":"' || p_arg_list(i+1) || '"';
-              end if;
+              l_json_parameters := l_json_parameters || '"' || p_arg_list(i) || '":"' || p_arg_list(i+1) || '"';
             end if;
           end loop;
           l_json_parameters := l_json_parameters || '}';
