@@ -11,7 +11,7 @@ as
   as
   begin
     p_user_name := pit_util.get_user;
-    p_session_id := sys_context('USERENV', 'CLIENT_IDENTIFIER');
+    p_session_id := coalesce(sys_context('USERENV', 'PROXY_USER'), sys_context('USERENV', 'CLIENT_IDENTIFIER'));
     p_required_context := null;
     if p_session_id is null then
       p_session_id := to_char(sys_context('USERENV','SID'));

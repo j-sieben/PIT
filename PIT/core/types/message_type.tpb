@@ -14,6 +14,9 @@ as
     p_arg_list msg_args)
     return self as result
   as
+    l_locale varchar2(100 byte);
+    l_language varchar2(100 byte);
+    l_territory varchar2(100 byte);
   begin
     select pms_text, pms_description, pms_pse_id, pms_active_error
       into self.message_text, self.message_description, self.severity, self.error_number
@@ -37,7 +40,11 @@ as
     -- replace anchors with msg params
     if p_arg_list is not null then
       if upper(p_arg_list(1)) = 'FORMAT_ICU' then
-        self.message_text := message_type.format_icu(self.message_text, p_arg_list(2));
+        l_language := sys_context('USERENV', 'LANGUAGE');
+        l_territory := substr(l_language, instr(l_language, '_') + 1, instr(l_language, '.') - instr(l_language, '_') - 1);
+        l_language := substr(l_language, 1, instr(l_language, '_') -1);
+        l_locale := utl_i18n.map_locale_to_iso(l_language, l_territory);
+        self.message_text := message_type.format_icu(self.message_text, p_arg_list(2), l_locale);
       else
         for i in p_arg_list.first..p_arg_list.last loop
           self.message_text :=

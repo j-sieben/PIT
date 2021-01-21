@@ -15,10 +15,11 @@ create or replace type message_type force is object(
   message_args msg_args,
   static function format_icu(
     p_msg in varchar2,
-    p_params in varchar2)
+    p_params in varchar2,
+    p_locale in varchar2)
     return varchar2
   as language java name
-    'icu.ICU.format(java.lang.String, java.lang.String) return java.lang.String',
+    'icu.ICU.format(java.lang.String, java.lang.String, java.lang.String) return java.lang.String',
   constructor function message_type(
     self in out nocopy message_type,
     p_message_name in varchar2,
