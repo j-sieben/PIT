@@ -14,9 +14,13 @@ as
     p_arg_list msg_args)
     return self as result
   as
+    C_SUCCESS constant number := 0;
     l_locale varchar2(100 byte);
     l_language varchar2(100 byte);
     l_territory varchar2(100 byte);
+    l_status number(1, 0);
+    l_error_message varchar2(1000 byte);
+    l_json_parameters varchar2(1000 byte);
   begin
     select pms_text, pms_description, pms_pse_id, pms_active_error
       into self.message_text, self.message_description, self.severity, self.error_number
@@ -44,7 +48,28 @@ as
         l_territory := substr(l_language, instr(l_language, '_') + 1, instr(l_language, '.') - instr(l_language, '_') - 1);
         l_language := substr(l_language, 1, instr(l_language, '_') -1);
         l_locale := utl_i18n.map_locale_to_iso(l_language, l_territory);
-        self.message_text := message_type.format_icu(self.message_text, p_arg_list(2), l_locale);
+        if p_arg_list.count = 2 then
+          l_json_parameters := p_arg_list(2);
+        else
+          l_json_parameters := '{';
+          for i in 2 .. p_arg_list.count loop
+            if mod(i, 2) = 0 then
+              if i > 2 then
+                l_json_parameters := l_json_parameters || ',';
+              end if;
+              if regexp_like(p_arg_list(i+1), '^[0-9\.]+$') then
+                l_json_parameters := l_json_parameters || '"' || p_arg_list(i) || '":' || p_arg_list(i+1);
+              else
+                l_json_parameters := l_json_parameters || '"' || p_arg_list(i) || '":"' || p_arg_list(i+1) || '"';
+              end if;
+            end if;
+          end loop;
+          l_json_parameters := l_json_parameters || '}';
+        end if;
+        self.message_text := message_type.format_icu(self.message_text, l_json_parameters, l_locale, l_status, l_error_message);
+        if l_status != C_SUCCESS then
+            raise_application_error(-20000, l_error_message);
+        end if;
       else
         for i in p_arg_list.first..p_arg_list.last loop
           self.message_text :=

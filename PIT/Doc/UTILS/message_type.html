@@ -97,6 +97,11 @@ Program units
 </TD></TR></TABLE>
 <TABLE CLASS="SUB_TABLE">
 <TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
+<A HREF="#FORMAT_ICU">format_icu</A>&nbsp;&nbsp;
+</TD><TD CLASS="DESC_TEXT" WIDTH=95%>
+
+</TD></TR>
+<TR><TD VALIGN="TOP" CLASS="TYPE_ITEM">
 <A HREF="#MESSAGE_TYPE">message_type</A>&nbsp;&nbsp;
 </TD><TD CLASS="DESC_TEXT" WIDTH=95%>
 
@@ -206,6 +211,17 @@ message_args
 </P>
 <PRE CLASS="DECL_TEXT">
 message_args msg_args
+</PRE>
+<HR>
+<A NAME="FORMAT_ICU"></A>
+<P CLASS="TYPE_TITLE">
+format_icu
+</P>
+<PRE CLASS="DECL_TEXT">
+Function format_icu(p_msg    in varchar2,
+                    p_params in varchar2,
+                    p_locale in varchar2) return varchar2
+
 </PRE>
 <HR>
 <A NAME="MESSAGE_TYPE"></A>
