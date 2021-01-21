@@ -122,12 +122,6 @@ This is obviously more complicated than a »normal« `PIT` message but offers mu
 
 Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases. If you're interested in some more background, you may want to read [my blog](https://j-sieben.github.io/blog/posts/2021-01-07-ICU-messages) on this topic as well.
 
-## How the ICU extension for `PIT` works
-
-It turned out that the required changes to `PIT` weren't as massive as feared. After importing the required ICU libraries (see the next section) and the small Java wrapper to call it from PL/SQL, it turned out that adding this wrapper method as a static member function to the `MESSAGE_TYPE` was the only change. In the constructor method of this type, it is analyzed whether the first parameter is `pit.FORMAT_ICU` and if it is, the static wrapper method is called to format the message. This was a nice proof of my concept to provide an »intelligent« message type rather than a simple string. Adding ICU was a snap basically and it leaves room for similar extension in the future.
-
-As ICU is not in integral part of the Oracle database, it is necessary to pass the actually set locale from the session context as an explicit parameter. Adding this to the Java library would have been possible but it would incur additional complexity by setting up an internal database connection from Java. Passing this information as a parameter was considered the simplest possible implementation.
-
 ## Installing the ICU extension
 
 `PIT` supports ICU messages after some preparational work. You have to load three java libraries into the database at the `PIT` owner schema. These libraries are:
