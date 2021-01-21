@@ -137,7 +137,7 @@ begin
     msg.ICU_TEST, 
     msg_args(pit.FORMAT_ICU, 
              'gender_of_host', l_gender,
-             'num_guests', l_num_guests,
+             'num_guests', to_char(l_num_guests),
              'host', l_host,
              'guest', l_guest));
 end;
