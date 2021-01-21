@@ -161,7 +161,7 @@ If you follow these conventions, all formatting that is possible with dates and 
 
 The follwing code shows a message with date and number replacement anchors:
 ```
-[Merssage: "At {on_datetime, time, ::jmm} on {on_datetime, date, ::dMMMM}, there was {event} on planet {planet_number,number,integer}."]
+[Message: "At {on_datetime, time, ::jmm} on {on_datetime, date, ::dMMMM}, there was {event} on planet {planet_number,number,integer}."]
 
 select pit.get_message_text(
          'ICU_TEST_2', 
