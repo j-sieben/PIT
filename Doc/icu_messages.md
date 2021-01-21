@@ -147,9 +147,17 @@ SQL> Maria invites Tamer and 4 other people to her party.
 ```
 Please not that all anchor names are case sensitive and must match the spelling of the message template. You may decide to either use lower or uppercase consistently in your message to prevent confusion.
 
-Caveat: If you have parameters with different datatypes it is probably saver to provide a matching JSON string yourself. If you use the parameter/value pair method instead, `PIT` treats any string that »looks like« a number as a number. This may or may not be ok, depending on your specific message. This option was provided to allow for a simpler way of passing values in in »normal« environments without complex data type problems.
-
 Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases. If you're interested in some more background, you may want to read [my blog](https://j-sieben.github.io/blog/posts/2021-01-07-ICU-messages) on this topic as well.
+
+## Working with Dates and Numbers in ICU
+
+Although far from perfect and complete, the integration of ICU into `PIT` supports the formatting of numbers or dates/date values.
+
+In terms of numbers, integer and float values are supported, with a dot expected as the decimal separator and no thousands separators allowed.
+
+Date and DateTime values must be in the ISO/XML date format convention, namely `2021-01-28` and `2021-01-28T15:30:00` respectively. Please note that the `T` is required.
+
+If you follow these conventions, all formatting that is possible with dates and numbers in ICU is applicable.
 
 ## Installing the ICU extension
 
