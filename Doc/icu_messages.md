@@ -120,6 +120,35 @@ SQL> Maria invites Tamer and 4 other people to her party.
 
 This is obviously more complicated than a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message. The code snippet uses `utl_text.bulk_replace`, a method from by [UTL_TEXT](https://github.com/j-sieben/UTL_TEXT) library. You may use any method you like but you have to make sure that you pass in a varchar/clob value, not a JSON object for example.
 
+Alternatively, you may use a second approach to pass parameters to ICU messages. The same convention to indicate that an ICU message is provided is in place, but now, you pass in a list of parameter name and value pair to `PIT`. Using this approach, the example from above reads as:
+
+```
+declare
+  l_gender varchar2(10 byte);
+  l_num_guests pls_integer;
+  l_host varchar2(128 byte);
+  l_guest varchar2(128 byte);
+begin
+  l_gender := 'female';
+  l_num_guests := 5;
+  l_host := 'Maria';
+  l_guest :='Tamer';
+  pit.print(
+    msg.ICU_TEST, 
+    msg_args(pit.FORMAT_ICU, 
+             'gender_of_host', l_gender,
+             'num_guests', l_num_guests,
+             'host', l_host,
+             'guest', l_guest));
+end;
+/
+
+SQL> Maria invites Tamer and 4 other people to her party.
+```
+Please not that all anchor names are case sensitive and must match the spelling of the message template. You may decide to either use lower or uppercase consistently in your message to prevent confusion.
+
+Caveat: If you have parameters with different datatypes it is probably saver to provide a matching JSON string yourself. If you use the parameter/value pair method instead, `PIT` treats any string that »looks like« a number as a number. This may or may not be ok, depending on your specific message. This option was provided to allow for a simpler way of passing values in in »normal« environments without complex data type problems.
+
 Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases. If you're interested in some more background, you may want to read [my blog](https://j-sieben.github.io/blog/posts/2021-01-07-ICU-messages) on this topic as well.
 
 ## Installing the ICU extension
