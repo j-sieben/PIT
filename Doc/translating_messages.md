@@ -1,5 +1,5 @@
 # Translate messages and translatable items
-`PIT` messages and translatable items are translatable into any Oracle supported language. This can be done using different methods. The probably easiest way is to use the APEX UI for `PIT`.
+`PIT` messages and translatable items are translatable into any Oracle supported language. This can be done using different methods. The probably easiest way is to use the [APEX UI](https://github.com/j-sieben/PIT/blob/master/Doc/administration_app.md) for `PIT`.
 
 
 ## Using the APEX UI
@@ -27,6 +27,6 @@ To translate messages, `pit_admin` offers a specialized method. This is because 
 
 ## Loading a translated `PIT` version
 
-If you install `PIT`, you need to define a default language. Later, you can easily add a translation by calling `pit_load_trans.sql`. You need to pass in the install user and the target language (Oracle language name). At the moment, only GERMAN and AMERICAN are provided. If you want to translate into other messages, look out for folder `messages` in the `PIT`installation folder. There are several folders of that kind but the organization of these is identically: They contain a folder named after the Oracle language and script files with the respective messages.
+If you install `PIT`, you need to define a default language. Later, you can easily add a translation by calling `pit_load_trans.sql`. You need to pass in the install user and the target language (Oracle language name). At the moment, only `GERMAN` and `AMERICAN` are provided. If you want to translate into other messages, look out for folder `messages` in the `PIT` installation folder. There are several folders of that kind but the organization of these is the same: They contain a folder named after the Oracle language and script files with the respective messages.
 
 If you want to add your own, simply duplicate a language folder, rename it to the desired target language, open the files and translate them. It would be nice if you provide me with your translations, I will gladly incorporate them into this project for others to use it.
