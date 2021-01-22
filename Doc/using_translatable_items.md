@@ -1,7 +1,7 @@
 # How to work with translatable items
 Translatable items offer the possibility to maintain translatable information in a standardized way. In many data models data must be translated into different languages based on user settings. This is especially true for data that is used for select lists, labels and the like. `PIT` offers a possibility to translate messages into many languages, but maintaining this kind of information with messages is not a valid approach, as it overloads the msg package with useless messages.
 
-To overcome this, `PIT` now offers `PIT` Translatable Items, or PTI for short. A PTI is a lightweigt alternative to messages. It lacks some of the functionality of messages but offers other benefits. First, a PTI is not attached to a severity, it does not come as an object and it is not secured by a constant at package MSG. It does allow for the integration of message parameters and exceeds messages in its possibility to store three message chunks under one name:
+To overcome this, `PIT` now offers `PIT` Translatable Items, or PTI for short. A PTI is a lightweigt alternative to messages. It lacks some of the functionality of messages but offers other benefits. First, a PTI is not attached to a severity, it does not come as an object and it is not secured by a constant at package `MSG`. It does allow for the integration of message parameters and exceeds messages in its possibility to store three message chunks under one name:
 
 - A `PTI_NAME` property with up to 200 characters in length and `MSG_ARGS` support,
 - A `PTI_DISPLAY_NAME` property with up to 200 characters in length and `MSG_ARGS` support and
@@ -10,7 +10,6 @@ To overcome this, `PIT` now offers `PIT` Translatable Items, or PTI for short. A
 The `PTI_DESCRIPTION` property was planned to be used for help texts and the like, therefore no support for `MSG_ARGS` was felt to be necessary.
 
 Messages had the possibility to group them into message groups already, but translatable items require you to assign them to a message group. The message group is part of the primary key, allowing for an easier naming system as a name has to be unique for a message group only.
-
 
 ## Technical Background
 Technically, translatable items are stored in table `PIT_TRANSLATABLE_ITEM` and consist of a `PTI_ID` (it's unique name for the message group),  a reference to table `PIT_MESSAGE_GROUP` and `PIT_MESSAGE_LANGUAGE`. Plus, it offers the beforementioned columns for storing the `PTI_NAME`, `PTI_DISPLAY_NAME` and `PTI_DESCRIPTION`. To allow for other tables to reference entries in this table, `PIT_TRANSLATABE_ITEM` grants a `REFERENCES` right to any `PIT` client. Plus, it offers a virtual column named `PIT_UID` which, in combination with column `PTI_UPMG_NAME`, forms a unique constraint other tables can reference. In conjunction with the `REFERENCES` grant on this table, other data models are allowed to include this table in a foreign key relationship into their local data models. They are not allowed to write to this table directly, but this can be achieved by using the respective API from `PIT`.
@@ -33,7 +32,7 @@ create table sct_action_item_focus(
 
 Please note the use of `&PIT_OWNER.` to see how a reference to a foreign schema can be made (of course you can provide a local synonym for that table as well). Also note that it is a good practice to define a static property for `SIF_PMG_NAME` (which references the message group in `PIT`) to make it easy to collect all translatable items for a certain area of the data model. This way, you can create an export of all translatable items very easily.
 
-It may be a good idea to create a view above your own table to wrap the storage of translatable items. The next code gives an idea on how to do this:
+It may be a good idea to create a view on top of your own table to wrap the storage of translatable items. The next code gives an idea on how to do this:
 
 ```
 create or replace view sct_action_item_focus_v as
