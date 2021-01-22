@@ -178,7 +178,7 @@ SQL> r
 SQL> Am 12. Mai um 10:03 trat das Ereignis "a disturbance in the Force" auf dem Planeten 25 auf.
 ```
 
-The example shows very nicely that it is not enough to internationalise only the messages, but that the data must also be treated accordingly. This can be done within `PIT` through translatable items.
+The example shows very nicely that it is not enough to internationalise only the messages, but that the data must also be treated accordingly. This can be done within `PIT` through [translatable items](https://github.com/j-sieben/PIT/blob/master/Doc/using_translatable_items.md).
 
 ## Installing the ICU extension
 
