@@ -93,7 +93,7 @@ From the list of use cases you can see that there is a requirement to be very fl
 
 When you think about these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, `PIT` allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a table and send them once a day and ignore all other messages.
 
-I strongly encourage you to create your own output module tailored to your logging needs. Perhaps you need a module that immediately creates a ticket in your ticket system in case of fatal errors or something similar. An own output module is the way to achieve this goal. If you want to familarize yourself with creating your own output module, you may want to continue reading [here](output_modules.md).
+I strongly encourage you to create your own output module tailored to your logging needs. Perhaps you need a module that immediately creates a ticket in your ticket system in case of fatal errors or something similar. An own output module is the way to achieve this goal. If you want to familarize yourself with creating your own output module, you may want to continue reading [here](Doc/output_modules.md).
 
 ### Context
 
