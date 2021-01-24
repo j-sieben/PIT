@@ -137,12 +137,6 @@ Of course you can omit the call to `PIT.stop_message_collection` and directly wo
 
 More details on working in collect mode can be found [here](Doc/collect_messages.md).
 
-### Output modules
-Another aspect of flexibility is the possibility to easily extend or change output modules. This is accomplished by object oriented programming. `PIT` uses an object called `PIT_MODULE` as an abstract class for all output modules. If you install a new output module by inheriting from `PIT_MODULE` (`create type `PIT`_CONSOLE under `PIT`_MODULE ...`) this new module gets known to `PIT` and may be used immediately without having to change `PIT` itself.
-A big advantage of this approach is that `PIT_MODULE` implements all necessary functionality as stubs. Because of this you only need to implement the behaviour you require for your new output module and leave all other moethods out. Say you plan to create a `PIT_MAIL` output module. It wouldn't make sense to implement a `purge` method as a sent mail cannot be purged. So if you don't need it, you simply don't implement it.
-
-Every output module may have its own set of parameters to control the behaviour of the output module. Obviously, output modules may have their own database objects, such as tables or helper packages, depending on their complexity. A `PIT_MAIL` module may have a table to buffer messages that need to be sent later, some helper packages to actually send a mail etc. The only connection to `PIT` is the inherited output module `PIT_MAIL`. Because it inherits from `PIT_MODULE`, `PIT` is secure to call any method for `PIT_MAIL` that `PIT_MODULE` implements. What happens with the provided messages is up to the output module.
-
 ## Administration
 To administer `PIT`, a dedicated administration package is provided. It provides methods to
 - create or translate messages
@@ -154,9 +148,10 @@ To administer `PIT`, a dedicated administration package is provided. It provides
  
 With these methods it's easy to maintain and extend an installation file during development to create new messages on the fly. If you do so, the deplyoment file is created just along with your activities. Alternatively, you may want to have `PIT_ADMIN` create an installation file containing all messages in the database for you.
 
-To make it even more convenient for you, I also added an APEX application that allows to maintain (create, edit, translate) messages and parameters, export their values by creating a downloadable script file withs calls to the `PIT_ADMIN`-API and see where any given message is referenced in the code.
+To make it even more convenient for you, I also added an APEX application that allows to maintain (create, edit, translate) messages and parameters, export their values by creating a downloadable script file withs calls to the `PIT_ADMIN`-API and see where any given message is referenced in the code. Read more about this AEPX application [here](Doc/administration_app.md).
 
 ## Extensibility
+
 PIT comes ready to use with a bunch of output modules. You may want to start your changes by reviewing the output modules and adjust their behaviour. Should an output module be missing, it's easy to create a new one based on the other modules that ship with `PIT`. I decided to create the necessary object types but only implement the bare minimum of functionality within these types, just enough to call helper packages that carry out the heavy lifting. This way you're not exposed to object oriented programming in PL/SQL more than absolutely necessary ... ;-) What I achieved by this is that object orientation adds a feature to PL/SQL not otherwise available, namely the concept of an interface. Using this concept makes the code more stable and easier to implement and understand, as you don't need to create dynamic PL/SQL packages and the like.
 
 Other possible extensions refer to the way session identity is detected. It may be sufficient to rely on `CLIENT_IDENTIFIER`, as this is the case in APEX environments, or to stick to the `USER` function to detect a specific user. Should this turn out to not be working for you (e.g. in a proxy user environment), you may provide a new `SESSION_ADAPTER` that implements your method of detecting the session identity. Which `SESSION_ADAPTER` is used is parameterizable. `PIT`ships with a default adapter and a second adapter to be used with the `PIT_APEX` output module. Within APEX, there is a different concept of session (namely a http session as opposed to a database session) and the way to access the username is different. Take this as a blue print for your own session adapters should you need one.
@@ -171,7 +166,7 @@ PIT makes havy use of parameters. Parameters are organized in parameter groups o
 
 As this package, along with a generic parameter table, is accessible outside `PIT`, the parameter package may be used to organize all of your application parameters as well. The administrative package once again allows you to create and maintain parameters and to export parameters by reating a group of parameter files with all parameters and their values in a file per parameter group. Read more about parameter support [using parameters](Doc/parameters.md)
 
-A second component that might be reused is a component to maintain globally managed contexts. In order to store parameters in a way that they are accessible cross-session, you need a globally accessed context. Whereas this type of context is very nice in that access to its information does not incur context switches from neither PL/SQL nor SQL, it's not all intuitive to use. A separate package `UTL_CONTEXT` allows for a smoother utilization of globally accessible contexts. Being a separate package it's easy to reuse this package for your own context requirements.
+A second component that might be reused is a component to maintain globally managed contexts. In order to store parameters in a way that they are accessible cross-session, you need a globally accessed context. Whereas this type of context is very nice in that access to its information does not incur context switches from neither PL/SQL nor SQL, it's not all intuitive to use. A separate package `UTL_CONTEXT` allows for a smoother utilization of globally accessible contexts. Being a separate package it's easy to reuse this package for your own context requirements. Context are described in depth [here](Doc/handling_contexts.md).
 
 ### APEX administration app for various APEX versions
 
@@ -185,8 +180,4 @@ To get familiar with `PIT`, read [Using `PIT`](Doc/using_pit.md)
 
 Details to throwing and catching Exceptions can be found [here](Doc/exceptions.md)
 
-To learn more about the concept of *Context* and *Toggles* read [Context and Toggles](Doc/handling_contexts.md)
-
 Some advice on how to keep execution speed high with `PIT` can be found [here](Doc/performance.md)
-
-If you need to write your own output module, continue reading [Output Modules](Doc/output_modules.md)
