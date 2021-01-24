@@ -4,7 +4,7 @@ ICU (International Components for Unicode) is an open-source project of mature C
 
 --- [International Components for Unicode. In Wikipedia, The Free Encyclopedia. Retrieved 11:39, January 07, 2021](https://en.wikipedia.org/wiki/International_Components_for_Unicode)
 
-In regard to messages, ICU puts normal `PIT` messages on steroids. It solves problems you can't address using simple `PIT` messages, such as plural, gender, selective messages based upon quantity and others. Let's look at an example.
+In regard to messages, ICU puts normal `PIT` messages on steroids. It solves problems you can't address using simple `PIT` messages, such as plural, gender, selective messages based upon quantity and others. If you're interested in some more background, you may want to read [my blog](https://j-sieben.github.io/blog/posts/2021-01-07-ICU-messages) on this topic as well. Let's look at an example.
 
 ## Example of an ICU message
 
@@ -89,7 +89,8 @@ end;
 ```
 
 To make it easier for both, the developer and the translator, to work with this message, you may think about putting the anchor names and a short description into the message description tag.
-You call the message this way:
+
+One way to call the message is by declaring the message to be an ICU message by passing `FORMAT_ICU` as the first parameter and providing a JSON instance with the respective message attributes as the second parameter. This gives you full control over the format of the parameters:
 
 ```
 declare
@@ -118,7 +119,7 @@ SQL> Maria invites Tamer and 4 other people to her party.
 
 This is obviously more complicated than a »normal« `PIT` message but offers much more power. Plus, keep in mind that all the internals of the translation issues to other languages are taken away from the code and put into the hands of the translator of the message. The code snippet uses `utl_text.bulk_replace`, a method from by [UTL_TEXT](https://github.com/j-sieben/UTL_TEXT) library. You may use any method you like but you have to make sure that you pass in a varchar/clob value, not a JSON object for example.
 
-Alternatively, you may use a second approach to pass parameters to ICU messages. The same convention to indicate that an ICU message is provided is in place, but now, you pass in a list of parameter name and value pair to `PIT`. Using this approach, the example from above reads as:
+Alternatively, you may use a second approach to pass parameters to ICU messages. The same convention to indicate that an ICU message is used, but now you pass in a list of parameter name and value pair to `PIT`. Using this approach, the example from above reads as:
 
 ```
 declare
@@ -143,21 +144,23 @@ end;
 
 SQL> Maria invites Tamer and 4 other people to her party.
 ```
+
 Please not that all anchor names are case sensitive and must match the spelling of the message template. You may decide to either use lower or uppercase consistently in your message to prevent confusion.
 
-Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use messages in all other cases. If you're interested in some more background, you may want to read [my blog](https://j-sieben.github.io/blog/posts/2021-01-07-ICU-messages) on this topic as well.
+Using this convention, you can mix »normal« and ICU messages without any setup. This way, you can benefit from the powerful ICU messages if you need this functionality and stick to the easier to use `PIT` messages in all other cases.
 
 ## Working with Dates and Numbers in ICU
 
-Although far from perfect and complete, the integration of ICU into `PIT` supports the formatting of numbers or dates/date values.
+Although far from perfect and complete, the integration of ICU into `PIT` supports the formatting of numbers or datetime/date values.
 
-In terms of numbers, integer and float values are supported, with a dot expected as the decimal separator and no thousands separators allowed.
+In terms of numbers, `integer` and `float` values are supported, with a dot expected as the decimal separator and no thousands separators allowed.
 
-Date and DateTime values must be in the ISO/XML date format convention, namely `2021-01-28` and `2021-01-28T15:30:00` respectively. Please note that the `T` is required.
+`date` and `datetime` values must be in the ISO/XML date format convention, namely `2021-01-28` and `2021-01-28T15:30:00` respectively. Please note that the `T` is mandatory.
 
 If you follow these conventions, all formatting that is possible with dates and numbers in ICU is applicable.
 
 The follwing code shows a message with date and number replacement anchors:
+
 ```
 [Message: "At {on_datetime, time, ::jmm} on {on_datetime, date, ::dMMMM}, there was {event} on planet {planet_number,number,integer}."]
 
@@ -182,11 +185,11 @@ The example shows very nicely that it is not enough to internationalise only the
 
 `PIT` supports ICU messages after some preparational work. You have to load three java libraries into the database at the `PIT` owner schema. These libraries are:
 
-- ICU4j, I've tested with [Release 68.2](https://github.com/unicode-org/icu/releases/tag/release-68-2)
-- orgJson, [Version 20201115](https://jar-download.com/artifacts/org.json)
-- A small ICU.jar, provided at folder `PIT/core/java/ICU.jar`
+- `ICU4j`, I've tested with [Release 68.2](https://github.com/unicode-org/icu/releases/tag/release-68-2)
+- `orgJson`, [Version 20201115](https://jar-download.com/artifacts/org.json)
+- A small `ICU.jar`, provided at folder `PIT/core/java/ICU.jar`
 
-To load a jar file into the database, use the `loadjava` utility. An example usage could be like so:
+To load a jar files into the database, use the `loadjava` utility. An example usage could be like so:
 
 ```
 loadjava.bat ICU.jar -oci -force -resolve -verbose -user <PIT_OWNER>/<PIT_PWD>@<database>
