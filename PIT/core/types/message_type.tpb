@@ -14,13 +14,13 @@ as
     p_arg_list msg_args)
     return self as result
   as
-    C_SUCCESS constant number := 0;
+    C_FAILURE constant number := 1;
     l_locale varchar2(100 byte);
     l_language varchar2(100 byte);
     l_territory varchar2(100 byte);
     l_status number(1, 0);
     l_error_message varchar2(1000 byte);
-    l_json_parameters varchar2(1000 byte);
+    l_json_parameters varchar2(32767 byte);
   begin
     select pms_text, pms_description, pms_pse_id, pms_active_error
       into self.message_text, self.message_description, self.severity, self.error_number
@@ -63,7 +63,7 @@ as
           l_json_parameters := l_json_parameters || '}';
         end if;
         self.message_text := message_type.format_icu(self.message_text, l_json_parameters, l_locale, l_status, l_error_message);
-        if l_status != C_SUCCESS then
+        if l_status = C_FAILURE then
             raise_application_error(-20000, l_error_message);
         end if;
       else
