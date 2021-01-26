@@ -648,7 +648,7 @@ as
                when pal_float_value is not null then to_char(pal_float_value, 'fm99999999999999.9999999999')
                when pal_date_value is not null then 'date ''' || to_char(pal_date_value, 'yyyy-mm-dd') || ''''
                when pal_timestamp_value is not null then 'timestamp ''' || to_char(pal_timestamp_value, 'yyyy-mm-dd hh24:mi:ssxff tzr') || ''''
-               when pal_boolean_value is not null then case pal_boolean_value when &C_FALSE. then 'false' else 'true' end
+               when pal_boolean_value is not null then case pal_boolean_value when C_FALSE then 'false' else 'true' end
                else 'null'
              end par_value
         from parameter_local p
