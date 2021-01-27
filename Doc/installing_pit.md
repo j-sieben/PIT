@@ -18,7 +18,7 @@ It is possible to adjust some settings before installing `PIT`. First, `PIT` is 
 
 ### Choose your flag type
 
-As storing boolean values in a data model is no easy thing to do in Oracle, many different best practiceses are used to circumvent the lack of a boolean data type in Oracle tables. I found it cumbersome to work with more than one of these best practices at a time, so I made `PIT` adjustable in this regard. In file `PIT/PIT/init/init.sql` you will find the following replacement variables:
+As storing boolean values in a data model is no easy thing to do in Oracle, many different best practiceses are used to circumvent the lack of a boolean data type in Oracle tables. I found it cumbersome to work with more than one of these best practices at a time, so I made `PIT` adjustable in this regard. In file `PIT/PIT/init/settings.sql` you will find the following replacement variables:
 
 ```
 -- ADJUST THIS SETTING IF YOU WANT ANOTHER TYPE 
@@ -30,7 +30,7 @@ Using these replacement variables, you can adjust the boolean type to your local
 
 ### Choose your exception pre- and/or postfix
 
-A message is identified by a unique name. If the severity of this message is `ERROR` or even `FATAL_ERROR`, `PIT` automatically creates user defined exceptions for it. To distinguish them from the message, `PIT` automatically extends the name by a pre- or postfix. You can freely choose, what pre- or postix to use by setting those in the `init` file from the previous paragraph:
+A message is identified by a unique name. If the severity of this message is `ERROR` or even `FATAL_ERROR`, `PIT` automatically creates user defined exceptions for it. To distinguish them from the message, `PIT` automatically extends the name by a pre- or postfix. You can freely choose, what pre- or postix to use by setting those in the `settings.sql` file from the previous paragraph:
 
 ```
 -- ADJUST THIS SETTINGS IF YOU WANT ANOTHER ERROR PRE- OR POSTFIX
