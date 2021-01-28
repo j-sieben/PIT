@@ -390,7 +390,7 @@ as
     l_args := string_to_table(p_context.settings, '|');    
     p_context.log_level := to_number(get_setting(l_args, 1));
     p_context.trace_level := to_number(get_setting(l_args, 2));
-    p_context.trace_timing := to_bool(get_setting(l_args, 3));
+    p_context.trace_timing := to_bool(replace(replace(get_setting(l_args, 3), 'Y', C_TRUE), 'N', C_FALSE));
     p_context.module_list := get_setting(l_args, 4);
   end string_to_context_type;
     

@@ -94,7 +94,7 @@ as
     end if;
 
     -- Timing
-    if p_call_stack.trace_timing = 'Y' then
+    if p_call_stack.trace_timing = pit_util.C_TRUE then
       l_timing := ' [wc=' || to_char(p_call_stack.wall_clock) ||
                   '; e=' || to_char(p_call_stack.elapsed) ||
                   '; e_cpu=' || to_char(p_call_stack.elapsed_cpu) ||
