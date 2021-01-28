@@ -289,6 +289,7 @@ If you code using the *Contractor Pattern*, you want to assert that incoming par
 - `pit.assert`
 - `pit.assert_exists`
 - `pit.assert_not_exists`
+- `pit.assert_datatype`
 
 Most methods are provided with overloads for `varchar2`, `number` and `date`, the exists methods take a sql statement as parameter and check whether that statement returns at least one or no row. Only `select` statements are allowed here of course ... `PIT` offers an overloaded method for the `pi.assert_(not_)exists` method that either accept a sql statement as `varchar2`or an openend cursor. The most generic function is `pit.assert` which expects a boolean expression of any kind and returns without result if the condition evaluates to true and throws an exception otherwise.
 
