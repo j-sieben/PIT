@@ -262,7 +262,7 @@ As `MSG_ARGS` is a `varray of clob`, it is possible to pass in parameters of any
 
 ## Power messages with ICU
 
-As an extension, you can even use ICU messages to power up your possibilities. What ICU is and what it offers as a benefit is explained [here](Doc/icu_messages.md).
+As an extension, you can even use ICU messages to power up your possibilities. What ICU is and what it offers as a benefit is explained [here](/Doc/icu_messages.md).
 
 ## Printing messages to the view layer
 
