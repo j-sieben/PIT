@@ -47,10 +47,10 @@ function my_func(
 as
 begin
   pit.enter('my_func', 
-    p_oparams => msg_params(
-                   msg_param('p_id', to_char(p_id)),
-                   msg_param('p_date', to_char(p_date, 'yyyy-mm-dd')),
-                   msg_param('p_string', p_string)));
+    p_params => msg_params(
+                  msg_param('p_id', to_char(p_id)),
+                  msg_param('p_date', to_char(p_date, 'yyyy-mm-dd')),
+                  msg_param('p_string', p_string)));
     ...
   pit.leave;
 end my_func;
@@ -126,20 +126,31 @@ To be able to use the log functionality, you must create a message first. This c
 
 ```
 begin
+  pit_admin.merge_message_group(
+    p_pmg_name => 'MY_GROUP',
+    p_pmg_description => 'Message of my project');
+    
   pit_admin.merge_message(
-    p_message_name => 'MY_FIRST_MESSAGE',
-    p_message_text => 'This is my first `PIT` message. Hello World!',
-    p_severity => pit.level_info, -- or 50
-    p_message_language => 'AMERICAN');
+    p_pms_name => 'MY_FIRST_MESSAGE',
+    p_pms_pmg_name => 'MY_GROUP',
+    p_pms_text => 'This is my first `PIT` message. Hello World!',
+    p_pms_description => 'Example message, here you can also find explanations for errors, etc.',
+    p_pms_pse_id => pit.level_info, -- or 50
+    p_pms_pml_name => 'AMERICAN');
   
-  pit.translate_message(
-    p_message_name => 'MY_FIRST_MESSAGE',
-    p_message_text => 'Das ist meine erste `PIT`-Nachricht. Hallo Welt!',
-    p_message_language => 'GERMAN');
+  pit_admin.translate_message(
+    p_pms_name => 'MY_FIRST_MESSAGE',
+    p_pms_text => 'Das ist meine erste `PIT`-Nachricht. Hallo Welt!',
+    p_pms_pml_name => 'GERMAN',
+    p_pms_description => 'Beispielnachricht, hier können auch Erläuterungen für Fehler stehen etc.');
   
   pit_admin.create_message_package;
 end;
 ```
+
+It begins by creating (or reusing) a message group. Message groups make it easy to collect and export messages as a script file, but they are purely declarative and don't allow you to use the same message name in another group. Would I have done this, the group name would have to become part of the message name (or provided as a second parameter, blowing up the API.
+
+You then create one or many messages within that group by calling `pit_admin.merge_message`. Make sure to provide this message in the default language you chose when installing `PIT`. A translation can be provided in any Oracle target language by calling `pit_admin.translate_message`, as shown above.
 
 At the end of the script, method `pit_admin.create_message_package` is called to have `pit_admin` (re)-create package `MSG`. It rebuilds the package based on the messages found in table `PIT_MESSAGE` where the `pit_admin` writes its messages to. It therefore can be called as often as you like and will always resemble the latest status of your messages. Keep in mind that it doesn't contain the messages itself. So if you just correct a typo there's no need to recreate the message package. This package contains a constant of type `varchar2(30)` (`varchar2(128)` starting with 12c) with the same name as the message and the value of the message name:
 
@@ -175,6 +186,8 @@ session altered
 Das ist meine erste `PIT`-Nachricht. Hallo Welt!
 ```
 
+If you prefer to use a GUI to create messages, you can install the administration application and create the message and the message group there. When exporting from this application, a script file similar to the one shown above will be created automatically.
+
 ## Handling exceptions with `PIT`
 
 To use `PIT` to handle your errors, you start by creating a new error message. The easiest way to achieve this is to call `pit_admin.merge_message` and `pit_admin.translate_message` for any message and translation you require. As a first example, let's create a message to handle Oracle error `-2292, Child record found`. This error has no predefined exception, so we will create this along with the message creation. After having created your messages, you call procedure `pit_admin.create_message_package` to (re-)create the central message package `MSG`. Here's the code to create this message:
@@ -182,16 +195,19 @@ To use `PIT` to handle your errors, you start by creating a new error message. T
 ```
 begin
   pit_admin.merge_message(
-    p_message_name => 'CHILD_RECORD_FOUND',
-    p_message_text => 'A child record is existing.',
-    p_severity => pit.level_error, -- or 30
-    p_message_language => 'AMERICAN',
+    p_pms_name => 'CHILD_RECORD_FOUND',
+    p_pms_pmg_name => 'MY_GROUP',
+    p_pms_text => 'A child record is existing.',
+    p_pms_description => 'The data cannot be deleted as long as dependent data still exists. First delete the dependent data.',
+    p_pms_pse_id => pit.level_error, -- or 30
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => -2292);
   
   pit.translate_message(
-    p_message_name => 'CHILD_RECORD_FOUND',
-    p_message_text => 'Ein abhängiger Datensatz wurde gefunden.',
-    p_message_language => 'GERMAN');
+    p_pms_name => 'CHILD_RECORD_FOUND',
+    p_pms_text => 'Ein abhängiger Datensatz wurde gefunden.',
+    p_pms_description => 'Die Daten können nicht gelöscht werden, solange noch abhängige Daten existieren. Löschen Sie zunächst die abhängigen Daten.',
+    p_pms_pml_name => 'GERMAN');
   
   pit_admin.create_message_package;
 end;
@@ -287,7 +303,7 @@ begin
   pit.assert(
     p_condition => p_param in (10,20,30),
     p_message_name => msg.PARAM_OUT_OF_RANGE, 
-    p_arg_list => msg_args('P_PARAM', '10,20,30', to_char(p_param))
+    p_msg_args => msg_args('P_PARAM', '10,20,30', to_char(p_param))
   );
   ...
 end;
