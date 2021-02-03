@@ -30,24 +30,27 @@ Changing settings means that all other sessions are aware of these changes immed
 As per Oracle standard, a context may contain information that is visible to every user, to a specific database user only or to a session that has a specific client identifier set. As a matter of fact, these options are not too intuitive to use when using a context out of the box. Fi, it would be highly appreciated to have a »fallback« for a given parameter: If a user does not have a matching client identifier, it would be nice if this user could instead see the more widely visible parameter of the same name. Unfortunately, this is not possible. To allow for this, `PIT` wrapps the usage of the globally accessed context in a helper package called `utl_context`.
 
 ### UTL_CONTEXT
-`utl_context` offers different types of globally accessed contexts to control how the context should behave. This wrapper is not only interesting for `PIT` but for other uses as well which can accept that this package writes to the context. Here is a list of the different context modes `utl_context` provides:
-- `utl_context.c_global`: ... for any user and any session
-- `utl_context.c_force_user`: ... only if database username matches
+
+To overcome some shortcomings and some unintuitive behaviour of globally accessible contexts, `PIT` ships with a helper package called `UTL_CONTEXT`. The global context can be maintained by this package only but aside from that it offers some possibilities not available with other packages accessing a globally accessible context. This wrapper is not only interesting for `PIT` but for other uses as well which can accept that this package writes to the context. `UTL_CONTEXT` offers different types of globally accessed contexts to control how the context should behave. Here is a list of the different context modes `UTL_CONTEXT` provides:
+- `utl_context.c_global`: ... for any user and any session, no possibility to restrict access based on user or session
+- `utl_context.c_force_user`: ... for any session, but only if database username matches
 - `utl_context.c_force_client_id`: ... only if client_identifier matches
 - `utl_context.c_force_user_client_id`: ... only if user AND client_identifier matches
 - `utl_context.c_prefer_client_id`: ... if a matching value for that client_identifier exists, it is visible, otherwise a default value is provided
 - `utl_context.c_prefer_user_client_id`: ... if a matching value for that user AND client_identifier exists, it is visible, otherwise a default value is provided
 - `utl_context.c_session`: ... only within the session that set the value (pseduo local context)
 
-To use one of those context types, you simply choose the constant value as value for `PIT` parameter `PIT_CTX_TYPE`. In an environment with client server connections, you may opt for a `FORCE_USER` if your application users are proxy or database users. If, on the other side, you work in a connection pool environment, you may choose `PREFER_CLIENT_ID` to control logging on a per user basis, even if they utilize different sessions per call.
+Of the modes offered, the `C_PREFER_...` options are special as they allow for a fallback solution. The idea is that if a specific setting for a combination of user and client identifier is avaiable, this will be chosen. If not, it »falls back« to a setting for the user if a value exists that has got no dependency to a client identifier. This makes it possible to have a specific log setting which applies to any user which can be overwritten by a specific setting if the client identifier matches. To use one of those context types, you simply choose the constant value as value for `PIT` parameter `PIT_CTX_TYPE`. In an environment with client server connections, you may opt for a `FORCE_USER` if your application users are proxy or database users. If, on the other side, you work in a connection pool environment, you may choose `PREFER_CLIENT_ID` to control logging on a per user basis, even if they utilize different sessions per call. `PIT` defaults to `utl_context.c_prefer_user_client_id`.
 
 ### Logging choices
 Now that we understand that the memory of `PIT` is the globally accessed context, we need to understand what options we have to control these settings.
 
-If you want to change the actual log settings, a best practice is to create a named context using the `pit_admin.create_named_context` method and switch to it. This is achieved by calling `pit.set_context(<NAME>);`, This will work immediately and across all sessions that can see the global context value. Another option is convenient during testing: You can call the overloaded version ot `pit.set_context` which allows you to set all log parameters directly without the need to create a named context upfront. Here's a code snippet to show you how to do it:
+If you want to change the actual log settings, a best practice is to create a named context using the `pit_admin.create_named_context` method and switch to it. This is achieved by calling `pit.set_context(<NAME_OF_CONTEXT>);`, This will work immediately and across all sessions that can see the global context value. Another option is convenient during testing: You can call the overloaded version ot `pit.set_context` which allows you to set all log parameters directly without the need to create a named context upfront. Here's a code snippet to show you how to do it:
 
 ```
 begin
+  pit.set_context('DEBUG');
+  -- Alternatively:
   pit.set_context(
     p_log_level => pit.level_all,
     p_trace_level => pit.trace_all,
@@ -57,7 +60,7 @@ begin
 end;
 ```
 
-How and when this method is called is up to you. You may bind it to an external toggle or call a script to switch it, as soon as you call the method, it gets switched. What the focus of this switch will be depends on the kind of context you have. 
+How and when this method is called is up to you. You may bind it to an external toggle or call a script to switch it, as soon as you call the method, it gets switched. What the focus of this switch will be depends on the kind of context you have. There is one exception to this rule: The session adapter, responsible for retrieving session id and username, also has an option to control logging. It may pass the name of a context back and `PIT` will immediately switch to this context. This is useful if you need a way to detect whether the calling environment is set to debug mode and you want `PIT`. Take APEX as an example: You can switch on logging of an APEX application by providing a switch within the URL. The APEX session adapter shipped with the `PIT_APEX` output module will detect this and switch to a context called `CONTEXT_APEX` that contains parameterizable logging settings for APEX. This way, `PIT` can be remotely switched on simply by setting APEX to debug mode.
 
 ### Toggle context
 Another option to control the log session is to switch logging on and of for a given list of methods or packages. Idea is that you may have packages that are well maintained and tested, whereas other packages need testing and logging. In this case, you can provide a »white list« to switch logging on or a »black list« to switch logging off. You may have any number of toggle switches. Normally, you may provide on toggle per named context you want to toggle to. Assure that this named context is available before creating a toggle to prevent assertion errors.
