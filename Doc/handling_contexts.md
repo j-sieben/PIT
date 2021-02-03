@@ -31,7 +31,7 @@ As per Oracle standard, a context may contain information that is visible to eve
 
 ### UTL_CONTEXT
 
-To overcome some shortcomings and some unintuitive behaviour of globally accessible contexts, `PIT` ships with a helper package called `UTL_CONTEXT`. The global context can be maintained by this package only but aside from that it offers some possibilities not available with other packages accessing a globally accessible context. This wrapper is not only interesting for `PIT` but for other uses as well which can accept that this package writes to the context. `UTL_CONTEXT` offers different types of globally accessed contexts to control how the context should behave. Here is a list of the different context modes `UTL_CONTEXT` provides:
+`UTL_CONTEXT` is not only interesting for `PIT` but for other uses as well which can accept that this package writes to the context. `UTL_CONTEXT` offers different types of globally accessed contexts to control how the context should behave. Here is a list of the different context modes `UTL_CONTEXT` provides:
 - `utl_context.c_global`: ... for any user and any session, no possibility to restrict access based on user or session
 - `utl_context.c_force_user`: ... for any session, but only if database username matches
 - `utl_context.c_force_client_id`: ... only if client_identifier matches
