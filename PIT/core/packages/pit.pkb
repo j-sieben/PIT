@@ -878,6 +878,24 @@ as
   end set_context;
   
   
+  procedure set_context_value(
+    p_name in varchar2,
+    p_value in varchar2)
+   as
+   begin
+     pit_pkg.set_context_value(p_name, p_value);
+   end set_context_value;
+  
+  
+  function get_context_value(
+    p_name in varchar2)
+    return varchar2
+  as
+  begin
+    return pit_pkg.get_context_value(p_name);
+  end get_context_value;
+  
+  
   procedure reset_context(
     p_active_session_only in boolean default true)
   as

@@ -331,6 +331,29 @@ as
     p_context in pit_util.context_type);
   
   
+  /* Method to set a context value eplicitly
+   * %param  p_name   Name of the attribute to set
+   * %param  p_value  Value to set, VARCHAR2 up to 4000 bytes.
+   * %usage  Is used to persist arbitrary values at the context. This allows for maintaining
+   *         information such as a test flag in a cross session aware manner.
+   *         Setting an attribute to NULL eliminates this attribute from the context.
+   */
+  procedure set_context_value(
+    p_name in varchar2,
+    p_value in varchar2);
+  
+  
+  /* Method to get a context value eplicitly
+   * %param  p_name  Name of the attribute to get
+   * %return Value of the attribute P_NAME
+   * %usage  Is used to retrieves sert values from the context. This allows for maintaining
+   *         information such as a test flag in a cross session aware manner.
+   */
+  function get_context_value(
+    p_name in varchar2)
+    return varchar2;
+    
+  
   /** Procedure to reset log settings to the default settings
    * %usage  If settings for a session were changed, calling this procedure
    *         resets these settings to the default settings as defined by the 

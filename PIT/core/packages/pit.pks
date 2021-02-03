@@ -982,6 +982,29 @@ as
   procedure set_context(
     p_context_name in varchar2);
     
+    
+  /* Method to set a context value eplicitly
+   * %param  p_name   Name of the attribute to set
+   * %param  p_value  Value to set, VARCHAR2 up to 4000 bytes.
+   * %usage  Is used to persist arbitrary values at the context. This allows for maintaining
+   *         information such as a test flag in a cross session aware manner.
+   *         Setting an attribute to NULL eliminates this attribute from the context.
+   */
+ procedure set_context_value(
+   p_name in varchar2,
+   p_value in varchar2);
+  
+  
+  /* Method to get a context value eplicitly
+   * %param  p_name  Name of the attribute to get
+   * %return Value of the attribute P_NAME
+   * %usage  Is used to retrieves sert values from the context. This allows for maintaining
+   *         information such as a test flag in a cross session aware manner.
+   */
+  function get_context_value(
+    p_name in varchar2)
+    return varchar2;
+    
   
   /** Resets the trace context for the active session to the default values
    * %usage Call this procedure to reset trace/debug setting to the default.<br>

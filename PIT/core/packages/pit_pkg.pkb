@@ -1457,7 +1457,35 @@ as
     when others then
       handle_error(C_LEVEL_FATAL);
   end set_context;
-
+  
+  
+  procedure set_context_value(
+    p_name in varchar2,
+    p_value in varchar2)
+  as
+    l_value pit_util.max_sql_char;
+    l_required_context pit_util.name_type;
+  begin
+    g_active_adapter.get_session_details(g_user_name, g_client_id,
+    g_schema_name, l_required_context);
+    
+    if p_value is null then
+      utl_context.clear_value(C_GLOBAL_CONTEXT, p_name, g_client_id);
+    else
+      l_value := substrb(p_value, 1, 4000);
+      utl_context.set_value(C_GLOBAL_CONTEXT, p_name, l_value, g_client_id);
+    end if;
+  end set_context_value;
+  
+  
+  function get_context_value(
+    p_name in varchar2)
+    return varchar2
+  as
+  begin
+    return sys_context(C_GLOBAL_CONTEXT, p_name);
+  end get_context_value;
+  
 
   procedure reset_active_context
   as

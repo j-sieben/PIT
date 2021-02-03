@@ -270,8 +270,35 @@ as
     p_message in message_type)
   as
     l_response clob;
+    $if dbms_db_version.ver_le_12_1 $then
+    l_message pit_util.max_char;
+    C_MESSAGE_TEMPLATE constant pit_util.max_char := 
+      '{"id":"#1#","message_name":"#2#","affected_id":"#3#","session_id":"#4#","user_name":"#5#","message_text":"#6#",' ||
+      '"message_description":"#7#","severity":"#8#","stack":"#9#","backtrace":"#10#","error_number":"#11#"}';
+    $else
     l_message json_object_t := json_object_t('{}');
+    $end
   begin
+    $if dbms_db_version.ver_le_12_1 $then
+    l_message := C_MESSAGE_TEMPLATE;
+    l_message := replace(l_message, '#1#', p_message.id);
+    l_message := replace(l_message, '#2#', p_message.message_name);
+    l_message := replace(l_message, '#3#', p_message.affected_id);
+    l_message := replace(l_message, '#4#', p_message.session_id);
+    l_message := replace(l_message, '#5#', p_message.user_name);
+    l_message := replace(l_message, '#6#', to_char(p_message.message_text));
+    l_message := replace(l_message, '#7#', to_char(p_message.message_description));
+    l_message := replace(l_message, '#8#', to_char(p_message.severity));
+    l_message := replace(l_message, '#9#', p_message.stack);
+    l_message := replace(l_message, '#10#', p_message.backtrace);
+    l_message := replace(l_message, '#11#', to_char(p_message.error_number));
+
+    pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message);
+    l_response := apex_web_service.make_rest_request(
+                    p_url => g_websocket_server,
+                    p_http_method => 'GET',
+                    p_body => l_message);
+    $else
     l_message.put('id', p_message.id);
     l_message.put('message_name', p_message.message_name);
     l_message.put('affected_id', p_message.affected_id);
@@ -289,6 +316,7 @@ as
                     p_url => g_websocket_server,
                     p_http_method => 'GET',
                     p_body => l_message.stringify());
+    $end
   end notify;
 
 
