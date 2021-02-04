@@ -293,7 +293,7 @@ as
     l_message := replace(l_message, '#10#', p_message.backtrace);
     l_message := replace(l_message, '#11#', to_char(p_message.error_number));
 
-    pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message);
+    pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message));
     l_response := apex_web_service.make_rest_request(
                     p_url => g_websocket_server,
                     p_http_method => 'GET',

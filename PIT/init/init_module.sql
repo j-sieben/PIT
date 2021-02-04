@@ -12,6 +12,9 @@ col install_user new_val INSTALL_USER format a30
 col default_language new_val DEFAULT_LANGUAGE format a30
 col module new_val MODULE format a30
 
+@init/settings.sql
+
+
 select user sys_user,
        upper('&1.') install_user,
        value default_language,

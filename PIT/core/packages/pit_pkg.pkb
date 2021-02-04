@@ -1464,10 +1464,9 @@ as
     p_value in varchar2)
   as
     l_value pit_util.max_sql_char;
-    l_required_context pit_util.name_type;
+    l_required_context pit_util.ora_name_type;
   begin
-    g_active_adapter.get_session_details(g_user_name, g_client_id,
-    g_schema_name, l_required_context);
+    g_active_adapter.get_session_details(g_user_name, g_client_id , l_required_context);
     
     if p_value is null then
       utl_context.clear_value(C_GLOBAL_CONTEXT, p_name, g_client_id);
