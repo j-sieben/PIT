@@ -316,7 +316,7 @@ as
     p_context_name in ora_name_type,
     p_settings in varchar2)
   as
-    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(Y|N)\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|N\|))$';
+    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || C_TRUE || '|' || C_FALSE || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || C_FALSE || '\|))$';
   begin
     -- context name must not be longer than 10 byte under C_MAX_LENGTH
     if length(p_context_name) > C_MAX_LENGTH - 10 then 
