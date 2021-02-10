@@ -109,7 +109,7 @@ as
   procedure load_modules
   as
     cursor installed_modules_cur is
-      select to_char(type_name) type_name
+      select type_name
         from all_types
        where supertype_name = C_BASE_MODULE
          and owner = C_PACKAGE_OWNER;
@@ -199,8 +199,14 @@ as
 
   /************************ CONTEXT MAINTENANCE ******************************/
   /** Method to read the actually chosen context from the global context
-   * %usage  Is used to read the actual settings, as they may have
-   *         changed based on settings in other sessions
+   * %param [p_args] Optional (list of) context name. If NULL, ACTIVE and DEFAULT contexts are searched in that order,
+   *                 otherwise the passed in (list of) context name has highest priority.
+   * %return Actual context settings.
+   * %usage  Is used to read the actual settings, as they may have changed based on settings in other sessions
+   *         Context are stored under their name in the global context. This method tries to read
+   *         the context values of the passed in context name. If it can't find any, it falls back to the active
+   *         context and if no active context exists, to the default context.
+   * %throws -20000: No context settings found. Is raised only if no context default settings could be found.
    */
   function read_best_matching_context(
     p_args in args default null)
@@ -243,7 +249,7 @@ as
   end read_best_matching_context;
   
   
-  /** Reads actual context settings into G_CONTEXT and decide whether a change in the settings has occurred
+  /** Reads actual context settings into G_CONTEXT and decides whether a change in the settings has occurred
    * %param [p_context_name] Optional context name. 
    * %usage  Is called to read the log settings from the globally accessed context.
    *         It tries to read the context in the following order: CONTEXT_FROM SESSION_ADAPTER, P_CONTEXT_NAME, C_ACTIVE_CONTEXT, C_DEFAULT_CONTEXT
@@ -269,13 +275,14 @@ as
   
   
   /** Retrieves the actually valid context settings and copies it to G_CONTEXT
-   * %usage  Is used as a wrapper around COPY_CONTEXT_TO_GLOBAL that add reading the actual context.
+   * %usage  Is used as a wrapper around COPY_CONTEXT_TO_GLOBAL. This method reads the actual context first
+   *         to find out whether the session adapter requires a context change. If yes, this context is read.
    */
   procedure copy_actual_context_to_global
   as
     l_required_context pit_util.ora_name_type;
   begin
-    -- start by reading the actual session details 
+    -- get the actually required context from the session adapter
     g_active_adapter.get_session_details(
       p_user_name => g_user_name, 
       p_session_id => g_client_id, 
@@ -285,7 +292,7 @@ as
   end copy_actual_context_to_global;
   
   
-  /** Sets new context settings for PIT at the context and raises CONTEXT_CHANGED event
+  /** Stores new context settings for PIT at the global context and raises CONTEXT_CHANGED event
    * %usage  Is called from <code>pit.SET_CONTEXT</code> to actually persist
    *         the required settings in the global context and raise a context switch event
    * %param  p_context   New context settings, instance of pit_util.context_type
@@ -331,7 +338,7 @@ as
    * %param  p_new_context    partly filled new context (log_level and module_list may be filled)
    * %usage  Is used if for a single log activity a new context setting is required, such as with LOG_SPECIFIC or NOTIFY.
    *         In this environment, only output modules and log threshold can be changed, therefore all other settings are
-   *         copied from the actually active context.
+   *         copied from the actually active context. Used in conjunction with RESET_TEMPORARILY_SET_CONTEXT
    */
   procedure set_context_temporarily(
     p_old_context out nocopy pit_util.context_type,
@@ -372,6 +379,8 @@ as
 
 
   /** Checks whether a toggle for a given package/method exists
+   * %param  p_module  Name of the package that toggles log settings
+   * %param  p_method  Name of the method that toggles log settings. If NULL, any method within P_MODULE will toggle.
    * %usage  A toggle controls whether PIT should log or not. Therefore it must be checked whether a toggle was defined for
    *         the actual package/method the call stack is at.
    *         If a setting is present, this method will set the new environment and return the settings at the same time
@@ -401,8 +410,8 @@ as
 
 
   /** Resets toggle context settings
-   * %usage  If a toggle was found and the call stack pops that entry, the log settings outside the toggle must be restored.
    * %param  p_settings  Context settings to set the context to
+   * %usage  If a toggle was found and the call stack pops that entry, the log settings outside the toggle must be restored.
    */
   procedure reset_toggle_context(
     p_settings in varchar2)
