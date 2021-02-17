@@ -83,6 +83,7 @@ prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
 
 prompt &h2.Create type bodies
 @&tools.install_type_body message_type
+@&tools.install_type_body msg_param
 @&tools.install_type_body call_stack_type
 @&tools.install_type_body log_state_type
 @&tools.install_type_body pit_default_adapter
