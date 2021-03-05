@@ -16,5 +16,69 @@ as
    return;
  end;
 
+ constructor function msg_param(
+   self in out nocopy msg_param,
+   p_param in varchar2,
+   p_value in date)
+   return self as result
+ as
+ begin
+   self.p_param := substrb(p_param, 1, 128);
+   if p_value > trunc(p_value) then
+     self.p_value := to_char(p_value, 'YYYY-MM-DD HH24:MI:SS');
+   else
+     self.p_value := to_char(p_value, 'YYYY-MM-DD');
+   end if;
+   return;
+ end;
+
+ constructor function msg_param(
+   self in out nocopy msg_param,
+   p_param in varchar2,
+   p_value in number)
+   return self as result
+ as
+   C_EXTENSION constant varchar2(10 byte) := '...';
+ begin
+   if p_value > trunc(p_value) then
+     self.p_value := to_char(p_value, 'fm999999999999999999990D9999999999999999');
+   else
+     self.p_value := to_char(p_value, 'fm999999999999999999999');
+   end if;
+   return;
+ end;
+
+ constructor function msg_param(
+   self in out nocopy msg_param,
+   p_param in varchar2,
+   p_value in timestamp)
+   return self as result
+ as
+ begin
+   self.p_param := substrb(p_param, 1, 128);
+   if p_value > trunc(p_value) then
+     self.p_value := to_char(p_value, 'YYYY-MM-DD HH24:MI:SSXFF');
+   else
+     self.p_value := to_char(p_value, 'YYYY-MM-DD');
+   end if;
+   return;
+ end;
+
+ constructor function msg_param(
+   self in out nocopy msg_param,
+   p_param in varchar2,
+   p_value in timestamp with time zone)
+   return self as result
+ as
+ begin
+   self.p_param := substrb(p_param, 1, 128);
+   if p_value > trunc(p_value) then
+     self.p_value := to_char(p_value, 'YYYY-MM-DD HH24:MI:SSXFF TZR');
+   else
+     self.p_value := to_char(p_value, 'YYYY-MM-DD');
+   end if;
+   return;
+ end;
+
 end;
 /
