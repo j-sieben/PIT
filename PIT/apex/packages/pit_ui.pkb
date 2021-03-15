@@ -455,6 +455,14 @@ as
   end get_default_language;
   
   
+  function get_help_websheet_id
+    return pls_integer
+  as
+  begin
+    return utl_apex.get_help_websheet_id;
+  end get_help_websheet_id;
+  
+  
   function get_active_context
     return varchar2
   as

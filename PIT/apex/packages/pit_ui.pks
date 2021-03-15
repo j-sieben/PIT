@@ -8,6 +8,14 @@ as
   function get_default_language
     return varchar2;
     
+    
+  /** Determine the ID of the websheet helper application
+   * %return ID fo the websheet helper application
+   * %usage  Is called to initialize the help system.
+   */
+  function get_help_websheet_id
+    return pls_integer;
+    
   
   /** Method to get the actually valid context settings as a HTML string
    * %usage  Is used to query the actually valid context settings
