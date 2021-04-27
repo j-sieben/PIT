@@ -50,11 +50,11 @@ end test_pit;
 alter session set current_schema=&INSTALL_USER.;
 
 prompt 
-prompt &s1.Content of log table PIT_LOG from module PIT_TABLE
+prompt &s1.Content of log table PIT_TABLE_LOG from module PIT_TABLE
 prompt 
 column user_name format a15
 column log_date format a25
 column msg_text format a45
 select log_id, user_name, log_date, msg_text
-  from pit_log;
+  from pit_table_log;
 prompt .

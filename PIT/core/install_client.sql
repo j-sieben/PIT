@@ -24,10 +24,15 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute utl_context
 
 -- Tables and Views
-@tools/grant_access.sql select pit_call_stack
-@tools/grant_access.sql select pit_log
 @tools/grant_access.sql "select, references" pit_message
-@tools/grant_access.sql select pit_message_language
-@tools/grant_access.sql select pit_message_language_v
+@tools/grant_access.sql read pit_message_language
+@tools/grant_access.sql read pit_message_language_v
 @tools/grant_access.sql "select, references" pit_translatable_item
-@tools/grant_access.sql select pit_translatable_item_v
+@tools/grant_access.sql read pit_translatable_item_v
+
+
+@modules/pit_apex/install_client.sql
+@modules/pit_console/install_client.sql
+@modules/pit_file/install_client.sql
+@modules/pit_mail/install_client.sql
+@modules/pit_table/install_client.sql
