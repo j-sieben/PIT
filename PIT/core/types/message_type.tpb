@@ -21,6 +21,33 @@ as
     l_status number(1, 0);
     l_error_message varchar2(1000 byte);
     l_json_parameters varchar2(32767 byte);
+    -- Cursor to detect replacement anchors and separate their inner structure
+    cursor anchor_cur(p_message_text in varchar2) is
+      with regex as(
+             select '#' anchor_char,
+                    '|' anchor_separator,
+                    '\#[A-Z0-9].*?\#' anchor_regex,
+                    '[^\|]+' anchor_name_regex,
+                    '(.*?)(\||$)' anchor_part_regex,
+                    q'^[0-9]+$^' valid_anchor_regex
+               from dual),
+           anchors as (
+              select trim(anchor_char from regexp_substr(p_message_text, anchor_regex, 1, level)) replacement_string,
+                     anchor_char, anchor_name_regex, anchor_part_regex, valid_anchor_regex
+                from regex
+             connect by level <= regexp_count(p_message_text, anchor_char) / 2),
+           parts as(
+             select anchor_char || replacement_string || anchor_char as replacement_string,
+                    upper(regexp_substr(replacement_string, anchor_name_regex, 1, 1)) anchor,
+                    regexp_substr(replacement_string, anchor_part_regex, 1, 2, null, 1) prefix,
+                    regexp_substr(replacement_string, anchor_part_regex, 1, 3, null, 1) postfix,
+                    regexp_substr(replacement_string, anchor_part_regex, 1, 4, null, 1) null_value,
+                    valid_anchor_regex
+               from anchors)
+      select replacement_string, anchor, prefix, postfix, null_value,
+             case when regexp_instr(anchor, valid_anchor_regex) > 0 then 1 else 0 end valid_anchor_name
+        from parts
+       where anchor is not null;
   begin
     select pms_text, pms_description, pms_pse_id, pms_active_error
       into self.message_text, self.message_description, self.severity, self.error_number
@@ -67,9 +94,16 @@ as
             raise_application_error(-20000, l_error_message);
         end if;
       else
-        for i in p_arg_list.first..p_arg_list.last loop
-          self.message_text :=
-            replace(self.message_text, '#' || i || '#', p_arg_list(i));
+        for a in anchor_cur(self.message_text) loop
+          if a.valid_anchor_name = 1 then
+            if p_arg_list.count >= a.anchor then
+              if p_arg_list(a.anchor) is not null then
+                self.message_text := replace(self.message_text, a.replacement_string, a.prefix || p_arg_list(a.anchor) || a.postfix);
+              else
+                self.message_text := replace(self.message_text, a.replacement_string, a.null_value);
+              end if;
+            end if;
+          end if;
         end loop;
       end if;
     end if;

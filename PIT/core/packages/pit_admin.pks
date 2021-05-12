@@ -7,16 +7,16 @@ as
   */
   
   -- Installation switches
-  c_level_le_warn constant boolean := TRUE;
-  c_level_le_info constant boolean := TRUE;
-  c_level_le_debug constant boolean := TRUE;
-  c_level_le_all constant boolean := TRUE;
+  C_LEVEL_LE_WARN constant boolean := true;
+  C_LEVEL_LE_INFO constant boolean := true;
+  C_LEVEL_LE_DEBUG constant boolean := true;
+  C_LEVEL_LE_ALL constant boolean := true;
   
-  c_trace_le_off constant boolean := TRUE;
-  c_trace_le_mandatory constant boolean := TRUE;
-  c_trace_le_optional constant boolean := TRUE;
-  c_trace_le_detailed constant boolean := TRUE;
-  c_trace_le_all constant boolean := TRUE;
+  C_TRACE_LE_OFF constant boolean := true;
+  C_TRACE_LE_MANDATORY constant boolean := true;
+  C_TRACE_LE_OPTIONAL constant boolean := true;
+  C_TRACE_LE_DETAILED constant boolean := true;
+  C_TRACE_LE_ALL constant boolean := true;
   
   -- Target distinguish between areas of similar items to streamline the API
   C_TARGET_PMS constant pit_util.ora_name_type := 'PMS'; -- Messages
@@ -25,6 +25,21 @@ as
     
 
   /********** ITEM MAINTENANCE ***********/
+  /** Procedure to validate a message group
+   * %param  p_row  record of a message group
+   * %raises
+   * %usage  Method is used to validate a message group
+   */
+  procedure validate_message_group(
+    p_row in pit_message_group%rowtype);
+    
+  /* Procedure to matain a message group
+   * %param  p_row  Record of a message group
+   * %usage  Overload for records of PIT_MESSAGE_GROUP%ROWtype
+   */
+  procedure merge_message_group(
+    p_row in out nocopy pit_message_group%rowtype);
+    
   /* Procedure to maintain message groups
    * %param  p_pmg_name         Name of the message group
    * %param [p_pmg_description] Optional description to describe the message group.
@@ -32,8 +47,8 @@ as
    *         other than sorting messages for easier maintenance and export separation
    */
   procedure merge_message_group(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
-    p_pmg_description in pit_message_group.pmg_description%TYPE default null);
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_pmg_description in pit_message_group.pmg_description%type default null);
     
     
   /** Procedure to delete a message group
@@ -41,13 +56,27 @@ as
    * %param [p_force]    Flag to indicate whether deleting this group should delete all messages of this group
    *                     Standard: FALSE: If messages exists, an error is thrown
    * %usage  Is used to delete a message group. Does not delete a message group if messages exists within that group,
-   *         unless specified by setting the P_FORCE parameter to TRUE. Will not commit nor re-create the MSG package.
+   *         unless specified by setting the P_FORCE parameter to true. Will not commit nor re-create the MSG package.
    */
   procedure delete_message_group(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_force in boolean default false);
     
 
+  /* Procedure to validate a message
+   * %param  p_row  Record of a message
+   * %usage  Method is used to validate a message
+   */
+  procedure validate_message(
+    p_row in out nocopy pit_message%rowtype);
+    
+  /* Procedure to merge a message
+   * %param  p_row  Record of a message
+   * %usage  Overload for records of PIT_MESSAGE%ROWtype
+   */
+  procedure merge_message(
+    p_row in out nocopy pit_message%rowtype);    
+    
   /* Procedure to maintain messages
    * %param  p_pms_name      Name of the respective pit_message. Must be unique for the default language
    * %param  p_pms_text      Message text with replacement anchors in the format #n#, 
@@ -64,13 +93,13 @@ as
    * %usage  Is used to create or change a PIT message. Will not commit nor re-create the MSG package.
    */
   procedure merge_message(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_text in pit_message.pms_text%TYPE,
-    p_pms_pse_id in pit_message.pms_pse_id%TYPE,
-    p_pms_description in pit_message.pms_description%TYPE default null,
-    p_pms_pmg_name in pit_message_group.pmg_name%TYPE default null,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE default null,
-    p_error_number in pit_message.pms_custom_error%TYPE default null);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_description in pit_message.pms_description%type default null,
+    p_pms_pmg_name in pit_message_group.pmg_name%type default null,
+    p_pms_pml_name in pit_message_language.pml_name%type default null,
+    p_error_number in pit_message.pms_custom_error%type default null);
     
     
   /* Procedure to delete a single pit_message. Will delete all translations as well
@@ -81,8 +110,8 @@ as
    *         Will not commit nor re-create the MSG package.
    */
   procedure delete_message(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE default null);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message_language.pml_name%type default null);
     
   
   /* Procedure to delete all messages
@@ -92,10 +121,26 @@ as
    *        Will not commit nor re-create the MSG package.
    */
   procedure delete_all_messages(
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null);
+    p_pmg_name in pit_message_group.pmg_name%type default null);
     
   
   /* Translatable items */
+  /** Procedure to validate a translatable item
+   * %param  p_row  Record of a translatable item
+   * %usage  Is used to  validate a translatable item
+   */
+  procedure validate_translatable_item(
+    p_row in pit_translatable_item%rowtype);
+    
+  
+  /** Procedure to merge a translatable item
+   * %param  p_row  Record of a translatable item
+   * %usage  Overloaded version with a record of type PIT_TRANSLATABLE_ITEM
+   */
+  procedure merge_translatable_item(
+    p_row in out nocopy pit_translatable_item%rowtype);
+    
+  
   /** Procedure to create a or change a translatable item
    * %param  p_pti_id            ID of the translatable item
    * %param  p_pit_pml_name      Language of the translatable item
@@ -107,12 +152,12 @@ as
    *         assotiated with it to allow for short, medium and longer versions of a text item.
    */
   procedure merge_translatable_item(
-    p_pti_id in pit_translatable_item.pti_id%TYPE,
-    p_pti_pml_name in pit_message_language.pml_name%TYPE,
-    p_pti_pmg_name in pit_message_group.pmg_name%TYPE,
-    p_pti_name in varchar2,
-    p_pti_display_name in varchar2 default null,
-    p_pti_description in clob default null);    
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type,
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_name in pit_translatable_item.pti_name%type,
+    p_pti_display_name pit_translatable_item.pti_display_name%type default null,
+    p_pti_description pit_translatable_item.pti_description%type default null);    
     
     
   /** Procedure to create a or change a translatable item
@@ -120,7 +165,7 @@ as
    * %usage  Deletes a translatable item and all its translations.
    */
   procedure delete_translatable_item(
-    p_pti_id in pit_translatable_item.pti_id%TYPE);
+    p_pti_id in pit_translatable_item.pti_id%type);
     
     
   /*********** SETTINGS **************/
@@ -130,8 +175,8 @@ as
    * %usage  This function is used to review the text of a given message in a desired language 
    */
   function get_message_text(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE default null)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message_language.pml_name%type default null)
     return varchar2;
     
     
@@ -227,14 +272,14 @@ as
   /*********** EXPORT **************/
   /** Method to get items of a group as a script of API calls to PIT_ADMIN package
    * %param  p_pmg_name   Message group to filter output
-   * %param  p_target     Type of items to translate C_TARGET_PMS | C_TARGET_PTI | C_TARGET_PAR
+   * %param  p_target     type of items to translate C_TARGET_PMS | C_TARGET_PTI | C_TARGET_PAR
    * %param  p_file_name  Out parameter that provides the file name for the Script file
    * %param  p_script     Out parameter that contains the SQL script created
    * %usage  Call this method to create a script file that can be used to export all
    *         items of this particular group as a SQL script file.
    */
   procedure create_installation_script(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
     p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob);
@@ -242,13 +287,13 @@ as
   
   /** Method to get items of a group as a script of API calls to PIT_ADMIN package
    * %param  p_pmg_name   Message group to filter output
-   * %param  p_target     Type of items to translate C_TARGET_PMS | C_TARGET_PTI | C_TARGET_PAR
+   * %param  p_target     type of items to translate C_TARGET_PMS | C_TARGET_PTI | C_TARGET_PAR
    * %return CLOB instance with the installation script
    * %usage  Call this method to create a script file that can be used to export all
    *         items of this particular group directly from SQL.
    */
   function get_installation_script(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2)
     return clob;
     
@@ -264,24 +309,24 @@ as
    *         the only task is to translate it.
    */
   procedure translate_message(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_text in pit_message.pms_text%TYPE,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE,
-    p_pms_description in pit_message.pms_description%TYPE default null);
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pml_name in pit_message_language.pml_name%type,
+    p_pms_description in pit_message.pms_description%type default null);
     
 
   /* Method to generate an XML file in format XLIFF to translate items
    * %param  p_target_language  Oracle supported language name to tranlsate the items to
    * %param  p_pmg_name         Group to filter the items to translate
-   * %param  p_target           Type of items to translate C_TARGET_PMS | C_TARGET_PTI
+   * %param  p_target           type of items to translate C_TARGET_PMS | C_TARGET_PTI
    * %param  p_file_name        Out parameter that provides the file name for the XLIFF file
    * %param  p_xliff            Out parameter that contains the XLIFF file created
    * %usage  Call this procedure to create an XLIFF-File that can be used to translate
    *         all members of a target type group to a target language.
    */
   procedure create_translation_xml(
-    p_target_language in pit_message_language.pml_name%TYPE,
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_target_language in pit_message_language.pml_name%type,
+    p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
     p_file_name out nocopy pit_util.ora_name_type,
     p_xliff out nocopy xmltype);
@@ -290,20 +335,20 @@ as
   /** Method to directly create a translation XLIFF file and return it as CLOB
    * %param  p_target_language  Oracle supported language name to tranlsate the items to
    * %param  p_pmg_name         Group to filter the items to translate
-   * %param  p_target           Type of items to translate C_TARGET_PMS | C_TARGET_PTI
+   * %param  p_target           type of items to translate C_TARGET_PMS | C_TARGET_PTI
    * %return CLOB in format XLIFF to be opened and edited by an XLIFF-Editor
    * %usage  Use this method to directly create a translation XLIFF file from SQL.
    */
   function get_translation_xml(
-    p_target_language in pit_message_language.pml_name%TYPE,
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_target_language in pit_message_language.pml_name%type,
+    p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2)
     return clob;
     
 
   /* Procedure to import translated items into the database
    * %param  p_xliff   XLIFF-instance with the translated messages
-   * %param  p_target  Type of items to translate C_TARGET_PMS | C_TARGET_PTI
+   * %param  p_target  type of items to translate C_TARGET_PMS | C_TARGET_PTI
    * %usage  If provided with a translated XLIFF-Instance, this procedure creates
    *         the necessary items for the new language based on it target type.
    */
@@ -314,12 +359,12 @@ as
   
   /* Procedure to delete a translation
    * %param  p_pml_name  Oracle language name of the translation to be removed
-   * %param  p_target    Type of items to translate C_TARGET_PMS | C_TARGET_PTI
+   * %param  p_target    type of items to translate C_TARGET_PMS | C_TARGET_PTI
    * %usage  Is called to remove all items in the given language and target type.
    *         Will not commit.
    */
   procedure delete_translation(
-    p_pml_name in pit_message_language.pml_name%TYPE,
+    p_pml_name in pit_message_language.pml_name%type,
     p_target in varchar2);
     
     
@@ -328,7 +373,7 @@ as
    * %param  Is called when loading a translation. The translation message is set to one of the available langauges
    */
   procedure register_translation(
-    p_pml_name in pit_message_language.pml_name%TYPE);
+    p_pml_name in pit_message_language.pml_name%type);
     
     
 end pit_admin;

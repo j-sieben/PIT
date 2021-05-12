@@ -5,7 +5,7 @@ as
     Package to administer PIT. Provides methods to create or maintain messages.
   */
 
-  /************************* TYPE DEFINITIONS *********************************/    
+  /************************* type DEFINITIONS *********************************/    
   type predefined_error_rec is record(
     source_type pit_util.ora_name_type,
     owner pit_util.ora_name_type,
@@ -25,6 +25,8 @@ as
   C_DEL char(1 byte) := '|';
   C_MIN_ERROR constant number := -20999;
   C_MAX_ERROR constant number := -20000;
+  C_FATAL constant binary_integer := 20;
+  C_ERROR constant binary_integer := 30;
   C_DEFAULT_LANGUAGE constant number := 10;
 
 
@@ -83,8 +85,8 @@ as
    *         packages from SYSTEM or SYS and only exceptions from non wrapped sources.
    */
   procedure check_error(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_custom_error in pit_message.pms_custom_error%TYPE)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_custom_error in pit_message.pms_custom_error%type)
   as
     l_predefined_error predefined_error_rec;
     l_message varchar2(2000);
@@ -121,11 +123,11 @@ as
   
   
   function get_export_group_script(
-    p_pmg_name in pit_message_group.pmg_name%TYPE)
+    p_pmg_name in pit_message_group.pmg_name%type)
     return varchar2
   as
     cursor message_group_cur(
-      p_pmg_name in pit_message_group.pmg_name%TYPE) is
+      p_pmg_name in pit_message_group.pmg_name%type) is
       select pmg_name, pmg_description
         from pit_message_group pmg
        where exists(
@@ -161,12 +163,12 @@ as
    * %usage  Is called internally by CREATE_INSTALLATION_SCRIPT
    */
   procedure script_messages(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
   as
     cursor message_cur(
-      p_pmg_name in pit_message_group.pmg_name%TYPE) is
+      p_pmg_name in pit_message_group.pmg_name%type) is
       select m.*, rank() over (partition by pms_name order by pml_default_order) rang
         from pit_message m
         join pit_message_language ml
@@ -243,12 +245,12 @@ end;
    * %usage  Is called internally by CREATE_INSTALLATION_SCRIPT
    */
   procedure script_translatable_items(
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_pmg_name in pit_message_group.pmg_name%type default null,
     p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
   as
     cursor pti_cur(
-      p_pmg_name in pit_message_group.pmg_name%TYPE) is
+      p_pmg_name in pit_message_group.pmg_name%type) is
       select i.*, rank() over (partition by pti_id order by pml_default_order) rang
         from pit_translatable_item i
         join pit_message_language ml
@@ -304,8 +306,8 @@ end;
    */
   procedure analyze_xliff(
     p_xliff xmltype,
-    p_pml_name out nocopy pit_message_language.pml_name%TYPE, 
-    p_pmg_name out nocopy pit_message_group.pmg_name%TYPE) 
+    p_pml_name out nocopy pit_message_language.pml_name%type, 
+    p_pmg_name out nocopy pit_message_group.pmg_name%type) 
   as
   begin
     select utl_i18n.map_language_from_iso(pml_name), pmg_name
@@ -327,8 +329,8 @@ end;
   procedure translate_messages(
     p_xliff in xmltype)
   as
-    l_pml_name pit_message_language.pml_name%TYPE;
-    l_pmg_name pit_message_group.pmg_name%TYPE;
+    l_pml_name pit_message_language.pml_name%type;
+    l_pmg_name pit_message_group.pmg_name%type;
   begin
     analyze_xliff(p_xliff, l_pml_name, l_pmg_name);
     
@@ -388,8 +390,8 @@ end;
   procedure translate_translatable_items(
     p_xliff in xmltype)
   as
-    l_pml_name pit_message_language.pml_name%TYPE;
-    l_pmg_name pit_message_group.pmg_name%TYPE;
+    l_pml_name pit_message_language.pml_name%type;
+    l_pmg_name pit_message_group.pmg_name%type;
   begin
     analyze_xliff(p_xliff, l_pml_name, l_pmg_name);
     
@@ -437,8 +439,8 @@ end;
    * %usage  Is called internally by GET_TRANSLATION_XML to allow for different target types
    */
   function get_pms_xml(
-    p_target_language in pit_message_language.pml_name%TYPE,
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null)
+    p_target_language in pit_message_language.pml_name%type,
+    p_pmg_name in pit_message_group.pmg_name%type default null)
     return xmltype
   as
     l_xml xmltype;
@@ -503,8 +505,8 @@ end;
    * %usage  Is called internally by GET_TRANSLATION_XML to allow for different target types
    */
   function get_pti_xml(
-    p_target_language in pit_message_language.pml_name%TYPE,
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null)
+    p_target_language in pit_message_language.pml_name%type,
+    p_pmg_name in pit_message_group.pmg_name%type default null)
     return xmltype
   as
     l_xml xmltype;
@@ -606,27 +608,50 @@ end;
 
 
   /****************************** INTERFACE ***********************************/
-  procedure merge_message_group(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
-    p_pmg_description in pit_message_group.pmg_description%TYPE default null)
+  procedure validate_message_group(
+    p_row in pit_message_group%rowtype)
   as
-    l_pmg_name pit_message_group.pmg_name%TYPE;
   begin
-    l_pmg_name := pit_util.harmonize_sql_name(p_pmg_name);
+    null;
+  end validate_message_group;
+  
+    
+  procedure merge_message_group(
+    p_row in out nocopy pit_message_group%rowtype)
+  as
+  begin
+    -- Initialization
+    p_row.pmg_name := pit_util.harmonize_sql_name(p_row.pmg_name);
+  
+    validate_message_group(p_row);
+    
     merge into pit_message_group t
-    using (select l_pmg_name pmg_name,
-                  p_pmg_description pmg_description
+    using (select p_row.pmg_name pmg_name,
+                  p_row.pmg_description pmg_description
              from dual) s
        on (t.pmg_name = s.pmg_name)
      when matched then update set
           pmg_description = s.pmg_description
      when not matched then insert(pmg_name, pmg_description)
-          values(s.pmg_name, s.pmg_description);
+          values(s.pmg_name, s.pmg_description);          
+  end merge_message_group;
+  
+    
+  procedure merge_message_group(
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_pmg_description in pit_message_group.pmg_description%type default null)
+  as
+    l_row pit_message_group%rowtype;
+  begin
+    l_row.pmg_name := p_pmg_name;
+    l_row.pmg_description := p_pmg_description;
+    
+    merge_message_group(l_row);    
   end merge_message_group;
   
   
   procedure delete_message_group(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_force in boolean default false)
   as
   begin
@@ -643,41 +668,40 @@ end;
   end delete_message_group;
 
 
-  procedure merge_message(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_text in pit_message.pms_text%TYPE,
-    p_pms_pse_id in pit_message.pms_pse_id%TYPE,
-    p_pms_description in pit_message.pms_description%TYPE default null,
-    p_pms_pmg_name in pit_message_group.pmg_name%TYPE default null,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE default null,
-    p_error_number in pit_message.pms_custom_error%TYPE default null)
+  procedure validate_message(
+    p_row in out nocopy pit_message%rowtype)
   as
-    l_pms_name pit_message.pms_name%TYPE;
-    l_error_number pit_message.pms_custom_error%TYPE;
-    C_FATAL constant binary_integer := 20;
-    C_ERROR constant binary_integer := 30;
   begin
   
-    l_pms_name := pit_util.harmonize_sql_name(p_pms_name);
-    
     case
-    when p_pms_pse_id in (C_FATAL, C_ERROR) and p_error_number not between C_MIN_ERROR and C_MAX_ERROR then
-      check_error(l_pms_name, p_error_number);
-      l_error_number := p_error_number;
-    when p_pms_pse_id in (C_FATAL, C_ERROR) then
-      l_error_number := C_MAX_ERROR;
+    when p_row.pms_pse_id in (C_FATAL, C_ERROR) and p_row.pms_custom_error not between C_MIN_ERROR and C_MAX_ERROR then
+      check_error(p_row.pms_name, p_row.pms_custom_error);
+    when p_row.pms_pse_id in (C_FATAL, C_ERROR) then
+      p_row.pms_custom_error := C_MAX_ERROR;
     else
       null;
     end case;
-
+    
+  end validate_message;
+  
+  
+  procedure merge_message(
+    p_row in out nocopy pit_message%rowtype)
+  as
+  begin
+    -- Initialization
+    p_row.pms_name := pit_util.harmonize_sql_name(p_row.pms_name);
+    
+    validate_message(p_row);
+    
     merge into pit_message t
-    using (select l_pms_name pms_name,
-                  upper(coalesce(p_pms_pml_name, g_default_language)) pms_pml_name,
-                  upper(p_pms_pmg_name) pms_pmg_name,
-                  p_pms_text pms_text,
-                  p_pms_description pms_description,
-                  p_pms_pse_id pms_pse_id,
-                  l_error_number pms_custom_error
+    using (select p_row.pms_name pms_name,
+                  upper(coalesce(p_row.pms_pml_name, g_default_language)) pms_pml_name,
+                  upper(p_row.pms_pmg_name) pms_pmg_name,
+                  p_row.pms_text pms_text,
+                  p_row.pms_description pms_description,
+                  p_row.pms_pse_id pms_pse_id,
+                  p_row.pms_custom_error pms_custom_error
              from dual) s
        on (t.pms_name = s.pms_name and t.pms_pml_name = s.pms_pml_name)
      when matched then update set
@@ -696,21 +720,44 @@ end;
     when dup_val_on_index then
       -- DUP_VAL_ON_INDEX may occur if a user tries to assign a custom error number twice
       select pms_name
-        into l_pms_name
+        into p_row.pms_name
         from pit_message
-       where pms_custom_error = p_error_number
+       where pms_custom_error = p_row.pms_custom_error
          and rownum = 1;
       rollback;
-      raise_application_error(C_MAX_ERROR, replace(C_ERROR_ALREADY_ASSIGNED, '#ERRNO#', l_pms_name));
+      raise_application_error(C_MAX_ERROR, replace(C_ERROR_ALREADY_ASSIGNED, '#ERRNO#', p_row.pms_name));
     when others then
       rollback;
         raise;
   end merge_message;
+    
+    
+  procedure merge_message(
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pse_id in pit_message.pms_pse_id%type,
+    p_pms_description in pit_message.pms_description%type default null,
+    p_pms_pmg_name in pit_message_group.pmg_name%type default null,
+    p_pms_pml_name in pit_message_language.pml_name%type default null,
+    p_error_number in pit_message.pms_custom_error%type default null)
+  as
+    l_row pit_message%rowtype;
+  begin
+    l_row.pms_name := p_pms_name;
+    l_row.pms_text := p_pms_text;
+    l_row.pms_pse_id := p_pms_pse_id;
+    l_row.pms_description := p_pms_description;
+    l_row.pms_pmg_name := p_pms_pmg_name;
+    l_row.pms_pml_name := p_pms_pml_name;
+    l_row.pms_custom_error := p_error_number;
+    
+    merge_message(l_row);
+  end merge_message;
 
 
   procedure delete_message(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message_language.pml_name%type)
   as
   begin
     delete from pit_message
@@ -721,7 +768,7 @@ end;
   
 
   procedure delete_all_messages(
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null)
+    p_pmg_name in pit_message_group.pmg_name%type default null)
   as
   begin
     delete from pit_message
@@ -730,22 +777,31 @@ end;
   end delete_all_messages;
   
   
-  procedure merge_translatable_item(
-    p_pti_id in pit_translatable_item.pti_id%TYPE,
-    p_pti_pml_name in pit_message_language.pml_name%TYPE,
-    p_pti_pmg_name in pit_message_group.pmg_name%TYPE,
-    p_pti_name in varchar2,
-    p_pti_display_name in varchar2 default null,
-    p_pti_description in clob default null)
+  /* TRANSLATABLE ITEMS */
+  procedure validate_translatable_item(
+    p_row in pit_translatable_item%rowtype)
   as
   begin
+    null;
+  end validate_translatable_item;
+  
+  
+  procedure merge_translatable_item(
+    p_row in out nocopy pit_translatable_item%rowtype)
+  as
+  begin
+    -- Initialize
+    p_row.pti_id := pit_util.harmonize_sql_name(p_row.pti_id);
+  
+    validate_translatable_item(p_row);
+    
     merge into pit_translatable_item t
-    using (select p_pti_id pti_id,
-                  coalesce(p_pti_pml_name, g_default_language) pti_pml_name,
-                  p_pti_pmg_name pti_pmg_name,
-                  p_pti_name pti_name,
-                  p_pti_display_name pti_display_name,
-                  p_pti_description pti_description
+    using (select p_row.pti_id pti_id,
+                  coalesce(p_row.pti_pml_name, g_default_language) pti_pml_name,
+                  p_row.pti_pmg_name pti_pmg_name,
+                  p_row.pti_name pti_name,
+                  p_row.pti_display_name pti_display_name,
+                  p_row.pti_description pti_description
              from dual) s
        on (t.pti_id = s.pti_id
        and t.pti_pml_name = s.pti_pml_name)
@@ -759,8 +815,29 @@ end;
   end merge_translatable_item;
   
   
+  procedure merge_translatable_item(
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pml_name in pit_message_language.pml_name%type,
+    p_pti_pmg_name in pit_message_group.pmg_name%type,
+    p_pti_name in pit_translatable_item.pti_name%type,
+    p_pti_display_name pit_translatable_item.pti_display_name%type default null,
+    p_pti_description pit_translatable_item.pti_description%type default null)
+  as
+    l_row pit_translatable_item%rowtype;
+  begin
+    l_row.pti_id := p_pti_id;
+    l_row.pti_pml_name := p_pti_pml_name;
+    l_row.pti_pmg_name := p_pti_pmg_name;
+    l_row.pti_name := p_pti_name;
+    l_row.pti_display_name := p_pti_display_name;
+    l_row.pti_description := p_pti_description;
+    
+    merge_translatable_item(l_row);
+  end merge_translatable_item;
+  
+  
   procedure delete_translatable_item(
-    p_pti_id in pit_translatable_item.pti_id%TYPE)
+    p_pti_id in pit_translatable_item.pti_id%type)
   as
   begin
     delete from pit_translatable_item
@@ -770,11 +847,11 @@ end;
 
   /*********** SETTINGS **************/
   function get_message_text(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE := null)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_pml_name in pit_message_language.pml_name%type := null)
     return varchar2
   as
-    l_pms_text pit_message.pms_text%TYPE;
+    l_pms_text pit_message.pms_text%type;
   begin
     select pms_text
       into l_pms_text
@@ -795,7 +872,7 @@ end;
     p_pml_list in pit_util.max_sql_char)
   as
     l_pml_list args;
-    l_pml_default_order pit_message_language.pml_default_order%TYPE;
+    l_pml_default_order pit_message_language.pml_default_order%type;
   begin
 
     update pit_message_language
@@ -971,7 +1048,7 @@ end;
   
   /*********** EXPORT **************/
   procedure create_installation_script(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
     p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
@@ -993,7 +1070,7 @@ end;
   
   
   function get_installation_script(
-    p_pmg_name in pit_message_group.pmg_name%TYPE,
+    p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2)
     return clob
   as
@@ -1011,13 +1088,13 @@ end;
   
   /*********** TRANSLATION **************/
   procedure translate_message(
-    p_pms_name in pit_message.pms_name%TYPE,
-    p_pms_text in pit_message.pms_text%TYPE,
-    p_pms_pml_name in pit_message_language.pml_name%TYPE,
-    p_pms_description in pit_message.pms_description%TYPE default null)
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_text in pit_message.pms_text%type,
+    p_pms_pml_name in pit_message_language.pml_name%type,
+    p_pms_description in pit_message.pms_description%type default null)
   as
-    l_pms_pse_id pit_message.pms_pse_id%TYPE;
-    l_error_number pit_message.pms_custom_error%TYPE;
+    l_pms_pse_id pit_message.pms_pse_id%type;
+    l_error_number pit_message.pms_custom_error%type;
   begin
     select pms_pse_id, pms_custom_error
       into l_pms_pse_id, l_error_number
@@ -1039,8 +1116,8 @@ end;
   
   
   procedure create_translation_xml(
-    p_target_language in pit_message_language.pml_name%TYPE,
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_target_language in pit_message_language.pml_name%type,
+    p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
     p_file_name out nocopy pit_util.ora_name_type,
     p_xliff out nocopy xmltype)
@@ -1093,8 +1170,8 @@ end;
   
   
   function get_translation_xml(
-    p_target_language in pit_message_language.pml_name%TYPE,
-    p_pmg_name in pit_message_group.pmg_name%TYPE default null,
+    p_target_language in pit_message_language.pml_name%type,
+    p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2)
     return clob
   as
@@ -1129,7 +1206,7 @@ end;
   
   
   procedure delete_translation(
-    p_pml_name in pit_message_language.pml_name%TYPE,
+    p_pml_name in pit_message_language.pml_name%type,
     p_target in varchar2)
   as
   begin
@@ -1147,7 +1224,7 @@ end;
   
   
   procedure register_translation(
-    p_pml_name in pit_message_language.pml_name%TYPE)
+    p_pml_name in pit_message_language.pml_name%type)
   as
   begin
     update pit_message_language
