@@ -34,8 +34,8 @@ as
     g_apex_triggered_context.module_list := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
     g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
   end initialize;
-  
-  
+
+
   /** Method sets http header when addressing the web socket connection
    * %param  p_title    Title of the notification
    * %param  p_message  Message of the notification
@@ -118,22 +118,20 @@ as
     l_severity binary_integer range 1..7;
     l_message pit_util.max_char;
   begin
-    if valid_environment then
-      l_severity := round(p_message.severity/10);
-      if p_message.stack is not null then
-        l_message := dbms_lob.substr(p_message.message_text, 30000, 1)
-                  || chr(10)
-                  || substr(p_message.stack, 1, 200)
-                  || chr(10)
-                  || substr(p_message.backtrace, 1, 2550);
-      else
-        l_message := dbms_lob.substr(p_message.message_text, 32760, 1);
-      end if;
-
-      apex_debug.log_long_message(
-        p_message => l_message,
-        p_level => l_severity);
+    l_severity := round(p_message.severity/10);
+    if p_message.stack is not null then
+      l_message := dbms_lob.substr(p_message.message_text, 30000, 1)
+                || chr(10)
+                || substr(p_message.stack, 1, 200)
+                || chr(10)
+                || substr(p_message.backtrace, 1, 2550);
+    else
+      l_message := dbms_lob.substr(p_message.message_text, 32760, 1);
     end if;
+
+    apex_debug.log_long_message(
+      p_message => l_message,
+      p_level => l_severity);
   end debug_message;
 
 
@@ -148,39 +146,38 @@ as
   procedure log_error(
     p_message in message_type)
   as
+    C_ITEM_LABEL varchar2(128 byte) := '#ITEMLABEL#';
     l_label varchar2(100);
     l_message varchar2(1000);
   begin
-    if valid_environment then
-      if p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
-        -- Get item label to include it into the message
-        begin
-             with params as(
-                  select to_number(v('APP_ID')) application_id,
-                         to_number(v('APP_PAGE_ID')) page_id,
-                         p_message.affected_id item_name
-                    from dual)
-           select /*+ no_merge (params) */ label
-             into l_label
-             from apex_application_page_items
-          natural join params;
-          l_message := replace(p_message.message_text, '#ITEM_LABEL#', l_label);
-        exception
-          when NO_DATA_FOUND then
-            l_message := replace(p_message.message_text, '#ITEM_LABEL#', p_message.affected_id);
-        end;
+    if instr(p_message.message_text, C_ITEM_LABEL) > 0 and p_message.affected_id is not null and regexp_like(p_message.affected_id, '^P[0-9]+_') then
+      -- Get item label to include it into the message
+      begin
+           with params as(
+                select to_number(v('APP_ID')) application_id,
+                       to_number(v('APP_PAGE_ID')) page_id,
+                       p_message.affected_id item_name
+                  from dual)
+         select /*+ no_merge (p) */ label
+           into l_label
+           from apex_application_page_items
+        natural join params p;
+        l_message := replace(p_message.message_text, C_ITEM_LABEL, l_label);
+      exception
+        when NO_DATA_FOUND then
+          l_message := replace(p_message.message_text, C_ITEM_LABEL, p_message.affected_id);
+      end;
 
-        apex_error.add_error(
-          p_message => l_message,
-          p_additional_info => p_message.message_description,
-          p_page_item_name => p_message.affected_id,
-          p_display_location => apex_error.c_inline_with_field_and_notif);
-      else
-        apex_error.add_error(
-          p_message => p_message.message_text,
-          p_additional_info => p_message.message_description,
-          p_display_location => apex_error.c_inline_with_field_and_notif);
-      end if;
+      apex_error.add_error(
+        p_message => l_message,
+        p_additional_info => p_message.message_description,
+        p_page_item_name => p_message.affected_id,
+        p_display_location => apex_error.c_inline_with_field_and_notif);
+    else
+      apex_error.add_error(
+        p_message => p_message.message_text,
+        p_additional_info => p_message.message_description,
+        p_display_location => apex_error.c_inline_with_field_and_notif);
     end if;
   end log_error;
 
@@ -197,18 +194,16 @@ as
     l_chunk pit_util.max_char;
     l_length binary_integer := dbms_lob.getlength(p_text);
   begin
-    if valid_environment then
-      while l_length > 0 and p_text is not null loop
-        dbms_lob.read(
-          lob_loc => p_text,
-          amount => l_amount,
-          offset => l_offset,
-          buffer => l_chunk);
-        l_offset := l_offset + l_amount;
-        l_length := l_length - l_amount;
-        sys.htp.p(l_chunk);
-      end loop;
-    end if;
+    while l_length > 0 and p_text is not null loop
+      dbms_lob.read(
+        lob_loc => p_text,
+        amount => l_amount,
+        offset => l_offset,
+        buffer => l_chunk);
+      l_offset := l_offset + l_amount;
+      l_length := l_length - l_amount;
+      sys.htp.p(l_chunk);
+    end loop;
   end print_clob;
 
 
@@ -227,14 +222,14 @@ as
     end if;
     return l_context;
   end get_apex_triggered_context;
-  
-  
+
+
   procedure log(
     p_message in message_type)
   as
   begin
     if valid_environment then
-      -- Entscheidungsbaum zur Ausgabe der einzelnen Schweregrade
+      -- Decision tree for the output of the individual severity levels
       case p_message.severity
       when pit.level_all then
         apex_debug.trace(p_message.message_text);
@@ -270,35 +265,8 @@ as
     p_message in message_type)
   as
     l_response clob;
-    $if dbms_db_version.ver_le_12_1 $then
-    l_message pit_util.max_char;
-    C_MESSAGE_TEMPLATE constant pit_util.max_char := 
-      '{"id":"#1#","message_name":"#2#","affected_id":"#3#","session_id":"#4#","user_name":"#5#","message_text":"#6#",' ||
-      '"message_description":"#7#","severity":"#8#","stack":"#9#","backtrace":"#10#","error_number":"#11#"}';
-    $else
     l_message json_object_t := json_object_t('{}');
-    $end
   begin
-    $if dbms_db_version.ver_le_12_1 $then
-    l_message := C_MESSAGE_TEMPLATE;
-    l_message := replace(l_message, '#1#', p_message.id);
-    l_message := replace(l_message, '#2#', p_message.message_name);
-    l_message := replace(l_message, '#3#', p_message.affected_id);
-    l_message := replace(l_message, '#4#', p_message.session_id);
-    l_message := replace(l_message, '#5#', p_message.user_name);
-    l_message := replace(l_message, '#6#', to_char(p_message.message_text));
-    l_message := replace(l_message, '#7#', to_char(p_message.message_description));
-    l_message := replace(l_message, '#8#', to_char(p_message.severity));
-    l_message := replace(l_message, '#9#', p_message.stack);
-    l_message := replace(l_message, '#10#', p_message.backtrace);
-    l_message := replace(l_message, '#11#', to_char(p_message.error_number));
-
-    pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message));
-    l_response := apex_web_service.make_rest_request(
-                    p_url => g_websocket_server,
-                    p_http_method => 'GET',
-                    p_body => l_message);
-    $else
     l_message.put('id', p_message.id);
     l_message.put('message_name', p_message.message_name);
     l_message.put('affected_id', p_message.affected_id);
@@ -316,7 +284,6 @@ as
                     p_url => g_websocket_server,
                     p_http_method => 'GET',
                     p_body => l_message.stringify());
-    $end
   end notify;
 
 

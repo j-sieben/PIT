@@ -29,7 +29,7 @@ prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 alter session set current_schema=&REMOTE_USER.;
 
 prompt &h3.Create UI-VIEWS
-@&tools.install_view apex_ui_list_menu
+--@&tools.install_view apex_ui_list_menu -- Part of UTL_APEX, no need to overwrite
 @&tools.install_view pit_ui_admin_pms
 @&tools.install_view pit_ui_admin_par
 @&tools.install_view pit_ui_admin_par_realm

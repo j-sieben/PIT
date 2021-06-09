@@ -426,7 +426,7 @@ wwv_flow_api.create_list_of_values(
 ,p_location=>'LOCAL'
 ,p_use_local_sync_table=>false
 ,p_query_table=>'PIT_UI_LOV_PARAMETER_REALM'
-,p_query_where=>'pre_is_active = (select utl_apex.get_true from dual)'
+,p_query_where=>'pre_is_active = (select utl_apex.c_true from dual)'
 ,p_return_column_name=>'R'
 ,p_display_column_name=>'D'
 ,p_group_sort_direction=>'ASC'
@@ -544,7 +544,7 @@ wwv_flow_api.create_list_of_values(
 ,p_location=>'LOCAL'
 ,p_use_local_sync_table=>false
 ,p_query_table=>'PIT_UI_LOV_MESSAGE_LANGUAGE'
-,p_query_where=>'pml_in_use = (select utl_apex.get_true from dual)'
+,p_query_where=>'pml_in_use = (select utl_apex.c_true from dual)'
 ,p_return_column_name=>'R'
 ,p_display_column_name=>'D'
 ,p_group_sort_direction=>'ASC'

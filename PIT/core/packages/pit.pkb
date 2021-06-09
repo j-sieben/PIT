@@ -26,7 +26,7 @@ as
    deterministic
   as
   begin
-    return 10;
+    return pit_pkg.C_LEVEL_OFF;
   end level_off;
   
   
@@ -35,7 +35,7 @@ as
     deterministic
   as
   begin
-    return 20;
+    return pit_pkg.C_LEVEL_FATAL;
   end level_fatal;
   
   
@@ -44,7 +44,7 @@ as
     deterministic
   as
   begin
-    return 30;
+    return pit_pkg.C_LEVEL_ERROR;
   end level_error;
   
   
@@ -53,7 +53,7 @@ as
     deterministic
   as
   begin
-    return 40;
+    return pit_pkg.C_LEVEL_WARN;
   end level_warn;
   
   
@@ -62,7 +62,7 @@ as
     deterministic
   as
   begin
-    return 50;
+    return pit_pkg.C_LEVEL_INFO;
   end level_info;
   
   
@@ -71,7 +71,7 @@ as
     deterministic
   as
   begin
-    return 60;
+    return pit_pkg.C_LEVEL_DEBUG;
   end level_debug;
   
   
@@ -80,7 +80,7 @@ as
     deterministic
   as
   begin
-    return 70;
+    return pit_pkg.C_LEVEL_ALL;
   end level_all;
   
   
@@ -89,7 +89,7 @@ as
     deterministic
   as
   begin
-    return 10;
+    return pit_pkg.C_TRACE_OFF;
   end trace_off;
   
   
@@ -98,7 +98,7 @@ as
     deterministic
   as
   begin
-    return 20;
+    return pit_pkg.C_TRACE_MANDATORY;
   end trace_mandatory;
   
   
@@ -107,7 +107,7 @@ as
     deterministic
   as
   begin
-    return 30;
+    return pit_pkg.C_TRACE_OPTIONAL;
   end trace_optional;
   
   
@@ -116,7 +116,7 @@ as
     deterministic
   as
   begin
-    return 40;
+    return pit_pkg.C_TRACE_DETAILED;
   end trace_detailed;
   
   
@@ -125,7 +125,7 @@ as
     deterministic
   as
   begin
-    return 50;
+    return pit_pkg.C_TRACE_ALL;
   end trace_all;
   
   

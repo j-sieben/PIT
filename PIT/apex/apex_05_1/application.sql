@@ -370,7 +370,7 @@ wwv_flow_api.create_list_of_values(
 ,p_lov_query=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select d, r',
 '  from pit_ui_lov_parameter_realm',
-' where pre_is_active = (select utl_apex.get_true from dual)',
+' where pre_is_active = (select utl_apex.c_true from dual)',
 ' order by d'))
 );
 wwv_flow_api.create_list_of_values(
@@ -9870,7 +9870,7 @@ wwv_flow_api.create_page_item(
 ,p_lov=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'select d, r',
 '  from pit_ui_lov_parameter_realm',
-' where pre_is_active = (select utl_apex.get_true from dual)',
+' where pre_is_active = (select utl_apex.c_true from dual)',
 ' order by d'))
 ,p_lov_display_null=>'YES'
 ,p_lov_null_text=>'- bitte wählen'

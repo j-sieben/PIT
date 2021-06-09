@@ -31,3 +31,10 @@ define h3="*   "
 define s1=".    - "
 
 set termout on
+   
+begin
+  if '&INSTALL_USER.' is null then
+    raise_application_error(-20000, 'Language &2. does not exist, please use an existing Oracle language name like AMERICAN');
+  end if;
+end;
+/

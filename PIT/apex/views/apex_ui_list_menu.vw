@@ -1,7 +1,7 @@
 create or replace view apex_ui_list_menu as
    with params as (
          select utl_apex.get_application_id(utl_apex.get_false) application_id,
-                utl_apex.get_true is_true
+                utl_apex.c_true is_true
            from dual)
  select /*+ no_merge (p) */
         level level_value,
