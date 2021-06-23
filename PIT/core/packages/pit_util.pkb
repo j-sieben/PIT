@@ -566,14 +566,19 @@ as
     l_depth := utl_call_stack.error_depth;
     
     append(l_stack, g_error_stack_template);
-    
+
     for i in 1 .. l_depth loop
-      if not g_omit_pit_in_stack or instr(utl_call_stack.error_msg(i), 'PIT') = 0 then
-        append(l_stack,
-          lpad(i, 5) || ' ' ||
-          rpad('ORA-' || trim(to_char(utl_call_stack.error_number(i),'00000')), 10) ||
-          utl_call_stack.error_msg(i));
-      end if;
+      begin
+        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
+          append(l_stack,
+            lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' '  ||
+            rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
+            utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
+        end if;
+      exception
+        when utl_call_stack.BAD_DEPTH_INDICATOR then
+          append(l_stack, 'Bad depth indicator error raised');
+      end;
     end loop;
     
     return l_stack;
