@@ -1043,6 +1043,24 @@ as
   procedure stop_message_collection;
   
   
+  /** Method to check whether no error has occurred yet
+   * %return TRUE, if no error or fatal error has occured yet, FALSE otherwise
+   * %usage  Is used to check that no exception has occured during collection mode. This is useful to control wether
+   *         further validations do make sense
+   */
+  function has_no_bulk_error
+    return boolean;
+  
+    
+  /** Method to check whether no error has occurred yet
+   * %return TRUE, if no fatal error 1has occured yet, FALSE otherwise
+   * %usage  Is used to check that no exception has occured during collection mode. This is useful to control wether
+   *         further validations do make sense
+   */
+  function has_no_bulk_fatal
+    return boolean;
+  
+  
   /** Retrieves the collection of messages raised since setting PIT to collect mode
    * %usage  Is used to retrieve a list of all messages raised during the collect cycle. It implicitly terminates collection
    *         mode by calling <code>SET_COLLECT_MODE(FALSE)</code> if PIT is still in collection mode.

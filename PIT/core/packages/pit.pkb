@@ -934,6 +934,22 @@ as
   end stop_message_collection;
   
   
+  function has_no_bulk_error
+    return boolean
+  as
+  begin
+    return pit_pkg.get_collect_least_severity > pit_pkg.C_LEVEL_ERROR;
+  end has_no_bulk_error;
+  
+  
+  function has_no_bulk_fatal
+    return boolean
+  as
+  begin
+    return pit_pkg.get_collect_least_severity > pit_pkg.C_LEVEL_FATAL;
+  end has_no_bulk_fatal;
+  
+  
   function get_message_collection
     return pit_message_table
   as

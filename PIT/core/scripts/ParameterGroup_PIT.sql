@@ -151,6 +151,15 @@ Level Error#    Message
    ,p_par_is_modifiable => null
   );
 
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_STOP_BULK_ON_FATAL'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Flag to indicate whether a fatal error during collect mode shall stop bulk mode immediately'
+   ,p_par_string_value => q'^R^'
+   ,p_par_boolean_value => false
+   ,p_par_is_modifiable => null
+  );
+
   commit;
 end;
 /

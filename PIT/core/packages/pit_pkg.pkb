@@ -30,6 +30,7 @@ as
   C_UNKNOWN_NAMED_CONTEXT constant pit_util.ora_name_type := 'PIT_UNKNOWN_NAMED_CONTEXT';
   C_BULK_ERROR constant pit_util.ora_name_type := 'PIT_BULK_ERROR';
   C_BULK_FATAL constant pit_util.ora_name_type := 'PIT_BULK_FATAL';
+  C_STOP_BULK_ON_FATAL constant pit_util.ora_name_type := 'PIT_STOP_BULK_ON_FATAL';
   C_FAIL_READ_MODULE_LIST constant pit_util.ora_name_type := 'PIT_FAIL_READ_MODULE_LIST';
   C_NO_CONTEXT_SETTINGS constant pit_util.ora_name_type := 'PIT_NO_CONTEXT_SETTINGS';
 
@@ -84,6 +85,8 @@ as
   /** Variables to store data in collect mode */
   g_collect_mode boolean;
   g_message_stack pit_message_table;
+  g_collect_least_severity binary_integer;
+  g_stop_bulk_on_fatal boolean;
   /** Other globals */
   g_log_state_threshold pls_integer;
 
@@ -741,9 +744,14 @@ as
     p_message in out nocopy message_type)
   as
   begin
-    p_message.error_code := coalesce(p_message.error_code, p_message.message_name);
-    g_message_stack.extend;
-    g_message_stack(g_message_stack.last) := p_message;
+    g_collect_least_severity := least(g_collect_least_severity, p_message.severity);
+    if g_stop_bulk_on_fatal and g_collect_least_severity = C_LEVEL_FATAL then
+      raise_error(C_LEVEL_FATAL, C_BULK_FATAL, null, null, null);
+    else
+      p_message.error_code := coalesce(p_message.error_code, p_message.message_name);
+      g_message_stack.extend;
+      g_message_stack(g_message_stack.last) := p_message;
+    end if;
   end push_message;
 
 
@@ -878,7 +886,12 @@ as
     g_log_state_threshold := param.get_integer(
                                p_par_id => C_LOG_STATE_THRESHOLD,
                                p_par_pgr_id => C_PARAM_GROUP);
+                               
+    g_stop_bulk_on_fatal := param.get_boolean(
+                              p_par_id => C_STOP_BULK_ON_FATAL,
+                              p_par_pgr_id => C_PARAM_GROUP);
     g_collect_mode := false;
+    g_collect_least_severity := C_LEVEL_ALL;
     
     -- Empty collections
     g_call_stack.delete;
@@ -1209,7 +1222,7 @@ as
       g_active_message.error_number := coalesce(g_active_message.error_number, -20000);
     end if;
 
-    if g_collect_mode then
+    if g_collect_mode and not (g_stop_bulk_on_fatal and g_collect_least_severity = C_LEVEL_FATAL) then
       push_message(g_active_message);
     else
       raise_application_error(
@@ -1521,22 +1534,15 @@ as
   procedure set_collect_mode(
     p_mode in boolean)
   as
-    l_min_severity pls_integer;
   begin
     -- initialize
     g_collect_mode := p_mode;
-    l_min_severity := C_LEVEL_ALL;
+    g_collect_least_severity := C_LEVEL_ALL;
     
     if g_collect_mode then
       g_message_stack.delete;
     else
-      for i in 1 .. g_message_stack.count loop
-        if l_min_severity > g_message_stack(i).severity then
-          l_min_severity := g_message_stack(i).severity;
-        end if;
-      end loop;
-      
-      case l_min_severity
+      case g_collect_least_severity
         when C_LEVEL_ERROR then
           raise_error(
             p_severity => C_LEVEL_ERROR,
@@ -1565,6 +1571,14 @@ as
     return g_collect_mode;
   end get_collect_mode;
     
+    
+  function get_collect_least_severity
+    return binary_integer
+  as
+  begin
+    return g_collect_least_severity;
+  end get_collect_least_severity; 
+  
   
   function get_message_collection
     return pit_message_table

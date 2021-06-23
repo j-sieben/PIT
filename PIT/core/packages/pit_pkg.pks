@@ -386,6 +386,15 @@ as
   function get_collect_mode
     return boolean;
     
+    
+  /** Method to retrieve the actually least severity during collect mode
+   * %return Least severity received so far
+   * %usage  Is used to examine during collect mode whether an error or fatal error has occurred
+   *         Based on this information, validation logic may be executed or not
+   */
+  function get_collect_least_severity
+    return binary_integer;
+    
   
   /** Method to retrieve the collection of messages raised since setting PIT to collect mode
    * %return Instance of PIT_MESSAGE_TABLE, a list of message instances
