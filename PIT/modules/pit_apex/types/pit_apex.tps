@@ -6,6 +6,10 @@ create type pit_apex under pit_module
   overriding member procedure log(
     self in out nocopy pit_apex,
     p_message in message_type),
+  /** Method logs state to the APEX debug stack*/
+  overriding member procedure log(
+    self in out nocopy pit_apex,
+    p_log_state log_state_type),
   /** Method writes the message to the http stream. This will incorporate the message text into the response */
   overriding member procedure print(
     self in out nocopy pit_apex,

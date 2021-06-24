@@ -12,6 +12,14 @@ create or replace type body pit_apex as
       end if;
    end log;
    
+   overriding member procedure log(
+    self in out nocopy pit_apex,
+      p_log_state in log_state_type)
+   as
+   begin
+      pit_apex_pkg.log(p_log_state);
+   end log;
+   
    overriding member procedure print(
     self in out nocopy pit_apex,
       p_message in message_type)

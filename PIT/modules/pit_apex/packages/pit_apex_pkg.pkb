@@ -253,6 +253,20 @@ as
   end log;
 
 
+  procedure log(
+    p_log_state in log_state_type)
+  as
+  begin
+    if p_log_state.params.count > 0 then
+      apex_debug.info('-> State');
+      for i in 1 .. p_log_state.params.count loop
+        apex_debug.info('...' || p_log_state.params(i).p_param || ': ' || p_log_state.params(i).p_value);
+      end loop;
+      apex_debug.info('<- State');
+    end if;
+  end log;
+
+
   procedure print(
     p_message in message_type)
   as

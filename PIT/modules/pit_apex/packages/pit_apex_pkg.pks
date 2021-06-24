@@ -21,6 +21,15 @@ as
    */
   procedure log(
     p_message in message_type);
+
+
+  /** Method to write state information to the APEX debug stack
+   * %param  p_log_state Instance of LOG_STATE_TYPE
+   * %usage  Method implements the LOG member procedure overload for LOG_STATE_TYPE and
+   *         writes the key value pairs of MSG_PARAM to the console.
+   */
+  procedure log (
+    p_log_state in log_state_type);
   
   
   /** Method to write general information to the APEX application
