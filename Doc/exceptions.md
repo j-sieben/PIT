@@ -223,11 +223,11 @@ begin
   pit.assert(
     p_condition => p_param_1 in (10, 20, 30), 
     p_message_name => msg.PARAM_OUT_OF_RANGE, 
-    p_arg_list => msg_args('P_PARAM_1', to_char(p_param_1)));
+    p_msg_args => msg_args('P_PARAM_1', to_char(p_param_1)));
   pit.assert_not_null(
     p_condition => p_param_2, 
     p_message_name => msg.PARAM_MUST_EXIST, 
-    p_arg_list => msg_args('P_PARAM_2'));
+    p_msg_args => msg_args('P_PARAM_2'));
   <do something>
 exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
