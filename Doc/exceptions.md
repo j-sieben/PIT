@@ -139,7 +139,7 @@ ORA-06512: at line 9
 
 ## Passing parameters to exception handlers
 
-It's also possible to pass output parameter values even in the case of exceptions. To achieve that, `pit.SQL_EXCEPTION` and `pit.STOP` provide an optional parameter called `P_PARAMS` that accepts an instance of `MSG_PARAMS` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
+It's also possible to pass output parameter values even in the case of exceptions. To achieve that, `pit.HANDLE_EXCEPTION` and `pit.STOP` provide an optional parameter called `P_PARAMS` that accepts an instance of `MSG_PARAMS` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
 
 ## Passing Error Codes
 
