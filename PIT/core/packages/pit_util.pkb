@@ -496,14 +496,8 @@ as
     p_module in out nocopy varchar2,
     p_action in out nocopy varchar2)
   as
-    $IF dbms_db_version.ver_le_11 $THEN
-    $ELSE
     l_depth binary_integer;
-    $END
   begin
-    $IF dbms_db_version.ver_le_11 $THEN
-    null;
-    $ELSE
     if p_action is null or p_module is null then
       l_depth := utl_call_stack.dynamic_depth;
       for i in 1 .. l_depth loop
@@ -523,7 +517,6 @@ as
           p_action := harmonize_name(null, utl_call_stack.subprogram(l_depth)(1));
       end;
     end if;
-    $END
   end get_module_and_action;
   
   
@@ -533,9 +526,6 @@ as
     l_depth binary_integer;
     l_stack max_char;
   begin
-    $IF dbms_db_version.ver_le_11 $THEN
-    return dbms_utility.format_call_stack;
-    $ELSE
     l_depth := utl_call_stack.dynamic_depth;
     
     append(l_stack, g_call_stack_template);
@@ -550,7 +540,6 @@ as
     end loop;
     
     return l_stack;
-    $END
   end get_call_stack;
   
   
@@ -560,9 +549,6 @@ as
     l_depth binary_integer;
     l_stack max_char;
   begin
-    $IF dbms_db_version.ver_le_11 $THEN
-    return dbms_utility.format_error_backtrace;
-    $ELSE
     l_depth := utl_call_stack.error_depth;
     
     append(l_stack, g_error_stack_template);
@@ -582,7 +568,6 @@ as
     end loop;
     
     return l_stack;
-    $END
   end get_error_stack;
   
 begin

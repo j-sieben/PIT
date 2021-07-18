@@ -1058,9 +1058,6 @@ as
     
     -- Do minimal tracing if context toggle is active
     if (g_context.allow_toggle or l_trace_me) and g_call_stack.last > 0 then
-      $IF dbms_db_version.ver_le_11 $THEN
-      l_entry_found := g_call_stack.last;
-      $ELSE
       if p_on_error then
         -- it is not secured that the exception handler is at the same method as the method raising the exception.
         -- Therefore try to find the method handling the error by name and remove any entry up to this entry
@@ -1081,7 +1078,6 @@ as
         -- Not advisable to look for named methods, as their name might be wrong based on code inlining
         l_entry_found := g_call_stack.last;
       end if;
-      $END
       
       for i in reverse l_entry_found .. g_call_stack.last loop
         -- finalize entry in call stack and pass to output modules

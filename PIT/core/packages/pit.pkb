@@ -389,24 +389,9 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_all $THEN
-    $IF dbms_db_version.ver_le_11 $THEN
-    -- Do not move to PIT_PKG to get correct name
-    if p_action is not null then
-      g_action := p_action;
-      g_module := p_module;
-    else
-      owa_util.who_called_me(
-        owner => g_owner,
-        name => g_action,
-        lineno => g_lineno,
-        caller_t => g_module);
-      g_action := g_action || '#' || to_char(g_lineno);
-    end if;
-    $ELSE
     -- starting with version 12c, UTL_CALL_STACK is used if parameters are not provided
     g_action := p_action;
     g_module := p_module;
-    $END
     pit_pkg.enter(
        g_action, g_module, p_params, p_trace_level, p_client_info);
     $ELSE

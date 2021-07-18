@@ -589,21 +589,12 @@ end;
   as
   begin
     -- Read default language
-    $IF dbms_db_version.ver_le_11 $THEN
-    select pml_name default_language
-      into g_default_language
-      from (select pml_name, rank() over (order by pml_default_order) rang
-              from pit_message_language
-             where pml_default_order > 0)
-     where rang = 1;
-    $ELSE
     select pml_name default_language
       into g_default_language
       from pit_message_language
      where pml_default_order > 0
      order by pml_default_order
      fetch first 1 rows only;
-    $END
   end initialize;
 
 
