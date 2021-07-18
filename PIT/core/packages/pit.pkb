@@ -168,6 +168,25 @@ as
   
   
   /****************************** LOGGING AND DEBUGGING *********************************/
+  
+  function check_log_level_greater_equal(
+    p_log_level in pls_integer)
+    return boolean
+  as
+  begin
+    return pit_pkg.check_log_level_greater_equal(p_log_level);
+  end check_log_level_greater_equal;
+  
+     
+  function check_trace_level_greater_equal(
+    p_trace_level in pls_integer)
+    return boolean
+  as
+  begin
+    return pit_pkg.check_trace_level_greater_equal(p_trace_level);
+  end check_trace_level_greater_equal;
+  
+  
   procedure log(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,

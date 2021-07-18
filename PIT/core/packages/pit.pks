@@ -73,7 +73,30 @@ as
   function type_xml return varchar2 deterministic;
   
   
-  /****************************** LOGGING AND DEBUGGING *********************************/
+  /****************************** LOGGING AND DEBUGGING *********************************/  
+  
+  /** Method checks whether the actually valid log level is greater or equal to P_LOG_LEVEL
+   * %param  p_log_level  Severity to check, one of the constants C_LEVEL_... of this package
+   * %return TRUE, if the acutally valid log level is greater or equal to P_LOG_LEVEL, FALSE otherwise
+   * %usage  Allows external code to check whether PIT is in a given log level. This is useful
+   *         to run logic only if it would be logged anyway.
+   */
+  function check_log_level_greater_equal(
+    p_log_level in pls_integer)
+    return boolean;
+    
+    
+  /** Method checks whether the actually valid trace level is greater or equal to P_TRACE_LEVEL
+   * %param  p_severity  Severity to check, one of the constants C_TRACE_... of this package
+   * %return TRUE, if the acutally valid log level is greater or equal to P_TRACE_LEVEL, FALSE otherwise
+   * %usage  Allows external code to check whether PIT is in a given trace level. This is useful
+   *         to run logic only if it would be traced anyway.
+   */
+  function check_trace_level_greater_equal(
+    p_trace_level in pls_integer)
+    return boolean;
+    
+    
   /** Captures debug information, level verbose
    * %usage  Call this procedure to emit debug messages. Normal usage
    *         is to report verbose information that is useful for a detailled

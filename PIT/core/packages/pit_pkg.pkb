@@ -907,6 +907,24 @@ as
   
 
   /** CORE */
+  function check_log_level_greater_equal(
+    p_log_level in pls_integer)
+    return boolean
+  as
+  begin
+    return log_me(p_log_level);
+  end check_log_level_greater_equal;
+  
+  
+  function check_trace_level_greater_equal(
+    p_trace_level in pls_integer)
+    return boolean
+  as
+  begin
+    return trace_me(p_trace_level);
+  end check_trace_level_greater_equal;
+  
+  
   procedure log_event(
     p_severity in pls_integer,
     p_message_name in pit_util.ora_name_type default null,
