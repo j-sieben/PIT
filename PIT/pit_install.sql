@@ -19,7 +19,7 @@ prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Installation at user &INSTALL_US
 prompt
 prompt &section.
 prompt &h1.Checking whether required users exist
-@tools/check_users_exist.sql &INSTALL_USER.
+@tools/check_users_exist.sql &INSTALL_USER. &NEW_PASSWORD.
 
 prompt &h2.grant user rights
 @set_grants.sql
@@ -54,7 +54,8 @@ prompt &h1.Installing PIT output modules
 @modules/pit_apex/install.sql
 @modules/pit_file/install.sql
 -- PIT_MAIL may be installed after installing UTL_TEXT
---@modules/pit_mail/install.sql
+-- Please use this script with the given information
+--@pit_install_module &INSTALL_USER. &DEFAULT_LANGUAGE. pit_mail
 
 
 prompt
