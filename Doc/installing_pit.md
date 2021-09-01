@@ -30,10 +30,12 @@ Using these replacement variables, you can adjust the boolean type to your local
 
 ### Choose the tablespace to install `PIT` data objects into
 
-If you don't adjust these settings, the tablespace where `PIT` installs its data objects into is derived from the following information:
+If you need full control over where `PIT` puts its data objects, it is advisable to create the users for `PIT` upfront and assign tablespace and the respective quotas. The installation relies on a default tablespace to be present and does not explicitly stores data objects in a fixed tablespace. If you leave it up to `PIT` to create the users, the following rules apply:
+
+- The `DEFAULT_TABLESPACE` parameter is set in the `PIT/PIT/init/settings.sql` file. As per default, the default tablespace of the database is chosen, but you can choose to override this setting by defining the `DEFAULT_TABLESPACE` parameter manually.
 - If the user to install `PIT` into already exists, it does nothing but uses the default tablespace of that user
-- If the user exists but has no tablespace quota on any tablespace, it grant quota unlimited on the `DEFAULT_TABLESPACE` parameter.
-- The `DEFAULT_TABLESPACE` parameter is set in the `PIT/PIT/init/settings.sql` file. As per default, the default tablespace of the database is chosen, but you can choose to override this setting by defining the `DEFAULT_TABLESPACE` manually. 
+- If the user exists but has no tablespace quota on any tablespace, it grants quota unlimited on the tablespace identified by the `DEFAULT_TABLESPACE` parameter.
+- If the user does not exist, the install script will generate her and assign quota unlimited on the tablespace identified by the `DEFAULT_TABLESPACE` parameter.
 
 ### Choose your exception pre- and/or postfix
 
