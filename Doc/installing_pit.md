@@ -28,6 +28,13 @@ define C_FALSE="'N'";
 ```
 Using these replacement variables, you can adjust the boolean type to your local preference, may it be `1|0` or any other setting. Be aware though that this is a one time decision, as this will be burned into the table declarations. Changing these settings is only possible by completely re-installing `PIT`. This is something you have to plan, as many other packages may depend on `PIT` and the flag type you chose.
 
+### Choose the tablespace to install `PIT` data objects into
+
+If you don't adjust these settings, the tablespace where `PIT` installs its data objects into is derived from the following information:
+- If the user to install `PIT` into already exists, it does nothing but uses the default tablespace of that user
+- If the user exists but has no tablespace quota on any tablespace, it grant quota unlimited on the DEFAULT_TABLESPACE parameter.
+- The DEFAULT_TABLESPACE parameter is set in the `PIT/PIT/init/settings.sql` file. As per default, the default tablespace of the database is chosen, but you can choose to override this setting by defining the DEFAULT_TABLESPACE manually. 
+
 ### Choose your exception pre- and/or postfix
 
 A message is identified by a unique name. If the severity of this message is `ERROR` or even `FATAL_ERROR`, `PIT` automatically creates user defined exceptions for it. To distinguish them from the message, `PIT` automatically extends the name by a pre- or postfix. You can freely choose, what pre- or postix to use by setting those in the `settings.sql` file from the previous paragraph:
