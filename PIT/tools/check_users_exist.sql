@@ -1,7 +1,7 @@
 prompt &h2.Checking owner user &1.
 declare
   l_user_exists pls_integer;
-  l_user_has_tablespace pls_integer;
+  l_user_has_quota pls_integer;
   l_password varchar2(20 byte);
   C_PASSWORD_LENGTH constant pls_integer := 12;
 begin
@@ -29,7 +29,7 @@ begin
   else
     -- Make sure that the user has access
     select count(*)
-      into l_user_has_tablespace
+      into l_user_has_quota
       from dba_ts_quotas
      where username = upper('&1.');
     
