@@ -41,12 +41,6 @@ prompt &h1.Installing PIT output modules
 @modules/pit_file/install_client.sql
 @modules/pit_mail/install_client.sql
 
-
-prompt
-prompt &h2.Grant access to PIT modules
-prompt &s1.Output module PIT_TABLE
-@modules/pit_table/install_client.sql
-
 prompt &h1.Finished PIT-Installation
 
 exit

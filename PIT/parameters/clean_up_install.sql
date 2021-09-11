@@ -13,8 +13,8 @@ declare
      where object_name in (
            '', -- Typen
            'PARAM', 'PARAM_ADMIN', -- Packages
-           'PARAMETER_VW', 'PARAMETER_VW_CORE', 'PARAMETER_REALM_VW', -- Views
-           'PARAMETER_TAB', 'PARAMETER_LOCAL', 'PARAMETER_GROUP', 'PARAMETER_TYPE',   -- Tabellen
+           'PARAMETER_VW', 'PARAMETER_VW_CORE', 'PARAMETER_REALM_VW', 'PARAMETER_CORE_VW', -- Views
+           'PARAMETER_TAB', 'PARAMETER_LOCAL', 'PARAMETER_GROUP', 'PARAMETER_TYPE', 'PARAMETER_REALM',  -- Tabellen
            'PARAMETER',  -- Synonyme
            '' -- Sequenzen
            )

@@ -19,7 +19,7 @@ prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Installation at user &INSTALL_US
 prompt
 prompt &section.
 prompt &h1.Checking whether required users exist
-@tools/check_users_exist.sql &INSTALL_USER. &NEW_PASSWORD.
+@tools/check_users_exist.sql &INSTALL_USER.
 
 prompt &h2.grant user rights
 @set_grants.sql

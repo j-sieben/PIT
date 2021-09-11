@@ -9,7 +9,7 @@ begin
   select count(username)
     into l_user_exists
     from all_users
-   where user = upper('&1.');
+   where username = upper('&1.');
    
   if l_user_exists = 0 then
     -- create a new random password for the user

@@ -28,8 +28,9 @@ prompt &h2.Module PIT_FILE
 @modules/pit_file/clean_up_install.sql
 prompt &h2.Module PIT_MAIL
 @modules/pit_mail/clean_up_install.sql
+
 prompt &h2.Module PIT_TEST
-@modules/pit_test/clean_up_install.sql
+@tests/pit_ut/clean_up_install.sql
 
 prompt &h1.Deinstall CORE Functionality
 @core/clean_up_install.sql
