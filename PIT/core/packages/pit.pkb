@@ -698,7 +698,10 @@ as
     end if;
   exception
     when others then
-      dbms_sql.close_cursor(l_id);
+      if dbms_sql.is_open(l_id) then
+        dbms_sql.close_cursor(l_id);
+      end if;
+      raise;
   end assert_exists;
   
   
@@ -740,7 +743,10 @@ as
     end if;
   exception
     when others then
-      dbms_sql.close_cursor(l_id);
+      if dbms_sql.is_open(l_id) then
+        dbms_sql.close_cursor(l_id);
+      end if;
+      raise;
   end assert_not_exists;
   
   
