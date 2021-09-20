@@ -4,9 +4,9 @@ As a rule, `PIT` runs stably and does not require any special attention. However
 
 ## During development
 
-`PIT` uses the package `MSG` to provide all messages with a corresponding constant. These constants allow the compiler to check for spelling errors and are therefore an important means of increasing code quality. The use of this package has however also the disadvantage that thereby a dependence of other packages to this package is developed.
+`PIT` uses the package `MSG` to provide all messages with a corresponding constant. These constants allow the compiler to check for spelling errors and are therefore an important means of increasing code quality. The use of this package has however also the disadvantage that thereby a dependence chain to other packages using `MSG` is established. This holds true for package `PIT` also, as this package contains the `PIT` API. But this package does not change (only if you extend or change the `PIT` API yourself), so this dependency is not disturbing. 
 
-This is especially true during development time, when messages are added and the `MSG` package is therefore rebuilt more often. This compilation may not be possible if other packages that use `MSG` are in use during the time of compilation. It is therefore advisable to create new messages when no longer running anwnedes of other developers could delay the creation.
+This is especially true during development time, when messages are added and the `MSG` package is therefore rebuilt more often. This compilation may not be possible if other packages that use `MSG` are in use during the time of compilation. It is therefore advisable to create new messages when no longer running scripts of other developers could delay the compilation.
 
 If other components of `PIT` are recompiled, for example the supplied object types, `PIT` may no longer show any reaction. In these cases it is usually helpful to reinitialize `PIT`. This can be done in two ways:
 
