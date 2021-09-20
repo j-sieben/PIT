@@ -1235,13 +1235,13 @@ as
       g_active_message.severity := p_severity;
       g_active_message.error_number := coalesce(g_active_message.error_number, -20000);
     end if;
-
-    if g_collect_mode and not (g_stop_bulk_on_fatal and g_collect_least_severity = C_LEVEL_FATAL) then
-      push_message(g_active_message);
+    
+    if g_collect_mode and not (p_severity = C_LEVEL_FATAL and g_stop_bulk_on_fatal) then
+      push_message(g_active_message);      
     else
       raise_application_error(
         g_active_message.error_number,
-        dbms_lob.substr(g_active_message.message_text, 2048, 1));
+        dbms_lob.substr(g_active_message.message_text, 2048, 1));    
     end if;
   end raise_error;
 
@@ -1551,10 +1551,10 @@ as
   begin
     -- initialize
     g_collect_mode := p_mode;
-    g_collect_least_severity := C_LEVEL_ALL;
     
     if g_collect_mode then
       g_message_stack.delete;
+      g_collect_least_severity := C_LEVEL_ALL;
     else
       case g_collect_least_severity
         when C_LEVEL_ERROR then
