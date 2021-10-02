@@ -12,7 +12,7 @@ declare
   as
     c_chars constant varchar2(60) := 'abcdefhijkmnoprstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
     c_numbers constant varchar2(60) := '23456789';
-    c_special_chars constant varchar2(60) := '!$%&/()=?+*#-@:<>';
+    c_special_chars constant varchar2(60) := '!$%/\()[]{}?+#-@:,'; -- @see https://docs.oracle.com/cd/E11223_01/doc.910/e11197/app_special_char.htm#MCMAD416
     
     c_char_group constant varchar2(1 byte) := 'c';
     c_num_group constant varchar2(1 byte) := 'n';
