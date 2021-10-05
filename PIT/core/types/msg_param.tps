@@ -26,6 +26,26 @@ create or replace type msg_param force as object(
     self in out nocopy msg_param,
     p_param in varchar2,
     p_value in timestamp with time zone)
+    return self as result,
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in timestamp with local time zone)
+    return self as result,
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in interval year to month)
+    return self as result,
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in interval day to second)
+    return self as result,
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in xmltype)
     return self as result
 );
 /
