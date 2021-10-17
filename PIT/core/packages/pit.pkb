@@ -7,7 +7,6 @@ as
   /*************************** PACKAGE VARIABLES ********************************/
   g_module pit_util.ora_name_type;
   g_owner pit_util.ora_name_type;
-  g_action pit_util.ora_name_type;
   g_lineno binary_integer;
   
   
@@ -405,9 +404,8 @@ as
   begin
     $IF pit_admin.c_trace_le_all $THEN
     -- starting with version 12c, UTL_CALL_STACK is used if parameters are not provided
-    g_action := p_action;
     pit_internal.enter(
-       g_action, p_params, p_trace_level, p_client_info);
+       p_action, p_params, p_trace_level, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;

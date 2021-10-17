@@ -1064,7 +1064,7 @@ as
    */
   /**
     Procedure: initialize
-      See <PIT_PKG.initialize>
+      See <PIT_INTERNAL.initialize>
    */
   procedure initialize
   as
@@ -1105,7 +1105,7 @@ as
 
   /**
     Function: check_log_level_greater_equal
-      See <PIT_PKG.check_log_level_greater_equal>
+      See <PIT_INTERNAL.check_log_level_greater_equal>
    */
   function check_log_level_greater_equal(
     p_log_level in pls_integer)
@@ -1118,7 +1118,7 @@ as
   
   /**
     Function: check_trace_level_greater_equal
-      See <PIT_PKG.check_trace_level_greater_equal>
+      See <PIT_INTERNAL.check_trace_level_greater_equal>
    */
   function check_trace_level_greater_equal(
     p_trace_level in pls_integer)
@@ -1131,7 +1131,7 @@ as
   
   /**
     Procedure: log_event
-      See <PIT_PKG.log_event>
+      See <PIT_INTERNAL.log_event>
    */
   procedure log_event(
     p_severity in pls_integer,
@@ -1173,7 +1173,7 @@ as
   
   /**
     Procedure: log_state
-      See <PIT_PKG.log_state>
+      See <PIT_INTERNAL.log_state>
    */
   procedure log_state(
     p_params in msg_params,
@@ -1190,7 +1190,7 @@ as
 
   /**
     Procedure: log_specific
-      See <PIT_PKG.log_specific>
+      See <PIT_INTERNAL.log_specific>
    */
   procedure log_specific(
     p_message_name in pit_util.ora_name_type,
@@ -1224,7 +1224,7 @@ as
 
   /**
     Procedure: enter
-      See <PIT_PKG.enter>
+      See <PIT_INTERNAL.enter>
    */
   procedure enter(
     p_action in pit_util.ora_name_type,
@@ -1240,17 +1240,16 @@ as
     
     -- Initialize
     l_trace_me := trace_me(p_trace_level);
+    l_action := p_action;
     
     -- reset active message to null, as this is a "normal" PL/SQL call that requires resetting any exception
     g_active_message := null;
     
     -- Do minimal tracing if context toggle is active
     if g_context.allow_toggle or l_trace_me then
-      if p_action is null then
-        pit_util.get_module_and_action(
-          p_module => l_module,
-          p_action => l_action);
-      end if;
+      pit_util.get_module_and_action(
+        p_module => l_module,
+        p_action => l_action);
       
       l_action := coalesce(p_action, l_action);
       l_context := get_toggle_context(
@@ -1280,7 +1279,7 @@ as
 
   /**
     Procedure: leave
-      See <PIT_PKG.leave>
+      See <PIT_INTERNAL.leave>
    */
   procedure leave(
     p_trace_level in pls_integer,
@@ -1347,7 +1346,7 @@ as
   
   /**
     Procedure: long_op
-      See <PIT_PKG.long_op>
+      See <PIT_INTERNAL.long_op>
    */
   procedure long_op(
     p_target in varchar2,
@@ -1400,7 +1399,7 @@ as
 
   /**
     Procedure: print
-      See <PIT_PKG.print>
+      See <PIT_INTERNAL.print>
    */
   procedure print(
     p_message_name in pit_util.ora_name_type,
@@ -1423,7 +1422,7 @@ as
   
   /**
     Procedure: notify
-      See <PIT_PKG.notify>
+      See <PIT_INTERNAL.notify>
    */
   procedure notify(
     p_message_name in pit_util.ora_name_type,
@@ -1457,7 +1456,7 @@ as
 
   /**
     Procedure: raise_error
-      See <PIT_PKG.raise_error>
+      See <PIT_INTERNAL.raise_error>
    */
   procedure raise_error(
     p_severity in pls_integer,
@@ -1486,7 +1485,7 @@ as
 
   /**
     Procedure: handle_error
-      See <PIT_PKG.handle_error>
+      See <PIT_INTERNAL.handle_error>
    */
   procedure handle_error(
     p_severity in pls_integer,
@@ -1511,7 +1510,7 @@ as
 
   /**
     Procedure: purge_log
-      See <PIT_PKG.purge_log>
+      See <PIT_INTERNAL.purge_log>
    */
   procedure purge_log(
     p_date_before in date,
@@ -1530,7 +1529,7 @@ as
 
   /**
     Function: get_message
-      See <PIT_PKG.get_message>
+      See <PIT_INTERNAL.get_message>
    */
   function get_message(
     p_message_name in pit_util.ora_name_type,
@@ -1560,7 +1559,7 @@ as
   
   /**
     Function: get_active_message
-      See <PIT_PKG.get_active_message>
+      See <PIT_INTERNAL.get_active_message>
    */
   function get_active_message
     return message_type
@@ -1572,7 +1571,7 @@ as
   
   /**
     Function: check_datatype
-      See <PIT_PKG.check_datatype>
+      See <PIT_INTERNAL.check_datatype>
    */
   function check_datatype(
     p_value in varchar2,
@@ -1645,7 +1644,7 @@ as
 
   /**
     Function: get_message_text
-      See <PIT_PKG.get_message_text>
+      See <PIT_INTERNAL.get_message_text>
    */
   function get_message_text(
     p_message_name in pit_util.ora_name_type,
@@ -1663,7 +1662,7 @@ as
   
   /**
     Function: get_trans_item
-      See <PIT_PKG.get_trans_item>
+      See <PIT_INTERNAL.get_trans_item>
    */
   function get_trans_item(
     p_pti_pmg_name in pit_message_group.pmg_name%type,
@@ -1703,7 +1702,7 @@ as
 
   /**
     Function: get_context
-      See <PIT_PKG.get_context>
+      See <PIT_INTERNAL.get_context>
    */
   function get_context
     return pit_util.context_type
@@ -1716,7 +1715,7 @@ as
 
   /**
     Procedure: set_context
-      See <PIT_PKG.set_context>
+      See <PIT_INTERNAL.set_context>
    */
   procedure set_context(
     p_context in pit_util.context_type)
@@ -1768,7 +1767,7 @@ as
   
   /**
     Procedure: set_context_value
-      See <PIT_PKG.set_context_value>
+      See <PIT_INTERNAL.set_context_value>
    */
   procedure set_context_value(
     p_name in varchar2,
@@ -1790,7 +1789,7 @@ as
   
   /**
     Function: get_context_value
-      See <PIT_PKG.get_context_value>
+      See <PIT_INTERNAL.get_context_value>
    */
   function get_context_value(
     p_name in varchar2)
@@ -1803,7 +1802,7 @@ as
 
   /**
     Procedure: reset_active_context
-      See <PIT_PKG.reset_active_context>
+      See <PIT_INTERNAL.reset_active_context>
    */
   procedure reset_active_context
   as
@@ -1821,7 +1820,7 @@ as
 
   /**
     Procedure: reset_context
-      See <PIT_PKG.reset_context>
+      See <PIT_INTERNAL.reset_context>
    */
   procedure reset_context
   as
@@ -1833,7 +1832,7 @@ as
   
   /**
     Procedure: set_collect_mode
-      See <PIT_PKG.set_collect_mode>
+      See <PIT_INTERNAL.set_collect_mode>
    */
   procedure set_collect_mode(
     p_mode in boolean)
@@ -1870,7 +1869,7 @@ as
     
   /**
     Function: get_collect_mode
-      See <PIT_PKG.get_collect_mode>
+      See <PIT_INTERNAL.get_collect_mode>
    */
   function get_collect_mode
     return boolean
@@ -1882,7 +1881,7 @@ as
     
   /**
     Function: get_collect_least_severity
-      See <PIT_PKG.get_collect_least_severity>
+      See <PIT_INTERNAL.get_collect_least_severity>
    */
   function get_collect_least_severity
     return binary_integer
@@ -1894,7 +1893,7 @@ as
   
   /**
     Function: get_message_collection
-      See <PIT_PKG.get_message_collection>
+      See <PIT_INTERNAL.get_message_collection>
    */
   function get_message_collection
     return pit_message_table
@@ -1911,7 +1910,7 @@ as
   
   /**
     Function: get_actual_call_stack_depth
-      See <PIT_PKG.get_actual_call_stack_depth>
+      See <PIT_INTERNAL.get_actual_call_stack_depth>
    */
   function get_actual_call_stack_depth
     return pls_integer
@@ -1923,7 +1922,7 @@ as
   
   /**
     Function: get_modules
-      See <PIT_PKG.get_modules>
+      See <PIT_INTERNAL.get_modules>
    */
   function get_modules
     return pit_module_list
@@ -1960,7 +1959,7 @@ as
   
   /**
     Function: get_active_modules
-      See <PIT_PKG.get_active_modules>
+      See <PIT_INTERNAL.get_active_modules>
    */
   function get_active_modules
     return args
@@ -1989,7 +1988,7 @@ as
 
   /**
     Function: get_available_modules
-      See <PIT_PKG.get_available_modules>
+      See <PIT_INTERNAL.get_available_modules>
    */
   function get_available_modules
     return args
@@ -2018,7 +2017,7 @@ as
   
   /**
     Function: report_module_status
-      See <PIT_PKG.report_module_status>
+      See <PIT_INTERNAL.report_module_status>
    */
   function report_module_status
     return args pipelined
