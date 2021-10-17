@@ -76,7 +76,7 @@ prompt &s1.Create internal messages
 prompt &h2.Create CORE package declarations
 @&tools.install_package_spec msg
 @&tools.install_package_spec pit
-@&tools.install_package_spec pit_pkg
+@&tools.install_package_spec pit_internal
 
 prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
 @&tools.run_script create_global_context
@@ -91,4 +91,4 @@ prompt &h2.Create type bodies
 
 prompt &h2.Create CORE package implementations
 @&tools.install_package_body pit
-@&tools.install_package_body pit_pkg
+@&tools.install_package_body pit_internal

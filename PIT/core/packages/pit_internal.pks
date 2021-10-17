@@ -1,4 +1,4 @@
-create or replace package pit_pkg
+create or replace package pit_internal
   authid definer
   --accessible by (package pit, package pit_ui)
 as
@@ -620,5 +620,5 @@ as
     return args 
     pipelined;
  
-end pit_pkg;
+end pit_internal;
 /

@@ -17,7 +17,7 @@ as
   as
   begin
     g_owner := user;
-    pit_pkg.initialize;
+    pit_internal.initialize;
   end initialize;
   
   
@@ -26,7 +26,7 @@ as
    deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_OFF;
+    return pit_internal.C_LEVEL_OFF;
   end level_off;
   
   
@@ -35,7 +35,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_FATAL;
+    return pit_internal.C_LEVEL_FATAL;
   end level_fatal;
   
   
@@ -44,7 +44,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_ERROR;
+    return pit_internal.C_LEVEL_ERROR;
   end level_error;
   
   
@@ -53,7 +53,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_WARN;
+    return pit_internal.C_LEVEL_WARN;
   end level_warn;
   
   
@@ -62,7 +62,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_INFO;
+    return pit_internal.C_LEVEL_INFO;
   end level_info;
   
   
@@ -71,7 +71,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_DEBUG;
+    return pit_internal.C_LEVEL_DEBUG;
   end level_debug;
   
   
@@ -80,7 +80,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_LEVEL_ALL;
+    return pit_internal.C_LEVEL_ALL;
   end level_all;
   
   
@@ -89,7 +89,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_TRACE_OFF;
+    return pit_internal.C_TRACE_OFF;
   end trace_off;
   
   
@@ -98,7 +98,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_TRACE_MANDATORY;
+    return pit_internal.C_TRACE_MANDATORY;
   end trace_mandatory;
   
   
@@ -107,7 +107,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_TRACE_OPTIONAL;
+    return pit_internal.C_TRACE_OPTIONAL;
   end trace_optional;
   
   
@@ -116,7 +116,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_TRACE_DETAILED;
+    return pit_internal.C_TRACE_DETAILED;
   end trace_detailed;
   
   
@@ -125,7 +125,7 @@ as
     deterministic
   as
   begin
-    return pit_pkg.C_TRACE_ALL;
+    return pit_internal.C_TRACE_ALL;
   end trace_all;
   
   
@@ -135,35 +135,35 @@ as
     return varchar2
   as
   begin
-    return pit_pkg.C_TYPE_INTEGER;
+    return pit_internal.C_TYPE_INTEGER;
   end type_integer;  
   
   function type_number
     return varchar2
   as
   begin
-    return pit_pkg.C_TYPE_NUMBER;
+    return pit_internal.C_TYPE_NUMBER;
   end type_number;  
     
   function type_date
     return varchar2
   as
   begin
-    return pit_pkg.C_TYPE_DATE;
+    return pit_internal.C_TYPE_DATE;
   end type_date;  
     
   function type_timestamp
     return varchar2
   as
   begin
-    return pit_pkg.C_TYPE_TIMESTAMP;
+    return pit_internal.C_TYPE_TIMESTAMP;
   end type_timestamp;  
   
   function type_xml
     return varchar2
   as
   begin
-    return pit_pkg.C_TYPE_XML;
+    return pit_internal.C_TYPE_XML;
   end type_xml;  
   
   
@@ -174,7 +174,7 @@ as
     return boolean
   as
   begin
-    return pit_pkg.check_log_level_greater_equal(p_log_level);
+    return pit_internal.check_log_level_greater_equal(p_log_level);
   end check_log_level_greater_equal;
   
      
@@ -183,7 +183,7 @@ as
     return boolean
   as
   begin
-    return pit_pkg.check_trace_level_greater_equal(p_trace_level);
+    return pit_internal.check_trace_level_greater_equal(p_trace_level);
   end check_trace_level_greater_equal;
   
   
@@ -196,7 +196,7 @@ as
     p_log_modules in varchar2 default null)
   as
   begin
-    pit_pkg.log_specific(
+    pit_internal.log_specific(
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
       p_error_code => p_error_code,
@@ -211,7 +211,7 @@ as
     p_severity in pls_integer default null)
   as
   begin
-    pit_pkg.log_state(
+    pit_internal.log_state(
       p_params => p_params,
       p_severity => p_severity);
   end log_state;
@@ -224,7 +224,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log_event(level_all, p_message_name, p_msg_args, p_affected_id, null);
+    pit_internal.log_event(level_all, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
@@ -239,7 +239,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_debug $THEN
-    pit_pkg.log_event(level_debug, p_message_name, p_msg_args, p_affected_id, null);
+    pit_internal.log_event(level_debug, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
@@ -254,7 +254,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_pkg.log_event(level_info, p_message_name, p_msg_args, p_affected_id, null);
+    pit_internal.log_event(level_info, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
@@ -269,7 +269,7 @@ as
   as
   begin
     $IF pit_admin.c_level_le_warn $THEN
-    pit_pkg.log_event(level_warn, p_message_name, p_msg_args, p_affected_id, null);
+    pit_internal.log_event(level_warn, p_message_name, p_msg_args, p_affected_id, null);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
@@ -284,7 +284,7 @@ as
     p_error_code in varchar2 default null)
   as
   begin
-    pit_pkg.raise_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code);
+    pit_internal.raise_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code);
   end error;
 
 
@@ -295,7 +295,7 @@ as
     p_error_code in varchar2 default null)
   as
   begin
-    pit_pkg.raise_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code);
+    pit_internal.raise_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code);
   end fatal;
   
 
@@ -307,7 +307,7 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_pkg.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
+    pit_internal.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
     leave;
   end sql_exception;
   
@@ -320,7 +320,7 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_pkg.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
+    pit_internal.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
     leave;
   end handle_exception;
 
@@ -333,7 +333,7 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_pkg.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
+    pit_internal.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
   end stop;
 
 
@@ -345,7 +345,7 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_pkg.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
+    pit_internal.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
   end reraise_exception;
   
   
@@ -406,7 +406,7 @@ as
     $IF pit_admin.c_trace_le_all $THEN
     -- starting with version 12c, UTL_CALL_STACK is used if parameters are not provided
     g_action := p_action;
-    pit_pkg.enter(
+    pit_internal.enter(
        g_action, p_params, p_trace_level, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
@@ -460,7 +460,7 @@ as
   is
   begin
     $IF pit_admin.c_trace_le_all $THEN
-    pit_pkg.leave(p_trace_level, p_params);
+    pit_internal.leave(p_trace_level, p_params);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -476,7 +476,7 @@ as
     p_op_name in varchar2)
   as
   begin
-    pit_pkg.long_op(
+    pit_internal.long_op(
       p_target => p_target,
       p_sofar => p_sofar,
       p_total => p_total,
@@ -491,7 +491,7 @@ as
     p_msg_args msg_args default null)
   as
   begin
-    pit_pkg.print(p_message_name, p_msg_args);
+    pit_internal.print(p_message_name, p_msg_args);
   end print;
   
 
@@ -503,7 +503,7 @@ as
     p_log_modules in varchar2 default null)
   as
   begin
-    pit_pkg.notify(
+    pit_internal.notify(
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
       p_msg_args => p_msg_args,
@@ -518,7 +518,7 @@ as
   return clob
   as
   begin
-    return pit_pkg.get_message_text(p_message_name, p_msg_args);
+    return pit_internal.get_message_text(p_message_name, p_msg_args);
   end get_message_text;
     
     
@@ -544,7 +544,7 @@ as
   return message_type
   as
   begin
-    return pit_pkg.get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
+    return pit_internal.get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
   end get_message;
   
   
@@ -552,7 +552,7 @@ as
     return message_type
   as
   begin
-    return pit_pkg.get_active_message;
+    return pit_internal.get_active_message;
   end get_active_message;
   
   
@@ -764,7 +764,7 @@ as
     end if;
     
     assert(
-      p_condition => pit_pkg.check_datatype(p_value, p_type, p_format_mask, p_accept_null),
+      p_condition => pit_internal.check_datatype(p_value, p_type, p_format_mask, p_accept_null),
       p_message_name => p_message_name,
       p_msg_args => l_msg_args,
       p_affected_id => p_affected_id,
@@ -789,7 +789,7 @@ as
   return varchar2
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name).pti_name;
+    return pit_internal.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name).pti_name;
   end get_trans_item_name; 
   
     
@@ -801,7 +801,7 @@ as
   return varchar2
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name).pti_display_name;
+    return pit_internal.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name).pti_display_name;
   end get_trans_item_display_name; 
   
     
@@ -812,7 +812,7 @@ as
   return clob
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, null, p_pti_pml_name).pti_description;
+    return pit_internal.get_trans_item(p_pti_pmg_name, p_pti_id, null, p_pti_pml_name).pti_description;
   end get_trans_item_description; 
   
     
@@ -824,7 +824,7 @@ as
   return pit_util.translatable_item_rec
   as
   begin
-    return pit_pkg.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name);
+    return pit_internal.get_trans_item(p_pti_pmg_name, p_pti_id, p_msg_args, p_pti_pml_name);
   end get_trans_item; 
   
   
@@ -835,7 +835,7 @@ as
     p_severity_lower_equal in number default null)
   as
   begin
-    pit_pkg.purge_log(p_date_before, p_severity_lower_equal);
+    pit_internal.purge_log(p_date_before, p_severity_lower_equal);
   end purge_log;
   
   
@@ -869,7 +869,7 @@ as
     l_context.trace_level := p_trace_level;
     l_context.trace_timing := p_trace_timing;
     l_context.module_list := p_log_modules;
-    pit_pkg.set_context(l_context);
+    pit_internal.set_context(l_context);
   end set_context;
   
   
@@ -879,7 +879,7 @@ as
     l_context pit_util.context_type;
   begin
     l_context.context_name := p_context_name;
-    pit_pkg.set_context(l_context);
+    pit_internal.set_context(l_context);
   end set_context;
   
   
@@ -888,7 +888,7 @@ as
     p_value in varchar2)
    as
    begin
-     pit_pkg.set_context_value(p_name, p_value);
+     pit_internal.set_context_value(p_name, p_value);
    end set_context_value;
   
   
@@ -897,7 +897,7 @@ as
     return varchar2
   as
   begin
-    return pit_pkg.get_context_value(p_name);
+    return pit_internal.get_context_value(p_name);
   end get_context_value;
   
   
@@ -906,9 +906,9 @@ as
   as
   begin
     if p_active_session_only then
-      pit_pkg.reset_active_context;
+      pit_internal.reset_active_context;
     else
-      pit_pkg.reset_context;
+      pit_internal.reset_context;
     end if;
   end reset_context;
   
@@ -917,15 +917,15 @@ as
     return pit_util.context_type
   as
   begin
-    return pit_pkg.get_context;
+    return pit_internal.get_context;
   end get_context;
   
   
   procedure start_message_collection
   as
   begin
-    if not pit_pkg.get_collect_mode then
-      pit_pkg.set_collect_mode(true);
+    if not pit_internal.get_collect_mode then
+      pit_internal.set_collect_mode(true);
     end if;
   end start_message_collection;
   
@@ -933,8 +933,8 @@ as
   procedure stop_message_collection
   as
   begin
-    if pit_pkg.get_collect_mode then
-      pit_pkg.set_collect_mode(false);
+    if pit_internal.get_collect_mode then
+      pit_internal.set_collect_mode(false);
     end if;
   end stop_message_collection;
   
@@ -943,7 +943,7 @@ as
     return boolean
   as
   begin
-    return pit_pkg.get_collect_least_severity > pit_pkg.C_LEVEL_ERROR;
+    return pit_internal.get_collect_least_severity > pit_internal.C_LEVEL_ERROR;
   end has_no_bulk_error;
   
   
@@ -951,7 +951,7 @@ as
     return boolean
   as
   begin
-    return pit_pkg.get_collect_least_severity > pit_pkg.C_LEVEL_FATAL;
+    return pit_internal.get_collect_least_severity > pit_internal.C_LEVEL_FATAL;
   end has_no_bulk_fatal;
   
   
@@ -959,7 +959,7 @@ as
     return pit_message_table
   as
   begin
-    return pit_pkg.get_message_collection;
+    return pit_internal.get_message_collection;
   end get_message_collection;
   
   
@@ -969,7 +969,7 @@ as
   as
     cursor modules is
       select pit_module_meta(module_name, module_available, module_active, module_stack) module
-        from table(pit_pkg.get_modules);
+        from table(pit_internal.get_modules);
   begin
     for m in modules loop
       pipe row (m.module);
@@ -987,7 +987,7 @@ as
   as
     cursor modules is
       select column_value module
-        from table(pit_pkg.get_available_modules);
+        from table(pit_internal.get_available_modules);
   begin
     for m in modules loop
       pipe row (m.module);
@@ -1005,7 +1005,7 @@ as
   as
     cursor modules is
       select column_value module
-        from table(pit_pkg.get_active_modules);
+        from table(pit_internal.get_active_modules);
   begin
     for m in modules loop
       pipe row (m.module);

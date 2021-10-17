@@ -1,7 +1,7 @@
-create or replace package body pit_pkg
+create or replace package body pit_internal
 as
   /** 
-    Package: PIT_PKG Body
+    Package: PIT_INTERNAL Body
       Implements the core PIT logic.
    
     Author:: 
@@ -2046,5 +2046,5 @@ as
 
 begin
   initialize;
-end pit_pkg;
+end pit_internal;
 /
