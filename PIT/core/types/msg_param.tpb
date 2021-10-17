@@ -40,6 +40,7 @@ as
  as
    C_EXTENSION constant varchar2(10 byte) := '...';
  begin
+   self.p_param := substrb(p_param, 1, 128);
    if p_value > trunc(p_value) then
      self.p_value := to_char(p_value, 'fm999999999999999999990D9999999999999999');
    else
