@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:core/types/args.tps","args.tps");NDSummary.OnSummaryLoaded("File:core/types/args.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[18,0,0,"Types","Types"],[19,0,1,"args","args"]]);

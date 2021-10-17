@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("pre",["Type"],[["predefined_error_rec",,[["PIT_ADMIN Body",,,,0,"File:core/packages/pit_admin.pkb:PIT_ADMIN_Body.predefined_error_rec","SQLClass:PIT_ADMIN_Body:predefined_error_rec"]]]]);

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:core/types/msg_args_char.tps","msg_args_char.tps");NDSummary.OnSummaryLoaded("File:core/types/msg_args_char.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[12,0,0,"Types","Types"],[13,0,1,"msg_args_char","msg_args_char"]]);

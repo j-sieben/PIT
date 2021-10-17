@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("sql",["Type","Function"],[["SQL",,[["PIT_UTIL","PL/SQL subtypes",,,0,"File:core/packages/pit_util.pks:PIT_UTIL.PL/SQL_subtypes","SQLClass:PIT_UTIL:PL/SQL_subtypes"]]],["sql_exception",,[["PIT",,,,1,"File:core/packages/pit.pks:PIT.sql_exception","SQLClass:PIT:sql_exception"]]]]);

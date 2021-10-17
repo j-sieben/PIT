@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("fla",["Type"],[["flag_type",,[["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.flag_type","SQLClass:PIT_UTIL:flag_type"]]]]);

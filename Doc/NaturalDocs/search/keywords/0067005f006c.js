@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("g_l",["Variable"],[["g_log_state_threshold",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.g_log_state_threshold","SQLClass:PIT_PKG_Body:g_log_state_threshold"]]]]);

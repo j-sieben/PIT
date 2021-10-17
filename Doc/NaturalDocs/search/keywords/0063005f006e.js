@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("c_n",["Constant"],[["C_NAME_TOO_LONG",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.C_NAME_TOO_LONG","SQLClass:PIT_UTIL_Body:C_NAME_TOO_LONG"]]],["C_NOTIFY_EVENT",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.C_NOTIFY_EVENT","SQLClass:PIT_PKG_Body:C_NOTIFY_EVENT"]]]]);

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("sta",["Function"],[["start_message_collection",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.start_message_collection","SQLClass:PIT:start_message_collection"]]]]);

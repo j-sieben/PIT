@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("has",["Function"],[["has_no_bulk_error",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.has_no_bulk_error","SQLClass:PIT:has_no_bulk_error"]]],["has_no_bulk_fatal",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.has_no_bulk_fatal","SQLClass:PIT:has_no_bulk_fatal"]]]]);

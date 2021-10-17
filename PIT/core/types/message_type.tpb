@@ -11,7 +11,7 @@ as
     p_error_code in varchar2,
     p_session_id in varchar2,
     p_user_name in varchar2,
-    p_arg_list msg_args)
+    p_msg_args msg_args)
     return self as result
   as
     C_FAILURE constant number := 1;
@@ -60,7 +60,7 @@ as
     self.error_code := p_error_code;
     self.session_id := p_session_id;
     self.user_name := p_user_name;
-    self.message_args := p_arg_list;
+    self.message_args := p_msg_args;
     
     if sqlcode != 0 then
       self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 11));
@@ -69,22 +69,22 @@ as
     end if;
 
     -- replace anchors with msg params
-    if p_arg_list is not null then
-      if upper(p_arg_list(1)) = 'FORMAT_ICU' then
+    if p_msg_args is not null then
+      if upper(p_msg_args(1)) = 'FORMAT_ICU' then
         l_language := sys_context('USERENV', 'LANGUAGE');
         l_territory := substr(l_language, instr(l_language, '_') + 1, instr(l_language, '.') - instr(l_language, '_') - 1);
         l_language := substr(l_language, 1, instr(l_language, '_') -1);
         l_locale := utl_i18n.map_locale_to_iso(l_language, l_territory);
-        if p_arg_list.count = 2 then
-          l_json_parameters := p_arg_list(2);
+        if p_msg_args.count = 2 then
+          l_json_parameters := p_msg_args(2);
         else
           l_json_parameters := '{';
-          for i in 2 .. p_arg_list.count loop
+          for i in 2 .. p_msg_args.count loop
             if mod(i, 2) = 0 then
               if i > 2 then
                 l_json_parameters := l_json_parameters || ',';
               end if;
-              l_json_parameters := l_json_parameters || '"' || p_arg_list(i) || '":"' || p_arg_list(i+1) || '"';
+              l_json_parameters := l_json_parameters || '"' || p_msg_args(i) || '":"' || p_msg_args(i+1) || '"';
             end if;
           end loop;
           l_json_parameters := l_json_parameters || '}';
@@ -96,9 +96,9 @@ as
       else
         for a in anchor_cur(self.message_text) loop
           if a.valid_anchor_name = 1 then
-            if p_arg_list.count >= a.anchor then
-              if p_arg_list(a.anchor) is not null then
-                self.message_text := replace(self.message_text, a.replacement_string, a.prefix || p_arg_list(a.anchor) || a.postfix);
+            if p_msg_args.count >= a.anchor then
+              if p_msg_args(a.anchor) is not null then
+                self.message_text := replace(self.message_text, a.replacement_string, a.prefix || p_msg_args(a.anchor) || a.postfix);
               else
                 self.message_text := replace(self.message_text, a.replacement_string, a.null_value);
               end if;

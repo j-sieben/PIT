@@ -353,13 +353,12 @@ as
 
   procedure enter_mandatory(
     p_action in varchar2 default null,
-    p_module in varchar2 default null,
     p_params in msg_params default null,
     p_client_info in varchar2 default null)
   as
   begin
     $IF pit_admin.c_trace_le_mandatory $THEN
-    enter(p_action, p_module, p_params, trace_mandatory, p_client_info);
+    enter(p_action, p_params, trace_mandatory, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -369,13 +368,12 @@ as
   
   procedure enter_optional(
     p_action in varchar2 default null,
-    p_module in varchar2 default null,
     p_params in msg_params default null,
     p_client_info in varchar2 default null)
   as
   begin
     $IF pit_admin.c_trace_le_optional $THEN
-    enter(p_action, p_module, p_params, trace_optional, p_client_info);
+    enter(p_action, p_params, trace_optional, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -385,13 +383,12 @@ as
   
   procedure enter_detailed(
     p_action in varchar2 default null,
-    p_module in varchar2 default null,
     p_params in msg_params default null,
     p_client_info in varchar2 default null)
   as
   begin
     $IF pit_admin.c_trace_le_detailed $THEN
-    enter(p_action, p_module, p_params, trace_detailed, p_client_info);
+    enter(p_action, p_params, trace_detailed, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -401,7 +398,6 @@ as
 
   procedure enter(
     p_action in varchar2 default null,
-    p_module in varchar2 default null,
     p_params in msg_params default null,
     p_trace_level in number default pit.trace_all,
     p_client_info in varchar2 default null)
@@ -410,9 +406,8 @@ as
     $IF pit_admin.c_trace_le_all $THEN
     -- starting with version 12c, UTL_CALL_STACK is used if parameters are not provided
     g_action := p_action;
-    g_module := p_module;
     pit_pkg.enter(
-       g_action, g_module, p_params, p_trace_level, p_client_info);
+       g_action, p_params, p_trace_level, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:core/types/pit_module_meta.tps","pit_module_meta.tps");NDSummary.OnSummaryLoaded("File:core/types/pit_module_meta.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[33,0,0,"Types","Types"],[34,0,1,"pit_module_meta","pit_module_meta"]]);

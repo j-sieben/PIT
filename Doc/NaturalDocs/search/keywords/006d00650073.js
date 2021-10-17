@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("mes",["Constant","Type"],[["Message",,[["PIT_UTIL Body","Message constants",,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.Message_constants","SQLClass:PIT_UTIL_Body:Message_constants"]]],["message_type",,[[,,,,1,"File:core/types/message_type.tps:message_type"]]]]);

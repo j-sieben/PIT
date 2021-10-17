@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("lon",["Function"],[["long_op",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.long_op","SQLClass:PIT:long_op"],["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.long_op","SQLClass:PIT_PKG_Body:long_op"],["PIT_PKG",,,,0,"File:core/packages/pit_pkg.pks:PIT_PKG.long_op","SQLClass:PIT_PKG:long_op"]]]]);

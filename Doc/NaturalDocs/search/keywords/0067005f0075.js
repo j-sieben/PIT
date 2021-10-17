@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("g_u",["Variable"],[["g_user",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.g_user","SQLClass:PIT_UTIL_Body:g_user"]]],["g_user_name",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.g_user_name","SQLClass:PIT_PKG_Body:g_user_name"]]]]);

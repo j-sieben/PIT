@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("cal",["Type"],[["call_stack_tab",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.call_stack_tab","SQLClass:PIT_PKG_Body:call_stack_tab"]]],["call_stack_type",,[[,,,,0,"File:core/types/call_stack_type.tps:call_stack_type"]]]]);

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("pau",["Function"],[["pause",,[[,,,,0,"File:core/types/call_stack_type.tps:pause"]]]]);

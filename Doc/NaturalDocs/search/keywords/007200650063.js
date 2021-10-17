@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("rec",["Function"],[["recompile_invalid_objects",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.recompile_invalid_objects","SQLClass:PIT_UTIL_Body:recompile_invalid_objects"],["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.recompile_invalid_objects","SQLClass:PIT_UTIL:recompile_invalid_objects"]]]]);

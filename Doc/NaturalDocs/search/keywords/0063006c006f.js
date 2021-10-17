@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("clo",["Function"],[["clob_append",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.clob_append","SQLClass:PIT_UTIL_Body:clob_append"],["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.clob_append","SQLClass:PIT_UTIL:clob_append"]]]]);

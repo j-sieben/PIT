@@ -1,4 +1,13 @@
 create or replace view pit_message_language_v as
+/**
+  View: pit_message_language_v
+    View to present all message languages available.
+    
+  Fields:
+    pml_name - Name of the message language
+    pml_default_order - Order of the message language
+    pml_rank - Ranking information of the langauges
+ */
 with data as(
        select pml_name, pml_default_order
          from pit_message_language

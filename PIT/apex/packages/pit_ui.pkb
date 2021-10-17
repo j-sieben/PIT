@@ -1215,7 +1215,7 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
       -- Propagate changed settings to all sessions
       pit.reset_context(false);
     else
-      pit_admin.remove_named_context(g_edit_context_row.par_id);
+      pit_admin.delete_named_context(g_edit_context_row.par_id);
     end case;
     
     pit.leave_mandatory;

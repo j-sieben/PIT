@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("par",["Variable"],[["Parameter",,[["PIT_UTIL Body","Parameter variables",,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.Parameter_variables","SQLClass:PIT_UTIL_Body:Parameter_variables"]]]]);

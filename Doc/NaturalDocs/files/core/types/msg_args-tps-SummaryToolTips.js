@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:core/types/msg_args.tps",{15:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Basic array of MESSAGE_TYPE parameters</div></div>"});

@@ -183,3 +183,5 @@ Details to throwing and catching Exceptions can be found [here](Doc/exceptions.m
 Some advice on how to keep execution speed high with `PIT` can be found [here](Doc/performance.md)
 
 Should you experience problems when using `PIT`, some advices can be found [here](Doc/troubleshooting.md)
+
+Technical documentation about the packages that form `PIT` can be found [here](Doc/NaturalDocs/index.html)

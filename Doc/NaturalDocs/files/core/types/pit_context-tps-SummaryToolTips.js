@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:core/types/pit_context.tps",{36:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Object to collect context settings</div></div>",38:"<div class=\"NDToolTip TFunction LSQL\"><div class=\"TTSummary\">Method to cast the object to a string representation</div></div>"});

@@ -1,37 +1,60 @@
 create or replace type pit_console force under pit_module(
-  /** Output module to write to the console */
+  /** 
+    Type: PIT_MODULE.pit_console
+      Output module to write to the console 
+   */
   
-  /** Method logs entries to the console.*/
+  /** 
+    Procedure: log
+      See <PIT_MODULE.log>
+   */
   overriding member procedure log(
     self in out nocopy pit_console,
     p_message in message_type),
     
-  /** Method writes variable state to the console */
+  /**
+    Procedure: log
+      See <PIT_MODULE.log>
+   */
   overriding member procedure log(
     self in out nocopy pit_console,
     p_log_state log_state_type),
     
-  /** Method writes informational messages to the console */
+  /**
+    Procedure: print
+      See <PIT_MODULE.print>
+   */
   overriding member procedure print(
     self in out nocopy pit_console,
     p_message in message_type),
     
-  /** Method writes lightweigt notifications to the console */
+  /**
+    Procedure: notify
+      See <PIT_MODULE.notify>*/
   overriding member procedure notify(
     self in out nocopy pit_console,
     p_message in message_type),
     
-  /** Method writes entering a method to the console, including parameter values */
+  /**
+    Procedure: enter
+      See <PIT_MODULE.enter>
+   */
   overriding member procedure enter(
     self in out nocopy pit_console,
     p_call_stack call_stack_type),
     
-  /** Method writes leaving a method to the console, including out parameter values */
+  /**
+    Procedure: leave
+      See <PIT_MODULE.leave>
+   */
   overriding member procedure leave (
     self in out nocopy pit_console,
     p_call_stack call_stack_type),
     
-  /** Method logs if a context is changed */
+  /**
+    Procedure: context_changed
+      See <PIT_MODULE.context_changed>
+   */
   overriding member procedure context_changed(
     self in out nocopy pit_console,
     p_ctx in pit_context),

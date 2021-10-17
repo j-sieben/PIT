@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ada",["Constant"],[["adapter",,[["PIT_PKG Body","Private adapter constants",,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.Private_adapter_constants","SQLClass:PIT_PKG_Body:Private_adapter_constants"]]]]);

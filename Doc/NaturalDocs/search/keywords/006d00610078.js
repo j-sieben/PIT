@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("max",["Type"],[["max_char",,[["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.max_char","SQLClass:PIT_UTIL:max_char"]]],["max_sql_char",,[["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.max_sql_char","SQLClass:PIT_UTIL:max_sql_char"]]]]);

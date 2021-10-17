@@ -1,18 +1,51 @@
 create or replace package body pit_util
 as
-
-  /** Generic utitilies for PIT */
-
-  /**** CONSTANTS ****/
+  /** 
+    Package: PIT_UTIL Body
+      Implementation of generic utitilies for PIT.
+   
+    Author:: 
+      Juergen Sieben, ConDeS GmbH
+      
+      Published under MIT licence
+   */
+   
+  /**
+    Group: Private constants
+   */
+  /**
+    Constants: Message constants
+      C_NAME_TOO_LONG - Message if a name exceeds the maximum length#
+      C_WRONG_PATTERN - Message if a name does not adhere to the given naming conventions
+   */
   C_PKG constant ora_name_type := $$PLSQL_UNIT;
   C_NAME_TOO_LONG constant varchar2(200) := 'Toggle name is too long. Please use a maximum of #MAX_LENGTH# byte';
   C_WRONG_PATTERN constant varchar2(2000) := '#WHAT# not correct. Please use a valid format as described in the documentation. Checked: #PATTERN#';
-  
-  C_PARAMETER_GROUP constant varchar2(5) := 'PIT';
   C_NAME_SPELLING constant ora_name_type := 'NAME_SPELLING';
-  C_CTX_DEL constant char(1 byte) := '|';
+  
+  /**
+    Constants: Other constants
+      C_CTX_DEL - Delimiter between context values in string representation
+      C_TRUTHY - Boolean TRUE as <flag_type
+      C_FALSY - Boolean FALSE as <flag_type
+   */
+  C_CTX_DEL constant char(1 byte) := '|';  
+  C_TRUTHY constant flag_type := &C_TRUE.;
+  C_FALSY constant flag_type := &C_FALSE.;
     
-  /**** GLOBAL VARS ****/
+  /**
+    Group: Private package variables
+   */
+  /**
+    Variables: Parameter variables
+      g_user - Variable to store result of SQL function USER;
+      g_error_prefix - Container for parameter ERROR_PREFIX
+      g_error_postfix - Container for parameter ERROR_POSTFIX
+      g_call_stack_template - Container for parameter PIT_CALL_STACK_TEMPLATE
+      g_error_stack_template - Container for parameter PIT_ERROR_STACK_TEMPLATE
+      g_omit_pit_in_stack - Container for parameter OMIT_PIT_IN_STACK
+      g_name_spelling varchar2(10 byte);
+   */
   g_user ora_name_type;
   g_error_prefix varchar2(5 byte);
   g_error_postfix varchar2(5 byte);
@@ -21,8 +54,17 @@ as
   g_omit_pit_in_stack boolean;
   g_name_spelling varchar2(10 byte);
   
-  /**** HELPER ****/
-  /** Method to append P_CHUNK to P_TEXT */
+  /**
+    Group: Private methods
+   */
+  /**
+    Procedure: append
+      Method to append <P_CHUNK> to <P_TEXT>
+      
+    Parameters:
+      p_text - Text to append <p_chunk> to
+      p_chunk - Text to append
+   */
   procedure append(
     p_text in out nocopy varchar2,
     p_chunk in varchar2)
@@ -32,10 +74,16 @@ as
   end append;
   
   
-  /* Harmonizes the spelling of database names etc.
-   * %usage  Is used to harmonize the spelling of names. Conversion is based on parameter PIT.NAME_SPELLING
-   * %param  p_name  Name to harmonize
-   * %return Harmonized name
+  /**
+    Function: harmonize_name
+      Harmonizes the spelling of database names etc.
+      Conversion is based on parameter <PIT.NAME_SPELLING>
+      
+    Parameter:
+      p_name - Name to harmonize
+      
+    Returns:
+      Harmonized name
    */
   function harmonize_name(
     p_name in varchar2)
@@ -53,9 +101,15 @@ as
   end harmonize_name;
   
   
-  /** Helper to decide whether a subprogram has to be ignored due to parameterctings
-   * %param  p_subprogram  Method to check
-   * %return Flag to indicate whether a subprogram has to be ignored (TRUE) or not (FALSE)
+  /** 
+    Function: ignore_subprogram
+      Helper to decide whether a subprogram has to be ignored due to parameter settings
+      
+    Parameter:
+      p_subprogram - Method to check
+      
+    Returns:
+      Flag to indicate whether a subprogram has to be ignored (TRUE) or not (FALSE)
    */
   function ignore_subprogram(
     p_subprogram in varchar2)
@@ -70,7 +124,10 @@ as
   end ignore_subprogram;
   
   
-  /** Package Initialization */
+  /**
+    Procedure: initialize
+      Package Initialization 
+   */
   procedure initialize
   as
     l_prefix_length binary_integer;
@@ -102,23 +159,133 @@ as
   end initialize;
   
   
-  /**** INTERFACE ****/
-  function get_true
+  function c_true
     return flag_type
   as
   begin
-    return C_TRUE;
-  end get_true;
+    return C_TRUTHY;
+  end c_true;
   
   
-  function get_false
+  function c_false
     return flag_type
   as
   begin
-    return C_FALSE;
-  end get_false;
+    return C_FALSY;
+  end c_false;
   
   
+  /**
+    Group: Public getter methods
+   */
+  /**
+    Function: get_call_stack
+      See <PIT_UTIL.get_call_stack>
+   */
+  function get_call_stack
+    return varchar2
+  as
+    l_depth binary_integer;
+    l_stack max_char;
+  begin
+    l_depth := utl_call_stack.dynamic_depth;
+    
+    append(l_stack, g_call_stack_template);
+    
+    for i in 1 .. l_depth loop
+      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
+        append(l_stack,
+          lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' ' ||
+          rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
+          utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
+      end if;
+    end loop;
+    
+    return l_stack;
+  end get_call_stack;
+  
+  
+  /**
+    Function: get_error_name
+      See <PIT_UTIL.get_error_name>
+   */
+  function get_error_name(
+    p_pms_name in pit_message.pms_name%type)
+    return varchar2
+  as
+  begin
+    return g_error_prefix || p_pms_name || g_error_postfix;
+  end get_error_name;
+  
+  
+  /**
+    Function: get_error_stack
+      See <PIT_UTIL.get_error_stack>
+   */
+  function get_error_stack
+    return varchar2
+  as
+    l_depth binary_integer;
+    l_stack max_char;
+  begin
+    l_depth := utl_call_stack.error_depth;
+    
+    append(l_stack, g_error_stack_template);
+
+    for i in 1 .. l_depth loop
+      begin
+        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
+          append(l_stack,
+            lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' '  ||
+            rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
+            utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
+        end if;
+      exception
+        when utl_call_stack.BAD_DEPTH_INDICATOR then
+          append(l_stack, 'Bad depth indicator error raised');
+      end;
+    end loop;
+    
+    return l_stack;
+  end get_error_stack;
+  
+
+  /**
+    Function: get_module_and_action
+      See <PIT_UTIL.get_module_and_action>
+   */
+  procedure get_module_and_action(
+    p_module in out nocopy varchar2,
+    p_action in out nocopy varchar2)
+  as
+    l_depth binary_integer;
+  begin
+    if p_action is null or p_module is null then
+      l_depth := utl_call_stack.dynamic_depth;
+      for i in 1 .. l_depth loop
+        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
+          l_depth := i;
+          exit;
+        end if;
+      end loop;
+      
+      -- Set action and module to the first non excluded entry
+      begin
+        p_action := harmonize_name(utl_call_stack.subprogram(l_depth)(2));
+        p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
+      exception
+        when others then
+          -- when called from an anonymous block, not all values may have entries
+          p_action := harmonize_name(null, utl_call_stack.subprogram(l_depth)(1));
+      end;
+    end if;
+  end get_module_and_action;
+  
+  
+  /**
+    Function: get_user
+      See <PIT_UTIL.get_user>
+   */
   function get_user
     return ora_name_type
   as
@@ -127,29 +294,15 @@ as
   end get_user;
   
   
-  /**** TEXT FUNCTIONS ****/
-  function string_to_table(
-    p_string_value in varchar2,
-    p_delimiter in varchar2 := ':')
-    return args
-  as
-    l_args args := args();
-  begin
-    if p_string_value is not null then
-      if instr(p_string_value, p_delimiter) > 0 then
-        for i in 1 .. regexp_count(p_string_value, '\' || p_delimiter) + 1 loop
-          l_args.extend;
-          l_args(i) := regexp_substr(p_string_value, '[^\' || p_delimiter || ']+', 1, i);
-        end loop;
-      else
-        l_args.extend;
-        l_args(1) := p_string_value;
-      end if;
-    end if;
-    return l_args;
-  end string_to_table;
+  /**
+    Group: Public text methods
+   */
   
   
+  /**
+    Function: bulk_replace
+      See <PIT_UTIL.bulk_replace>
+   */
   function bulk_replace(
     p_string in varchar2,
     p_chunks in char_table)
@@ -166,6 +319,10 @@ as
   end bulk_replace;
 
 
+  /**
+    Procedure: clob_append
+      See <PIT_UTIL.clob_append>
+   */
   procedure clob_append(
     p_clob in out nocopy clob,
     p_chunk in clob)
@@ -180,6 +337,10 @@ as
   end clob_append;
   
   
+  /**
+    Function: concatenate
+      See <PIT_UTIL.concatenate>
+   */
   function concatenate(
     p_chunk_list char_table,
     p_delimiter varchar2,
@@ -198,6 +359,29 @@ as
   end concatenate;
   
   
+  /**
+    Function: harmonize_name
+      See <PIT_UTIL.harmonize_name>
+   */
+  function harmonize_name(
+    p_prefix in varchar2,
+    p_name in varchar2)
+    return varchar2
+  as
+    l_harmonized_name max_sql_char;
+  begin
+    l_harmonized_name := p_name;
+    if substr(upper(p_name), 1, length(p_prefix)) != upper(p_prefix) then
+      l_harmonized_name := p_prefix || l_harmonized_name;
+    end if;
+    return upper(l_harmonized_name);
+  end harmonize_name;
+  
+  
+  /**
+    Function: harmonize_sql_name
+      See <PIT_UTIL.harmonize_sql_name>
+   */
   function harmonize_sql_name(
     p_name in varchar2,
     p_prefix in varchar2 default null,
@@ -228,90 +412,13 @@ as
   end harmonize_sql_name;
   
   
-  function harmonize_name(
-    p_prefix in varchar2,
-    p_name in varchar2)
-    return varchar2
-  as
-    l_harmonized_name max_sql_char;
-  begin
-    l_harmonized_name := p_name;
-    if substr(upper(p_name), 1, length(p_prefix)) != upper(p_prefix) then
-      l_harmonized_name := p_prefix || l_harmonized_name;
-    end if;
-    return upper(l_harmonized_name);
-  end harmonize_name;
-  
-  
-  function to_bool(
-    p_boolean in boolean)
-    return flag_type
-  as
-    l_result flag_type;
-  begin
-    if p_boolean is not null then
-      if p_boolean then
-        l_result := C_TRUE;
-      else
-        l_result := C_FALSE;
-      end if;
-    end if;
-    return l_result;
-  end to_bool;
-  
-  
-  function to_bool(
-    p_boolean in flag_type)
-    return boolean
-  as
-  begin
-    return p_boolean = C_TRUE;
-  end to_bool;
-  
-  
-  function get_error_name(
-    p_pms_name in pit_message.pms_name%type)
-    return varchar2
-  as
-  begin
-    return g_error_prefix || p_pms_name || g_error_postfix;
-  end get_error_name;
-
-
-  function cast_to_msg_args_char(
-    p_msg_args msg_args)
-    return msg_args_char
-  as
-    l_msg_args msg_args_char;
-  begin
-    if p_msg_args is not null then
-      l_msg_args := msg_args_char();
-      for i in p_msg_args.first .. p_msg_args.last loop
-        l_msg_args.extend;
-        l_msg_args(i) := dbms_lob.substr(p_msg_args(i), 4000, 1);
-      end loop;
-    end if;
-    return l_msg_args;
-  end cast_to_msg_args_char;
-    
-  function cast_to_msg_args(
-    p_msg_args msg_args_char)
-    return msg_args
-  as
-    l_msg_args msg_args;
-  begin
-    if p_msg_args is not null then
-      l_msg_args := msg_args();
-      for i in p_msg_args.first .. p_msg_args.last loop
-        l_msg_args.extend;
-        l_msg_args(i) := p_msg_args(i);
-      end loop;
-    end if;
-    return l_msg_args;
-  end cast_to_msg_args;
-  
-  
-  /**** VALIDATION ****/
+  /**
+    Group: Public validation helper methods
+   */
+  /**
+    Procedure: check_context_settings
+      See <PIT_UTIL.check_context_settings>
+   */
   procedure check_context_settings(
     p_context_name in ora_name_type,
     p_settings in varchar2)
@@ -334,6 +441,10 @@ as
   end check_context_settings;
   
   
+  /**
+    Procedure: check_toggle_settings
+      See <PIT_UTIL.check_toggle_settings>
+   */
   procedure check_toggle_settings(
     p_toggle_name in ora_name_type,
     p_module_list in varchar2,
@@ -359,8 +470,74 @@ as
     when no_data_found then
       raise context_missing;
   end check_toggle_settings;
+  
+  
+  /**
+    Group: Public conversion methods
+   */
+  /**
+    Function: cast_to_msg_args_char
+      See <PIT_UTIL.cast_to_msg_args_char>
+   */
+  function cast_to_msg_args_char(
+    p_msg_args msg_args)
+    return msg_args_char
+  as
+    l_msg_args msg_args_char;
+  begin
+    if p_msg_args is not null then
+      l_msg_args := msg_args_char();
+      for i in p_msg_args.first .. p_msg_args.last loop
+        l_msg_args.extend;
+        l_msg_args(i) := dbms_lob.substr(p_msg_args(i), 4000, 1);
+      end loop;
+    end if;
+    return l_msg_args;
+  end cast_to_msg_args_char;
+    
+    
+  /**
+    Function: cast_to_msg_args
+      See <PIT_UTIL.cast_to_msg_args>
+   */
+  function cast_to_msg_args(
+    p_msg_args msg_args_char)
+    return msg_args
+  as
+    l_msg_args msg_args;
+  begin
+    if p_msg_args is not null then
+      l_msg_args := msg_args();
+      for i in p_msg_args.first .. p_msg_args.last loop
+        l_msg_args.extend;
+        l_msg_args(i) := p_msg_args(i);
+      end loop;
+    end if;
+    return l_msg_args;
+  end cast_to_msg_args;
+    
+    
+  /**
+    Function: context_type_to_string
+      See <PIT_UTIL.context_type_to_string>
+   */
+  function context_type_to_string(
+    p_settings in context_type)
+    return varchar2
+  as
+    l_trace_timing flag_type;
+    l_trace_settings max_sql_char;
+  begin
+    l_trace_timing := to_bool(p_settings.trace_timing);
+    l_trace_settings := concatenate(char_table(p_settings.log_level, p_settings.trace_level, l_trace_timing, p_settings.module_list), C_CTX_DEL);
+    return l_trace_settings;
+  end context_type_to_string;
     
   
+  /**
+    Function: string_to_context_type
+      See <PIT_UTIL.string_to_context_type>
+   */
   procedure string_to_context_type(
     p_context_values in varchar2,
     p_context in out nocopy context_type)
@@ -393,21 +570,74 @@ as
     p_context.trace_timing := to_bool(get_setting(l_args, 3));
     p_context.module_list := get_setting(l_args, 4);
   end string_to_context_type;
-    
-    
-  function context_type_to_string(
-    p_settings in context_type)
-    return varchar2
+  
+  
+  /**
+    Function: string_to_table
+      See <PIT_UTIL.string_to_table>
+   */
+  function string_to_table(
+    p_string_value in varchar2,
+    p_delimiter in varchar2 := ':')
+    return args
   as
-    l_trace_timing flag_type;
-    l_trace_settings max_sql_char;
+    l_args args := args();
   begin
-    l_trace_timing := to_bool(p_settings.trace_timing);
-    l_trace_settings := concatenate(char_table(p_settings.log_level, p_settings.trace_level, l_trace_timing, p_settings.module_list), C_CTX_DEL);
-    return l_trace_settings;
-  end context_type_to_string;
+    if p_string_value is not null then
+      if instr(p_string_value, p_delimiter) > 0 then
+        for i in 1 .. regexp_count(p_string_value, '\' || p_delimiter) + 1 loop
+          l_args.extend;
+          l_args(i) := regexp_substr(p_string_value, '[^\' || p_delimiter || ']+', 1, i);
+        end loop;
+      else
+        l_args.extend;
+        l_args(1) := p_string_value;
+      end if;
+    end if;
+    return l_args;
+  end string_to_table;
   
   
+  /**
+    Function: to_bool
+      See <PIT_UTIL.to_bool>
+   */
+  function to_bool(
+    p_boolean in flag_type)
+    return boolean
+  as
+  begin
+    return p_boolean = C_TRUE;
+  end to_bool;
+
+  /**
+    Function: to_bool
+      See <PIT_UTIL.to_bool>
+   */
+  function to_bool(
+    p_boolean in boolean)
+    return flag_type
+  as
+    l_result flag_type;
+  begin
+    if p_boolean is not null then
+      if p_boolean then
+        l_result := C_TRUE;
+      else
+        l_result := C_FALSE;
+      end if;
+    end if;
+    return l_result;
+  end to_bool;
+  
+  
+  /**
+    Group: Public helper methods
+   */
+  /**
+    Procedure: recompile_invalid_objects
+      See <PIT_UTIL.recompile_invalid_objects>
+   */
   procedure recompile_invalid_objects
   as
     -- Constants
@@ -490,85 +720,6 @@ as
       end loop;
     end loop;
   end recompile_invalid_objects;
-  
-
-  procedure get_module_and_action(
-    p_module in out nocopy varchar2,
-    p_action in out nocopy varchar2)
-  as
-    l_depth binary_integer;
-  begin
-    if p_action is null or p_module is null then
-      l_depth := utl_call_stack.dynamic_depth;
-      for i in 1 .. l_depth loop
-        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
-          l_depth := i;
-          exit;
-        end if;
-      end loop;
-      
-      -- Set action and module to the first non excluded entry
-      begin
-        p_action := harmonize_name(utl_call_stack.subprogram(l_depth)(2));
-        p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
-      exception
-        when others then
-          -- when called from an anonymous block, not all values may have entries
-          p_action := harmonize_name(null, utl_call_stack.subprogram(l_depth)(1));
-      end;
-    end if;
-  end get_module_and_action;
-  
-  
-  function get_call_stack
-    return varchar2
-  as
-    l_depth binary_integer;
-    l_stack max_char;
-  begin
-    l_depth := utl_call_stack.dynamic_depth;
-    
-    append(l_stack, g_call_stack_template);
-    
-    for i in 1 .. l_depth loop
-      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
-        append(l_stack,
-          lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' ' ||
-          rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
-          utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
-      end if;
-    end loop;
-    
-    return l_stack;
-  end get_call_stack;
-  
-  
-  function get_error_stack
-    return varchar2
-  as
-    l_depth binary_integer;
-    l_stack max_char;
-  begin
-    l_depth := utl_call_stack.error_depth;
-    
-    append(l_stack, g_error_stack_template);
-
-    for i in 1 .. l_depth loop
-      begin
-        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
-          append(l_stack,
-            lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' '  ||
-            rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
-            utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
-        end if;
-      exception
-        when utl_call_stack.BAD_DEPTH_INDICATOR then
-          append(l_stack, 'Bad depth indicator error raised');
-      end;
-    end loop;
-    
-    return l_stack;
-  end get_error_stack;
   
 begin
   initialize;

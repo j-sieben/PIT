@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("nam",["Type"],[["named_ctx_list_tab",,[["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.named_ctx_list_tab","SQLClass:PIT_UTIL:named_ctx_list_tab"]]]]);

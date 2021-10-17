@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("cha",["Type"],[["char_table",,[[,,,,0,"File:core/types/char_table.tps:char_table"]]]]);

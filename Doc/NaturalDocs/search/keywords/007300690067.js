@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("sig",["Type"],[["sign_type",,[["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.sign_type","SQLClass:PIT_UTIL:sign_type"]]]]);

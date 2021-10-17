@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("for",["Constant","Function"],[["FORMAT_ICO",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.FORMAT_ICO","SQLClass:PIT:FORMAT_ICO"]]],["format_icu",,[[,,,,1,"File:core/types/message_type.tps:format_icu"]]],["Formatting",,[["PIT","Formatting constants",,,0,"File:core/packages/pit.pks:PIT.Formatting_constants","SQLClass:PIT:Formatting_constants"]]]]);

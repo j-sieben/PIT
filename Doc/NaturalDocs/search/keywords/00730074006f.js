@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("sto",["Function"],[["stop",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.stop","SQLClass:PIT:stop"]]],["stop_message_collection",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.stop_message_collection","SQLClass:PIT:stop_message_collection"]]]]);

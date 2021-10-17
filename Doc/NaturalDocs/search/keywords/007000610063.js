@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("pac",["Variable"],[["Package",,[["PIT_ADMIN Body","Package variables",,,0,"File:core/packages/pit_admin.pkb:PIT_ADMIN_Body.Package_variables","SQLClass:PIT_ADMIN_Body:Package_variables"],["PIT_PKG Body","Package variables",,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.Package_variables","SQLClass:PIT_PKG_Body:Package_variables"]]]]);

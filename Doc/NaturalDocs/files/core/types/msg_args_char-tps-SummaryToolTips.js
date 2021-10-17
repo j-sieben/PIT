@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:core/types/msg_args_char.tps",{13:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">CHAR based version of MSG_ARGS. Required if params are to be saved in a table.</div></div>"});

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("loa",["Function"],[["load_adapter",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.load_adapter","SQLClass:PIT_PKG_Body:load_adapter"]]]]);
