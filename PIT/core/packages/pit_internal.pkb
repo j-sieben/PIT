@@ -1251,10 +1251,9 @@ as
         p_module => l_module,
         p_action => l_action);
       
-      l_action := coalesce(p_action, l_action);
       l_context := get_toggle_context(
-                    p_module => l_module, 
-                    p_method => l_action);
+                     p_module => l_module, 
+                     p_method => l_action);
       
       push_stack(
         p_module => l_module,
