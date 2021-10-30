@@ -21,7 +21,7 @@ as
   
   
   function level_off
-  return number
+  return binary_integer
    deterministic
   as
   begin
@@ -30,7 +30,7 @@ as
   
   
   function level_fatal
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -39,7 +39,7 @@ as
   
   
   function level_error
-    return number
+    return binary_integer
     deterministic
   as
   begin
@@ -48,7 +48,7 @@ as
   
   
   function level_warn
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -57,7 +57,7 @@ as
   
   
   function level_info
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -66,7 +66,7 @@ as
   
   
   function level_debug
-    return number
+    return binary_integer
     deterministic
   as
   begin
@@ -75,7 +75,7 @@ as
   
   
   function level_all
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -84,7 +84,7 @@ as
   
   
   function trace_off
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -93,7 +93,7 @@ as
   
   
   function trace_mandatory
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -102,7 +102,7 @@ as
   
   
   function trace_optional
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -111,7 +111,7 @@ as
   
   
   function trace_detailed
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -120,7 +120,7 @@ as
   
   
   function trace_all
-  return number
+  return binary_integer
     deterministic
   as
   begin
@@ -167,6 +167,13 @@ as
   
   
   /****************************** LOGGING AND DEBUGGING *********************************/
+  function get_log_level
+    return binary_integer
+  as
+  begin
+    return pit_internal.get_log_level;
+  end get_log_level;
+  
   
   function check_log_level_greater_equal(
     p_log_level in pls_integer)
@@ -176,7 +183,15 @@ as
     return pit_internal.check_log_level_greater_equal(p_log_level);
   end check_log_level_greater_equal;
   
-     
+  
+  function get_trace_level
+    return binary_integer
+  as
+  begin
+    return pit_internal.get_trace_level;
+  end get_trace_level;
+  
+  
   function check_trace_level_greater_equal(
     p_trace_level in pls_integer)
     return boolean

@@ -70,6 +70,17 @@ as
     return boolean;
     
     
+  /**
+    Function: get_log_level
+      Method returns the actually set log level.
+      
+    Returns:
+      Log level that is actually active.
+   */
+  function get_log_level
+    return binary_integer;
+    
+    
   /** 
     Function: check_log_level_greater_equal
       Method checks whether the actually valid log level is greater or equal to <P_LOG_LEVEL>.
@@ -86,6 +97,17 @@ as
   function check_log_level_greater_equal(
     p_log_level in pls_integer)
     return boolean;
+    
+    
+  /**
+    Function: get_trace_level
+      Method returns the actually set trace level.
+      
+    Returns:
+      Trace level that is actually active.
+   */
+  function get_trace_level
+    return binary_integer;
     
   
   /**

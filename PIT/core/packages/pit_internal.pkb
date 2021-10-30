@@ -304,7 +304,6 @@ as
     return pit_util.context_type
   as
     l_args args;
-    l_settings pit_util.max_sql_char;
     l_context pit_util.context_type;
   begin
     -- Initialisierung   
@@ -318,23 +317,25 @@ as
      l_args := args(C_CONTEXT_ACTIVE, C_CONTEXT_DEFAULT); 
     end if;
     
-    l_settings := utl_context.get_first_match(
-                    p_context => C_GLOBAL_CONTEXT, 
-                    p_attribute_list => l_args, 
-                    p_with_name => true, 
-                    p_client_id => g_client_id);
+    l_context.settings := 
+      utl_context.get_first_match(
+        p_context => C_GLOBAL_CONTEXT, 
+        p_attribute_list => l_args, 
+        p_with_name => true, 
+        p_client_id => g_client_id);
       
-    if l_settings is null then
+    if l_context.settings is null then
       raise_application_error(-20000, 'No context settings found for context ' || C_CONTEXT_DEFAULT);
     end if;
                     
     pit_util.string_to_context_type(
-      p_context_values => l_settings, 
+      p_context_values => l_context.settings, 
       p_context => l_context);
     
     -- copy global context settings
     l_context.allow_toggle := g_context.allow_toggle;
     l_context.broadcast_context_switch := g_context.broadcast_context_switch;
+    l_context.ctx_changed := false;
     
     return l_context;
   end read_best_matching_context;
@@ -367,12 +368,12 @@ as
     l_args args;
     l_actual_context pit_util.context_type;
   begin
-    -- load settings from global context
+    -- load settings from global context    
+    l_actual_context := read_best_matching_context;
+    
     -- If session adapter mandates for a context, this has precedence over local settings
     g_context := read_best_matching_context(args(p_context_name));        
     g_active_modules := get_modules_by_name(g_context.module_list);
-    
-    l_actual_context := read_best_matching_context;
     g_context.ctx_changed := g_context.settings != l_actual_context.settings;
       
   end copy_context_to_global;
@@ -422,8 +423,7 @@ as
   as
   begin
     
-    -- If it has not been decided whether the new settings differ from actual settings, do so here
-    if p_context.ctx_changed is null then
+    if g_context.settings is null then
       g_context := read_best_matching_context;
     end if;
     
@@ -1102,6 +1102,19 @@ as
     report_module_status;
   end initialize;
   
+  
+  /**
+    Function: get_log_level
+      See <PIT_INTERNAL.get_log_level>
+   */
+  function get_log_level
+    return binary_integer
+  as
+  begin
+    copy_actual_context_to_global;
+    return greatest(g_context.log_level, C_LEVEL_ERROR);
+  end get_log_level;
+  
 
   /**
     Function: check_log_level_greater_equal
@@ -1114,6 +1127,19 @@ as
   begin
     return log_me(p_log_level);
   end check_log_level_greater_equal;
+  
+  
+  /**
+    Function: get_trace_level
+      See <PIT_INTERNAL.get_trace_level>
+   */
+  function get_trace_level
+    return binary_integer
+  as
+  begin
+    copy_actual_context_to_global;
+    return g_context.trace_level;
+  end get_trace_level;
   
   
   /**

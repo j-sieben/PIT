@@ -1,6 +1,7 @@
 create or replace view pit_message_v as
 with deflt as (
-       select pms_name, pms_pml_name, pms_pmg_name, pms_text, pms_description, pms_pse_id, pms_active_error
+       select pms_name, pms_pml_name, pms_pmg_name, pms_text, pms_description, pms_pse_id, 
+              pms_active_error
          from pit_message
         where pms_id is not null),
      trans as (

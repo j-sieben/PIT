@@ -31,19 +31,19 @@ as
       TRACE_OPTIONAL - Trace level for package internal procedure calls
       
    */
-  function level_off return number deterministic;
-  function level_fatal return number deterministic;
-  function level_error return number deterministic;
-  function level_warn return number deterministic;
-  function level_info return number deterministic;
-  function level_debug return number deterministic;
-  function level_all return number deterministic;
+  function level_off return binary_integer deterministic;
+  function level_fatal return binary_integer deterministic;
+  function level_error return binary_integer deterministic;
+  function level_warn return binary_integer deterministic;
+  function level_info return binary_integer deterministic;
+  function level_debug return binary_integer deterministic;
+  function level_all return binary_integer deterministic;
   
-  function trace_off return number deterministic;
-  function trace_mandatory return number deterministic;
-  function trace_optional return number deterministic;
-  function trace_detailed return number deterministic;
-  function trace_all return number deterministic;
+  function trace_off return binary_integer deterministic;
+  function trace_mandatory return binary_integer deterministic;
+  function trace_optional return binary_integer deterministic;
+  function trace_detailed return binary_integer deterministic;
+  function trace_all return binary_integer deterministic;
   
   /**
     Constants: Formatting constants
@@ -68,7 +68,18 @@ as
   
   /**
     Group: Logging and Debugging methods
-   */ 
+   */
+  /**
+    Function: get_log_level
+      Method returns the actually set log level.
+      
+    Returns:
+      Log level that is actually active.
+   */
+  function get_log_level
+    return binary_integer;
+    
+    
   /** 
     Function: check_log_level_greater_equal
       Method checks whether the actually valid log level is greater or equal to P_LOG_LEVEL
@@ -85,6 +96,17 @@ as
   function check_log_level_greater_equal(
     p_log_level in pls_integer)
     return boolean;
+    
+    
+  /**
+    Function: get_trace_level
+      Method returns the actually set trace level.
+      
+    Returns:
+      Trace level that is actually active.
+   */
+  function get_trace_level
+    return binary_integer;
     
     
   /** 
