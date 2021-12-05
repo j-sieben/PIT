@@ -35,23 +35,21 @@ prompt &h2.Create views
 @&tools.install_view pit_trace_level_v
 
 prompt &h2.Create type declarations
-@&tools.install_type_spec args
 @&tools.install_type_spec char_table
 @&tools.install_type_spec msg_args
 @&tools.install_type_spec msg_args_char
 @&tools.install_type_spec msg_param
 @&tools.install_type_spec msg_params
 @&tools.install_type_spec message_type
-@&tools.install_type_spec pit_message_table
-@&tools.install_type_spec call_stack_type
-@&tools.install_type_spec log_state_type
+@&tools.install_type_spec pit_args
+@&tools.install_type_spec pit_context_type
+@&tools.install_type_spec pit_call_stack_type
 @&tools.install_type_spec pit_default_adapter
-@&tools.install_type_spec pit_context
+@&tools.install_type_spec pit_log_state_type
+@&tools.install_type_spec pit_message_table
 @&tools.install_type_spec pit_module
 @&tools.install_type_spec pit_module_meta
 @&tools.install_type_spec pit_module_list
-
-@&tools.install_type_body pit_context
 
 prompt &h2.Create ADMIN package declarations
 @&tools.install_package_spec pit_util
@@ -76,6 +74,8 @@ prompt &s1.Create internal messages
 prompt &h2.Create CORE package declarations
 @&tools.install_package_spec msg
 @&tools.install_package_spec pit
+@&tools.install_package_spec pit_context
+@&tools.install_package_spec pit_call_stack
 @&tools.install_package_spec pit_internal
 
 prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
@@ -84,11 +84,14 @@ prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
 prompt &h2.Create type bodies
 @&tools.install_type_body message_type
 @&tools.install_type_body msg_param
-@&tools.install_type_body call_stack_type
-@&tools.install_type_body log_state_type
+@&tools.install_type_body pit_call_stack_type
+@&tools.install_type_body pit_context_type
 @&tools.install_type_body pit_default_adapter
+@&tools.install_type_body pit_log_state_type
 @&tools.install_type_body pit_module
 
 prompt &h2.Create CORE package implementations
 @&tools.install_package_body pit
+@&tools.install_package_body pit_call_stack
+@&tools.install_package_body pit_context
 @&tools.install_package_body pit_internal

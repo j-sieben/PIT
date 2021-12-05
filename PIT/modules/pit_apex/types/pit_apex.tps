@@ -18,7 +18,7 @@ create type pit_apex under pit_module
    */
   overriding member procedure log(
     self in out nocopy pit_apex,
-    p_log_state log_state_type),
+    p_log_state pit_log_state_type),
   /** 
     Procedure: print
       See <PIT_MODULE.print>
@@ -42,14 +42,14 @@ create type pit_apex under pit_module
    */
   overriding member procedure enter (
     self in out nocopy pit_apex,
-    p_call_stack in call_stack_type),
+    p_call_stack in pit_call_stack_type),
   /**
     Procedure: leave
       See <PIT_MODULE.leave>
    */
   overriding member procedure leave (
     self in out nocopy pit_apex,
-    p_call_stack in call_stack_type),
+    p_call_stack in pit_call_stack_type),
   /** 
     Procedure: pit_apex
       Contructor function to instantiate the output module. Marks the module available only if an APEX session exists.

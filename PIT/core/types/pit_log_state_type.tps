@@ -1,4 +1,4 @@
-create or replace type log_state_type
+create or replace type pit_log_state_type
   authid definer
 is object (
   /**
@@ -21,8 +21,8 @@ is object (
       p_severity - Level of the entry
       p_params - Method parameters passed in
    */
-  constructor function log_state_type(
-    self in out nocopy log_state_type,
+  constructor function pit_log_state_type(
+    self in out nocopy pit_log_state_type,
     p_severity in integer,
     p_params in msg_params)
     return self as result

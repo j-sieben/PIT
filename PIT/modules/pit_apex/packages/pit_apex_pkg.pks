@@ -40,14 +40,14 @@ as
   /** 
     Procedure: log
       Method to write state information to the APEX debug stack.
-      Method implements the <PIT_APEX> log member procedure overload for <LOG_STATE_TYPE> and writes 
+      Method implements the <PIT_APEX> log member procedure overload for <PIT_LOG_STATE_TYPE> and writes 
       the key value pairs of <MSG_PARAM> to the console.
       
     Parameter:
-      p_log_state - Instance of <LOG_STATE_TYPE>
+      p_log_state - Instance of <PIT_LOG_STATE_TYPE>
    */
   procedure log (
-    p_log_state in log_state_type);
+    p_log_state in pit_log_state_type);
   
   
   /** 
@@ -90,10 +90,10 @@ as
       to the APEX debug stack. Requires an APEX log level of LEVEL5 or higher to show the entries.
       
     Parameter:
-      p_call_stack - Instance of <CALL_STACK_TYPE>
+      p_call_stack - Instance of <PIT_CALL_STACK_TYPE>
    */
   procedure enter(
-    p_call_stack in call_stack_type);
+    p_call_stack in pit_call_stack_type);
 
 
   /** 
@@ -104,10 +104,10 @@ as
       to the APEX debug stack. Requires an APEX log level of LEVEL5 or higher to show the entries.
       
     Parameter:
-      p_call_stack - Instance of <CALL_STACK_TYPE>
+      p_call_stack - Instance of <PIT_CALL_STACK_TYPE>
    */
   procedure leave(
-    p_call_stack in call_stack_type);
+    p_call_stack in pit_call_stack_type);
 
   
   /** 

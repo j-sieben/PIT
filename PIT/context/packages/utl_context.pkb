@@ -279,7 +279,7 @@ as
 
   function get_first_match(
     p_context in varchar2,
-    p_attribute_list in args,
+    p_attribute_list in pit_args,
     p_with_name in boolean default false,
     p_client_id varchar2 default null)
     return varchar2
@@ -287,15 +287,14 @@ as
     l_value sql_char;
   begin
     read_settings(p_context);
-    for i in p_attribute_list.first .. p_attribute_list.last loop
+    for i in 1 .. p_attribute_list.count loop
       l_value := sys_context(p_context, p_attribute_list(i));
       case
       when l_value is null and g_context_setting.with_fallback
       then -- Fallback auf allgemeinen Parameter
         l_value := get_with_client_id(
                      p_context, p_attribute_list(i), '');
-      when l_value is null and
-           g_context_setting.with_session_id
+      when l_value is null and g_context_setting.with_session_id
       then -- Lese sessionspezifischen Parameter
         l_value := get_with_client_id(
                      p_context, p_attribute_list(i),

@@ -709,7 +709,7 @@ end;
   procedure set_language_settings(
     p_pml_list in pit_util.max_sql_char)
   as
-    l_pml_list args;
+    l_pml_list pit_args;
     l_pml_default_order pit_message_language.pml_default_order%type;
   begin
 

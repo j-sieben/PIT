@@ -7,15 +7,15 @@ create type pit_table under pit_module(
   
   /** Method to insert state information into table PIT_TABLE_PARAMS */
   overriding member procedure log(
-    p_log_state in log_state_type),
+    p_log_state in pit_log_state_type),
     
   /** Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS */
   overriding member procedure enter (
-    p_call_stack call_stack_type),
+    p_call_stack pit_call_stack_type),
     
   /** Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS */
   overriding member procedure leave (
-    p_call_stack call_stack_type),
+    p_call_stack pit_call_stack_type),
     
   /** Method to clean up log tables based on purge date and/or severity */
   overriding member procedure purge(

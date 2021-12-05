@@ -36,39 +36,6 @@ as
   /**
     Group: Data types
    */
-  /**
-    Type: context_type
-      Record to store log and trace settings
-    
-    Properties:
-      context_name - Name of the context, is used to identify a stored context
-      settings - Condensed string with settings for log/trace level, flag_timing and module list
-      log_level - On of the C_LEVEL constants, controls logging
-      trace_level - On of the C_TRACE constants, controls tracing
-      trace_timing - Flag to control whether timing information for methods are calculated
-      module_list - Colon separated list of output modules
-      allow_toggle - Flag to indicate whether logging can be switched on and off based on package names (toggles)
-      broadcast_context_switch - Flag to indicate whether a context switch should be broadcasted to all instantiated output modules
-      ctx_changed - Flag to indicate whether context has changed in comparison to actual context
-   */
-  type context_type is record (
-    context_name pit_util.ora_name_type,
-    settings pit_util.max_sql_char,
-    log_level binary_integer,
-    trace_level binary_integer,
-    trace_timing boolean,
-    module_list pit_util.max_sql_char,
-    allow_toggle boolean,
-    broadcast_context_switch boolean,
-    ctx_changed boolean := true);
-    
-  /**
-    Type: named_ctx_list_tab
-      List of <CONTEXT_TYPE> indexed by <ORA_NAME_TYPE>
-   */
-  type named_ctx_list_tab is table of context_type index by ora_name_type;
-    
-
   /** 
     Type: translatable_item_rec
       Record to grant access to a translatable item
@@ -355,37 +322,9 @@ as
     return msg_args;
     
     
-  /** 
-    Function: context_type_to_string
-      Method to cast an instance of <CONTEXT_TYPE> to VARCHAR2
-      
-    Parameter:
-      p_settings - Only enough attributes to allow for storage within the context are put together.
-      
-    Returns:
-      String with a pipe separated list of DEBUG_LEVEL|TRACE_LEVEL|TIMING_FLAG|MODULE_LIST
-   */
-  function context_type_to_string(
-    p_settings in context_type)
-    return varchar2;
-    
-    
-  /** 
-    Procedure: string_to_context_type
-      Method to cast a context value read from the globally accessed context to a context type record.
-      
-    Parameters:
-      p_context_values - String as read from <UTL_CONTEXT.get_first_match> or from call stack
-      p_context - Instance of <CONTEXT_TYPE>
-   */
-  procedure string_to_context_type(
-    p_context_values in varchar2,
-    p_context in out nocopy context_type);
-    
-    
   /**
     Function: string_to_table
-      Helper to convert a string with a given separator into an instance of type ARGS.
+      Helper to convert a string with a given separator into an instance of type PIT_ARGS.
       Internal helper to split a string into an array of chars.
       
     Parameters:
@@ -393,12 +332,29 @@ as
       p_delimiter - Optional character that separates the items in <p_string_value>. Defaults to colon (:)
       
     Returns:
-      Array of items (up to 50) of VARCHAR2
+      Instance of <PIT_ARGS>
    */
   function string_to_table(
     p_string_value in varchar2,
     p_delimiter in varchar2 := ':')
-    return args;
+    return pit_args;
+    
+    
+  /**
+    Function: table_to_string
+      Helper to convert a <PIT_ARGS> instance to a string with a given separator.
+      
+    Parameters:
+      p_table - Instance of <PIT_ARGS>
+      p_delimiter - Optional character that combines the items in <p_table>. Defaults to colon (:)
+      
+    Returns:
+      String containig all non null entries from <p_table>
+   */
+  function table_to_string(
+    p_table in pit_args,
+    p_delimiter in varchar2 := ':')
+  return varchar2;
     
     
   /** 

@@ -17,14 +17,6 @@ as
     return pls_integer;
     
   
-  /** Method to get the actually valid context settings as a HTML string
-   * %usage  Is used to query the actually valid context settings
-   * %return SQL query that emits the actually valid context settings
-   */
-  function get_active_context
-    return varchar2;
-    
-  
   /** Wrapper around PIT_UTIL.harmonize_sql_name
    * %param  p_item_name  Name of the page item containing the SQL name
    * %param [p_prefix]    Optional prefix for the resulting name

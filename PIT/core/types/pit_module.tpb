@@ -5,7 +5,7 @@ as
   
   member procedure context_changed(
     self in out nocopy pit_module,
-    p_ctx in pit_context)
+    p_ctx in pit_context_type)
   as
   begin
     null;
@@ -21,7 +21,7 @@ as
   
   member procedure log (
     self in out nocopy pit_module,
-    p_log_state in log_state_type)
+    p_log_state in pit_log_state_type)
   as
   begin
     null;
@@ -45,7 +45,7 @@ as
   
   member procedure enter (
     self in out nocopy pit_module,
-    p_call_stack call_stack_type)
+    p_call_stack pit_call_stack_type)
   as
   begin
     null;
@@ -53,7 +53,7 @@ as
   
   member procedure leave (
     self in out nocopy pit_module,
-    p_call_stack call_stack_type)
+    p_call_stack pit_call_stack_type)
   as
   begin
     null;

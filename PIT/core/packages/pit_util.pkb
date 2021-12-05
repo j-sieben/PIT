@@ -513,61 +513,6 @@ as
     end if;
     return l_msg_args;
   end cast_to_msg_args;
-    
-    
-  /**
-    Function: context_type_to_string
-      See <PIT_UTIL.context_type_to_string>
-   */
-  function context_type_to_string(
-    p_settings in context_type)
-    return varchar2
-  as
-    l_trace_timing flag_type;
-    l_trace_settings max_sql_char;
-  begin
-    l_trace_timing := to_bool(p_settings.trace_timing);
-    l_trace_settings := concatenate(char_table(p_settings.log_level, p_settings.trace_level, l_trace_timing, p_settings.module_list), C_CTX_DEL);
-    return l_trace_settings;
-  end context_type_to_string;
-    
-  
-  /**
-    Function: string_to_context_type
-      See <PIT_UTIL.string_to_context_type>
-   */
-  procedure string_to_context_type(
-    p_context_values in varchar2,
-    p_context in out nocopy context_type)
-  as
-    l_position binary_integer;
-    l_args args;
-    
-    function get_setting(p_settings args, p_idx number)
-      return varchar2
-    as
-      l_setting max_sql_char;
-    begin
-      if p_settings.exists(p_idx) then
-        l_setting := p_settings(p_idx);
-      end if;
-      return l_setting;
-    end get_setting;
-  begin
-    l_position := instr(p_context_values, utl_context.C_NAME_DELIMITER);
-    if l_position > 0 then
-      p_context.settings := substr(p_context_values, 1, l_position - 1);
-      p_context.context_name := substr(p_context_values, l_position + 1);
-    else
-      p_context.settings := p_context_values;
-    end if;
-      
-    l_args := string_to_table(p_context.settings, '|');    
-    p_context.log_level := to_number(get_setting(l_args, 1));
-    p_context.trace_level := to_number(get_setting(l_args, 2));
-    p_context.trace_timing := to_bool(get_setting(l_args, 3));
-    p_context.module_list := get_setting(l_args, 4);
-  end string_to_context_type;
   
   
   /**
@@ -577,9 +522,9 @@ as
   function string_to_table(
     p_string_value in varchar2,
     p_delimiter in varchar2 := ':')
-    return args
+    return pit_args
   as
-    l_args args := args();
+    l_args pit_args := pit_args();
   begin
     if p_string_value is not null then
       if instr(p_string_value, p_delimiter) > 0 then
@@ -594,6 +539,29 @@ as
     end if;
     return l_args;
   end string_to_table;
+  
+  
+  /**
+    Function: table_to_string
+      See <PIT_UTIL.table_to_string>
+   */
+  function table_to_string(
+    p_table in pit_args,
+    p_delimiter in varchar2 := ':')
+  return varchar2
+  as
+    l_string pit_util.max_char;
+  begin
+    for i in 1 .. p_table.count loop
+      if p_table(i) is not null then
+        if i > 1 then
+          l_string := l_string || p_delimiter;
+        end if;
+        l_string := l_string || p_table(i);
+      end if;
+    end loop;
+    return l_string;
+  end table_to_string;
   
   
   /**

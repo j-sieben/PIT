@@ -14,7 +14,7 @@ create or replace type body pit_apex as
    
    overriding member procedure log(
     self in out nocopy pit_apex,
-      p_log_state in log_state_type)
+      p_log_state in pit_log_state_type)
    as
    begin
       pit_apex_pkg.log(p_log_state);
@@ -38,7 +38,7 @@ create or replace type body pit_apex as
    
    overriding member procedure enter(
     self in out nocopy pit_apex,
-      p_call_stack in call_stack_type)
+      p_call_stack in pit_call_stack_type)
    as
    begin
       pit_apex_pkg.enter(p_call_stack);
@@ -46,7 +46,7 @@ create or replace type body pit_apex as
    
    overriding member procedure leave(
     self in out nocopy pit_apex,
-      p_call_stack in call_stack_type)
+      p_call_stack in pit_call_stack_type)
    as
    begin
       pit_apex_pkg.leave(p_call_stack);

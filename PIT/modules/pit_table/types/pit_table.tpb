@@ -13,7 +13,7 @@ create or replace type body pit_table as
   end log;
     
   overriding member procedure log(
-    p_log_state in log_state_type)
+    p_log_state in pit_log_state_type)
   as
   begin
     if p_log_state.severity <= fire_threshold then
@@ -22,14 +22,14 @@ create or replace type body pit_table as
   end log;
   
   overriding member procedure enter(
-    p_call_stack call_stack_type)
+    p_call_stack pit_call_stack_type)
   as
   begin
     pit_table_pkg.enter(p_call_stack);
   end enter;
   
   overriding member procedure leave(
-    p_call_stack call_stack_type)
+    p_call_stack pit_call_stack_type)
   as
   begin
     pit_table_pkg.leave(p_call_stack);

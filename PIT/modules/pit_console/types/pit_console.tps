@@ -18,7 +18,7 @@ create or replace type pit_console force under pit_module(
    */
   overriding member procedure log(
     self in out nocopy pit_console,
-    p_log_state log_state_type),
+    p_log_state pit_log_state_type),
     
   /**
     Procedure: print
@@ -41,7 +41,7 @@ create or replace type pit_console force under pit_module(
    */
   overriding member procedure enter(
     self in out nocopy pit_console,
-    p_call_stack call_stack_type),
+    p_call_stack pit_call_stack_type),
     
   /**
     Procedure: leave
@@ -49,7 +49,7 @@ create or replace type pit_console force under pit_module(
    */
   overriding member procedure leave (
     self in out nocopy pit_console,
-    p_call_stack call_stack_type),
+    p_call_stack pit_call_stack_type),
     
   /**
     Procedure: context_changed
@@ -57,7 +57,7 @@ create or replace type pit_console force under pit_module(
    */
   overriding member procedure context_changed(
     self in out nocopy pit_console,
-    p_ctx in pit_context),
+    p_ctx in pit_context_type),
     
   /** Constructor function */
   constructor function pit_console (

@@ -69,64 +69,6 @@ as
     p_accept_null in boolean)
     return boolean;
     
-    
-  /**
-    Function: get_log_level
-      Method returns the actually set log level.
-      
-    Returns:
-      Log level that is actually active.
-   */
-  function get_log_level
-    return binary_integer;
-    
-    
-  /** 
-    Function: check_log_level_greater_equal
-      Method checks whether the actually valid log level is greater or equal to <P_LOG_LEVEL>.
-      
-      Allows external code to check whether PIT is in a given log level. 
-      This is useful to run logic only if it would be logged anyway.
-      
-    Parameter:
-      p_log_level - Severity to check, one of the constants C_LEVEL_... of this package
-      
-    Returns:
-      TRUE, if the acutally log level is greater or equal to <P_LOG_LEVEL>, FALSE otherwise
-   */
-  function check_log_level_greater_equal(
-    p_log_level in pls_integer)
-    return boolean;
-    
-    
-  /**
-    Function: get_trace_level
-      Method returns the actually set trace level.
-      
-    Returns:
-      Trace level that is actually active.
-   */
-  function get_trace_level
-    return binary_integer;
-    
-  
-  /**
-    Function: check_trace_level_greater_equal
-      Method checks whether the actually valid trace level is greater or equal to <P_TRACE_LEVEL>.
-      
-      Allows external code to check whether PIT is in a given trace level. 
-      This is useful to run logic only if it would be traced anyway.
-      
-    Parameter:
-      p_log_level - Severity to check, one of the constants C_TRACE_... of this package
-      
-    Returns:
-      TRUE, if the acutally trace level is greater or equal to <P_TRACE_LEVEL>, FALSE otherwise
-   */
-  function check_trace_level_greater_equal(
-    p_trace_level in pls_integer)
-    return boolean;
-    
   
   /** 
     Procedure: enter
@@ -193,17 +135,6 @@ as
     p_msg_args in msg_args)
     return clob;
     
-    
-  /** 
-    Function:get_actual_call_stack_depth
-      Method to retrieve the actual call stack depth. Used internally to check whether the call stack is correctly maintained.
-      
-    Returns:
-      Actual stack depth
-   */
-  function get_actual_call_stack_depth
-    return pls_integer;
-    
 
   /** 
     Function: get_trans_item
@@ -259,12 +190,13 @@ as
     Parameters:
       p_trace_level - Trace level to allow for selective tracing.
       p_params - Instance of <msg_params> with a list of key-value pairs representing parameter name and -value.
-      p_on_error - Flag to indicate whether leave method was called in connection with error handling
+      p_severity - Indicates whether leave was called in the vicinity of error handling. Based on severity, 
+                   either any entry up to the calling entry is popped from stack or the stack is completely emptied.
    */
   procedure leave(
     p_trace_level in pls_integer,
     p_params in msg_params,
-    p_on_error in boolean default false);  
+    p_severity in binary_integer default null);  
     
     
   /** 
@@ -290,7 +222,7 @@ as
   
 
   /** 
-    Procedure: log_specific
+    Procedure: log_explicit
       Logs messages regardless of log settings. It takes the message_name and constructs an instance of 
       <MESSAGE_TYPE> for it. It then calls any log procedure of all active output modules and passes the message, 
       regardless of the actual log settings.
@@ -308,7 +240,7 @@ as
                       for this single call only. It does not affected the overall
                       log module settings for the active or default context
    */
-  procedure log_specific(
+  procedure log_explicit(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
     p_error_code in varchar2,
@@ -334,38 +266,6 @@ as
   procedure log_state(
     p_params in msg_params,
     p_severity in pit_message_severity.pse_id%type default null);
-  
-  
-  /** 
-    Procedure: long_op
-      Sets dbms_application_info.
-      
-      Use this procedure to pass information about long operations to the database. If this task is completed, 
-      call this procedure with
-      
-      --- SQL
-      p_sofar = p_total (or p_sofar = 100)
-      ---
-      
-      to allow for proper state cleansing.
-      
-      If you call <pit.HANDLE_EXCEPTION> or <pit.STOP>, the state will be cleaned as well.
-      This method will work only if tracing is enabled, as it takes the method name from the call stack and
-      persist the actual index with the call stack.
-      
-    Parameters:
-      p_target - Description of the operation
-      p_sofar - Percentage of the task completed (0 .. 100 or individual scale)
-      p_total - Amount of work to be done
-      p_units - Unit of work, eg. "rows processed" or similar
-      p_op_name - Actual action. Either passed in manually or taken from the method name
-   */
-  procedure long_op(
-    p_target in varchar2,
-    p_sofar in number,
-    p_total in number,
-    p_units in varchar2,
-    p_op_name in varchar2);
   
 
   /** 
@@ -455,30 +355,27 @@ as
     Group: Context maintenance
    */
   /** 
-    Function: get_context
-      Functon to retrieve the actual context as an instance of <pit_util.CONTEXT_TYPE>.
-      is called if an external function wishes to persist the actual settings and reset them later
-      
-    Returns:
-      Instance of context_type filled with the actually valid settings
-   */
-  function get_context
-    return pit_util.context_type;
-    
-    
-  /** 
     Procedure: set_context
       Procedure to change the settings in the global PIT_CONTEXT.
       
       This procedure is used if log settings have to be changed dynamically.
-      Normal usage is to overwrite log settings as defined in the parameters for a given session.
+      This method is either called with an existing context name or with explicit log settings.
+      If the method is called with an exising context name, the settings are derived from the
+      parameters for that context. Otherwise, an anonymous context is copied to the active context.
       
     Parameter:
-      p_context  Instance of <PIT_UTIL.context_type>
-   */
-  
+      p_context_name - Optional name of the context
+      p_log_level - Optional log level of the context
+      p_trace_level - Optional trace level of the context
+      p_trace_timing - Optional flag to indicate whether timing should be switched on
+      p_log_modules - Optional list of log modules to log to
+   */  
   procedure set_context(
-    p_context in pit_util.context_type);
+    p_context_name in varchar2 default null,
+    p_log_level in integer default null,
+    p_trace_level in integer default null,
+    p_trace_timing in boolean default null,
+    p_log_modules in varchar2 default null);
   
   
   /* 
@@ -510,26 +407,6 @@ as
   procedure set_context_value(
     p_name in varchar2,
     p_value in varchar2);
-    
-  
-  /** 
-    Procedure: reset_active_context
-      Procedure to reset log settings to the default settings.
-      
-      If settings for a session were changed, calling this procedure resets these settings 
-      to the default settings as defined by the parameters.
-   */
-  procedure reset_active_context;
-  
-  
-  /** 
-    Procedure reset_context
-      Procedure to reset the complete context to default settings
-      
-      Use this procedure to rest all session settings to the  default settings. 
-      Be aware that calling this procedure will reset ALL log settings of ALL sessions to default
-   */
-  procedure reset_context;
   
   
   /**
@@ -590,57 +467,6 @@ as
    */
   function get_message_collection
     return pit_message_table;
-    
-  
-  /** 
-    Group: Module maintenance methods
-   */
-  /** 
-    Function: get_active_modules
-      Function to retrieve a list of active modules.
-      
-    Returns:
-      <ARGS>, List of module names
-   */
-  function get_active_modules
-   return args
-   pipelined;
-    
-    
-  /** 
-    Function: get_available_modules
-      Function to retrieve a list of available modules. A module is AVAILABLE if it could be initialized succesfully.
-      
-    Returns:
-      <ARGS>, List of module names
-   */
-  function get_available_modules
-   return args
-   pipelined;
-   
-   
-  /**
-    Function: get_modules
-      Function to retrieve a list of all installed modules.
-      
-    Returns:
-      <PIT_MODULE_LIST>, List of modules, availabilty and active status
-   */
-  function get_modules
-    return pit_module_list
-    pipelined;
-   
-   
-  /** 
-    Function: report_module_status
-      Function to retrieve status of all modules
-    
-    Returns:
-      <ARGS>, List of module names
-   */
-  function report_module_status
-    return args 
-    pipelined;
  
 end pit_internal;
 /

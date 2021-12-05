@@ -6,6 +6,9 @@ define tools=tools/
 prompt &h2.Installation in Schema &REMOTE_USER.
 prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 
+-- Types
+@&tools.grant_access.sql execute PIT_CONTEXT_TYPE
+
 -- Packages
 @&tools.grant_access.sql execute MAIL
 @&tools.grant_access.sql execute PIT_APEX_PKG
@@ -34,6 +37,7 @@ prompt &h3.Create UI-VIEWS
 @&tools.install_view pit_ui_admin_par
 @&tools.install_view pit_ui_admin_par_realm
 @&tools.install_view pit_ui_edit_pgr
+@&tools.install_view pit_ui_admin_pit_active_context
 @&tools.install_view pit_ui_admin_pit_context
 @&tools.install_view pit_ui_admin_pit_module
 @&tools.install_view pit_ui_admin_pit_toggle

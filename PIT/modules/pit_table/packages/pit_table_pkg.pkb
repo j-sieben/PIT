@@ -1,17 +1,30 @@
 create or replace package body pit_table_pkg 
 as
-
-  /** Implementation of PIT_TABLE output module */
+  /** 
+    Package: PIT_TABLE_PKG Body
+      Implementation package for type <PIT_TABLE>
+   
+    Author:: 
+      Juergen Sieben, ConDeS GmbH
+      
+      Published under MIT licence
+   */
 
   C_FIRE_THRESHOLD constant varchar2(30 char) := 'PIT_TABLE_FIRE_THRESHOLD';
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
   
-  /** Helper method to write to table PIT_TABLE_PARAMS
-   * %param  p_id  ID of the entry, taken from CALL_STACK or LOG_STATE
-   * %param  p_pse_id  Severity of the entry. 70 if CALL_STACK entry
-   * %param  p_params  Instance of MSG_PARAMS
-   * %usage  Is used to wrap the insert operation on PIT_TABLE_PARAMS, as it is used by
-   *         several methods
+  /**
+    Group: Helper Methods
+   */
+  /** 
+    Procedure: persist_params
+      Helper method to write to table <PIT_TABLE_PARAMS>. 
+      Is used to wrap the insert operation on <PIT_TABLE_PARAMS>, used by several methods
+      
+    Parameters:
+      p_id - ID of the entry, taken from <PIT_CALL_STACK_TYPE> or <PIT_LOG_STATE_TYPE>
+      p_pse_id - Severity of the entry. 70 if CALL_STACK entry
+      p_params - Instance of <MSG_PARAMS>
    */
   procedure persist_params(
     p_id in pit_table_params.ptp_id%type,
@@ -27,7 +40,13 @@ as
   end persist_params;
   
 
-  /* INTERFACE */
+  /**
+    Group: Public method implementations
+   */
+  /**
+    Procedure: log
+      See <pit_table_pkg.log>
+   */
   procedure log(
     p_message in message_type)
   as
@@ -43,14 +62,22 @@ as
   end log;
   
   
+  /**
+    Procedure: log
+      See <pit_table_pkg.log>
+   */
   procedure log(
-    p_log_state log_state_type)
+    p_log_state pit_log_state_type)
   as
   begin
     persist_params(p_log_state.id, p_log_state.severity, p_log_state.params);
   end log;
   
 
+  /**
+    Procedure: purge
+      See <pit_table_pkg.purge>
+   */
   procedure purge(
     p_date_until in date,
     p_severity_greater_equal in number default null)
@@ -67,8 +94,12 @@ as
   end;
 
 
+  /**
+    Procedure: enter
+      See <pit_table_pkg.enter>
+   */
   procedure enter(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     insert into pit_table_call_stack
@@ -84,8 +115,12 @@ as
   end enter;
 
 
+  /**
+    Procedure: leave
+      See <pit_table_pkg.leave>
+   */
   procedure leave(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     insert into pit_table_call_stack
@@ -102,6 +137,10 @@ as
   end leave;
 
 
+  /**
+    Procedure: initialize_module
+      See <pit_table_pkg.initialize_module>
+   */
   procedure initialize_module(
     self in out pit_table)
   as
@@ -111,7 +150,7 @@ as
   exception
     when others then
       self.status := msg.PIT_FAIL_MODULE_INIT;
-      self.stack  := dbms_utility.format_error_stack;
+      self.stack  := substr(sqlerrm, 12);
   end initialize_module;
 
 end pit_table_pkg;

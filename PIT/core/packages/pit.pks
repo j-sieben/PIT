@@ -68,7 +68,18 @@ as
   
   /**
     Group: Logging and Debugging methods
+   */    
+  /**
+    Function: get_active_context
+      Method returns an instance of <PIT_CONTEXT_TYPE> that is actually in use.
+      
+    Returns:
+      Context object that is actually active.
    */
+  function get_active_context
+    return pit_context_type;
+    
+    
   /**
     Function: get_log_level
       Method returns the actually set log level.
@@ -94,7 +105,7 @@ as
       TRUE, if the acutally valid log level is greater or equal to P_LOG_LEVEL, FALSE otherwise
    */
   function check_log_level_greater_equal(
-    p_log_level in pls_integer)
+    p_log_level in binary_integer)
     return boolean;
     
     
@@ -123,7 +134,7 @@ as
       TRUE, if the acutally valid log level is greater or equal to <p_trace_level>, FALSE otherwise
    */
   function check_trace_level_greater_equal(
-    p_trace_level in pls_integer)
+    p_trace_level in binary_integer)
     return boolean;
     
     
@@ -296,7 +307,7 @@ as
    */
   procedure log_state(
     p_params msg_params,
-    p_severity in pls_integer default null);
+    p_severity in binary_integer default null);
     
     
   /** 
@@ -600,21 +611,24 @@ as
       
       If you call <handle_exception> or <stop>, the state will be cleaned as well.
       
-      This method will work only if tracing is enabled, as it takes the mewthod name 
+      This method will work only if tracing is enabled, as it takes the method name 
       from the call stack and persists the actual index with the call stack.
       
+      If you plan to call it in a loop you may only pass in the required parameters, all
+      other values are taken from the first call.
+      
     Parameters:
-      p_target - Description of the operation. Max length is 32 byte.
       p_sofar - Percentage of the task completed (0 .. 100 or individual scale)
       p_total - Amount of work to be done. Defaults to 100 (percent)
+      p_target - Description of the operation. Max length is 32 byte.
       p_units - Unit of work, eg. "rows processed" or similar. Defaults to "iterations done"
       p_op_name - Optional indication of the task that is performed. If NULL, the package.method name is used.
                   Max length is 64 byte.
    */
   procedure long_op(
-    p_target in varchar2,
     p_sofar in number,
     p_total in number default 100,
+    p_target in varchar2 default null,
     p_units in varchar2 default null,
     p_op_name in varchar2 default null);
     
@@ -1252,19 +1266,6 @@ as
     
   
   /** 
-    Function: get_context
-      Gets the actually set context as an instance of <pit_util.CONTEXT_TYPE>
-      
-      Call this method to get the actually set context settings. Useful to check whether context switches were performed.
-      
-    Returns:
-      Instance of <pit_util.CONTEXT_TYPE> with the actual context settings.
-   */
-  function get_context
-    return pit_util.context_type;
-    
-  
-  /** 
     Procedure: start_message_collection
       Switches PIT collection mode on
       
@@ -1357,7 +1358,7 @@ as
       <ARGS>, name list of the available (successfully instantiated) modules
    */
   function get_available_modules
-    return args 
+    return pit_args 
     pipelined;
     
     
@@ -1372,7 +1373,7 @@ as
       <ARGS>, name list of the actually active modules
    */
   function get_active_modules
-    return args 
+    return pit_args 
     pipelined;
     
   

@@ -233,7 +233,7 @@ as
     when others then
       self.fire_threshold := pit.level_off;
       self.status := msg.PIT_FAIL_MODULE_INIT;
-      self.stack := dbms_utility.format_error_stack;
+      self.stack := substr(sqlerrm, 12);
   end initialize_module;
 
 end pit_mail_pkg;

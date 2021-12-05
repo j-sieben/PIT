@@ -15,12 +15,12 @@ create or replace type pit_file under pit_module(
   /** Method writes entering a method to the file, including input parameters */
   overriding member procedure enter(
     self in out nocopy pit_file,
-    p_call_stack in call_stack_type),
+    p_call_stack in pit_call_stack_type),
     
   /** Method writes leaving a method to the file, including output parameters */
   overriding member procedure leave(
     self in out nocopy pit_file,
-    p_call_stack in call_stack_type),
+    p_call_stack in pit_call_stack_type),
     
   /** Constructor method. If the directory is not accessible, it will render the module unusable */
   constructor function pit_file(

@@ -28,10 +28,10 @@ as
       Method implements the <PIT_CONSOLE> log member procedure overload and writes the key value pairs of <MSG_PARAM> to the console.
       
     Parameter:
-      p_log_state - Instance of <LOG_STATE_TYPE>
+      p_log_state - Instance of <PIT_LOG_STATE_TYPE>
    */
   procedure log (
-    p_log_state in log_state_type);
+    p_log_state in pit_log_state_type);
 
 
   /**
@@ -40,10 +40,10 @@ as
       Method implements the <PIT_CONSOLE> enter member procedure and writes the call stack type attributes to the console.
       
     Parameter:
-      p_call_stack - Instance of <CALL_STACK_TYPE>
+      p_call_stack - Instance of <PIT_CALL_STACK_TYPE>
    */
   procedure enter(
-    p_call_stack in call_stack_type);
+    p_call_stack in pit_call_stack_type);
 
 
   /**
@@ -52,10 +52,10 @@ as
       Method implements the <PIT_CONSOLE> leave member procedure and writes the call stack type attributes to the console.
       
     Parameter:
-      p_call_stack - Instance of <CALL_STACK_TYPE>
+      p_call_stack - Instance of <PIT_CALL_STACK_TYPE>
    */
   procedure leave(
-    p_call_stack in call_stack_type);
+    p_call_stack in pit_call_stack_type);
     
 
   /**
@@ -67,7 +67,7 @@ as
       p_ctx - Instance of <PIT_CONTEXT>
    */
   procedure context_changed(
-    p_ctx in pit_context);
+    p_ctx in pit_context_type);
 
   
   /**

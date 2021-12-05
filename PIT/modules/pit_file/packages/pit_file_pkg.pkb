@@ -94,7 +94,7 @@ as
    *        is called to append the call stack to the log file.
    */
   procedure write_call_stack(
-    p_call_stack in call_stack_type,
+    p_call_stack in pit_call_stack_type,
     p_template in varchar2)
   as
     l_unit_name pit_util.ora_name_type;
@@ -174,7 +174,7 @@ as
   
   
   procedure enter(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     write_call_stack(p_call_stack, g_enter_template);
@@ -182,7 +182,7 @@ as
   
   
   procedure leave(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     write_call_stack(p_call_stack, g_leave_template);
@@ -201,10 +201,10 @@ as
     self.status := msg.PIT_MODULE_INSTANTIATED;
   exception
     when others then
-      -- KEINEN Fehler werfen, da in Initialisierungsphase!
+      -- DO NOT throw an error, because in initialization phase!
       self.fire_threshold := pit.level_off;
       self.status := msg.PIT_FAIL_MODULE_INIT;
-      self.stack := dbms_utility.format_error_stack;
+      self.stack := substr(sqlerrm, 12);
   end initialize_module;
 
 begin

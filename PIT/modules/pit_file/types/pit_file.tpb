@@ -24,7 +24,7 @@ as
   
   overriding member procedure enter(
     self in out nocopy pit_file,
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     pit_file_pkg.enter(p_call_stack);
@@ -32,7 +32,7 @@ as
   
   overriding member procedure leave(
     self in out nocopy pit_file,
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     pit_file_pkg.leave(p_call_stack);

@@ -26,6 +26,8 @@ as
       C_TRACE_LE_OPTIONAL - Methods <pit.enter_optional> | <pit.leave_optional>
       C_TRACE_LE_DETAILED - Methods <pit.enter_detailed> | <pit.leave_detailed>
       C_TRACE_LE_ALL - Methods <pit.enter> | <pit.leave>
+      
+      C_GLOBAL_CONTEXT - PIT memory in globally accessible context
    */  
   C_LEVEL_LE_WARN constant boolean := true;
   C_LEVEL_LE_INFO constant boolean := true;
@@ -37,6 +39,8 @@ as
   C_TRACE_LE_OPTIONAL constant boolean := true;
   C_TRACE_LE_DETAILED constant boolean := true;
   C_TRACE_LE_ALL constant boolean := true;
+  
+  C_HAS_GLOBAL_CONTEXT constant boolean := true;
   
   /** 
     Constants: Export groups

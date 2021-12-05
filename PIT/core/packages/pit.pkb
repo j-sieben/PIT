@@ -167,20 +167,28 @@ as
   
   
   /****************************** LOGGING AND DEBUGGING *********************************/
+  function get_active_context
+    return pit_context_type
+  as
+  begin
+    return pit_context.get_context;
+  end get_active_context;
+  
+  
   function get_log_level
     return binary_integer
   as
   begin
-    return pit_internal.get_log_level;
+    return pit_context.get_log_level;
   end get_log_level;
   
   
   function check_log_level_greater_equal(
-    p_log_level in pls_integer)
+    p_log_level in binary_integer)
     return boolean
   as
   begin
-    return pit_internal.check_log_level_greater_equal(p_log_level);
+    return pit_context.log_me(p_log_level);
   end check_log_level_greater_equal;
   
   
@@ -188,16 +196,16 @@ as
     return binary_integer
   as
   begin
-    return pit_internal.get_trace_level;
+    return pit_context.get_trace_level;
   end get_trace_level;
   
   
   function check_trace_level_greater_equal(
-    p_trace_level in pls_integer)
+    p_trace_level in binary_integer)
     return boolean
   as
   begin
-    return pit_internal.check_trace_level_greater_equal(p_trace_level);
+    return pit_context.trace_me(p_trace_level);
   end check_trace_level_greater_equal;
   
   
@@ -210,7 +218,7 @@ as
     p_log_modules in varchar2 default null)
   as
   begin
-    pit_internal.log_specific(
+    pit_internal.log_explicit(
       p_message_name => p_message_name,
       p_affected_id => p_affected_id,
       p_error_code => p_error_code,
@@ -222,7 +230,7 @@ as
   
   procedure log_state(
     p_params msg_params,
-    p_severity in pls_integer default null)
+    p_severity in binary_integer default null)
   as
   begin
     pit_internal.log_state(
@@ -322,7 +330,6 @@ as
   as
   begin
     pit_internal.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
-    leave;
   end sql_exception;
   
 
@@ -335,7 +342,6 @@ as
   as
   begin
     pit_internal.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_error_code, p_params);
-    leave;
   end handle_exception;
 
 
@@ -372,7 +378,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_mandatory $THEN
-    enter(p_action, p_params, trace_mandatory, p_client_info);
+    pit_internal.enter(p_action, p_params, trace_mandatory, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -387,7 +393,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_optional $THEN
-    enter(p_action, p_params, trace_optional, p_client_info);
+    pit_internal.enter(p_action, p_params, trace_optional, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -402,7 +408,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_detailed $THEN
-    enter(p_action, p_params, trace_detailed, p_client_info);
+    pit_internal.enter(p_action, p_params, trace_detailed, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -418,9 +424,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_all $THEN
-    -- starting with version 12c, UTL_CALL_STACK is used if parameters are not provided
-    pit_internal.enter(
-       p_action, p_params, p_trace_level, p_client_info);
+    pit_internal.enter(p_action, p_params, p_trace_level, p_client_info);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -433,7 +437,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_mandatory $THEN
-    leave(trace_mandatory, p_params);
+    pit_internal.leave(trace_mandatory, p_params);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -446,7 +450,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_optional $THEN
-    leave(trace_optional, p_params);
+    pit_internal.leave(trace_optional, p_params);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -459,7 +463,7 @@ as
   as
   begin
     $IF pit_admin.c_trace_le_detailed $THEN
-    leave(trace_detailed, p_params);
+    pit_internal.leave(trace_detailed, p_params);
     $ELSE
     -- Tracing disallowed by conditional compilation
     null;
@@ -482,19 +486,24 @@ as
   
   
   procedure long_op(
-    p_target in varchar2,
     p_sofar in number,
     p_total in number default 100,
+    p_target in varchar2 default null,
     p_units in varchar2 default null,
-    p_op_name in varchar2)
+    p_op_name in varchar2 default null)
   as
   begin
-    pit_internal.long_op(
+    $IF pit_admin.c_trace_le_all $THEN
+    pit_call_stack.long_op(
       p_target => p_target,
       p_sofar => p_sofar,
       p_total => p_total,
       p_units => p_units,
       p_op_name => p_op_name);
+    $ELSE
+    -- Tracing disabled, no support for longops possible
+    null;
+    $END
   end long_op;
   
   /****************************** NOTIFICATION AND MESSAGES *********************************/
@@ -876,23 +885,21 @@ as
     p_trace_timing in boolean,
     p_log_modules in varchar2)
   as
-    l_context pit_util.context_type;
   begin
-    l_context.log_level := p_log_level;
-    l_context.trace_level := p_trace_level;
-    l_context.trace_timing := p_trace_timing;
-    l_context.module_list := p_log_modules;
-    pit_internal.set_context(l_context);
+    pit_internal.set_context(
+      p_log_level => p_log_level,
+      p_trace_level => p_trace_level,
+      p_trace_timing => p_trace_timing,
+      p_log_modules => p_log_modules);
   end set_context;
   
   
   procedure set_context(
     p_context_name in varchar2)
   as
-    l_context pit_util.context_type;
   begin
-    l_context.context_name := p_context_name;
-    pit_internal.set_context(l_context);
+    pit_internal.set_context(
+      p_context_name => p_context_name);
   end set_context;
   
   
@@ -919,19 +926,12 @@ as
   as
   begin
     if p_active_session_only then
-      pit_internal.reset_active_context;
+      pit_internal.set_context(
+        p_context_name => pit_context.C_CONTEXT_DEFAULT);
     else
-      pit_internal.reset_context;
+      pit_context.initialize;
     end if;
   end reset_context;
-  
-  
-  function get_context
-    return pit_util.context_type
-  as
-  begin
-    return pit_internal.get_context;
-  end get_context;
   
   
   procedure start_message_collection
@@ -980,12 +980,11 @@ as
   return pit_module_list
     pipelined
   as
-    cursor modules is
-      select pit_module_meta(module_name, module_available, module_active, module_stack) module
-        from table(pit_internal.get_modules);
+    l_module_list pit_module_list;
   begin
-    for m in modules loop
-      pipe row (m.module);
+    l_module_list := pit_context.get_modules(pit_context.C_FOCUS_ALL_MODULES);
+    for i in 1 .. l_module_list.count loop
+      pipe row (l_module_list(i));
     end loop;
     return;
   exception
@@ -995,15 +994,14 @@ as
     
     
   function get_available_modules
-  return args 
+  return pit_args 
     pipelined
   as
-    cursor modules is
-      select column_value module
-        from table(pit_internal.get_available_modules);
+    l_module_list pit_module_list;
   begin
-    for m in modules loop
-      pipe row (m.module);
+    l_module_list := pit_context.get_modules(pit_context.C_FOCUS_AVAILABLE_MODULES);
+    for i in 1 .. l_module_list.count loop
+      pipe row (l_module_list(i).module_name);
     end loop;
     return;
   exception
@@ -1013,15 +1011,14 @@ as
     
     
   function get_active_modules
-  return args 
+  return pit_args 
     pipelined
   as
-    cursor modules is
-      select column_value module
-        from table(pit_internal.get_active_modules);
+    l_module_list pit_module_list;
   begin
-    for m in modules loop
-      pipe row (m.module);
+    l_module_list := pit_context.get_modules(pit_context.C_FOCUS_ACTIVE_MODULES);
+    for i in 1 .. l_module_list.count loop
+      pipe row (l_module_list(i).module_name);
     end loop;
     return;
   exception

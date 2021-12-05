@@ -54,7 +54,7 @@ as
    *         is called to print the call stack.
    */
   procedure print_call_stack(
-    p_call_stack in call_stack_type,
+    p_call_stack in pit_call_stack_type,
     p_template in varchar2)
   as
     l_unit_name varchar2(257 byte);
@@ -121,7 +121,7 @@ as
   
   
   procedure log(
-    p_log_state in log_state_type)
+    p_log_state in pit_log_state_type)
   as
   begin
     if p_log_state.params.count > 0 then
@@ -135,28 +135,28 @@ as
   
 
   procedure enter(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     print_call_stack(p_call_stack, g_enter_template);
   end enter;
 
   procedure leave(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
   begin
     print_call_stack(p_call_stack, g_leave_template);
   end leave;
 
   procedure context_changed(
-    p_ctx in pit_context)
+    p_ctx in pit_context_type)
   as
     c_del constant varchar2(5) := ', ';
   begin
     dbms_output.put_line(
       pit.get_message_text(
         msg.CTX_CHANGED,
-        msg_args(p_ctx.to_string())));
+        msg_args(p_ctx.trace_settings)));
   end context_changed;
 
   procedure initialize_module(
@@ -168,7 +168,7 @@ as
   exception
     when others then
       self.status := msg.PIT_FAIL_MODULE_INIT;
-      self.stack := dbms_utility.format_error_stack;
+      self.stack := substr(sqlerrm, 12);
   end initialize_module;
 
 begin

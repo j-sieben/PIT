@@ -1,8 +1,8 @@
-create or replace type call_stack_type
+create or replace type pit_call_stack_type
   authid definer
 is object (
   /**
-    Type: call_stack_type
+    Type: pit_call_stack_type
       Is used to collect a call stack entry
       
     Properties:
@@ -14,7 +14,7 @@ is object (
       client_info - Identifier of the client and other information
       session_id - ID of the session. Might be the ID of the database session or a virtual session ID, such as an APEX session ID
       long_op_idx - Actual index of a long op
-      long_op_sno - Total number of long op actions expected
+      long_op_sno - Internal information for dbms_application_info for repetitive calls to long_op. 
       params - Instance of <msg_params> holding parameters of the method call
       wall_clock - Timestamp when the method was called
       elapsed - Time in hsec the database spent within this method
@@ -27,7 +27,7 @@ is object (
       last_resume_point_cpu - If a sub method is called, call stack puts the time spent her to catch on when the method returns
       trace_level - Level of the call stack entry
       trace_timing - Flag to indicate whether timining information is required
-      trace_settings - context settings for this call stack entry. Used for toggle functionality
+      trace_context - context name for this call stack entry. Used for toggle functionality
    */
   -- Attributes
   id integer,
@@ -51,26 +51,26 @@ is object (
   last_resume_point integer,
   last_cpu_resume_point integer,
   trace_level integer,
-  trace_timing char(1),
-  trace_settings varchar2(4000 byte),
+  trace_timing &FLAG_TYPE.,
+  trace_context pit_context_type,
   /** 
     Procedure: pause
       Method to pause the clock for the actual method 
    */
   member procedure pause(
-    self in out nocopy call_stack_type),
+    self in out nocopy pit_call_stack_type),
   /** 
     Procedure: resume
       Method resumes measuring time for the actual method 
    */
   member procedure resume(
-    self in out nocopy call_stack_type),
+    self in out nocopy pit_call_stack_type),
   /** 
     Procedure: leave
       Method to collect timing information upon leaving the method 
    */
   member procedure leave(
-    self in out nocopy call_stack_type),
+    self in out nocopy pit_call_stack_type),
   /** 
     Function: call_stack_type
       Constructor function
@@ -87,10 +87,10 @@ is object (
       p_call_level - Actual call level.
       p_trace_level - Actual trace level
       p_trace_timing - Flag to indicate whether timining information is required
-      p_trace_settings - context settings for this call stack entry. Used for toggle functionality
+      p_trace_context - context instance of type <pit_context_type> for this call stack entry. Used for toggle functionality
    */
-  constructor function call_stack_type(
-    self in out nocopy call_stack_type,
+  constructor function pit_call_stack_type(
+    self in out nocopy pit_call_stack_type,
     p_session_id in varchar2,
     p_user_name in varchar2,
     p_module_name in varchar2,
@@ -102,7 +102,7 @@ is object (
     p_call_level in integer,
     p_trace_level in integer,
     p_trace_timing in char,
-    p_trace_settings in varchar2)
+    p_trace_context in pit_context_type)
     return self as result
 )
 final instantiable;

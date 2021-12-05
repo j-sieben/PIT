@@ -463,54 +463,6 @@ as
   end get_help_websheet_id;
   
   
-  function get_active_context
-    return varchar2
-  as
-    l_context pit_util.context_type;
-    l_stmt utl_apex.max_char;
-    l_context_template constant utl_apex.max_sql_char := q'^with params as (
-       select '#DEBUG_LEVEL#' debug_level,
-              '#TRACE_LEVEL#' trace_level,
-              '#TRACE_TIMING#' trace_timing,
-              '#LOG_MODULES#' log_modules
-         from dual),
-     trace_settings as(
-       select ptl_display_name
-         from pit_trace_level_v
-         join params
-           on ptl_id = trace_level),
-     trace_timing as(
-       select pti_display_name
-         from pit_translatable_item_v
-         join params
-           on pti_pmg_name = 'PIT'
-          and pti_id = 'BOOLEAN_' || trace_timing),
-     debug_settings as(
-       select pse_display_name
-         from pit_message_severity_v
-         join params
-           on pse_id = debug_level)
-select pse_display_name debug_level, ptl_display_name trace_level, pti_display_name trace_timing, log_modules
-  from params
- cross join trace_settings
- cross join debug_settings
- cross join trace_timing;^';
-  begin
-    pit.enter_mandatory;
-    
-    l_context := pit.get_context;
-    
-    l_stmt := utl_text.bulk_replace(l_context_template, char_table(
-                'DEBUG_LEVEL', l_context.log_level,
-                'TRACE_LEVEL', l_context.trace_level,
-                'TRACE_TIMING', utl_apex.get_bool(l_context.trace_timing),
-                'LOG_MODULES', l_context.module_list));
-    
-    pit.leave_mandatory;
-    return l_stmt;
-  end get_active_context;
-  
-  
   procedure harmonize_sql_name(
     p_item_name in varchar2,
     p_prefix in varchar2 default null)
@@ -601,8 +553,11 @@ select pse_display_name debug_level, ptl_display_name trace_level, pti_display_n
     l_flag utl_apex.flag_type;
   begin
     pit.enter_mandatory;
-    
-    l_flag := utl_apex.get_bool(param.get_boolean('ALLOW_TOGGLE', 'PIT'));
+    select par_boolean_value
+      into l_flag
+      from parameter_vw
+     where par_pgr_id = 'PIT'
+       and par_id = 'ALLOW_TOGGLE';
     
     pit.leave_mandatory(
       p_params => msg_params(msg_param('Result', l_flag)));

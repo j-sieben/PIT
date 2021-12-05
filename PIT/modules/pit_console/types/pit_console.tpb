@@ -16,7 +16,7 @@ as
   
   overriding member procedure log(
     self in out nocopy pit_console,
-    p_log_state log_state_type)
+    p_log_state pit_log_state_type)
   as
   begin
     pit_console_pkg.log(p_log_state);
@@ -43,7 +43,7 @@ as
   
   overriding member procedure enter(
     self in out nocopy pit_console,
-    p_call_stack call_stack_type)
+    p_call_stack pit_call_stack_type)
   as
   begin
     pit_console_pkg.enter(p_call_stack);
@@ -52,7 +52,7 @@ as
   
   overriding member procedure leave (
     self in out nocopy pit_console,
-    p_call_stack call_stack_type)
+    p_call_stack pit_call_stack_type)
   as
   begin
     pit_console_pkg.leave(p_call_stack);
@@ -60,7 +60,7 @@ as
   
   overriding member procedure context_changed(
     self in out nocopy pit_console,
-    p_ctx in pit_context)
+    p_ctx in pit_context_type)
   as
   begin
     pit_console_pkg.context_changed(p_ctx);

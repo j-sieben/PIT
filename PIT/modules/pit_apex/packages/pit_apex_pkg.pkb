@@ -16,7 +16,7 @@ as
   C_YES constant varchar2(3 byte) := 'YES';
   C_CHUNK_SIZE constant integer := 8192;
 
-  g_apex_triggered_context pit_util.context_type;
+  g_apex_triggered_context pit_context_type;
   g_fire_threshold number;
   g_websocket_server varchar2(1000 byte);
 
@@ -27,11 +27,12 @@ as
   procedure initialize
   as
   begin
+    g_apex_triggered_context := pit_context_type();
     g_fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
     g_apex_triggered_context.log_level := param.get_integer(C_TRG_FIRE_THRESHOLD, C_PARAM_GROUP);
     g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
-    g_apex_triggered_context.trace_timing := param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP);
-    g_apex_triggered_context.module_list := param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP);
+    g_apex_triggered_context.trace_timing := pit_util.to_bool(param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP));
+    g_apex_triggered_context.log_modules := pit_util.string_to_table(param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP));
     g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
   end initialize;
 
@@ -79,13 +80,13 @@ as
 
 
   /** Method converts MSG_PARAMS into NAME-VALUE-Pairs
-   * %param  p_call_stack  Instance of CALL_STACK_TYPE with parameter information
+   * %param  p_call_stack  Instance of <PIT_CALL_STACK_TYPE> with parameter information
    * %param  p_position    Index of the nth parameter to read
    * %usage  Is used to extract MSG_PARAMS to an explicit parameter list as used by APEX_DEBUG.ENTER
    *         Odd position number returns name, even position number returns value of the parameter
    */
   function get_msg_param(
-    p_call_stack in call_stack_type,
+    p_call_stack in pit_call_stack_type,
     p_position in binary_integer)
     return varchar2
   as
@@ -254,7 +255,7 @@ as
 
 
   procedure log(
-    p_log_state in log_state_type)
+    p_log_state in pit_log_state_type)
   as
   begin
     if p_log_state.params.count > 0 then
@@ -302,7 +303,7 @@ as
 
 
   procedure enter(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   is
     l_message message_type;
     l_message_language varchar2(64);
@@ -338,7 +339,7 @@ as
 
 
   procedure leave(
-    p_call_stack in call_stack_type)
+    p_call_stack in pit_call_stack_type)
   as
     l_message message_type;
   begin
@@ -384,7 +385,7 @@ as
   exception
     when others then
       self.status := msg.pit_fail_module_init;
-      self.stack := pit_util.get_error_stack;
+      self.stack := substr(sqlerrm, 12);
   end initialize_module;
 
 begin

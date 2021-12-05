@@ -36,7 +36,7 @@ as
    *         writes the call stack type attributes to a trace file.
    */
   procedure enter(
-    p_call_stack in call_stack_type);
+    p_call_stack in pit_call_stack_type);
   
 
   /** Method to write call stack information on leave to a trace file
@@ -45,7 +45,7 @@ as
    *         writes the call stack type attributes to a trace file.
    */
   procedure leave(
-    p_call_stack in call_stack_type);
+    p_call_stack in pit_call_stack_type);
 
   
   /** Initialization method for PIT_FILE output module
