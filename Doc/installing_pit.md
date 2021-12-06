@@ -1,18 +1,7 @@
 # `PIT` Installation
 
-## Installing `PIT`
 
- `PIT` installation is split into three installation files to make it easy to adjust `PIT` to your specific needs:
-
-- Core installation file, installs the core `PIT` packages and data structures. The owner of `PIT` can work with `PIT`, no additional installation is required
-- Client installation file, grants all necessary rights to a adifferent user to allow for centralized deployment of `PIT` for many schemas. Attached is a file to run on the client side to create local synonyms for the granted objects.
-- APEX installation file, installs the APEX application to maintain `PIT`. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems. Attached is a file to grant all necessary rights that has to be run as the `PIT` owner.
-
-As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL\*Plus* to install `PIT`, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`.
-
-## Adjust `PIT` to your wishes
-
-### Changes in this release
+## Changes in this release
 Up to this version, `PIT` was intended to be installed by a user with a DBA role. This made it easy to grant missing system or object privileges and to centrally grant object privileges on `PIT` objects to other schemas and create synonyms for the granted objects on the remote side in one go.
 
 As a matter of fact, a DBA role install is not always possible, fi in cloud hosted databases or in an company setting that does not allow for these forms of installation. Therefore I decided to recreate the installation process to make it possible to install `PIT` without a DBA role. As a direct consequence, you don't pass the name of the owner into the installation script anymore, as you are connected as that user anyway.
@@ -35,6 +24,19 @@ Based on this, two installation scenarios are possible:
 
 If neither the grant nor the context is present, `PIT` falls back to a local solution. This is achieved with conditional compilation. Plus, it won't install the `UTL_CONTEXT` package and therefore does not support working with global contexts at all. If you change the setup later, it is required to reinstall `PIT` as well.
 
+## Installing `PIT`
+
+ `PIT` installation is split into three processes to make it easy to adjust `PIT` to your specific needs:
+
+- Core installation, installs the core `PIT` packages and data structures. The owner of `PIT` can work with `PIT`, no additional installation is required
+- Client installation, grants all necessary rights to a adifferent user to allow for centralized deployment of `PIT` for many schemas.
+- APEX maintenance application installation, installs the APEX application to maintain `PIT`. This is recommended on development machines only, as all generated messages can be deployed by exporting them from the development server on production systems.
+
+Each installation step is possible by means of a script file (`.bat` or `.sh`) that asks for any parameters it requires and a set of direct installation files ready for your own batching. As this release does not rely on DBA roles for the installation user anymore, there are more single steps to execute because I had to split client grants and respective synonym creation into two scripts, executed as different database users.
+
+As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL\*Plus* to install `PIT`, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`. The batch files take care of that so you may investigate them if you are unsure on how to do this yourself.
+
+## Adjust `PIT` to your wishes
 ### Choose the default language
 
 It is possible to adjust some settings before installing `PIT`. First, `PIT` is designed to be internationalized from ground up. As a basis, you need to define a default language for `PIT`. It is important to understand that any message you create must exists in this default language at least. You may translate it to other languages later, but you won't be able to just have a message in a language other than the default language. So, as a best practice, choose the best language for your needs and make this the default language. `PIT` supports `AMERICAN` adn `GERMAN` as languages out of the box. You adjust your default language by passing it in as a parameter when installing `PIT`. 
