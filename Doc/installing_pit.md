@@ -11,7 +11,7 @@ There are some drawbacks to this approach though:
 - `PIT` stores the actual log settings in a globally accessible context. Often, the right to create such a context is not granted.
 - In order to grant access to `PIT` for a client user, it is now necessary to run two scripts for each of the respective schemas.
 
-In regard to the context, `PIT` was changed to support either a context or to store the log information internally. The reason for the context was that in a connection pool environment it is mandatory to be able to pass log settings between sessions. This can be achieved by a globally accessed context. There is an alternative which stores this information in a central table, but [evidence] (http://www.oracle-developer.net/display.php?id=424) has shown that this approach incurs a performance impact. Therefore, I didn't want to move into this direction.
+In regard to the context, `PIT` was changed to support either a context or to store the log information internally. The reason for the context was that in a connection pool environment it is mandatory to be able to pass log settings between sessions. This can be achieved by a globally accessed context. There is an alternative which stores this information in a central table, but [evidence](http://www.oracle-developer.net/display.php?id=424) has shown that this approach incurs a performance impact. Therefore, I didn't want to move into this direction.
 
 In the vicinity of APEX though, logging is controlled by setting the log level at URL level, so APEX itself carries this information to any session working for the actual user. It is therefore possible in this environment to achieve the same goal without using a context.
 
