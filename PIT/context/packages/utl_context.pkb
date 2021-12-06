@@ -148,7 +148,7 @@ as
                   end is_global
         from dba_context
        where package = C_PACKAGE_NAME
-         and schema = '&INSTALL_USER.';
+         and schema = user;
     l_dummy ora_name_type;
     l_context_type ora_name_type;
     l_parameter_id ora_name_type;

@@ -1,20 +1,23 @@
 /*
   Script to uninstall PIT
   
-  Parameters:
-  -- 1: PIT_OWNER: database user who own PIT
-  -- 2: DEFAULT LANGUAGE: Default language of the APEX messages
 */
+set termout off
 
-@init/init.sql &1. &2.
+col default_language new_val DEFAULT_LANGUAGE format a128
+select pit.get_default_language default_language
+  from dual;
+  
+col with_context new_val WITH_CONTEXT format a10
+select case count(*) when 1 then 'true' else 'false' end with_context
+  from user_objects
+ where object_type = 'PACKAGE'
+   and object_name = 'UTL_CONTEXT';
+set termout on
 
-prompt &h2.grant user rights
-@set_grants.sql
-
-alter session set current_schema=&INSTALL_USER.;
+@init/init.sql &DEFAULT_LANGUAGE.
 
 prompt &section.
-
 prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Deinstallation
 
 prompt &h1.Deinstall OUTPUT-MODULES
@@ -40,9 +43,6 @@ prompt &h1.Deinstall CONTEXT Framework
 
 prompt &h1.Deinstall PARAMETER Framework
 @parameters/clean_up_install.sql
-
-prompt &h2.Revoke user rights
-@revoke_grants.sql
 
 prompt &h1.Finished PIT De-Installation
 

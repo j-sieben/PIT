@@ -7,8 +7,8 @@ prompt &h2.Clean up existing installation
 @&install_dir.clean_up_install.sql
 
 prompt
-prompt &h2.Grant user rights for PIT_FILE to &INSTALL_USER.
-@&tools.run_script user_grants
+prompt &h2.Checking prerequites
+@&install_dir.check_prerequisites
 
 prompt &h2.Create types and packages
 @&tools.install_type_spec pit_file

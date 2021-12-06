@@ -1,16 +1,8 @@
 
 @init/set_folders.sql core
 
-prompt
-prompt &h1.Installing PIT core
-prompt &h2.Check installation prerequisites
-@&install_dir.check_prerequisites.sql
-
 prompt &h2.Remove existing installation
 @&install_dir.clean_up_install.sql
-
-prompt &h2.Setting compile flags
-@&install_dir.set_compiler_flags.sql
 
 prompt &h2.Create sequences
 @&tools.check_has_sequence pit_log_seq
@@ -78,7 +70,7 @@ prompt &h2.Create CORE package declarations
 @&tools.install_package_spec pit_call_stack
 @&tools.install_package_spec pit_internal
 
-prompt &s1.Create global context PIT_CTX_&INSTALL_USER.
+prompt &s1.Create global context
 @&tools.run_script create_global_context
 
 prompt &h2.Create type bodies

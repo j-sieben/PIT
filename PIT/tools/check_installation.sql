@@ -2,24 +2,23 @@ declare
   l_has_invalid_items pls_integer;
 begin
   
-  dbms_output.put_line('&s1.Recompiling schema &INSTALL_USER.');
-  dbms_utility.compile_schema(schema => '&INSTALL_USER.');
+  dbms_output.put_line('&s1.Recompiling schema ' || user);
+  dbms_utility.compile_schema(schema => user);
   
   for i in 1 .. 3 loop
     select count(*)
       into l_has_invalid_items
-    from dba_objects
-     where owner = upper('&INSTALL_USER.')
-       and status = 'INVALID';
+      from user_objects
+     where status = 'INVALID';
     if l_has_invalid_items > 0 then
       dbms_output.put_line('&s1.compiling invalid components');
-      dbms_utility.compile_schema(schema => '&INSTALL_USER.');
+      dbms_utility.compile_schema(schema => user);
     else
       dbms_output.put_line('&s1.no invalid components found.');
       exit;
     end if;
   end loop;
-  if '&INSTALL_USER.' != '&REMOTE_USER.' then
+  if user != '&REMOTE_USER.' then
     dbms_output.put_line('&s1.Recompiling schema &REMOTE_USER.');
     dbms_utility.compile_schema(schema => '&REMOTE_USER.');
     dbms_session.reset_package;

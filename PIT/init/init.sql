@@ -8,19 +8,16 @@ whenever sqlerror exit
 clear screen
 set termout off
 
-col sys_user new_val SYS_USER format a30
-col install_user new_val INSTALL_USER format a30
-col remote_user new_val REMOTE_USER format a30
-col default_language new_val DEFAULT_LANGUAGE format a30
-col apex_ws new_val APEX_WS format a30
+col default_language new_val DEFAULT_LANGUAGE format a128
+col install_user new_val INSTALL_USER format a128
 
-select user sys_user,
-       upper('&1.') install_user,
-       null remote_user,
-       value default_language
+select value default_language, user install_user
   from V$NLS_VALID_VALUES
  where parameter = 'LANGUAGE'
-   and value = upper('&2.');
+   and value = upper('&1.');
+  
+set termout on
+
 
 @init/settings.sql
 
@@ -33,8 +30,8 @@ define s1=".    - "
 set termout on
    
 begin
-  if '&INSTALL_USER.' is null then
-    raise_application_error(-20000, 'Language &2. does not exist, please use an existing Oracle language name like AMERICAN');
+  if '&DEFAULT_LANGUAGE.' is null then
+    raise_application_error(-20000, 'Language &1. does not exist, please use an existing Oracle language name like AMERICAN');
   end if;
 end;
 /

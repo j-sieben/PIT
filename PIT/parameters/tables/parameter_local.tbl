@@ -1,3 +1,4 @@
+
 create table parameter_local(
    pal_id &ORA_NAME_TYPE.,
    pal_pgr_id &ORA_NAME_TYPE.,

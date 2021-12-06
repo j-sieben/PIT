@@ -1,4 +1,4 @@
-
+set termout off
 -- Choose your FLAG_TYPE datatype to adhere to your local conventions
 define FLAG_TYPE="char(1 byte)";
 define C_TRUE="'Y'";
@@ -11,7 +11,7 @@ define C_FALSE="'N'";
 col ora_name_type new_val ORA_NAME_TYPE format a128
 col ora_max_length new_val ORA_MAX_LENGTH format a128
 
-select 'varchar2(' || data_length || ' byte)' ora_name_type, data_length ora_max_length
+select 'varchar2(' || data_length || case char_used when 'B' then ' byte)' else ' char)' end ora_name_type, data_length ora_max_length
   from all_tab_columns
  where table_name = 'USER_TABLES'
    and column_name = 'TABLE_NAME';
@@ -32,5 +32,4 @@ select property_value default_tablespace
 -- and the total length is limited to 4 bytes.
 define EXCEPTION_PREFIX=''
 define EXCEPTION_POSTFIX='ERR'
-   
-define INSTALL_ON_DEV = false
+set termout on

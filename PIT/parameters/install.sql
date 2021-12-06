@@ -1,8 +1,5 @@
 @init/set_folders parameters
 
-prompt &h2.Change current schema to &INSTALL_USER.
-alter session set current_schema=&INSTALL_USER.;
-
 prompt &h2.Clean up existing installations
 @&install_dir.clean_up_install.sql
 

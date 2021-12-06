@@ -83,7 +83,7 @@ begin
     into l_app_id, l_ws
     from apex_applications
    where alias = c_app_alias
-     and owner = '&INSTALL_USER.';
+     and owner = user;
    
   dbms_output.put_line('&s1.Remove application ' || c_app_alias);
   wwv_flow_api.set_security_group_id(l_ws);

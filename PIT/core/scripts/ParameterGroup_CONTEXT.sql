@@ -16,7 +16,7 @@ begin
   );
 
   param_admin.edit_parameter(
-    p_par_id => 'PIT_CTX_&INSTALL_USER._TYPE'
+    p_par_id => 'PIT_CTX_' || user || '_TYPE'
    ,p_par_pgr_id => 'CONTEXT'
    ,p_par_description => 'Type of the globally accessed PIT context (SESSION|PREFER_USER_CLIENT_ID etc.)'
    ,p_par_string_value => q'^PREFER_CLIENT_ID^'
