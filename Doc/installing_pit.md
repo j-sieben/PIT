@@ -94,6 +94,8 @@ create context pit_ctx_<schema> using <schema>.utl_context accessed globally;
 ```
 Plus, you need the `READ` privilege on the view `DBA_CONTEXT`. The context has to be present before you can install `PIT`, as the script searches for it and decides upon the result whether to install `UTL_CONTEXT` or not.
 
+Output modules may require additional system or object privileges. Take an email output module for example. This module will almost certainly require an execute privilege on either `UTL_MAIL`, `UTL_SMTP` or `APEX_MAIL` in order to fulfil its duty. The scripts do contain a `PIT_MAIL` output module, but is commented out in the installation files. If you plan to use it, you may install it using the script `pit_load_module`. 
+
 ## Install `PIT`
 
 You may run the installation scripts directly from a command line or use the predefined batch scripts provided for Windows and Unix. The batch scripts set the environment accordingly and ask for the respective parameters interactively.
@@ -120,7 +122,7 @@ sqlplus <pit_owner>/<pwd>@database
 SQL> @pit_install AMERICAN
 ```
 
-This example will install `PIT` with `AMERICAN` as the default language for messages, the tables are stored in the derfault tablespace of the actual user. All parameters are case insensitive.
+This example will install `PIT` with `AMERICAN` as the default language for messages, the tables are stored in the derfault tablespace of the actual user. All parameters are case insensitive. Using the batch file is straightforward, simply start `install.bat` and follow the instructions on the console. This is true for all other installation steps, so I won't discuss them in any detail anymore.
 
 ## Uninstall `PIT`
 To uninstall `PIT`, simply call `pit_uninstall.sql` from the installation folder. This script requires you to connect to the `PIT` owner and to all granted client users to avoid having to connect as a DBA user. No parameters are required.
