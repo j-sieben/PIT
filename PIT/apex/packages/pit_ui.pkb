@@ -264,7 +264,7 @@ as
     pit.leave_detailed;
     return l_harmonized_name;
   exception
-    when msg.$ERROR_PRE.INVALID_SQL_NAME&ERROR_POST. then
+    when msg.&ERR_PRE.INVALID_SQL_NAME&ERR_POST. then
       utl_apex.set_error(
         p_page_item => p_item_name,
         p_message => msg.INVALID_SQL_NAME,
@@ -365,7 +365,7 @@ as
   exception
     when NO_DATA_FOUND then
       utl_apex.set_error(l_page_item, msg.PIT_PASS_MESSAGE, msg_args(SQLERRM));
-    when msg.&ERR_PRE.UTL_APEX_INVALID_REQUEST&ERROR_POST.then
+    when msg.&ERR_PRE.UTL_APEX_INVALID_REQUEST&ERR_POST. then
       utl_apex.set_error(
         p_page_item => null,
         p_message => msg.UTL_APEX_INVALID_REQUEST,
@@ -924,7 +924,7 @@ as
     pit.leave_mandatory;
     return true;
   exception
-    when msg.&ERR_PRE.PIT_BULK_ERROR_ERR&ERR_POST. then
+    when msg.&ERR_PRE.PIT_BULK_ERROR&ERR_POST. then
       utl_apex.handle_bulk_errors(char_table());
       
       pit.leave_mandatory;
@@ -1193,7 +1193,7 @@ as
     pit.leave_mandatory;
     return true;
   exception
-    when msg.&ERROR_PRE.INVALID_SQL_NAME_ERR&ERR_POST. then
+    when msg.&ERR_PRE.INVALID_SQL_NAME&ERR_POST. then
       utl_apex.set_error('PAR_ID', msg.INVALID_SQL_NAME);
       pit.leave_mandatory;
       return true;

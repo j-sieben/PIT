@@ -5,7 +5,7 @@ define tools=tools/
 
 prompt &h2.Installation in Schema &REMOTE_USER.
 prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
-@install_scripts/pit_register_apex.sql
+@install_scripts/create_apex_synonyms.sql
 
 prompt &h3.Create UI-VIEWS
 --@&tools.install_view apex_ui_list_menu -- Part of UTL_APEX, no need to overwrite

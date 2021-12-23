@@ -22,6 +22,10 @@ define EXCEPTION_PREFIX=''
 define EXCEPTION_POSTFIX='ERR'
 
 -- Don't change these
-define ERR_PRE=&EXCEPTION_PREFIX_.
-define ERR_POST=_&EXCEPTION_POSTFIX.
+col err_pre new_val ERR_PRE format a30
+col err_post new_val ERR_POST format a30
+
+select ltrim('&EXCEPTION_PREFIX.' || '_', '_') err_pre,
+       rtrim('_' || '&EXCEPTION_POSTFIX.', '_') err_post
+  from dual;
 set termout on

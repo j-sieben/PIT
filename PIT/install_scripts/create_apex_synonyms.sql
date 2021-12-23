@@ -7,17 +7,18 @@
   - REMOTE_USER:  database user who will be enabled to use PIT
 */
 
-set termout off
 
 @init/init_client.sql
 
+set termout off
 -- Overwrite PIT_USER from init_client
 col pit_user new_val PIT_USER format a128
 select owner pit_user
   from all_objects
  where object_type = 'PACKAGE'
    and object_name = 'PIT';
-   
+set termout on
+
 begin
   if '&PIT_USER.' is null then
     raise_application_error(-20000, 'No PIT installation found. Check whether the grants have been set.');
