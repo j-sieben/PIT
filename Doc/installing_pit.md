@@ -34,7 +34,7 @@ If neither the grant nor the context is present, `PIT` falls back to a local sol
 
 Each installation step is possible by means of a script file (`.bat` or `.sh`) that asks for any parameters it requires and a set of direct installation files ready for your own batching. As this release does not rely on DBA roles for the installation user anymore, there are more single steps to execute because I had to split client grants and respective synonym creation into two scripts, executed as different database users.
 
-As with any software that contains umlauts etc, it's advisable to store the files in UTF-8 encoding. This requires you to take care that this encoding does not get corrupt when editing the script files. But there's another thing to keep in mind: Before starting *SQL\*Plus* to install `PIT`, you need to make sure that your environment is set to UTF-8 as well. This is achieved by setting environment variable  `NLS_LANG` to a value of `AMERICAN_AMERICA.AL32UTF8`. It doesn't matter really which language and territory you choose as long as you make sure that the last parameter is `AL32UTF8`. The batch files take care of that so you may investigate them if you are unsure on how to do this yourself.
+If you want to install `PIT` from the sql installation scripts directly, make sure that your environment supports Unicode by settings `NLS_LANG` accordingly. This avoids loosing umlauts and caters for unicode characters in the quote statements of the installation scripts. The batch files take care of that so you may investigate them if you are unsure on how to do this yourself.
 
 ## Adjust `PIT` to your wishes
 ### Choose the default language
