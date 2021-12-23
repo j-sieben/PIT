@@ -39,11 +39,11 @@ If you want to install `PIT` from the sql installation scripts directly, make su
 ## Adjust `PIT` to your wishes
 ### Choose the default language
 
-It is possible to adjust some settings before installing `PIT`. First, `PIT` is designed to be internationalized from ground up. As a basis, you need to define a default language for `PIT`. It is important to understand that any message you create must exists in this default language at least. You may translate it to other languages later, but you won't be able to just have a message in a language other than the default language. So, as a best practice, choose the best language for your needs and make this the default language. `PIT` supports `AMERICAN` adn `GERMAN` as languages out of the box. You adjust your default language by passing it in as a parameter when installing `PIT`. 
+It is possible to adjust some settings before installing `PIT`. First, `PIT` is designed to be internationalized from ground up. As a basis, you need to define a default language for `PIT`. It is important to understand that any message you create must exists in this default language at least. You may translate it to other languages later, but you won't be able to just have a message in a language other than the default language. So, as a best practice, choose the best language for your needs and make this the default language. `PIT` supports `AMERICAN` and `GERMAN` as languages out of the box. You adjust your default language by passing it in as a parameter when installing `PIT`. 
 
 ### Choose the default tablespace
 
-Starting with this release, the installation files expect that you created the users owning `PIT` to be present, including a tablespace quota and a default tablespace. To adjust the tablespace, there is the option to pass in the desired tablespace for the tables and indexes `PIT` installs as a second parameter. If you omit this second parameter, the installation file falls back to the default tablespace of the user.
+Starting with this release, the installation files expect that you created the users owning `PIT` upfront, including a tablespace quota and a default tablespace. To adjust the tablespace for the `PIT` tables and indexes, there is the option to pass in the desired tablespace as a second parameter. If you omit this second parameter, the installation file falls back to the default permanent tablespace of the user.
 
 ### Choose your flag type
 
@@ -88,11 +88,11 @@ Additionally, if you want to use a globally accessible context, you need:
 - `CREATE ANY CONTEXT`
 - `READ` privilege on `DBA_CONTEXT`
 
-If your DBA creates the context for you, provide him with the following script to achieve that (replace `<schema>` with the name of the user you are connected to):
+Alternatively, a DBA can create the global context for you. You then don't need the `CREATE ANY CONTEXT` privilege. If your DBA creates the context for you, provide him with the following script (replace `<schema>` with the name of the user you are connected to):
 ```
 create context pit_ctx_<schema> using <schema>.utl_context accessed globally;
 ```
-Plus, you need the `READ` privilege on the view `DBA_CONTEXT`. The context has to be present before you can install `PIT`, as the script searches for it and decides upon the result whether to install `UTL_CONTEXT` or not.
+Plus, the DBA needs to grant you a `READ` privilege on the view `DBA_CONTEXT`. The context has to be present before you can install `PIT`, as the script searches for it and decides upon the result whether to install `UTL_CONTEXT` or not.
 
 Output modules may require additional system or object privileges. Take an email output module for example. This module will almost certainly require an execute privilege on either `UTL_MAIL`, `UTL_SMTP` or `APEX_MAIL` in order to fulfil its duty. The scripts do contain a `PIT_MAIL` output module, but is commented out in the installation files. If you plan to use it, you may install it using the script `pit_load_module`. 
 
