@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("glo",["Variable"],[["global",,[["Output Modules.PIT_MAIL.MAIL Body","email related global variables",,,0,"File:modules/pit_mail/packages/mail.pkb:Output_Modules.PIT_MAIL.MAIL_Body.email_related_global_variables","SQLClass:Output_Modules.PIT_MAIL.MAIL_Body:email_related_global_variables"]]]]);

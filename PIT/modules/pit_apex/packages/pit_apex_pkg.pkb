@@ -1,9 +1,29 @@
 create or replace package body pit_apex_pkg
 as
 
-  /** Implementation of PIT_APEX output module */
+  /**
+    Package: Output Modules.PIT_APEX.PIT_APEX_PKG Body
+      Implements PIT_APEX output module methods
 
-  /* CONSTANTS AND VARIABLES */
+    Author::
+      Juergen Sieben, ConDeS GmbH
+
+      Published under MIT licence
+   */
+  /**
+    Group: Package Constants
+   */
+  /**    
+    Constants: Parameter Constants
+      C_PARAM_GROUP - Parameter group of <PIT>
+      C_APEX_CONTEXT - Parameter name for the log context to switch to when APEX is in debug mode
+      C_FIRE_THRESHOLD - Parameter name for the generic fire threshold
+      C_TRG_FIRE_THRESHOLD - Parameter name for the APEX context fire threshold
+      C_TRG_TRACE_THRESHOLD - Parameter name for the APEX context trace threshold
+      C_TRG_TRACE_TIMING - Parameter name for the context trace timing flag
+      C_TRG_LOG_MODULES - Parameter name for the context log module list
+      C_WEB_SOCKET_SERVER - Parameter name for the websocket server (not yet functional!)
+   */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
   C_APEX_CONTEXT constant pit_util.ora_name_type := 'CONTEXT_APEX';
   C_DEFAULT_CONTEXT constant pit_util.ora_name_type := 'CONTEXT_DEFAULT';
@@ -20,9 +40,12 @@ as
   g_fire_threshold number;
   g_websocket_server varchar2(1000 byte);
 
-  /* HELPER */
-  /** Helper method to read parameter values into global package variables
-   * %usage  Is called from INITIALIZE_MODULE method.
+  /**
+    Group: Helper methods
+   */
+  /** 
+    Procedure: initialize
+      Helper method to read parameter values into global package variables. Is called from <INITIALIZE_MODULE> method.
    */
   procedure initialize
   as
@@ -37,10 +60,13 @@ as
   end initialize;
 
 
-  /** Method sets http header when addressing the web socket connection
-   * %param  p_title    Title of the notification
-   * %param  p_message  Message of the notification
-   * %usage  Tbd
+  /** 
+    Procedure: set_http_header
+      Method sets http header when addressing the web socket connection. For future release, not yet functional.
+      
+    Parameters:
+      p_title - Title of the notification
+      p_message - Message of the notification
    */
   procedure set_http_header(
     p_title in varchar2,
@@ -67,9 +93,13 @@ as
   end set_http_header;
 
 
-  /** Method checks whether module is called within a valid APEX session environment
-   * %return Flag to indicate whether a valid APEX session environment exists (TRUE) or not (FALSE)
-   * %usage  Is called from any public method to prevent useless execution of no APEX environment is available
+  /**
+    Function: valid_environment
+      Method checks whether module is called within a valid APEX session environment.
+      Is called from any public method to prevent useless execution of no APEX environment is available.
+      
+    Returns:
+      Flag to indicate whether a valid APEX session environment exists (TRUE) or not (FALSE)
    */
   function valid_environment
     return boolean
@@ -79,11 +109,16 @@ as
   end valid_environment;
 
 
-  /** Method converts MSG_PARAMS into NAME-VALUE-Pairs
-   * %param  p_call_stack  Instance of <PIT_CALL_STACK_TYPE> with parameter information
-   * %param  p_position    Index of the nth parameter to read
-   * %usage  Is used to extract MSG_PARAMS to an explicit parameter list as used by APEX_DEBUG.ENTER
-   *         Odd position number returns name, even position number returns value of the parameter
+  /** 
+    Funciton: get_msg_param
+      Method converts <MSG_PARAMS> into NAME-VALUE-Pairs as used by <APEX_DEBUG.ENTER>.
+     
+    Parameters:
+      p_call_stack - Instance of <PIT_CALL_STACK_TYPE> with parameter information
+      p_position - Index of the nth parameter to read
+      
+    Returns:
+      Odd position number returns name, even position number returns value of the parameter.
    */
   function get_msg_param(
     p_call_stack in pit_call_stack_type,
@@ -105,13 +140,18 @@ as
   end get_msg_param;
 
 
-  /** Method forwards messages to the APEX debug stack
-   * %param  p_message  Instance of MESSAGE_TYPE
-   * %usage  Emits data, if
-   *         {*} - Valid APEX environment exists
-   *         {*} - log_level PIT_APEX_FIRE_THRESHOLD is reached
-   *         {*} - APEX logging is activated
-   *         PIT severity is mapped to APEX severity and message transformed into plain string
+  /** 
+    Procedure: debug_message
+      Method forwards messages to the APEX debug stack. 
+      PIT severity is mapped to APEX severity and message transformed into plain string.
+      Emits data, if ...
+   
+      - Valid APEX environment exists
+      - log_level PIT_APEX_FIRE_THRESHOLD is reached
+      - APEX logging is activated
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
    */
   procedure debug_message(
     p_message in message_type)
@@ -136,13 +176,19 @@ as
   end debug_message;
 
 
-  /* Method adds error messages to the apex error stack
-   * %param  p_message  Instance of MESSAGE_TYPE
-   * %usage  Emits data, if
-   *         {*} - Valid APEX environment exists
-   *         If P_MESSAGE.AFFECTED_ID is set and the message contains anchor #ITEM_LABEL#
-   *         {*} - it tries to find the item label and replaces the anchor with the actual label
-   *         {*} - it shows the exception with reference to the affected id
+  /**
+    Procedure: log_error
+      Method adds error messages to the apex error stack. 
+      It tries to find the item label and replaces the anchor with the actual label and shows the exception with reference to the affected id.
+      Emits data, if ...
+   
+      - Valid APEX environment exists
+      - <P_MESSAGE.AFFECTED_ID> is set and the message contains anchor #ITEM_LABEL#
+      - log_level <PIT_APEX_FIRE_THRESHOLD> is reached
+      - APEX logging is activated
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
    */
   procedure log_error(
     p_message in message_type)
@@ -183,9 +229,13 @@ as
   end log_error;
 
 
-  /* Method passes a CLOB text to APEX, using HTP.P
-   * %param  p_text  CLOB instance to pass to APEX
-   * %usage  CLOB is splitted into chunks of C_CHUNK_SIZE bytes to circumvent the limitation of http streams of 32 KByte
+  /**
+    Procedure: print_clob
+      Method passes a CLOB text to APEX, using HTP.P.
+      CLOB is splitted into chunks of <C_CHUNK_SIZE> bytes to circumvent the limitation of http streams of 32 KByte.
+      
+    Parameter:
+      p_text - CLOB instance to pass to APEX
    */
   procedure print_clob(
     p_text in clob)
@@ -208,7 +258,13 @@ as
   end print_clob;
 
 
-  /* INTERFACE */
+  /**
+    Group: Interfacce
+   */
+  /**
+    Function: get_apex_triggered_context
+      see <PIT_APEX_PKG.get_apex_triggered_context>
+   */
   function get_apex_triggered_context
     return varchar2
   as
@@ -225,6 +281,10 @@ as
   end get_apex_triggered_context;
 
 
+  /**
+    Function: log
+      see <PIT_APEX_PKG.log>
+   */
   procedure log(
     p_message in message_type)
   as
@@ -254,6 +314,10 @@ as
   end log;
 
 
+  /**
+    Function: log
+      see <PIT_APEX_PKG.log>
+   */
   procedure log(
     p_log_state in pit_log_state_type)
   as
@@ -268,6 +332,10 @@ as
   end log;
 
 
+  /**
+    Function: print
+      see <PIT_APEX_PKG.print>
+   */
   procedure print(
     p_message in message_type)
   as
@@ -276,6 +344,10 @@ as
   end print;
 
 
+  /**
+    Function: notify
+      see <PIT_APEX_PKG.notify>
+   */
   procedure notify(
     p_message in message_type)
   as
@@ -302,6 +374,10 @@ as
   end notify;
 
 
+  /**
+    Function: enter
+      see <PIT_APEX_PKG.enter>
+   */
   procedure enter(
     p_call_stack in pit_call_stack_type)
   is
@@ -338,6 +414,10 @@ as
   end enter;
 
 
+  /**
+    Function: leave
+      see <PIT_APEX_PKG.leave>
+   */
   procedure leave(
     p_call_stack in pit_call_stack_type)
   as
@@ -371,6 +451,10 @@ as
   end leave;
 
 
+  /**
+    Function: initialize_module
+      see <PIT_APEX_PKG.initialize_module>
+   */
   procedure initialize_module(
     self in out nocopy pit_apex)
   as

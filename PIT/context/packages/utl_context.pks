@@ -97,29 +97,6 @@ as
     p_context in varchar2,
     p_attribute in varchar2,
     p_client_id varchar2 default null);
-    
-  
-  /**
-    Function: get_first_match
-      Get the best matching parameter value based on a collection of context attributes. 
-      Tries to find a value for each entered attribute name and returns the first NOT-NULL-value.
-      
-    Parameters:
-      p_context - Name of the context to write a value to
-      p_attribute_list - List of attributes for which a value shall be retrieved
-      p_with_name - Optional flag that indicates whether the name of the context attribute should be appended (TRUE)
-                    or not (FALSE, default). If TRUE, the attribute name is separated by <C_NAME_DELIMITER>
-      p_client_id - Optional client id as set at sys_context('USERENV', 'CLIENT_IDENTIFIER')
-      
-    Returns:
-      Varchar-value of the parameter
-   */
-  function get_first_match(
-    p_context in varchar2,
-    p_attribute_list in pit_args,
-    p_with_name in boolean default false,
-    p_client_id varchar2 default null)
-    return varchar2;
 
 
   /**

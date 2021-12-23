@@ -1,14 +1,15 @@
-create or replace package pit_table_pkg 
+create or replace package pit_table_pkg
+  authid definer
 as
-  /** 
-    Package: PIT_PKG
+
+  /**
+    Package: Output Modules.PIT_TABLE.PIT_TABLE_PKG
       Implementation package for type <PIT_TABLE>
    
-    Author:: 
+    Author::
       Juergen Sieben, ConDeS GmbH
-      
-      Published under MIT licence
    */
+   
   
   /** 
     Procedure: log 
@@ -51,7 +52,7 @@ as
       Method implmenents the <PIT_TABLE.enter> method to write the call stack type attributes to tables <PIT_TABLE_CALL_STACK> and <PIT_TABLE_PARAMS>.
       
     Parameters:
-      p_message - Instance of <message_type> to persist
+      p_call_stack - Instance of <pit_call_stack_type> to persist
    */
   procedure enter(
     p_call_stack in pit_call_stack_type);
@@ -62,14 +63,14 @@ as
       Method implmenents the <PIT_TABLE.leave> method to write the call stack type attributes to tables <PIT_TABLE_CALL_STACK> and <PIT_TABLE_PARAMS>.
       
     Parameters:
-      p_message - Instance of <message_type> to persist
+      p_call_stack - Instance of <pit_call_stack_type> to persist
    */
   procedure leave(
     p_call_stack in pit_call_stack_type);
 
   
   /**
-    Procedure: leave 
+    Procedure: initialize_module 
       Method implements the parameterless constructor method of <PIT_TABLE>.
    */
   procedure initialize_module(

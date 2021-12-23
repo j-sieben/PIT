@@ -1,15 +1,31 @@
 create or replace package body mail_cram
 as
+  /** 
+    Package: Output Modules.PIT_MAIL.MAIL_CRAM Body
+      Package to allow to authenticate to a CRAM SMTP server
+      
+    Disclaimer::
+      Based on a <blog: http://www.experts-exchange.com/Database/Oracle/A_5915-Extending-Oracle%27s-Email-functionality-with-PL-SQL-Authentication.html> by Sean Stuber.        
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
+  */
 
-  /** Package implements CRAM-Authentication */
-
-  /** Method to create an authorization string
-   * %param  p_user         User name
-   * %param  p_password     Password of the user
-   * %param  p_challenge    Password of the user
-   * %param  p_hash_method  Password of the user
-   * %return Authorization string
-   * %usage  Is used to form an authorization string based on the hash method chosen
+  /**
+    Group: Helper Methods
+   */
+  /** 
+    Function: get_auth_string
+      Method to create an authorization string. Is used to form an authorization string based on the hash method chosen
+      
+    Parameters:
+      p_user - User name
+      p_password - Password of the user
+      p_challenge - Salt to add to the password
+      p_hash_method - One of the <C_HASH_MD5>|<C_HASH_SHA1> to identify the authentication method
+      
+    Returns:
+      Authorization string.
    */
   function get_auth_string(
     p_user in varchar2,
@@ -81,6 +97,13 @@ as
   end get_auth_string;
 
 
+  /** 
+    Group: Interface
+   */
+  /**
+    Procedure: authenticate
+      see: <MAIL_CRAM.authenticate>
+   */
   procedure authenticate(
     p_conn in out nocopy utl_smtp.connection,
     p_hash_method in varchar2,

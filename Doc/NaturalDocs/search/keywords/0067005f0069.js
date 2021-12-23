@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("g_i",["Variable"],[["g_is_multipart_mail",,[["Output Modules.PIT_MAIL.MAIL Body",,,,0,"File:modules/pit_mail/packages/mail.pkb:Output_Modules.PIT_MAIL.MAIL_Body.g_is_multipart_mail","SQLClass:Output_Modules.PIT_MAIL.MAIL_Body:g_is_multipart_mail"]]]]);

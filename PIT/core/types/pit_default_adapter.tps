@@ -1,4 +1,4 @@
-create or replace type pit_default_adapter as object(
+create or replace type pit_default_adapter force as object(
   /** 
     Type: pit_default_adapter
       Adapter code to be injected into the PIT installation. Detects session id and username 

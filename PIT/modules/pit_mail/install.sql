@@ -8,7 +8,7 @@ prompt &h1.Module PIT_MAIL
 prompt &h2.Delete existing types and packages
 @&install_dir.clean_up_install.sql
 
-prompt &h2.Grant user rights to &INSTALL_USER.
+prompt &h2.Grant user rights to &PIT_USER.
 @&tools.run_script user_grants
 
 prompt &h2.Create queue table for PIT_MAIL

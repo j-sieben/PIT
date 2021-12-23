@@ -1,4 +1,4 @@
-create or replace type pit_log_state_type
+create or replace type pit_log_state_type force
   authid definer
 is object (
   /**

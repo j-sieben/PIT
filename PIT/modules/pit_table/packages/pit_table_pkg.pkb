@@ -1,7 +1,7 @@
 create or replace package body pit_table_pkg 
 as
   /** 
-    Package: PIT_TABLE_PKG Body
+    Package: Output Modules.PIT_TABLE.PIT_TABLE_PKG Body
       Implementation package for type <PIT_TABLE>
    
     Author:: 

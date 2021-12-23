@@ -1,22 +1,37 @@
 create or replace package body mail_ntlm
 as
-  /** Package implementation to allow to authenticate to a NTLM SMTP server
-      Disclaimer
-        This package is a PL/SQL port from the Ntml.java, distributed under
-        GNU General Public License Version 2 only ("GPL") or the Common Development
-        and Distribution License("CDDL") 1.0 (see https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html).
-        Ntlm.java is part of javamail, available at http://kenai.com/projects/javamail
-        Authors Michael McMahon and Bill Shannon
-        Port made by Javier Martin-Ortega, under GPL v2
+  /** 
+    Package: Output Modules.PIT_MAIL.MAIL_NTLM Body
+      Package to allow to authenticate to a NTLM SMTP server
+      
+    Disclaimer::
+      This package is a PL/SQL port from the Ntml.java, distributed under
+      <GNU General Public License Version 2 only ("GPL") or the Common Development
+      and Distribution License("CDDL") 1.0: https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html>.
+      Ntlm.java is part of javamail, available at http://kenai.com/projects/javamail
+      Authors: Michael McMahon and Bill Shannon
+      Port made by Javier Martin-Ortega, under GPL v2
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
   */
 
-  /* Package constants */
+  /** 
+    Group: Private Constants
+  */
+
+  /**
+    Constants: Crypt-related constants
+      C_CRYPT_TYPE - Encryption method required for NTLM
+      C_MAGIC - Salt information
+      C_NTLM - Name of the authentication method NTLM
+  */
   c_crypt_type constant pls_integer :=
     dbms_crypto.chain_ecb + dbms_crypto.encrypt_des + dbms_crypto.pad_none;
   c_magic constant varchar2(16):='4b47532140232425';
   c_ntlm constant varchar2(10) := 'NTLM';
 
-  /* HELPER Functions */
+
   function bitor(
     p_x in number,
     p_y in number)
@@ -62,6 +77,20 @@ as
   end binary_ops;
 
 
+  /**
+    Group: Helper Methods
+   */
+  /** 
+    Function: create_des_key
+      Method to create a DES key based on the input parameters
+      
+    Parameters:
+      p_key - Key
+      p_offset - Offset value for the key
+      
+    Returns:
+      DES key
+   */
   function create_des_key(
     p_key varchar,
     p_offset number)
@@ -79,7 +108,16 @@ as
   end create_des_key;
 
 
-  -- Add a parity bit at the end of every byte
+  /**
+    Function: add_parity_bit
+      Adds a parity bit at the end of every byte
+      
+    Parameter:
+      p_des_key - DES key
+    
+    Returns: 
+      DES key with the parity bits added
+   */
   function add_parity_bit(
     p_des_key in varchar2)
     return varchar2
@@ -108,6 +146,16 @@ as
   end add_parity_bit;
 
 
+  /**
+    Function: generate_secret
+      Generates a secret from the DES key
+      
+    Parameter:
+      p_des_key - DES key
+    
+    Returns: 
+      Secret
+   */
   function generate_secret(
     p_des_key varchar2)
     return varchar2
@@ -124,6 +172,16 @@ as
   end;
 
 
+  /**
+    Function: get_utf_little_unmarked
+      Converts <P_TEXT> to Unicode by simply adding a 00 byte after every original text's byte
+      
+    Parameter:
+      p_text - Text to convert
+      
+    Returns:
+      Unicode encoded string
+   */
   function get_utf_little_unmarked(
     p_text varchar2)
     return varchar2
@@ -140,6 +198,16 @@ as
   end get_utf_little_unmarked;
 
 
+  /**
+    Function: length_in_two_bytes
+      Returns the length passed in as <P_DATA> in a two byte representation
+      
+    Parameter:
+      p_data - Length to convert
+      
+    Returns:
+      Length as a two byte string
+   */
   function length_in_two_bytes(
     p_data number)
     return varchar2
@@ -150,6 +218,16 @@ as
   end length_in_two_bytes;
 
 
+  /**
+    Function: calc_response
+    
+    Parameters:
+      p_key - Key
+      p_test - Textto encrypt
+    
+    Returns:
+      Encrypted version of <P_TEXT> 
+   */
   function calc_response(
     p_key in varchar2,
     p_text in varchar2)
@@ -177,6 +255,15 @@ as
   end calc_response;
 
 
+  /**
+    Function: calc_lm_hash
+      
+    Parameter:
+      p_password - Password to hash
+      
+    Returns: 
+      Encrypted password for LM
+   */
   function calc_lm_hash (
     p_password in varchar2)
     return varchar2
@@ -200,6 +287,15 @@ as
   end calc_lm_hash;
 
 
+  /**
+    Function: calc_nt_hash
+      
+    Parameter:
+      p_password - Password to hash
+      
+    Returns: 
+      Encrypted password for NT
+   */
   function calc_nt_hash(
     p_password varchar2)
     return varchar2
@@ -214,7 +310,18 @@ as
       1, 16 * 2), 21 * 2, '0');
   end calc_nt_hash;
 
-
+  
+  /**
+    Function: generate_first_msg
+      Generates the initial message to authenticate
+      
+    Parameters:
+      p_domain - Domain of the mail server
+      p_host - Name of the mail server
+      
+    Returns:
+      Initial message
+   */
   function generate_first_msg(
     p_domain in varchar2,
     p_host in varchar2)
@@ -261,6 +368,20 @@ as
   end generate_first_msg;
 
 
+  /**
+    Function: generate_second_msg
+      Generates the initial message to authenticate
+      
+    Parameters:
+      p_first_reply - First reply of the server
+      p_user - User name to authenticate
+      p_password - Password of the user
+      p_domain - Domain of the mail server
+      p_host - Name of the mail server
+      
+    Returns:
+      Second message
+   */
   function generate_second_msg(
     p_first_reply in varchar2,
     p_user in varchar2,
@@ -344,7 +465,13 @@ as
   end generate_second_msg;
 
 
-  /* INTERFACE-Implementation */
+  /**
+    Group: Interface
+   */
+  /**
+    Procedure: authenticate
+      see: <MAIL_NTLM.authenticate>
+   */
   procedure authenticate(
     p_conn in out nocopy utl_smtp.connection,
     p_host in varchar2,

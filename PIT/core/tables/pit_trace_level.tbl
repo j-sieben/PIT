@@ -6,7 +6,7 @@ create table pit_trace_level(
   constraint pit_trace_level_pk primary key(ptl_name),
   constraint fk_ptl_pti_id foreign key(ptl_pti_id, ptl_pti_pmg_id)
     references pit_translatable_item(pti_uid, pti_upmg)
-) organization index;
+) organization index tablespace &DEFAULT_TABLESPACE.;
 
 
 

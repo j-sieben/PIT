@@ -6,9 +6,6 @@ prompt &h3.Remove existing installation
 prompt &h3.Installing context parameters
 @&tools.run_script ParameterGroup_CONTEXT
 
-prompt &h3.Create type declarations
-@&tools.install_type_spec pit_args
-
 prompt &h3.Installing packages
 @&tools.install_package_spec utl_context
 

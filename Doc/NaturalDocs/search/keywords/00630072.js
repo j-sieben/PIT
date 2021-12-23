@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("cr",["Constant"],[["CR",,[["Output Modules.PIT_MAIL.MAIL Body",,,,0,"File:modules/pit_mail/packages/mail.pkb:Output_Modules.PIT_MAIL.MAIL_Body.CR","SQLClass:Output_Modules.PIT_MAIL.MAIL_Body:CR"]]]]);

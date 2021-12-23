@@ -3,7 +3,7 @@ create or replace package pit_apex_pkg
 as
 
   /**
-    Package: MODULE.PIT_APEX_PKG
+    Package: Output Modules.PIT_APEX.PIT_APEX_PKG
       Implementation package for type <PIT_APEX>
       
       Notify functionality is based on the work of Daniel Hochleitner
@@ -28,7 +28,7 @@ as
   /**
     Procedure: log
       Method to write log information to the APEX debug stack.
-      Method implements the <PIT_APEX> log member procedure and writes the message attributes to the APEX debug stack.
+      Method implements the <PIT_APEX.log> member procedure and writes the message attributes to the APEX debug stack.
       
     Parameter:
       p_message - Instance of <MESSAGE_TYPE>
@@ -40,7 +40,7 @@ as
   /** 
     Procedure: log
       Method to write state information to the APEX debug stack.
-      Method implements the <PIT_APEX> log member procedure overload for <PIT_LOG_STATE_TYPE> and writes 
+      Method implements the <PIT_APEX.log> member procedure overload for <PIT_LOG_STATE_TYPE> and writes 
       the key value pairs of <MSG_PARAM> to the console.
       
     Parameter:
@@ -53,7 +53,7 @@ as
   /** 
     Procedure: print
       Method to write general information to the APEX application.
-      Method implements the <PIT_APEX> print member procedure of type <PIT_APEX>
+      Method implements the <PIT_APEX.print> member procedure of type <PIT_APEX>
       and writes the message attributes to the APEX http stream.
       
     Parameter:
@@ -67,7 +67,7 @@ as
     Procedure: notify
       Method to write log information to the APEX application.
       
-      Method implements the <PIT_APEX> notify member procedure and writes the message attributes to the APEX http stream.
+      Method implements the <PIT_MODULE.PIT_APEX.notify> member procedure and writes the message attributes to the APEX http stream.
       
       This method uses a web socket connection and should be used if a progress or other state information has to be shown
       at the apex application. It will take the session id parameter of <MESSAGE_TYPE> to route the message to the correct client.
@@ -86,7 +86,7 @@ as
     Procedure: enter
       Method to write call stack information on enter to the APEX debug stack.
       
-      Method implements the <PIT_APEX> enter member procedure and writes the call stack type attributes 
+      Method implements the <PIT_MODULE.PIT_APEX.enter> member procedure and writes the call stack type attributes 
       to the APEX debug stack. Requires an APEX log level of LEVEL5 or higher to show the entries.
       
     Parameter:
@@ -100,7 +100,7 @@ as
     Procedure: leave
       Method to write call stack information on leave to the APEX debug stack.
       
-      Method implements the <PIT_APEX> leave member procedure and writes the call stack type attributes 
+      Method implements the <PIT_MODULE.PIT_APEX.leave> member procedure and writes the call stack type attributes 
       to the APEX debug stack. Requires an APEX log level of LEVEL5 or higher to show the entries.
       
     Parameter:
@@ -112,7 +112,7 @@ as
   
   /** 
     Procedure: initialize_module
-      Initialization method for <PIT_APEX> output module.
+      Initialization method for <PIT_MODULE.PIT_APEX> output module.
       
       Method implements the parameterless constructor method of <PIT_APEX>.
       This method marks the output module available only in an existing APEX environment.

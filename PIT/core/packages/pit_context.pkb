@@ -222,15 +222,13 @@ as
   procedure get_active_context
   as
     l_settings pit_util.max_sql_char;
-    l_args pit_args := pit_args(C_CONTEXT_ACTIVE);
   begin
     $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
     -- Initialize    
     l_settings := 
-      utl_context.get_first_match(
+      utl_context.get_value(
         p_context => C_GLOBAL_CONTEXT,
-        p_attribute_list => l_args, 
-        p_with_name => false, 
+        p_attribute => C_CONTEXT_ACTIVE, 
         p_client_id => g_client_id);
         
     case when l_settings is null then
@@ -678,7 +676,7 @@ as
   return pit_args pipelined
   as
     C_MESSAGE_TEMPLATE constant pit_util.max_sql_char := q'|Status of #IDX#: #STATUS#, Threshold: #THRESHOLD#|';
-    l_idx pit_util.ora_name_type;
+    l_idx binary_integer;
     l_message pit_util.max_sql_char;
   begin
     -- initialize
@@ -761,6 +759,10 @@ as
     p_self.trace_timing := l_args(3);
     p_self.log_modules := pit_util.string_to_table(l_args(4));
     p_self.trace_settings := p_settings;
+  exception
+    when others then
+      dbms_output.put_line('Unknown error at ' || p_settings || ': ' || substr(sqlerrm, 12));
+      raise;
   end instantiate_pit_context_type;
   
 begin

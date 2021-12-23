@@ -1,14 +1,32 @@
-create or replace
-package body pit_file_pkg
+create or replace package body pit_file_pkg
 as
 
-  /** Implementation of PIT_FILE output module */
+  /**
+    Package: Output Modules.PIT_FILE.PIT_FILE_PKG Body
+      Implements MODULE.PIT_FILE output module methods
+
+    Author::
+      Juergen Sieben, ConDeS GmbH
+
+      Published under MIT licence
+   */
+   
+  /**
+    Group: Constants and global variables 
+  */
   
-  /* Constants and global variables */
-  type param_tab is table of pit_util.ora_name_type
-    index by pit_util.ora_name_type;
-  g_param_list param_tab;
-  
+  /**
+    Constants: Parameter constants
+      C_PARAM_GROUP - Parameter group of <PIT>
+      C_PIT_FILE - Prefix for parameter names
+      C_FIRE_THRESHOLD - Parameter name for the fire threshold
+      C_OUT_DIRECTORY - Parameter name for the directory object to write to
+      C_FILE_NAME - Parameter name for the file name of the trace file
+      C_ENTER_TEMPLATE - Parameter name for the ENTER-Template
+      C_LEAVE_TEMPLATE - Parameter name for the LEAVE-Template
+      C_MESSAGE_TEMPLATE - Parameter name for the MESSAGE_TYPE-Template
+      C_LEVEL_INDICATOR - Parameter name for the level indicator
+   */
   C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
   C_PIT_FILE constant pit_util.ora_name_type := 'PIT_FILE';
   C_FIRE_THRESHOLD constant pit_util.ora_name_type := C_PIT_FILE || '_FIRE_THRESHOLD';
@@ -35,8 +53,11 @@ as
   g_leave_template varchar2(2000);
   g_level_indicator varchar2(100);
   
-  /** Initialization method
-   * %usage Is called by INITIALIZE_MODULE and reads several parameters into global variables
+  /**
+    Procedure: initialize
+      Initialization method.
+      
+      Is called by <INITIALIZE_MODULE> and reads several parameters into global variables
    */
   procedure initialize
   as
@@ -48,9 +69,15 @@ as
   end initialize;
 
   
-  /** Helper method to open the log file.
-   * %param p_write_mode flag according to UTL_FILE to control how a file has to be opened
-   * %usage Is called to prepare the log file for writing.
+  /**
+    Group: Helper Methods
+   */
+  /** 
+    Procedure: open_file
+      Helper method to open the log file. Is called to prepare the log file for writing.
+      
+    Parameter:
+      p_write_mode - Flag according to UTL_FILE to control how a file has to be opened
    */
   procedure open_file(
     p_write_mode in char)
@@ -62,8 +89,9 @@ as
   end open_file;
   
   
-  /** Helper to close the log file.
-   * %usage Is called to close the log file and release the resources
+  /** 
+    Procedure: close_file
+      Helper to close the log file. Is called to close the log file and release the resources.
    */
   procedure close_file
   as
@@ -74,9 +102,12 @@ as
   end close_file;
   
   
-  /** Helper to write text to the log file
-   * %param p_text Text that is appended to the log file
-   * %usage Is called to append text to the log file
+  /** 
+    Procedure write_to_file
+      Helper to write text to the log file
+      
+    Parameter:
+      p_text - Text that is appended to the log file.
    */
   procedure write_to_file(
     p_text in varchar2)
@@ -86,12 +117,16 @@ as
   end write_to_file;
   
   
-  /** Helper to format call stack entries to write them to the log file
-   * %param p_call_stack Instance of call stack to be printed
-   * %param p_template Name of the template to be used to format the output.
-   * %usage Templates are defined as parameters and referenced here to control
-   *        the formatting of the call stack. After formatting, procedure WRITE_TO_FILE
-   *        is called to append the call stack to the log file.
+  /** 
+    Procedure: write_call_stack
+      Helper to format call stack entries to write them to the log file.
+      
+      Templates are defined as parameters and referenced here to control the formatting of the call stack. 
+      After formatting, procedure <WRITE_TO_FILE> is called to append the call stack to the log file.
+      
+    Parameters:
+      p_call_stack - Instance of <PIT_CALL_STACK> to be printed
+      p_template - Name of the template to be used to format the output.
    */
   procedure write_call_stack(
     p_call_stack in pit_call_stack_type,
@@ -124,8 +159,14 @@ as
     write_to_file(l_message);
   end write_call_stack;
   
-    
-  /* INTERFACE */  
+  
+  /**
+    Group: Interface
+   */
+  /**
+    Procedure: log
+      see <pit_file_pkg.log>
+   */
   procedure log(
     p_message in message_type)
   as
@@ -138,6 +179,10 @@ as
   end log;
   
   
+  /**
+    Procedure: log
+      see <pit_file_pkg.log>
+   */
   procedure log(
     p_params in msg_params)
   as
@@ -162,6 +207,10 @@ as
   end log;
   
   
+  /**
+    Procedure: purge
+      see <pit_file_pkg.purge>
+   */
   procedure purge
   as
   begin
@@ -173,6 +222,10 @@ as
   end purge;
   
   
+  /**
+    Procedure: enter
+      see <pit_file_pkg.enter>
+   */
   procedure enter(
     p_call_stack in pit_call_stack_type)
   as
@@ -181,6 +234,10 @@ as
   end enter;
   
   
+  /**
+    Procedure: leave
+      see <pit_file_pkg.leave>
+   */
   procedure leave(
     p_call_stack in pit_call_stack_type)
   as
@@ -189,6 +246,10 @@ as
   end leave;
   
   
+  /**
+    Procedure: initialize_module
+      see <pit_file_pkg.initialize_module>
+   */
   procedure initialize_module(
     self in out pit_file)
   as

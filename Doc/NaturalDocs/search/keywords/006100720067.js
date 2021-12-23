@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("arg",["Type"],[["args",,[[,,,,0,"File:core/types/args.tps:args"]]]]);

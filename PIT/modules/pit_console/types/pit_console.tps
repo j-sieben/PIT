@@ -1,7 +1,7 @@
 create or replace type pit_console force under pit_module(
   /** 
-    Type: PIT_MODULE.pit_console
-      Output module to write to the console 
+    Package: Output Modules.PIT_CONSOLE.PIT_CONSOLE
+      Output module to write to the console. Extends <PIT_MODULE>.
    */
   
   /** 
@@ -59,7 +59,10 @@ create or replace type pit_console force under pit_module(
     self in out nocopy pit_console,
     p_ctx in pit_context_type),
     
-  /** Constructor function */
+  /** 
+    Procedure: pit-console
+      Contructor function to instantiate the output module.
+   */
   constructor function pit_console (
     self in out nocopy pit_console)
     return self as result)

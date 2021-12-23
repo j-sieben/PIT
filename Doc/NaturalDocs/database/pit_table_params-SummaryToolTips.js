@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("Database:pit_table_params",{865:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">table for trace and time information</div></div>"});

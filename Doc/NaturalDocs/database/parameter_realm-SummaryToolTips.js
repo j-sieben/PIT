@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("Database:parameter_realm",{856:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Lookup for parameter realms</div></div>"});

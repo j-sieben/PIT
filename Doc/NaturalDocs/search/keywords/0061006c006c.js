@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("all",["Function"],[["allows_toggle",,[["PIT_CONTEXT Body",,,,0,"File:core/packages/pit_context.pkb:PIT_CONTEXT_Body.allows_toggle","SQLClass:PIT_CONTEXT_Body:allows_toggle"],["pit_context",,,,0,"File:core/packages/pit_context.pks:pit_context.allows_toggle","SQLClass:pit_context:allows_toggle"]]]]);

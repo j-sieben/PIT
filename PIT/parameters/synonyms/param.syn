@@ -1,1 +1,1 @@
-create synonym param for &INSTALL_USER..param;
+create synonym param for &PIT_USER..param;

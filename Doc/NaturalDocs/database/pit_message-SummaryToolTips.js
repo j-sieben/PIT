@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("Database:pit_message",{540:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">central log message repository in various languages.</div></div>"});

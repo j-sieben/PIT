@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("Database:parameter_group",{854:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Lookup for parameter groups</div></div>"});

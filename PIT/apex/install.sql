@@ -5,31 +5,7 @@ define tools=tools/
 
 prompt &h2.Installation in Schema &REMOTE_USER.
 prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
-
--- Types
-@&tools.grant_access.sql execute PIT_CONTEXT_TYPE
-
--- Packages
-@&tools.grant_access.sql execute MAIL
-@&tools.grant_access.sql execute PIT_APEX_PKG
-@&tools.grant_access.sql execute PIT_CONSOLE_PKG
-@&tools.grant_access.sql execute PIT_FILE_PKG
-@&tools.grant_access.sql execute PIT_MAIL_PKG
-@&tools.grant_access.sql execute PIT_TABLE_PKG
-@&tools.grant_access.sql execute PIT_MODULE_META
-
--- Tables and Views
-@&tools.grant_access.sql select PIT_MESSAGE
-@&tools.grant_access.sql select PIT_MESSAGE_GROUP
-@&tools.grant_access.sql select PIT_MESSAGE_LANGUAGE
-@&tools.grant_access.sql select PIT_MESSAGE_SEVERITY
-@&tools.grant_access.sql select PIT_MESSAGE_SEVERITY_V
-@&tools.grant_access.sql select PIT_TRACE_LEVEL
-@&tools.grant_access.sql select PIT_TRACE_LEVEL_V
-@&tools.grant_access.sql select PIT_MESSAGE_LANGUAGE_V
-@&tools.grant_access.sql select PIT_MESSAGE_V
-
-alter session set current_schema=&REMOTE_USER.;
+@install_scripts/pit_register_apex.sql
 
 prompt &h3.Create UI-VIEWS
 --@&tools.install_view apex_ui_list_menu -- Part of UTL_APEX, no need to overwrite

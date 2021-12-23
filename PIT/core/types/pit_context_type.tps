@@ -1,4 +1,4 @@
-create or replace type pit_context_type as object(
+create or replace type pit_context_type force as object(
   /** 
     Type: pit_context
       Object to collect context settings

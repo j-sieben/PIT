@@ -1,4 +1,4 @@
-create or replace type pit_module_meta as object(
+create or replace type pit_module_meta force as object(
   /** 
     Type: pit_module_meta
       Provides meta information for output modules to be used in a pipelined function.

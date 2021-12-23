@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("Database:parameter_group","parameter_group");NDSummary.OnSummaryLoaded("Database:parameter_group",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[854,0,0,"parameter_group"]]);

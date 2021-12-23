@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("Database:utl_text_templates","utl_text_templates");NDSummary.OnSummaryLoaded("Database:utl_text_templates",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[868,0,0,"utl_text_templates"]]);

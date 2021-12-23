@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("cli",["Type"],[["client_info_t",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.client_info_t","SQLClass:PIT_PKG_Body:client_info_t"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("cli",["Type"],[["client_info_t",,[["PIT_INTERNAL Body",,,,0,"File:core/packages/pit_internal.pkb:PIT_INTERNAL_Body.client_info_t","SQLClass:PIT_INTERNAL_Body:client_info_t"]]]]);

@@ -1,23 +1,43 @@
 create or replace package mail_cram
   authid definer
 as
-  /** Package to allow to authenticate to a CRAM SMTP server
-      Disclaimer
-        Based on a blog by Sean Stuber:
-        http://www.experts-exchange.com/Database/Oracle/A_5915-Extending-Oracle%27s-Email-functionality-with-PL-SQL-Authentication.html
+  /** 
+    Package: Output Modules.PIT_MAIL.MAIL_CRAM
+      Package to allow to authenticate to a CRAM SMTP server
+      
+    Disclaimer::
+      Based on a <blog: http://www.experts-exchange.com/Database/Oracle/A_5915-Extending-Oracle%27s-Email-functionality-with-PL-SQL-Authentication.html> by Sean Stuber.        
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
   */
 
-  /* Public constant declarations */
-  c_hash_md5 constant varchar2(20) := 'CRAM-MD5';
-  c_hash_sha1 constant varchar2(20) := 'CRAM-SHA1';
+  /**
+    Group: Public Constants
+   */
+  /**
+    Constants: Crypto-related constants
+      C_HASH_MD5 - MD5 has algorythm
+      C_HASH_SHA1 - SHA1 has algorythm
+   */
+  C_HASH_MD5 constant varchar2(20) := 'CRAM-MD5';
+  C_HASH_SHA1 constant varchar2(20) := 'CRAM-SHA1';
 
 
-  /** Method to authenticate with a CRAM SMTP server like Exchange
-   * %param  p_conn         Parameter for the actual SMTP-connection
-   * %param  p_hash_method  One of the package constants to identify the authentication method
-   * %param  p_user_name    Name of the user to authenticate
-   * %param  p_password     Authentication users password
-   * %usage  Procedure will authenticate p_conn with the credentials provided and return the connection
+  /**
+    Group: Public Methods
+   */
+  /** 
+    Procedure: authenticate
+      Method to authenticate with a CRAM SMTP server like Exchange with the credentials provided and return the connection.
+      
+      Connection is passed back via <P_CONN> parameter.
+      
+    Parameters:
+      p_conn - Parameter for the actual SMTP-connection
+      p_hash_method - One of the <C_HASH_MD5>|<C_HASH_SHA1> to identify the authentication method
+      p_user_name - Name of the user to authenticate
+      p_password - Authentication users password
    */
   procedure authenticate(
     p_conn in out nocopy utl_SMTP.connection,

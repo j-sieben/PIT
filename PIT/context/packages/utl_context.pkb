@@ -6,6 +6,7 @@ as
   /* PACKAGE CONSTANTS */
   -- Global Constants
   C_PACKAGE_NAME constant ora_name_type := $$PLSQL_UNIT;
+  C_OWNER constant ora_name_type := $$PLSQL_UNIT_OWNER;
   C_TRUE constant flag_type := &C_TRUE.;
   C_FALSE constant flag_type := &C_FALSE.;
 
@@ -53,7 +54,6 @@ as
 
   g_context_settings context_settings_tab;
   g_context_setting context_setting_rec;
-  g_user ora_name_type;
 
   /* Helper to check whether a context is maintained by this package
    * %param  p_context  Name of the context to check
@@ -71,7 +71,7 @@ as
       $END
     elsif not g_context_settings.exists(p_context) then
       $IF $$PIT_INSTALLED $THEN
-      pit.error(msg.CTX_INVALID_CONTEXT, msg_args(p_context, $$PLSQL_UNIT));
+      pit.error(msg.CTX_INVALID_CONTEXT, msg_args(p_context, C_PACKAGE_NAME));
       $ELSE
       raise_application_error(-20998,
         replace(
@@ -103,7 +103,7 @@ as
   as
   begin
     if g_context_setting.with_user_name then
-      return g_user;
+      return C_OWNER;
     else
       return null;
     end if;
@@ -148,19 +148,18 @@ as
                   end is_global
         from dba_context
        where package = C_PACKAGE_NAME
-         and schema = user;
+         and schema = C_OWNER;
     l_dummy ora_name_type;
     l_context_type ora_name_type;
     l_parameter_id ora_name_type;
     l_empty_ctx_setting context_setting_rec;
   begin
-    g_user := user;
     for ctx in ctx_cur loop
       g_context_setting := l_empty_ctx_setting;
       g_context_setting.is_global := case ctx.is_global
         when C_TRUE then true else false end;
       if g_context_setting.is_global then
-        l_parameter_id := replace(ctx.namespace, '_APEX_BUCH') || C_PARAMETER_POSTFIX;
+        l_parameter_id := ctx.namespace || C_PARAMETER_POSTFIX;
         begin
           l_context_type := to_char(param.get_string(l_parameter_id, C_PARAMETER_GROUP_ID));
         exception
@@ -275,43 +274,6 @@ as
     dbms_session.clear_context(
       p_context, nvl(p_client_id, get_client_id), p_attribute);
   end clear_value;
-
-
-  function get_first_match(
-    p_context in varchar2,
-    p_attribute_list in pit_args,
-    p_with_name in boolean default false,
-    p_client_id varchar2 default null)
-    return varchar2
-  as
-    l_value sql_char;
-  begin
-    read_settings(p_context);
-    for i in 1 .. p_attribute_list.count loop
-      l_value := sys_context(p_context, p_attribute_list(i));
-      case
-      when l_value is null and g_context_setting.with_fallback
-      then -- Fallback auf allgemeinen Parameter
-        l_value := get_with_client_id(
-                     p_context, p_attribute_list(i), '');
-      when l_value is null and g_context_setting.with_session_id
-      then -- Lese sessionspezifischen Parameter
-        l_value := get_with_client_id(
-                     p_context, p_attribute_list(i),
-                     nvl(p_client_id, sys_context(C_ENV, C_SESSION_ID)));
-      else
-        null;
-      end case;
-      if l_value is not null then
-        if p_with_name then
-          l_value := l_value || c_name_delimiter || p_attribute_list(i);
-        end if;
-        -- Value found, exit loop
-        exit;
-      end if;
-    end loop;
-    return l_value;
-  end get_first_match;
 
 
   procedure reset_context(

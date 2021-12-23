@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ext",["Function"],[["extract_mail_address",,[["Output Modules.PIT_MAIL.MAIL Body",,,,0,"File:modules/pit_mail/packages/mail.pkb:Output_Modules.PIT_MAIL.MAIL_Body.extract_mail_address","SQLClass:Output_Modules.PIT_MAIL.MAIL_Body:extract_mail_address"]]]]);

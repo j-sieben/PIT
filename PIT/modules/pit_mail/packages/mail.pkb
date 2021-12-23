@@ -1,18 +1,47 @@
 create or replace package body mail
 as
 
-  /** Package implementation to wrap sending mails via UTL_SMTP */
+  /**
+    Package: Output Modules.PIT_MAIL.MAIL Body
+      Package to wrap sending mails via UTL_SMTP
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
+   */
 
-  /* Constants */
+  /**
+    Group: Private Constants
+   */
+  /**
+    Constants: Email constants
+      CR - Carriage return, taken from <UTL_TCP>
+      C_BOUNDARY - Boundary string to separate parts within a mail
+      C_PARAM_GROUP - Name of the parameter group
+   */
   CR varchar2(2) := utl_tcp.crlf;
   C_BOUNDARY constant varchar2(100) := '---+#abc1234321cba#+--';
   C_PARAM_GROUP constant varchar2(100) := 'MISC';
   
-  /* Public variable declarations */
+  /**
+    Group: Private global variables
+   */
+  /**
+    Variables: email related global variables
+      g_host - Host of the email server
+      g_port - Portnummer of the email server
+      g_usr - Name of the user to authenticate with the email server
+      g_pwd - Password of the user to authenticate with the email server
+      g_sender - Email address of the sender
+      g_encoding - Encoding to use for the mails
+      g_is_multipart_mail - Flag to indicate whether a mail is a multipart mail
+      g_html_content_type - Header information for an email in HTML format
+      g_multipart_content_type - Header information for a multipart email
+      g_trace_text - Trace information, is filled upon sending a mail
+   */
   g_pkg_is_working boolean;
   g_host varchar2(64);
-  g_sender varchar2(200);
   g_port pls_integer := 25;
+  g_sender varchar2(200);
   g_usr varchar2(64);
   g_pwd varchar2(64);
   g_encoding varchar2(20);
@@ -24,6 +53,16 @@ as
   g_prompt_flag boolean := false;
 
 
+  /**
+    Group: Private Helper Methods
+   */
+  /**
+    Function: mail_server_access_granted
+      Checks whether a mail server has granted access succesfully.
+    
+    Returns:
+      Flag to indicate whether the user could authenticate at the mail server (TRUE) or not (FALSE)
+   */
   function mail_server_access_granted
     return boolean
   as
@@ -49,6 +88,13 @@ as
   end mail_server_access_granted;
 
 
+  /**
+    Function: mail_server_accessible
+      Checks whether a mail server can be contacted over the net succesfully.
+    
+    Returns:
+      Flag to indicate whether the mail server could be contacted (TRUE) or not (FALSE)
+   */
   function mail_server_accessible
     return boolean
   as
@@ -72,49 +118,18 @@ as
   end mail_server_accessible;
 
 
-  procedure initialize
-  as
-  begin
-    pit.enter_mandatory;
+  /**
+    Function: encode_item
+      Method to convert text to an encoded data island.
+      
+      This method is a wrapper around <UTL_ENCODE>.quoted_printable_encode.
     
-    select case value
-             when 'AL32UTF8' then 'utf-8'
-             else 'iso-8859-15' end char_set
-      into g_encoding
-      from v$nls_parameters
-     where parameter = 'NLS_CHARACTERSET';
-
-    g_html_content_type := 'text/html; charset=' || g_encoding;
-
-    with connection as (
-           select reverse(
-                    utl_raw.cast_to_varchar2(
-                      utl_encode.base64_decode(
-                        substr(param.get_string('SEND', C_PARAM_GROUP), 1, 512)))) connect_string
-             from dual),
-         data as (
-           select connect_string,
-                  instr(connect_string, '/') usr_pwd,
-                  instr(connect_string, '^', -1) pwd_host,
-                  instr(connect_string, ':', -1) host_port
-             from connection)
-    select substr(connect_string, 1, usr_pwd - 1) usr,
-           substr(connect_string, usr_pwd + 1, pwd_host - usr_pwd - 1) pwd,
-           substr(connect_string, pwd_host + 1, host_port - pwd_host - 1) host,
-           substr(connect_string, host_port + 1) port
-      into g_usr, g_pwd, g_host, g_port
-      from data;    
-
-    g_pkg_is_working := mail_server_access_granted and mail_server_accessible;
-    
-    pit.leave_mandatory;
-  exception
-    when others then
-      pit.handle_exception(msg.MAIL_PKG_NOT_WORKING);
-      g_pkg_is_working := false;
-  end initialize;
-
-
+    Parameter:
+      p_item - Element to encode
+      
+    Returns:
+      Encoded value of <p_item>
+   */
   function encode_item(
     p_item in varchar2)
     return varchar2
@@ -138,8 +153,18 @@ as
       p_params => msg_params(msg_param('Result', l_result)));
     return l_result;
   end encode_item;
+  
 
-
+  /**
+    Function: create_address_list
+      Method to convert a semicolon-delimited list of email addresses into an instance of <ADDRESS_TAB>.
+    
+    Parameter:
+      p_address_list - emicolon-delimited list of email addresses
+      
+    Returns:
+      Instance of <ADDRESS_TAB>
+   */
   function create_address_list(
     p_address_list in varchar2)
     return address_tab
@@ -168,6 +193,16 @@ as
   end create_address_list;
 
 
+  /**
+    Function: extract_mail_address
+      Method to extract the mail address from an address of form "user.name <email_address>" or "email_address".
+    
+    Parameter:
+      p_address - address of form "user.name <email_address>" or "email_address".
+      
+    Returns:
+      Email address portion of <p_address>
+   */
   function extract_mail_address(
     p_address in varchar2)
     return varchar2
@@ -191,6 +226,16 @@ as
   end extract_mail_address;
 
 
+  /**
+    Function: encode_mail_address
+      Method to encode the mail address
+    
+    Parameter:
+      p_address - address of form "user.name <email_address>" or "email_address".
+      
+    Returns:
+      Email address with an encoded user name portion, if present
+   */
   function encode_mail_address(
     p_address in varchar2)
     return varchar2
@@ -219,6 +264,13 @@ as
   end encode_mail_address;
 
 
+  /**
+    Procedure: write_log
+      Method to write connection or process steps to <g_trace_text>
+    
+    Parameter:
+      p_text - Text to add to <g_trace_text>
+   */
   procedure write_log(
     p_text in varchar2)
   as
@@ -241,6 +293,15 @@ as
   end write_log;
 
 
+  /**
+    Procedure: write_header
+      Method to write header information in the correct format
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+      p_item - Header item to write
+      p_text - Header item value to write
+   */
   procedure write_header(
     p_conn in out nocopy utl_smtp.connection,
     p_item in varchar2,
@@ -252,6 +313,14 @@ as
   end write_header;
 
 
+  /**
+    Procedure: write_body
+      Method to write body text to the <UTL_SMTP> connection
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+      p_text - Body text to write
+   */
   procedure write_body(
     p_conn in out nocopy utl_smtp.connection,
     p_text in varchar2)
@@ -262,6 +331,15 @@ as
   end write_body;
 
 
+  /**
+    Procedure: write_boundary
+      Method to write boundary text to the <UTL_SMTP> connection
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+      p_last_boundary - Flag to indicate whether this is the last boundary of the mail.
+                        If TRUE, the method adds a comment to close the boundary sections.
+   */
   procedure write_boundary(
     p_conn in out nocopy utl_smtp.connection,
     p_last_boundary in boolean default false)
@@ -274,6 +352,13 @@ as
   end write_boundary;
 
 
+  /**
+    Procedure: authenticate_via_login
+      Method to authenticate at the mail server. User credentials are taken from <g_usr> and <g_pwd> global variables.
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+   */
   procedure authenticate_via_login(
     p_conn in out nocopy utl_smtp.connection)
   as
@@ -293,6 +378,14 @@ as
   end authenticate_via_login;
 
 
+  /**
+    Procedure: authenticate_via_plain
+      Method to authenticate at the mail server via AUTH PLAIN mechanism.
+      User credentials are taken from <g_usr> and <g_pwd> global variables.
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+   */
   procedure authenticate_via_plain(
     p_conn in out nocopy utl_smtp.connection)
   as
@@ -315,6 +408,17 @@ as
   end authenticate_via_plain;
 
 
+  /**
+    Procedure: connect_mail_server
+      Method to connect the mail server and authenticate.
+      
+      The method reacts on the initial reply of the mail server to decide upon
+      the authentication mechanisma to use. LOGIN and PLAIN are support directly
+      within this package, CRAM and NTLM via package <MAIL_CRAM> and <MAIL_NTLM> respectively.
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+   */
   procedure connect_mail_server(
     p_conn out nocopy utl_smtp.connection)
   as
@@ -375,6 +479,17 @@ as
   end connect_mail_server;
 
 
+  /**
+    Procedure: set_recipient_list
+      Method to set the recipients list for the mail.
+    
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+      p_sender - Sender of the mail
+      p_subject - Subject of the mail
+      p_recipients - Instance of <ADDRESS_TAB> with the recipients
+      p_cc_recipients - Instance of <ADDRESS_TAB> with the cc_recipients
+   */
   procedure set_recipient_list(
     p_conn in out nocopy utl_smtp.connection,
     p_sender in varchar2,
@@ -429,6 +544,13 @@ as
   end set_recipient_list;
 
 
+  /**
+    Procedure: set_content_type
+      Method to set the content type of the mail according to <g_is_multipart_mail>.
+      
+    Parameter:
+      p_conn - <UTL_SMTP> connection
+   */
   procedure set_content_type(
     p_conn in out nocopy utl_smtp.connection)
   as
@@ -447,6 +569,14 @@ as
   end set_content_type;
 
 
+  /**
+    Procedure: send_mail_body
+      Sends the mail body, taking the content type into account.
+      
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+      p_message - Message of the mail
+   */
   procedure send_mail_body(
     p_conn in out nocopy utl_smtp.connection,
     p_message in varchar2)
@@ -477,6 +607,16 @@ as
   end send_mail_body;
 
 
+  /**
+    Procedure: send_attachment
+      Sends the mail attachment.
+      
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+      p_file_name - Attachment file name
+      p_mime_type - Attachment mime type
+      p_attachment - Attachment binary stream
+   */
   procedure send_attachment(
     p_conn in out nocopy utl_smtp.connection,
     p_file_name in varchar2,
@@ -531,6 +671,13 @@ as
   end send_attachment;
 
 
+  /**
+    Procedure: disconnect_mail_server
+      Disconnects from the mail server.
+      
+    Parameters:
+      p_conn - <UTL_SMTP> connection
+   */
   procedure disconnect_mail_server(
     p_conn in out nocopy utl_smtp.connection)
   as
@@ -553,7 +700,60 @@ as
   end disconnect_mail_server;
 
 
-  /* INTERFACE */
+  /**
+    Group: Interface
+   */
+  /**
+    Procedure: initialize
+      see <MAIL.initialize>
+   */
+  procedure initialize
+  as
+  begin
+    pit.enter_mandatory;
+    
+    select case value
+             when 'AL32UTF8' then 'utf-8'
+             else 'iso-8859-15' end char_set
+      into g_encoding
+      from v$nls_parameters
+     where parameter = 'NLS_CHARACTERSET';
+
+    g_html_content_type := 'text/html; charset=' || g_encoding;
+
+    with connection as (
+           select reverse(
+                    utl_raw.cast_to_varchar2(
+                      utl_encode.base64_decode(
+                        substr(param.get_string('SEND', C_PARAM_GROUP), 1, 512)))) connect_string
+             from dual),
+         data as (
+           select connect_string,
+                  instr(connect_string, '/') usr_pwd,
+                  instr(connect_string, '^', -1) pwd_host,
+                  instr(connect_string, ':', -1) host_port
+             from connection)
+    select substr(connect_string, 1, usr_pwd - 1) usr,
+           substr(connect_string, usr_pwd + 1, pwd_host - usr_pwd - 1) pwd,
+           substr(connect_string, pwd_host + 1, host_port - pwd_host - 1) host,
+           substr(connect_string, host_port + 1) port
+      into g_usr, g_pwd, g_host, g_port
+      from data;    
+
+    g_pkg_is_working := mail_server_access_granted and mail_server_accessible;
+    
+    pit.leave_mandatory;
+  exception
+    when others then
+      pit.handle_exception(msg.MAIL_PKG_NOT_WORKING);
+      g_pkg_is_working := false;
+  end initialize;
+  
+  
+  /**
+    Procedure: pkg_is_working
+      see <MAIL.pkg_is_working>
+   */
   function pkg_is_working
     return boolean
   as
@@ -562,6 +762,10 @@ as
   end pkg_is_working;
   
   
+  /**
+    Procedure: set_credentials
+      see <MAIL.set_credentials>
+   */
   procedure set_credentials(
     p_host in varchar2,
     p_port in pls_integer,
@@ -587,6 +791,10 @@ as
   end set_credentials;
 
 
+  /**
+    Procedure: send_mail
+      see <MAIL.send_mail>
+   */
   procedure send_mail(
     p_sender in varchar2,
     p_recipients in mail.address_tab,
@@ -651,6 +859,10 @@ as
   end send_mail;
 
 
+  /**
+    Procedure: send_mail
+      see <MAIL.send_mail>
+   */
   procedure send_mail(
     p_sender in varchar2,
     p_recipients in mail.address_tab,
@@ -701,6 +913,10 @@ as
   end send_mail;
 
 
+  /**
+    Procedure: send_mail
+      see <MAIL.send_mail>
+   */
   procedure send_mail(
     p_sender in varchar2,
     p_recipient in varchar2,

@@ -1,7 +1,13 @@
 create or replace type pit_apex_adapter under pit_default_adapter(
 
   /** 
-    Type: pit_apex_adatpter
+    Package: Output Modules.PIT_APEX.PIT_APEX_ADAPTER
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
+   */
+  /**
+    Procedure: get_session_details
       Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX.
       
       This method detects the APEX session id, logged on user and debug status.

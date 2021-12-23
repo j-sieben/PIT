@@ -26,8 +26,6 @@ begin
 end;
 /
 
-alter session set current_schema=&REMOTE_USER.;
-
 prompt &s1.Output of module PIT_CONSOLE
 prompt 
 
@@ -45,8 +43,6 @@ exception
 end test_pit;
 /
 
-
-alter session set current_schema=&INSTALL_USER.;
 
 prompt 
 prompt &s1.Content of log table PIT_TABLE_LOG from module PIT_TABLE

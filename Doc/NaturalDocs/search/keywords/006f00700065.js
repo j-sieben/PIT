@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ope",["Function"],[["open_file",,[["Output Modules.PIT_FILE.PIT_FILE_PKG Body",,,,0,"File:modules/pit_file/packages/pit_file_pkg.pkb:Output_Modules.PIT_FILE.PIT_FILE_PKG_Body.open_file","SQLClass:Output_Modules.PIT_FILE.PIT_FILE_PKG_Body:open_file"]]]]);

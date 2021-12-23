@@ -1,9 +1,28 @@
 create or replace package body pit_console_pkg
 as
-  
-  /** Implementation of PIT_CONSOLE output module */
 
-  /* Constants and global Package variables */
+  /**
+    Package: Output Modules.PIT_CONSOLE.PIT_CONSOLE_PKG Body
+      Implements PIT_CONSOLE output module methods.
+
+    Author::
+      Juergen Sieben, ConDeS GmbH
+
+      Published under MIT licence
+   */
+  /**
+    Group: Package Constants
+   */
+  /**    
+    Constants: Parameter Constants
+      C_PARAM_GROUP - Parameter group of <PIT>
+      C_PIT_CONSOLE - Parameter name prefix for <PIT_CONSOLE> parameters
+      C_FIRE_THRESHOLD - Parameter name for the fire threshold
+      C_ENTER_TEMPLATE - Parameter name for the ENTER-Template
+      C_LEAVE_TEMPLATE - Parameter name for the LEAVE-Template
+      C_MESSAGE_TEMPLATE - Parameter name for the MESSAGE-Template
+      C_LEVEL_INDICATOR - Parameter name for the indent level indicator
+   */
   C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
   C_PIT_CONSOLE constant varchar2(20) := 'PIT_CONSOLE';
   C_FIRE_THRESHOLD constant varchar2(30 char) := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
@@ -18,8 +37,12 @@ as
   g_level_indicator varchar2(10);
 
 
-  /** Initialization
-   * %usage  Reads several parameters into global variables
+  /**
+    Group: Helper Methods
+   */
+  /**
+    Procedure: initialize
+      Initialization, reads several parameters into global variables
    */
   procedure initialize
   as
@@ -31,10 +54,13 @@ as
   end initialize;
 
 
-  /** Helper to print a message to the console
-   * %param  p_message  Message to print to the console
-   * %usage  Called to print a message text to the console, reducing output to 32KByte
-   *         to take limitations of DBMS_OUTPUT into account
+  /** 
+    Procedure: print
+      Helper to print a message to the console. Called to print a message text to the console, 
+      reducing output to 32KByte to take limitations of <DBMS_OUTPUT> into account
+      
+    Parameter:
+      p_message - Message to print to the console
    */
   procedure print(
     p_message in clob)
@@ -46,12 +72,14 @@ as
   end print;
 
 
-  /** Helper to print the content of a call stack
-   * %param  p_call_stack  Instance of call stack to print
-   * %param  p_template    Name of the template to be used to format the output.
-   * %usage  Templates are defined as parameters and referenced here to control
-   *         the formatting of the call stack. After formatting, procedure PRINT
-   *         is called to print the call stack.
+  /** 
+    Procedure print_call_stack
+      Helper to print the content of a call stack. Templates are defined as parameters and referenced here to control
+      the formatting of the call stack. After formatting, procedure <PRINT> is called to print the call stack.
+      
+    Parameters:
+      p_call_stack - Instance of call stack to print
+      p_template - Name of the template to be used to format the output.
    */
   procedure print_call_stack(
     p_call_stack in pit_call_stack_type,
@@ -107,7 +135,13 @@ as
   end print_call_stack;
   
 
-  /* Interface */
+  /**
+    Group: Interface 
+   */
+  /**
+    Procedure: log
+      see <PIT_CONSOLE_PKG.log>
+   */
   procedure log(
     p_message in message_type)
   as
@@ -120,6 +154,10 @@ as
   end log;
   
   
+  /**
+    Procedure: log
+      see <PIT_CONSOLE_PKG.log>
+   */
   procedure log(
     p_log_state in pit_log_state_type)
   as
@@ -134,13 +172,22 @@ as
   end log;
   
 
+  /**
+    Procedure: enter
+      see <PIT_CONSOLE_PKG.enter>
+   */
   procedure enter(
     p_call_stack in pit_call_stack_type)
   as
   begin
     print_call_stack(p_call_stack, g_enter_template);
   end enter;
+  
 
+  /**
+    Procedure: leave
+      see <PIT_CONSOLE_PKG.leave>
+   */
   procedure leave(
     p_call_stack in pit_call_stack_type)
   as
@@ -148,6 +195,11 @@ as
     print_call_stack(p_call_stack, g_leave_template);
   end leave;
 
+
+  /**
+    Procedure: context_changed
+      see <PIT_CONSOLE_PKG.context_changed>
+   */
   procedure context_changed(
     p_ctx in pit_context_type)
   as
@@ -159,6 +211,11 @@ as
         msg_args(p_ctx.trace_settings)));
   end context_changed;
 
+
+  /**
+    Procedure: initialize_module
+      see <PIT_CONSOLE_PKG.initialize_module>
+   */
   procedure initialize_module(
     self in out pit_console)
   as

@@ -1,28 +1,57 @@
 create type pit_table under pit_module(
-  /** Output module to write messages to a table */
   
-  /** Method to insert debug and error message into table PIT_TABLE_LOG */
+   
+  /** 
+    Package: Output Modules.PIT_TABLE.PIT_TABLE
+      Output module for a log table. Extends <PIT_MODULE>.
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
+   */
+  
+  /** 
+    Procedure: log
+      See <PIT_MODULE.log>
+   */
   overriding member procedure log(
     p_message in message_type),
   
-  /** Method to insert state information into table PIT_TABLE_PARAMS */
+  
+  /** 
+    Procedure: log
+      See <PIT_MODULE.log>
+   */
   overriding member procedure log(
     p_log_state in pit_log_state_type),
-    
-  /** Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS */
+  
+  /** 
+    Procedure: enter
+      See <PIT_MODULE.enter>
+   */
   overriding member procedure enter (
     p_call_stack pit_call_stack_type),
     
-  /** Method to write call stack information into table PIT_TABLE_CALL_STACK / PIT_TABLE_PARAMS */
+  
+  /** 
+    Procedure: leave
+      See <PIT_MODULE.leave>
+   */
   overriding member procedure leave (
     p_call_stack pit_call_stack_type),
-    
-  /** Method to clean up log tables based on purge date and/or severity */
+  
+  
+  /** 
+    Procedure: purge
+      See <PIT_MODULE.purge>
+   */
   overriding member procedure purge(
     p_purge_date in date,
     p_severity_greater_equal in integer default null),
     
-  /** Constructor function */
+  /** 
+    Procedure: pit_table
+      Contructor function to instantiate the output module. Marks the module available only if an APEX session exists.
+   */
   constructor function pit_table (
     self in out nocopy pit_table)
     return self as result

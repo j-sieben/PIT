@@ -1,6 +1,6 @@
-create or replace type pit_module as object(
+create or replace type pit_module force as object(
   /** 
-    Type: pit_module
+    Package: PIT_MODULE
       Abstract output module for PIT.
     
     Properties:
@@ -91,7 +91,7 @@ create or replace type pit_module as object(
     p_call_stack pit_call_stack_type),
     
   /** 
-    Procedure: context_changed
+    Procedure: purge
       Method is called to purge a message stack. Useful for output modules persisting messages 
       
     Parameter: 

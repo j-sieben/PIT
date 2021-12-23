@@ -1,4 +1,4 @@
-create or replace type pit_call_stack_type
+create or replace type pit_call_stack_type force
   authid definer
 is object (
   /**

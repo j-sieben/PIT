@@ -1,1 +1,0 @@
-prompt &s1.No action for PIT_FILE client install necessary

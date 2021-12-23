@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core/types/log_state_type.tps","log_state_type.tps");NDSummary.OnSummaryLoaded("File:core/types/log_state_type.tps",[["SQL","SQL"]],[["Functions","Function"],["Groups","Group"],["Types","Type"]],[[3,0,1,"Types","Types"],[4,0,2,"log_state_type","log_state_type"],[5,0,1,"Functions","Functions"],[6,0,0,"log_state_type","log_state_type(2)"]]);

@@ -1,10 +1,9 @@
 create or replace package pit_console_pkg
 as
   
-
   /**
-    Package: MODULE.PIT_CONSOLE_PKG
-      Implementation package for type <PIT_CONSOLE>
+    Package: Output Modules.PIT_CONSOLE.PIT_CONSOLE_PKG
+      Implementation package for type <PIT_CONSOLE>. Extends <PIT_MODULE>
    
     Author::
       Juergen Sieben, ConDeS GmbH

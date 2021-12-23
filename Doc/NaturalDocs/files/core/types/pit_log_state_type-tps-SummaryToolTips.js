@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:core/types/pit_log_state_type.tps",{38:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Used to log a state along with an ID and a severity</div></div>",58:"<div class=\"NDToolTip TFunction LSQL\"><div class=\"TTSummary\">Constructor function</div></div>"});

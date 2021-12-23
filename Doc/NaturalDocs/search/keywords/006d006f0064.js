@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("mod",["Type"],[["module_list_type",,[["PIT_PKG Body",,,,0,"File:core/packages/pit_pkg.pkb:PIT_PKG_Body.module_list_type","SQLClass:PIT_PKG_Body:module_list_type"]]],["module_t",,[[,,,,0,"File:core/types/module_t.tps:module_t"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("mod",["Type","Function"],[["module_t",,[[,,,,0,"File:core/types/module_t.tps:module_t"]]],["module_to_meta",,[["PIT_CONTEXT Body",,,,1,"File:core/packages/pit_context.pkb:PIT_CONTEXT_Body.module_to_meta","SQLClass:PIT_CONTEXT_Body:module_to_meta"]]]]);

@@ -1,1 +1,1 @@
-﻿NDSearch.OnPrefixDataLoaded("deb",["Function"],[["debug",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.debug","SQLClass:PIT:debug"]]]]);
+﻿NDSearch.OnPrefixDataLoaded("deb",["Function"],[["debug",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.debug","SQLClass:PIT:debug"]]],["debug_message",,[["Output Modules.PIT_APEX.PIT_APEX_PKG Body",,,,0,"File:modules/pit_apex/packages/pit_apex_pkg.pkb:Output_Modules.PIT_APEX.PIT_APEX_PKG_Body.debug_message","SQLClass:Output_Modules.PIT_APEX.PIT_APEX_PKG_Body:debug_message"]]]]);

@@ -1,8 +1,12 @@
 create type pit_apex under pit_module
 (
+   
   /** 
-    Type: PIT_MODULE.pit_apex
-      Output module for an APEX environment 
+    Package: Output Modules.PIT_APEX.PIT_APEX
+      Output module for an APEX environment. Extends <PIT_MODULE>.
+   
+    Author::
+      Juergen Sieben, ConDeS GmbH
    */
   
   /** 
@@ -50,6 +54,7 @@ create type pit_apex under pit_module
   overriding member procedure leave (
     self in out nocopy pit_apex,
     p_call_stack in pit_call_stack_type),
+    
   /** 
     Procedure: pit_apex
       Contructor function to instantiate the output module. Marks the module available only if an APEX session exists.

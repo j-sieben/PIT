@@ -5,7 +5,6 @@ set feedback off
 set lines 120
 set pages 9999
 whenever sqlerror exit
-clear screen
 set termout off
 col sys_user new_val SYS_USER format a30
 col install_user new_val INSTALL_USER format a30

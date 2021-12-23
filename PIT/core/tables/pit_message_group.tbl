@@ -2,7 +2,7 @@ create table pit_message_group(
   pmg_name &ORA_NAME_TYPE.,
   pmg_description varchar2(200 char),
   constraint pk_pmg_id primary key(pmg_name)
-) organization index;
+) organization index tablespace &DEFAULT_TABLESPACE.;
 
 comment on table pit_message_group is 'Optional message group, used to export groupwise';
 comment on column pit_message_group.pmg_name is 'Unique message group name, primary key';

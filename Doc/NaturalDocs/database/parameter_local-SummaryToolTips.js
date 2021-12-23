@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("Database:parameter_local",{855:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Local table to store overwritten parameters</div></div>"});
