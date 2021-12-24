@@ -13,5 +13,5 @@ prompt &h3.Grant access rights to &REMOTE_USER.
 @&tools.grant_access.sql "select, references" parameter_tab
 @&tools.grant_access.sql "select, references" parameter_type
 
-@&tools.grant_access.sql select parameter_core_vw
-@&tools.grant_access.sql select parameter_realm_vw
+@&tools.grant_access.sql read parameter_core_vw
+@&tools.grant_access.sql read parameter_realm_vw

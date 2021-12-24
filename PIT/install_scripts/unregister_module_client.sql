@@ -13,9 +13,9 @@
 define module_dir=modules/&MODULE./
 
 prompt &section.Revoking access of PIT module &MODUEL. from client &REMOTE_USER.
-@&module_dir.clean_up_client.sql
+@&module_dir.unregister_client.sql
 
 prompt
-prompt &h1.Grant to PIT module &MODULE. from client successfully revoked
+prompt &h1.Grant to PIT module &MODULE. from client successfully unregistered
 
 exit;

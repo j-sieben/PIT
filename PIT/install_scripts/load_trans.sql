@@ -4,13 +4,10 @@
   Call this script directly with the required parameters.
   
   Parameters:
-  - INSTALL_USER: database user who owns PIT
   - LANGUAGE: Oracle language name of the language to install.
 */
 
-@init/init.sql &1. &2.
-
-alter session set current_schema=&PIT_USER.;
+@init/init.sql &1.
 
 prompt
 prompt &section.
@@ -28,7 +25,6 @@ prompt &s1.Messages
 --@modules/pit_aq/messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql
 @modules/pit_mail/messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql
 --@modules/pit_test/messages/&DEFAULT_LANGUAGE./MessageGroup_PIT.sql
-
 
 prompt &s1.Translatable Items
 @core/messages/&DEFAULT_LANGUAGE./TranslatableItemGroup_PIT.sql

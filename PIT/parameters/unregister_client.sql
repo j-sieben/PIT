@@ -1,43 +1,24 @@
+define param_dir=parameters/
+define tools=tools/
 
-declare
-  object_does_not_exist exception;
-  pragma exception_init(object_does_not_exist, -4043);
-  table_does_not_exist exception;
-  pragma exception_init(table_does_not_exist, -942);
-  sequence_does_not_exist exception;
-  pragma exception_init(sequence_does_not_exist, -2282);
-  synonym_does_not_exist exception;
-  pragma exception_init(synonym_does_not_exist, -1434);
-  cursor delete_object_cur is
-          select object_name name, object_type type
-            from user_objects
-           where object_name in (
-                 '', -- Typen
-                 '', -- Packages
-                 'PARAMETER_VW', -- Views
-                 'PARAMETER_LOCAL',   -- Tabellen
-                 'PARAM', 'PARAM_ADMIN', 'PARAMETER_GROUP', 'PARAMETER_REALM', 'PARAMETER_TAB', 'PARAMETER_TYPE',
-                 'PARAMETER_CORE_VW', 'PARAMETER_REALM_VW', -- Synonyme
-                 '' -- Sequenzen
-                 )
-             and object_type not like '%BODY'
-           order by object_type, object_name;
-begin
-  for obj in delete_object_cur loop
-    begin
-      execute immediate 'drop ' || obj.type || ' ' || obj.name ||
-                        case obj.type 
-                        when 'TYPE' then ' force' 
-                        when 'TABLE' then ' cascade constraints' 
-                        end;
-     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.name || ' deleted.');
-    
-    exception
-      when object_does_not_exist or table_does_not_exist or sequence_does_not_exist or synonym_does_not_exist then
-        dbms_output.put_line('&s1.' || obj.type || ' ' || obj.name || ' does not exist.');
-      when others then
-        raise;
-    end;
-  end loop;
-end;
-/
+prompt
+prompt &h2.Remove registration of parameter package.
+
+prompt &h3.Drop synonyms
+@&tools.drop_object.sql param
+@&tools.drop_object.sql param_admin
+
+@&tools.drop_object.sql parameter_group
+@&tools.drop_object.sql parameter_realm
+@&tools.drop_object.sql parameter_tab
+@&tools.drop_object.sql parameter_type
+
+@&tools.drop_object.sql parameter_core_vw
+@&tools.drop_object.sql parameter_realm_vw
+
+prompt &h3.Drop local objects
+prompt &s1.Drop table PARAMETER_LOCAL
+@&tools.drop_object.sql parameter_local
+
+prompt &s1.Drop view PARAMETER_VW
+@&tools.drop_object.sql parameter_vw

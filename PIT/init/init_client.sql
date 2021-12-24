@@ -15,10 +15,11 @@ col remote_user new_val REMOTE_USER format a128
 select '' "1"
   from dual
  where null is not null;
-
-select user pit_user, coalesce(upper('&1.'), user) remote_user
-  from all_users
- where username = coalesce(upper('&1.'), user);
+ 
+select owner pit_user, coalesce(upper('&1.'), user) remote_user
+  from all_objects
+ where object_name = 'PIT'
+   and object_type = 'PACKAGE';
  
 -- Define length of ORA_NAME_TYPE according to oracle version
 col ora_name_type new_val ORA_NAME_TYPE format a128

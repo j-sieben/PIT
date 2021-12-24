@@ -19,7 +19,7 @@ col apex_version new_val APEX_VERSION format a30
 
 select owner install_user, owner pit_user, user remote_user
   from all_objects
- where object_name = 'PIT_ADMIN'
+ where object_name = 'PIT'
    and object_type = 'PACKAGE';
    
 select workspace apex_ws, 
