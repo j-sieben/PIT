@@ -1,9 +1,6 @@
 # `PIT`
 PL/SQL Instrumentation Toolkit
 
-## Important notice
-I'm actually busy to develop a new release. Please don't install from the master branch but from the stable release 1.1.
-
 Hi everybody,
 this is the home of `PIT`, the PL/SQL Instrumentation Toolkit.
 This tool is designed to help you manage your 
