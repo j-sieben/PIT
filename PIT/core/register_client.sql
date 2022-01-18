@@ -15,9 +15,11 @@ prompt &h3.Create synonyms
 @&tool_dir.create_synonym.sql msg_param
 @&tool_dir.create_synonym.sql msg_params
 @&tool_dir.create_synonym.sql pit
+@&tool_dir.create_synonym.sql pit_admin
 @&tool_dir.create_synonym.sql pit_util
 
 -- Tables and Views
+@&tool_dir.create_synonym.sql pit_message
 @&tool_dir.create_synonym.sql pit_message_language
 @&tool_dir.create_synonym.sql pit_message_language_v
 @&tool_dir.create_synonym.sql pit_translatable_item_v
