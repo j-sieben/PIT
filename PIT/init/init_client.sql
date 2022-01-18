@@ -16,7 +16,10 @@ select '' "1"
   from dual
  where null is not null;
  
-select owner pit_user, coalesce(upper('&1.'), user) remote_user
+select owner pit_user, 
+       case when instr('&1.', '[') > 0 
+       then substr(upper('&1.'), instr('&1.', '[') + 1, length('&1.') - instr('&1.', '[') - 1)
+       else coalesce(upper('&1.'), user) end remote_user
   from all_objects
  where object_name = 'PIT'
    and object_type = 'PACKAGE';

@@ -483,11 +483,11 @@ as
         p_params => p_params,
         p_trace_level => p_trace_level,
         p_trace_context => l_context);
-    end if;
 
-    raise_event(
-      p_event => C_ENTER_EVENT,
-      p_call_stack => l_call_stack);
+      raise_event(
+        p_event => C_ENTER_EVENT,
+        p_call_stack => l_call_stack);
+    end if;
     
   exception
     when others then

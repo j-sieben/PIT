@@ -133,7 +133,6 @@ as
        p_call_stack.elapsed, p_call_stack.elapsed_cpu, p_call_stack.total, p_call_stack.total_cpu);
     
     persist_params(p_call_stack.id, pit.LEVEL_DEBUG, p_call_stack.params);
-  
   end leave;
 
 

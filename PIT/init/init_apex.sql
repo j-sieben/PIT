@@ -17,7 +17,10 @@ col app_id new_val APP_ID format a30
 col apex_version new_val APEX_VERSION format a30
 
 
-select owner install_user, owner pit_user, user remote_user
+select owner install_user, owner pit_user, 
+       case when instr('&1.', '[') > 0 
+       then substr(upper('&1.'), instr('&1.', '[') + 1, length('&1.') - instr('&1.', '[') - 1)
+       else coalesce(upper('&1.'), user) end remote_user
   from all_objects
  where object_name = 'PIT'
    and object_type = 'PACKAGE';

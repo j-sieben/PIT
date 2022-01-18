@@ -201,7 +201,7 @@ as
       end if;
     end loop;
     
-    return l_stack;
+    return substrb(l_stack, 1, 2000);
   end get_call_stack;
   
   

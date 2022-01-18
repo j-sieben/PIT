@@ -56,5 +56,5 @@ select substr(script, 1, instr(script, '|') - 1) SCRIPT,
 drop function get_install_script;
   
 set termout on
-prompt &s1.&msg.
-@&script.
+prompt &s1.&MSG.
+@&SCRIPT.
