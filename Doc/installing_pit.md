@@ -83,6 +83,8 @@ The script to install `PIT` requires a set of system privileges. Actually, the f
 - `CREATE SEQUENCE`
 - `CREATE TYPE`
 
+The beforementioned grants can be granted via a role with the exception of `CREATE PROCEDURE` which must be granted directly, not via a role. Reason for this is that package `PIT_ADMIN` creates package `MSG` dynamically based on table metadata. This is not possible without a direct grant. So, strictly speaking, this grant is required on development machines only where you create new messages. If you want to deploy `PIT` to a production environment, you could alternatively deploy your created `MSG` package from development directly.
+
 Additionally, if you want to use a globally accessible context, you need:
 
 - `CREATE ANY CONTEXT`
