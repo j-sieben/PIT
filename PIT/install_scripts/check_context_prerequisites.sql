@@ -2,20 +2,22 @@
 create or replace function get_install_script
 return varchar2
 as
-  l_is_installed pls_integer;
+  l_is_installed pls_integer := 0;
+  l_has_context_grant pls_integer := 0;
+  l_has_grant_on_dba_context pls_integer := 0;
   l_script varchar2(2000 byte) := 'tools/null.sql|';
 begin
   
-  select count(*)
-    into l_is_installed
-	  from user_objects
-   where object_type = 'PACKAGE'
-	   and object_name in ('PARAM_ADMIN');
-     
-  if l_is_installed = 0 then
-    raise_application_error(-20000, 'Install Parameter handling before installing PIT.');
-  end if;  
+  -- in any case you need access to DBA_CONTEXT to check for the context
+  begin
+    execute immediate 'select null from dba_context';
+    l_has_grant_on_dba_context := 1;
+  exception
+    when others then
+      null;
+  end;
   
+  -- Try to find the context
   select count(*)
     into l_is_installed
     from all_objects
@@ -24,18 +26,20 @@ begin
    
   if l_is_installed = 0 then
     dbms_output.put_line('&s1.Globally accessible context not present, trying to create it');
+    -- If the context is not present, you will need the CREATE ANY CONTERXT grant to create it
+    select count(*)
+      into l_has_context_grant
+      from user_sys_privs
+     where privilege = 'CREATE ANY CONTEXT';
   end if;
-     
-  select count(*)
-    into l_is_installed
-    from user_sys_privs
-   where privilege = 'CREATE ANY CONTEXT';
-   
-  if l_is_installed = 0 then
-    l_script := l_script || 'Privilege to create a globally accsessible context is missing, skipping installation';
+       
+  case when l_has_grant_on_dba_context = 0 then
+    l_script := l_script || 'Privilege to read DBA_CONTEXT is missing, skipping installation';
+  when l_is_installed = 0 and l_has_context_grant = 0 then
+    l_script := l_script || 'Privilege to create a globally accsessible context is required but missing, skipping installation';
   else
-    l_script := 'context/install.sql|Grants exist, installing CONTEXT framework';
-  end if; 
+    l_script := 'context/install.sql|Grants or globally accessible context exist, installing CONTEXT framework';
+  end case; 
   
   return l_script;
 end;
