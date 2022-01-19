@@ -25,7 +25,7 @@ declare
       select privilege
         from user_sys_privs;
 begin
-  dbms_output.put_line('&1.Checking privileges');
+  dbms_output.put_line('&h2.Checking privileges');
   l_required_privs := foo_char_table('CREATE TABLE', 'CREATE VIEW', 'CREATE TYPE', 'CREATE SEQUENCE', 'ALTER SESSION');
   
   for priv in priv_cur(l_required_privs) loop
@@ -33,7 +33,7 @@ begin
     dbms_output.put_line('&s1.Missing (role) privilege ' || priv.column_value);
   end loop;
   
-  dbms_output.put_line('&1.Checking required directly granted privileges');
+  dbms_output.put_line('&h2.Checking required directly granted privileges');
   l_required_privs := foo_char_table('CREATE PROCEDURE');
   
   for priv in direct_priv_cur(l_required_privs) loop

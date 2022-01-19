@@ -31,6 +31,15 @@ select workspace apex_ws,
   from apex_workspaces
  where workspace = upper('&1.');
  
+set termout on
+begin
+  if '&APEX_WS.' is null then
+    raise_application_error(-20000, 'Workspace &1. does not exist. Please choose an existing workspace');
+  end if;
+end;
+/
+set termout off
+ 
 select pml_name default_language
   from &PIT_USER..pit_message_language_v
  where pml_default_order = 10;

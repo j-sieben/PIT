@@ -12,9 +12,8 @@ begin
     from dual
    where exists(
          select null
-           from all_tab_privs
-          where table_name = 'UTL_TEXT'
-            and grantee = '&REMOTE_USER.');
+           from all_objects
+          where object_name = 'UTL_TEXT');
             
   if l_utl_text_exists = 0 then
     dbms_output.put_line('&s1.UTL_TEXT is required by this package. You can get it from GitHub as well.');
