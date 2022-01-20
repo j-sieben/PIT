@@ -775,7 +775,13 @@ end;
     merge into pit_message m
     using (select pms_name, pms_pml_name, C_MIN_ERROR - 1 + dense_rank() over (order by pms_name) pms_active_error
              from pit_message
-            where pms_pse_id <= 30) v
+            where pms_pse_id <= 30
+              and pms_custom_error = C_MAX_ERROR
+           union all
+           select pms_name, pms_pml_name, pms_custom_error
+             from pit_message
+            where pms_pse_id <= 30
+              and pms_custom_error != C_MAX_ERROR) v
        on (m.pms_name = v.pms_name
        and m.pms_pml_name = v.pms_pml_name)
      when matched then update set
