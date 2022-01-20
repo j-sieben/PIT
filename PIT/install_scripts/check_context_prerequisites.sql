@@ -17,12 +17,9 @@ begin
       null;
   end;
   
-  -- Try to find the context
-  select count(*)
-    into l_is_installed
-    from all_objects
-   where object_type = 'CONTEXT'
-     and object_name = 'PIT_CTX_' || user;
+  -- Try to find the context (dynamic SQL to avoid compilation problems if no grant exists)
+  execute immediate q'^select count(*) from dba_context where namespace = 'PIT_CTX_' || user^'
+    into l_is_installed;
    
   if l_is_installed = 0 then
     dbms_output.put_line('&s1.Globally accessible context not present, trying to create it');
