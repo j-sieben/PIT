@@ -43,7 +43,7 @@ as
   
   
   /**
-    Group: Private global Variables
+    Group: Private Global Variables
    */
   /**
     Variables: Context related variables
@@ -68,7 +68,7 @@ as
   
 
   /**
-    Group: Private helper methods
+    Group: Private Helper Methods
    */
   /**
     Procedure:load_modules
@@ -140,11 +140,30 @@ as
 
 
   /** 
-    Procedure: get_context_list
+    Function: set_active_modules
+      Copies all requested and available output module instances into g_active_modules.
+      These modules will then be used to log to.
+   */
+  procedure set_active_modules
+  as
+    l_module pit_util.ora_name_type;
+  begin
+    g_active_modules.delete;
+    for i in 1 .. g_context.log_modules.count loop
+      l_module := g_context.log_modules(i);
+      if g_available_modules.exists(l_module) then
+        g_active_modules(l_module) := g_available_modules(l_module);
+      end if;
+    end loop;
+  end set_active_modules;
+
+
+  /** 
+    Procedure: read_context_list
       Reads all predefined context and toggles from parameters and stores it in globally accessed context.
       Method is invoked during initialization to copy parameter settings for access across sessions.
    */
-  procedure get_context_list
+  procedure read_context_list
   as
     cursor context_cur is
       with toggles as (
@@ -189,42 +208,23 @@ as
                                       p_settings => ctx.setting);
       end if;
     end loop;
-  end get_context_list;
-
-
-  /** 
-    Function: set_active_modules
-      Copies all requested and available output module instances into g_active_modules.
-      These modules will then be used to log to.
-   */
-  procedure set_active_modules
-  as
-    l_module pit_util.ora_name_type;
-  begin
-    g_active_modules.delete;
-    for i in 1 .. g_context.log_modules.count loop
-      l_module := g_context.log_modules(i);
-      if g_available_modules.exists(l_module) then
-        g_active_modules(l_module) := g_available_modules(l_module);
-      end if;
-    end loop;
-  end set_active_modules;
+  end read_context_list;
   
   
   /** 
-    Procedure: get_active_context
+    Procedure: read_active_context
       Method to read the actually chosen context from the global context. Is used to read the actual settings, 
       as they may have changed based on settings in other sessions.
       
       If the context does not differ from the default settings, the global context is empty. In this case,
       g_context is reset to the default context to detect when a different session reset the logging settings.
    */
-  procedure get_active_context
+  procedure read_active_context
   as
     l_settings pit_util.max_sql_char;
   begin
     $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
-    -- Initialize    
+    -- Initialize
     l_settings := 
       utl_context.get_value(
         p_context => C_GLOBAL_CONTEXT,
@@ -238,20 +238,21 @@ as
                      p_context_name => C_CONTEXT_ACTIVE,
                      p_settings => l_settings);
     else
-      -- no change, exiting g_context is active. Ignore
+      -- no change, existing g_context is active. Ignore
       null;
     end case;
-    set_active_modules;
     $ELSE
     -- on initialization, g_context is null, get default context;
     if g_context.context_name is null then
       g_context := g_context_list(C_CONTEXT_DEFAULT);
-      set_active_modules;
     end if;
     $END
-  end get_active_context;
+    set_active_modules;
+  end read_active_context;
   
-  
+  /**
+    Group: Public Methods
+   */
   /**
     Function: initialize
       See <pit_context.initialize>
@@ -271,7 +272,7 @@ as
     
     -- First, load all available output modules, contexts and toggles
     load_modules;
-    get_context_list;
+    read_context_list;
     
     -- Set default context or take it from global context
     set_context(
@@ -314,7 +315,7 @@ as
   as
     l_context pit_context_type;
   begin
-    get_active_context;
+    read_active_context;
     if p_context_name is not null then
       l_context := g_context_list(p_context_name);
     else
@@ -421,9 +422,9 @@ as
     p_context_has_changed out boolean)
   as
   begin
-    get_active_context;
+    read_active_context;
     case when p_context is null then
-      -- initialization, keep settings from get_active_context
+      -- initialization, keep settings from read_active_context
       p_context_has_changed := false;
     when g_context.trace_settings != p_context.trace_settings then
       g_context := p_context;
@@ -521,7 +522,7 @@ as
   return boolean
   as
   begin
-    get_active_context;
+    read_active_context;
     return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_ERROR);
   end log_me;
   
@@ -535,7 +536,7 @@ as
   return boolean
   as
   begin
-    get_active_context;
+    read_active_context;
     return p_trace_level <= g_context.trace_level;
   end trace_me;
   
@@ -548,7 +549,7 @@ as
   return boolean
   as
   begin
-    get_active_context;
+    read_active_context;
     return pit_util.to_bool(g_context.trace_timing);
   end trace_timing;
   
@@ -573,7 +574,7 @@ as
   return binary_integer
   as
   begin
-    get_active_context;
+    read_active_context;
     return greatest(g_context.log_level, pit_internal.C_LEVEL_ERROR);
   end get_log_level;
   
@@ -586,7 +587,7 @@ as
   return binary_integer
   as
   begin
-    get_active_context;
+    read_active_context;
     return g_context.trace_level;
   end get_trace_level;
   
@@ -607,7 +608,7 @@ as
   begin
     -- initialize
     l_module_list := pit_module_list();
-    get_active_context;    
+    read_active_context;    
     
     case p_focus
     when C_FOCUS_ALL_MODULES then

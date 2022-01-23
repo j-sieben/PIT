@@ -302,9 +302,11 @@ as
       
     Parameter:
       p_pti_id - ID of the translatable item
+      p_pti_pmg_name - Message group of the translatable item
    */
   procedure delete_translatable_item(
-    p_pti_id in pit_translatable_item.pti_id%type);
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pmg_name in pit_message_group.pmg_name%type);
     
     
   

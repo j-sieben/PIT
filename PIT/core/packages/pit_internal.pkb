@@ -149,6 +149,7 @@ as
       end;
       if l_adapter is not null and l_adapter.status = C_ADAPTER_OK then
         g_active_adapter := l_adapter;
+        dbms_output.put_line('Adapter "' || l_adapter_list(l_idx) || '" instantiated.');
         exit;
       end if;
       l_idx := l_adapter_list.next(l_idx);
@@ -453,9 +454,20 @@ as
     l_allows_toggle boolean;
     l_context pit_context_type;
     l_call_stack pit_call_stack_type;
+    l_required_context pit_util.ora_name_type;
   begin
     
     -- Initialize
+    -- start by reading the actual session details 
+    g_active_adapter.get_session_details(
+      p_user_name => g_user_name, 
+      p_session_id => g_client_info, 
+      p_required_context => l_required_context);
+    
+    if l_required_context is not null then
+      set_context(l_required_context);
+    end if;
+      
     l_trace_me := pit_context.trace_me(p_trace_level);
     l_allows_toggle := pit_context.allows_toggle;
     l_action := p_action;

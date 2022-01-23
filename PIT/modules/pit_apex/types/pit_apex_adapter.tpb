@@ -8,12 +8,12 @@ as
     p_session_id out varchar2,
     p_required_context out nocopy varchar2)
   as
-    l_id varchar2(64 byte) := sys_context('USERENV', 'CLIENT_IDENTIFIER');
   begin
-    p_user_name := substr(l_id, 1, instr(l_id, ':') - 1);
-    p_session_id := l_id; 
+    p_user_name := apex_application.g_user;
+    p_session_id := apex_application.g_instance; 
     -- If APEX is set to logging, adjust context to predefined log settings defined in PIT_APEX params
     p_required_context := pit_apex_pkg.get_apex_triggered_context;
+    dbms_output.put_line('PIT_APEX_ADAPTER called');
   end get_session_details;
    
    

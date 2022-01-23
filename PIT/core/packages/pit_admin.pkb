@@ -1153,11 +1153,13 @@ end;
       See <PIT_ADMIN.delete_translatable_item>
    */
   procedure delete_translatable_item(
-    p_pti_id in pit_translatable_item.pti_id%type)
+    p_pti_id in pit_translatable_item.pti_id%type,
+    p_pti_pmg_name in pit_message_group.pmg_name%type)
   as
   begin
     delete from pit_translatable_item
-     where pti_id = p_pti_id;
+     where pti_id = p_pti_id
+       and pti_pmg_name = p_pti_pmg_name;
   end delete_translatable_item;
 
 

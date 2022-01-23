@@ -1197,11 +1197,11 @@ as
       utl_apex.set_error('PAR_ID', msg.INVALID_SQL_NAME);
       pit.leave_mandatory;
       return true;
-    when pit_util.context_missing then
+    when pit_util.CONTEXT_MISSING then
       utl_apex.set_error('TOGGLE_CONTEXT_NAME', msg.PIT_CONTEXT_MISSING, msg_args(g_edit_toggle_row.toggle_context_name));
       pit.leave_mandatory;
       return true;
-    when pit_util.name_too_long then
+    when pit_util.NAME_TOO_LONG then
       utl_apex.set_error('PAR_ID', msg.PIT_NAME_TOO_LONG, msg_args(to_char(pit_util.C_MAX_LENGTH)));
       pit.leave_mandatory;
       return true;
