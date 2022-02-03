@@ -19,6 +19,7 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute msg_params
 @tools/grant_access.sql execute pit
 @tools/grant_access.sql execute pit_admin
+@tools/grant_access.sql execute pit_app_api
 @tools/grant_access.sql execute pit_util
 
 -- Tables and Views

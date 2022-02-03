@@ -1,20 +1,21 @@
 create or replace package body pit_ui 
 as
-  /** UI Package for the PIT APEX maintenance application */
+  /** 
+    Package: PIT_UI Body
+      UI Package for the PIT APEX maintenance application.
+   
+    Author:: 
+      Juergen Sieben, ConDeS GmbH
+      
+      Published under MIT licence
+   */
   
+  /**
+    Group: Public Methods
+   */
+   
   -- Global Variables
-  g_page_prefix utl_apex.ora_name_type;
   g_page_values utl_apex.page_value_t;
-  g_edit_pms_row pit_ui_edit_pms%rowtype;
-  g_edit_pmg_row pit_ui_edit_pmg%rowtype;
-  g_edit_pgr_row pit_ui_edit_pgr%rowtype;  
-  g_edit_par_row pit_ui_edit_par%rowtype;  
-  g_edit_realm_row pit_ui_edit_realm%rowtype;
-  g_set_realm_row pit_ui_set_realm%rowtype;
-  g_edit_par_realm_row pit_ui_edit_par_realm%rowtype;  
-  g_edit_module_row pit_ui_edit_module%rowtype;
-  g_edit_context_row pit_ui_edit_context%rowtype;
-  g_edit_toggle_row pit_ui_edit_toggle%rowtype;
   
   type export_rec is record(
     pms_pmg_list char_table,
@@ -25,141 +26,175 @@ as
   );
   g_export_row export_rec;
 
-  g_edit_pre_row parameter_realm%rowtype;
   
-  /* INTERNALS */
-  
-  /* Helper method to copy session state values from an APEX page 
-   * %usage  Is called to copy the actual session state of an APEX page into a PL/SQL table
-   *         and then copy it to a record instance
+  /**
+    Group: Helper Methods
    */
-  procedure copy_edit_pms
+  
+  /**
+    Procedures: Helper methods to copy session state values from an APEX page 
+      Is called to copy the actual session state of an APEX page into a PL/SQL table and then copy it to a record instance
+      
+      copy_edit_pms - For page EDIT_PMS
+      copy_edit_pmg - For page EDIT_PMG
+      copy_edit_pgr - For page EDIT_PGR
+      copy_edit_pre - For page EDIT_PRE
+      copy_edit_par - For page EDIT_PAR
+      copy_edit_par_realm - For page EDIT_PAR_REALM
+      copy_edit_realm - For page EDIT_REALM
+      copy_set_realm - For page SET_REALM
+      copy_export - For page EXPORT
+      copy_edit_module - For page EDIT_MODULE
+      copy_edit_context - For page EDIT_CONTEXT
+      copy_edit_toggle - For page EDIT_TOGGLE
+   */
+  procedure copy_edit_pms(
+    p_row in out nocopy pit_message%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_pms');
     
-    g_page_values := utl_apex.get_page_values('EDIT_PMS');
-    g_edit_pms_row.pms_pmg_name := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pms_pmg_name'));
-    g_edit_pms_row.pms_name := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pms_name'));
-    g_edit_pms_row.pms_pml_name := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pms_pml_name'));
-    g_edit_pms_row.pms_text := utl_apex.get(g_page_values, 'pms_text');
-    g_edit_pms_row.pms_description := utl_apex.get(g_page_values, 'pms_description');
-    g_edit_pms_row.pms_pse_id := to_number(utl_apex.get(g_page_values, 'pms_pse_id'), 'fm9999999999990d99999999');
-    g_edit_pms_row.pms_custom_error := to_number(utl_apex.get(g_page_values, 'pms_custom_error'), 'fm9999999999990d99999999');
+    g_page_values := utl_apex.get_page_values('EDIT_PMS_FORM');
+    p_row.pms_pmg_name := utl_apex.get(g_page_values, 'pms_pmg_name');
+    p_row.pms_name := utl_apex.get(g_page_values, 'pms_name');
+    p_row.pms_pml_name := utl_apex.get(g_page_values, 'pms_pml_name');
+    p_row.pms_text := utl_apex.get(g_page_values, 'pms_text');
+    p_row.pms_description := utl_apex.get(g_page_values, 'pms_description');
+    p_row.pms_pse_id := to_number(utl_apex.get(g_page_values, 'pms_pse_id'), 'fm9999999999990d99999999');
+    p_row.pms_custom_error := to_number(utl_apex.get(g_page_values, 'pms_custom_error'), 'fm9999999999990d99999999');
     
     pit.leave_detailed;
   end copy_edit_pms;
   
   
-  procedure copy_edit_pmg
+  procedure copy_edit_pmg(
+    p_row in out nocopy pit_message_group%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_pmg');
     
-    g_page_values := utl_apex.get_page_values('EDIT_PMG');
-    g_edit_pmg_row.pmg_name := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pmg_name'));
-    g_edit_pmg_row.pmg_description := utl_apex.get(g_page_values, 'pmg_description');
+    g_page_values := utl_apex.get_page_values('EDIT_PMG_FORM');
+    p_row.pmg_name := utl_apex.get(g_page_values, 'pmg_name');
+    p_row.pmg_description := utl_apex.get(g_page_values, 'pmg_description');
+    p_row.pmg_error_prefix := utl_apex.get(g_page_values, 'pmg_error_prefix');
+    p_row.pmg_error_postfix := utl_apex.get(g_page_values, 'pmg_error_postfix');
     
     pit.leave_detailed;
   end copy_edit_pmg;
   
   
-  procedure copy_edit_pgr
+  procedure copy_edit_pgr(
+    p_row in out nocopy parameter_group%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_pgr');
     
-    g_page_values := utl_apex.get_page_values('EDIT_PGR');
-    g_edit_pgr_row.pgr_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pgr_id'));
-    g_edit_pgr_row.pgr_description := utl_apex.get(g_page_values, 'pgr_description');
-    g_edit_pgr_row.pgr_is_modifiable := coalesce(utl_apex.get(g_page_values, 'pgr_is_modifiable'), utl_apex.C_TRUE);
+    g_page_values := utl_apex.get_page_values('EDIT_PGR_FORM');
+    p_row.pgr_id := utl_apex.get(g_page_values, 'pgr_id');
+    p_row.pgr_description := utl_apex.get(g_page_values, 'pgr_description');
+    p_row.pgr_is_modifiable := coalesce(utl_apex.get(g_page_values, 'pgr_is_modifiable'), utl_apex.C_TRUE);
     
     pit.leave_detailed;
   end copy_edit_pgr;
 
   
-  procedure copy_edit_pre
+  procedure copy_edit_pre(
+    p_row in out nocopy parameter_realm%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_pre');
     
-    g_page_values := utl_apex.get_page_values('EDIT_PRE');
-    g_edit_pre_row.pre_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'pre_id'));
-    g_edit_pre_row.pre_description := utl_apex.get(g_page_values, 'pre_description');
-    g_edit_pre_row.pre_is_active := utl_apex.get(g_page_values, 'pre_is_active');
+    g_page_values := utl_apex.get_page_values('EDIT_PRE_FORM');
+    p_row.pre_id := utl_apex.get(g_page_values, 'pre_id');
+    p_row.pre_description := utl_apex.get(g_page_values, 'pre_description');
+    p_row.pre_is_active := utl_apex.get(g_page_values, 'pre_is_active');
     
     pit.leave_detailed;
   end copy_edit_pre;
   
 
-  procedure copy_edit_par
+  procedure copy_edit_par(
+    p_row in out nocopy parameter_vw%rowtype)
   as
+    l_par_xml_string pit_util.max_char;
   begin
     pit.enter_detailed('copy_edit_par');
     
-    g_page_values := utl_apex.get_page_values('EDIT_PAR');
-    g_edit_par_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
-    g_edit_par_row.par_pgr_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_pgr_id'));
-    g_edit_par_row.par_description := utl_apex.get(g_page_values, 'par_description');
-    g_edit_par_row.par_pat_id := utl_apex.get(g_page_values, 'par_pat_id');
-    g_edit_par_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
-    g_edit_par_row.par_integer_value := to_number(utl_apex.get(g_page_values, 'par_integer_value'), 'fm9999999999990d99999999');
-    g_edit_par_row.par_float_value := to_number(utl_apex.get(g_page_values, 'par_float_value'), 'fm9999999999990d99999999');
-    g_edit_par_row.par_date_value := to_date(utl_apex.get(g_page_values, 'par_date_value'), 'dd.mm.yyyy');
-    g_edit_par_row.par_timestamp_value := utl_apex.get(g_page_values, 'par_timestamp_value');
-    g_edit_par_row.par_boolean_value := utl_apex.get(g_page_values, 'par_boolean_value');
-    g_edit_par_row.par_is_modifiable := utl_apex.get(g_page_values, 'par_is_modifiable');
-    g_edit_par_row.par_validation_string := utl_apex.get(g_page_values, 'par_validation_string');
-    g_edit_par_row.par_validation_message := utl_apex.get(g_page_values, 'par_validation_message');
-    g_edit_par_row.par_xml_value := utl_apex.get(g_page_values, 'par_xml_value');
+    g_page_values := utl_apex.get_page_values('EDIT_PAR_FORM');
+    p_row.par_id := utl_apex.get(g_page_values, 'par_id');
+    p_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
+    p_row.par_description := utl_apex.get(g_page_values, 'par_description');
+    p_row.par_pat_id := utl_apex.get(g_page_values, 'par_pat_id');
+    p_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    p_row.par_integer_value := to_number(utl_apex.get(g_page_values, 'par_integer_value'), 'fm9999999999990d99999999');
+    p_row.par_float_value := to_number(utl_apex.get(g_page_values, 'par_float_value'), 'fm9999999999990d99999999');
+    p_row.par_date_value := to_date(utl_apex.get(g_page_values, 'par_date_value'), 'dd.mm.yyyy');
+    p_row.par_timestamp_value := utl_apex.get(g_page_values, 'par_timestamp_value');
+    p_row.par_boolean_value := utl_apex.get(g_page_values, 'par_boolean_value');
+    p_row.par_is_modifiable := utl_apex.get(g_page_values, 'par_is_modifiable');
+    p_row.par_validation_string := utl_apex.get(g_page_values, 'par_validation_string');
+    p_row.par_validation_message := utl_apex.get(g_page_values, 'par_validation_message');
+    
+    -- assert parameter type XML here already to allow for xml conversion
+    l_par_xml_string := utl_apex.get(g_page_values, 'par_xml_value');
+    if l_par_xml_string is not null then
+      utl_apex.assert_datatype(
+        p_value => l_par_xml_string, 
+        p_type => pit.type_xml,
+        p_page_item => 'PAR_XML_VALUE');        
+      p_row.par_xml_value := xmltype(l_par_xml_string);
+    end if;
     
     pit.leave_detailed;
   end copy_edit_par;
   
     
-  procedure copy_edit_par_realm
+  procedure copy_edit_par_realm(
+    p_row in out nocopy parameter_vw%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_par_realm');
     
-    g_page_values := utl_apex.get_page_values('EDIT_PAR_REALM');
-    g_edit_par_realm_row.pre_par_id := utl_apex.get_value('P7_PAR_ID');
-    g_edit_par_realm_row.pre_pgr_id := utl_apex.get_value('P7_PAR_PGR_ID');
-    g_edit_par_realm_row.pre_id := utl_apex.get(g_page_values, 'pre_id');
-    g_edit_par_realm_row.pre_string_value := utl_apex.get(g_page_values, 'pre_string_value');
-    g_edit_par_realm_row.pre_integer_value := to_number(utl_apex.get(g_page_values, 'pre_integer_value'), 'fm9999999999990d99999999');
-    g_edit_par_realm_row.pre_float_value := to_number(utl_apex.get(g_page_values, 'pre_float_value'), 'fm9999999999990d99999999');
-    g_edit_par_realm_row.pre_date_value := to_date(utl_apex.get(g_page_values, 'pre_date_value'), 'dd.mm.yyyy');
-    g_edit_par_realm_row.pre_timestamp_value := utl_apex.get(g_page_values, 'pre_timestamp_value');
-    g_edit_par_realm_row.pre_boolean_value := utl_apex.get(g_page_values, 'pre_boolean_value');
+    g_page_values := utl_apex.get_page_values('EDIT_PAR_REALM_FORM');
+    p_row.par_id := utl_apex.get_value('P7_PAR_ID');
+    p_row.par_pgr_id := utl_apex.get_value('P7_PAR_PGR_ID');
+    p_row.par_pre_id := utl_apex.get(g_page_values, 'pre_id');
+    p_row.par_string_value := utl_apex.get(g_page_values, 'pre_string_value');
+    p_row.par_integer_value := to_number(utl_apex.get(g_page_values, 'pre_integer_value'), 'fm9999999999990d99999999');
+    p_row.par_float_value := to_number(utl_apex.get(g_page_values, 'pre_float_value'), 'fm9999999999990d99999999');
+    p_row.par_date_value := to_date(utl_apex.get(g_page_values, 'pre_date_value'), 'dd.mm.yyyy');
+    p_row.par_timestamp_value := utl_apex.get(g_page_values, 'pre_timestamp_value');
+    p_row.par_boolean_value := utl_apex.get(g_page_values, 'pre_boolean_value');
     
     pit.leave_detailed;
   end copy_edit_par_realm;    
   
   
-  procedure copy_edit_realm
+  procedure copy_edit_realm(
+    p_row in out nocopy parameter_realm%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_realm');
     
-    g_page_values := utl_apex.get_page_values('EDIT_REALM');
-    g_edit_realm_row.pre_id := utl_apex.get(g_page_values, 'pre_id');
-    g_edit_realm_row.pre_description := utl_apex.get(g_page_values, 'pre_description');
-    g_edit_realm_row.pre_is_active := utl_apex.get(g_page_values, 'pre_is_active');
+    g_page_values := utl_apex.get_page_values('EDIT_REALM_FORM');
+    p_row.pre_id := utl_apex.get(g_page_values, 'pre_id');
+    p_row.pre_description := utl_apex.get(g_page_values, 'pre_description');
+    p_row.pre_is_active := utl_apex.get(g_page_values, 'pre_is_active');
     
     pit.leave_detailed;
   end copy_edit_realm;
   
   
-  procedure copy_set_realm
+  procedure copy_set_realm(
+    p_row in out nocopy parameter_vw%rowtype)
   as
   begin
     pit.enter_detailed('copy_set_realm');
     
     g_page_values := utl_apex.get_page_values('SET_REALM');
-    g_set_realm_row.par_id := utl_apex.get(g_page_values, 'par_id');
-    g_set_realm_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
-    g_set_realm_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    p_row.par_id := utl_apex.get(g_page_values, 'par_id');
+    p_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
+    p_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
     
     pit.leave_detailed;
   end copy_set_realm;
@@ -180,117 +215,82 @@ as
   end copy_export;
   
   
-  procedure copy_edit_module
+  procedure copy_edit_module(
+    p_row in out nocopy parameter_vw%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_module');
     
     g_page_values := utl_apex.get_page_values('EDIT_MODULE');
-    g_edit_module_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
-    g_edit_module_row.par_pgr_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_pgr_id'));
-    g_edit_module_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
-    g_edit_module_row.par_date_value := to_date(utl_apex.get(g_page_values, 'par_date_value'), 'dd.mm.yyyy');
-    g_edit_module_row.par_timestamp_value := to_timestamp(utl_apex.get(g_page_values, 'par_timestamp_value'), 'dd.mm.yyyy hh24:mi:ss');
-    g_edit_module_row.par_boolean_value := utl_apex.get(g_page_values, 'par_boolean_value');
-    g_edit_module_row.par_integer_value := to_number(utl_apex.get(g_page_values, 'par_integer_value'), '9999999999990');
-    g_edit_module_row.par_float_value := to_number(utl_apex.get(g_page_values, 'par_float_value'), '9999999999990d99999999');
+    p_row.par_id := utl_apex.get(g_page_values, 'par_id');
+    p_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
+    p_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    p_row.par_date_value := to_date(utl_apex.get(g_page_values, 'par_date_value'), 'dd.mm.yyyy');
+    p_row.par_timestamp_value := to_timestamp(utl_apex.get(g_page_values, 'par_timestamp_value'), 'dd.mm.yyyy hh24:mi:ss');
+    p_row.par_boolean_value := utl_apex.get(g_page_values, 'par_boolean_value');
+    p_row.par_integer_value := to_number(utl_apex.get(g_page_values, 'par_integer_value'), '9999999999990');
+    p_row.par_float_value := to_number(utl_apex.get(g_page_values, 'par_float_value'), '9999999999990d99999999');
     
     pit.leave_detailed;
   end copy_edit_module;
   
   
-  procedure copy_edit_context
+  procedure copy_edit_context(
+    p_row in out nocopy pit_ui_edit_context%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_context');
     
-    g_page_values := utl_apex.get_page_values('EDIT_CONTEXT');
-    g_edit_context_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'PAR_ID'));
-    g_edit_context_row.par_pgr_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_pgr_id'));
-    g_edit_context_row.pse_id := to_number(utl_apex.get(g_page_values, 'pse_id'), 'fm00');
-    g_edit_context_row.ptl_id := to_number(utl_apex.get(g_page_values, 'ptl_id'), 'fm00');
-    g_edit_context_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
-    g_edit_context_row.par_description := utl_apex.get(g_page_values, 'par_description');
-    g_edit_context_row.ctx_output_modules := utl_apex.get(g_page_values, 'ctx_output_modules');
-    g_edit_context_row.ctx_timing := utl_apex.get(g_page_values, 'ctx_timing');
+    g_page_values := utl_apex.get_page_values('EDIT_CONTEXT_FORM');
+    p_row.par_id := utl_apex.get(g_page_values, 'PAR_ID');
+    p_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
+    p_row.pse_id := to_number(utl_apex.get(g_page_values, 'pse_id'), 'fm00');
+    p_row.ptl_id := to_number(utl_apex.get(g_page_values, 'ptl_id'), 'fm00');
+    p_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    p_row.par_description := utl_apex.get(g_page_values, 'par_description');
+    p_row.ctx_output_modules := utl_apex.get(g_page_values, 'ctx_output_modules');
+    p_row.ctx_timing := utl_apex.get(g_page_values, 'ctx_timing');
     
     pit.leave_detailed;
   end copy_edit_context;
   
   
-  procedure copy_edit_toggle
+  procedure copy_edit_toggle(
+    p_row in out nocopy pit_ui_edit_toggle%rowtype)
   as
   begin
     pit.enter_detailed('copy_edit_toggle');
     
-    g_page_values := utl_apex.get_page_values('EDIT_TOGGLE');
-    g_edit_toggle_row.par_id := pit_util.harmonize_sql_name(utl_apex.get(g_page_values, 'par_id'));
-    g_edit_toggle_row.par_description := utl_apex.get(g_page_values, 'par_description');
-    g_edit_toggle_row.toggle_context_name := utl_apex.get(g_page_values, 'toggle_context_name');
-    g_edit_toggle_row.toggle_module_list := utl_apex.get(g_page_values, 'toggle_module_list');
+    g_page_values := utl_apex.get_page_values('EDIT_TOGGLE_FORM');
+    p_row.par_id := utl_apex.get(g_page_values, 'PAR_ID');
+    p_row.par_description := utl_apex.get(g_page_values, 'PAR_DESCRIPTION');
+    p_row.toggle_context_name := utl_apex.get(g_page_values, 'TOGGLE_CONTEXT_NAME');
+    p_row.toggle_module_list := utl_apex.get(g_page_values, 'TOGGLE_MODULE_LIST');
     
     pit.leave_detailed;
   end copy_edit_toggle;
   
   
-  /** Method to check whether a name conforms to the internal naming standards
-   * %param  p_name       Name to check
-   * %param  p_item_name  Name of the page item containing P_NAME
-   * %param  p_region_id  Static ID of the region
-   * %return Harmonized name if possible, entered name in case of error
-   * %usage  Is used as a wrapper to reduce code on various validate methods
-   */
-  function check_name(
-    p_name in pit_util.ora_name_type,
-    p_item_name in pit_util.ora_name_type,
-    p_region_id in pit_util.ora_name_type)
-    return varchar2
-  as
-    l_harmonized_name pit_util.ora_name_type;
-  begin
-    pit.enter_detailed('check_name');
-    
-    utl_apex.assert_not_null(
-        p_condition => p_name, 
-        p_page_item => p_item_name,
-        p_region_id => p_region_id);
-        
-    if p_name is not null then
-      l_harmonized_name :=  pit_util.harmonize_sql_name(p_name);
-    else
-      l_harmonized_name := p_name;
-    end if;
-    
-    pit.leave_detailed;
-    return l_harmonized_name;
-  exception
-    when msg.&ERR_PRE.INVALID_SQL_NAME&ERR_POST. then
-      utl_apex.set_error(
-        p_page_item => p_item_name,
-        p_message => msg.INVALID_SQL_NAME,
-        p_msg_args => null,
-        p_region_id => p_region_id);
-        
-      pit.leave_detailed;
-      return p_name;
-  end check_name;
-  
-  
-  /** Method to download a zip with export files for all selected groups of type P_TARGET
-   * %param  p_target           Type of export items. One of PMS or PTI
-   * %param  p_target_language  target language (Oracle name), to translate the messages to
-   * %param  p_pmg_list         Colon separated list of message group names
-   * %usage  Is used to create an XLIFF compatible list of files to translate the select target type.
-   *         All selected groups are written to separate tranlsation files and downloaded as a zip file.
+  /**
+    Procedure: translate_groups
+      Method to download a zip with export files for all selected groups of type P_TARGET.
+      
+      Is used to create an XLIFF compatible list of files to translate the select target type.
+      All selected groups are written to separate tranlsation files and downloaded as a zip file.
+      
+    Parameters:
+      p_target - Type of export items. One of PMS or PTI
+      p_target_language - target language (Oracle name), to translate the messages to
+      p_pmg_list - Colon separated list of message group names
    */
   procedure translate_groups(
-    p_target utl_apex.ora_name_type,
+    p_target pit_util.ora_name_type,
     p_target_language in pit_util.ora_name_type,
     p_pmg_list in char_table)
   as
     l_xliff xmltype;
-    l_group_file_name utl_apex.ora_name_type;
-    l_zip_file_name utl_apex.ora_name_type;
+    l_group_file_name pit_util.ora_name_type;
+    l_zip_file_name pit_util.ora_name_type;
     l_zip_file blob;
   begin
     pit.enter_mandatory(
@@ -302,7 +302,7 @@ as
     l_zip_file_name := 'Translation.zip';
     
     for i in 1 .. p_pmg_list.count loop
-      pit_admin.create_translation_xml(
+      pit_app_api.translate_group(
         p_target_language => p_target_language,
         p_pmg_name => p_pmg_list(i),
         p_target => p_target,
@@ -325,15 +325,18 @@ as
   end translate_groups;
   
   
-  /** Method to import a XLIFF translation file into the categorie defined by P_TARGET
-   * %param  p_target           Type of export items. One of PMS or PTI
-   * %usage  Is used to import an XLIFF compatible file into the database.
+  /**
+    Procedure: import_translation
+      Method to import a XLIFF translation file into the categorie defined by P_TARGET.
+      
+    Parameter:
+      p_target - Type of export items. One of PMS or PTI
    */
   procedure import_translation(
-    p_target utl_apex.ora_name_type)
+    p_target pit_util.ora_name_type)
   as
     l_xliff xmltype;
-    l_page_item utl_apex.ora_name_type;
+    l_page_item pit_util.ora_name_type;
   begin
     pit.enter_mandatory(
       p_action => 'import_translation',
@@ -341,9 +344,9 @@ as
                     msg_param('p_target', p_target)));
                     
     case p_target
-      when pit_admin.C_TARGET_PMS then
+      when pit_app_api.C_TARGET_PMS then
         l_page_item := 'PMS_XLIFF';
-      when pit_admin.C_TARGET_PTI then
+      when pit_app_api.C_TARGET_PTI then
         l_page_item := 'PTI_XLIFF';
       else
         pit.error(msg.UTL_APEX_INVALID_REQUEST);
@@ -355,7 +358,7 @@ as
      order by created_on desc
      fetch first 1 row only;
     
-    pit_admin.apply_translation(
+    pit_app_api.apply_translation(
       p_xliff => l_xliff,
       p_target => p_target);
         
@@ -365,7 +368,7 @@ as
   exception
     when NO_DATA_FOUND then
       utl_apex.set_error(l_page_item, msg.PIT_PASS_MESSAGE, msg_args(SQLERRM));
-    when msg.&ERR_PRE.UTL_APEX_INVALID_REQUEST&ERR_POST. then
+    when msg.UTL_APEX_INVALID_REQUEST_ERR then
       utl_apex.set_error(
         p_page_item => null,
         p_message => msg.UTL_APEX_INVALID_REQUEST,
@@ -373,19 +376,21 @@ as
   end import_translation;
   
   
-  /* Method to export groups
-   * %param  p_target    Type of export items. One of PMS, PAR or PTI
-   * %param  p_pmg_list  Colon separated list of translatable item group names.
-   * %usage  Is used to combine all translatable items into separate files per group, wrap them in a ZIP and download it.
+  /**
+    Procedure: export_groups
+      Method to export groups. Is used to combine all translatable items into separate files per group, wrap them in a ZIP and download it.
+      
+    Parameters:
+      p_target - Type of export items. One of PMS, PAR or PTI
+      p_pmg_list - Colon separated list of translatable item group names.
    */
   procedure export_groups(
     p_target pit_util.ora_name_type,
     p_pmg_list in char_table)
   as
     l_clob clob;
-    l_xml xmltype;
-    l_group_file_name utl_apex.ora_name_type;
-    l_zip_file_name utl_apex.ora_name_type;
+    l_group_file_name pit_util.ora_name_type;
+    l_zip_file_name pit_util.ora_name_type;
     l_zip_file blob;
   begin
     pit.enter_mandatory(
@@ -396,19 +401,11 @@ as
     l_zip_file_name := 'Export.zip';
          
     for i in 1 .. p_pmg_list.count loop
-      case 
-        when p_target = pit_admin.C_TARGET_PMS or p_target = pit_admin.C_TARGET_PTI then
-          pit_admin.create_installation_script(
-            p_pmg_name => p_pmg_list(i),
-            p_target => p_target,
-            p_file_name => l_group_file_name,
-            p_script => l_clob);
-        when p_target = pit_admin.C_TARGET_PAR then
-          l_clob := param_admin.export_parameter_group(p_pmg_list(i));
-          l_group_file_name := 'ParameterGroup_' || p_pmg_list(i) || '.sql';
-        else
-          null;
-      end case;
+      pit_app_api.export_group(
+        p_target => p_target,
+        p_group_name => p_pmg_list(i),
+        p_group_file_name => l_group_file_name,
+        p_script => l_clob);
                    
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,
@@ -430,8 +427,9 @@ as
   end export_groups;
   
   
-  /* Method to export local parameters
-   * %usage  Is used to export all locally overwritten or defined parameters.
+  /**
+    Procedure: explrt_local_parameters
+      Method to export local parameters. Is used to export all locally overwritten or defined parameters.
    */
   procedure export_local_parameters
   as
@@ -446,7 +444,13 @@ as
   end export_local_parameters;
   
   
-  /* INTERFACE */
+  /**
+    Group: Public Methods
+   */
+  /**
+    Function: get_default_language
+      See <pit_ui.get_default_language>
+   */
   function get_default_language
     return varchar2
   as
@@ -455,14 +459,10 @@ as
   end get_default_language;
   
   
-  function get_help_websheet_id
-    return pls_integer
-  as
-  begin
-    return utl_apex.get_help_websheet_id;
-  end get_help_websheet_id;
-  
-  
+  /**
+    Function: harmonize_sql_name
+      See <pit_ui.harmonize_sql_name>
+   */
   procedure harmonize_sql_name(
     p_item_name in varchar2,
     p_prefix in varchar2 default null)
@@ -473,18 +473,24 @@ as
       p_params => msg_params(msg_param('p_item_name', p_item_name)));
     
     l_name := utl_apex.get_value(p_item_name);
-    l_name := pit_util.harmonize_sql_name(l_name, p_prefix);
+    
+    l_name := pit_app_api.check_name(l_name, p_prefix);
+    
     utl_apex.set_value(p_item_name, l_name);
     
     pit.leave_mandatory(
       p_params => msg_params(msg_param('Result', l_name)));
   exception
-    when others then
+    when msg.INVALID_SQL_NAME_ERR then
       -- leave the error display for the page validation, as an interactive grid does not support dynamic validation
       null;
   end harmonize_sql_name;
   
   
+  /**
+    Function: has_translatable_items
+      See <pit_ui.has_translatable_items>
+   */
   function has_translatable_items
     return boolean
   as
@@ -502,6 +508,10 @@ as
   end has_translatable_items;
   
   
+  /**
+    Function: has_local_parameters
+      See <pit_ui.has_local_parameters>
+   */
   function has_local_parameters
     return boolean
   as
@@ -519,20 +529,26 @@ as
   end has_local_parameters;
   
   
+  /**
+    Procedure: set_allow_toggles
+      See <pit_ui.set_allow_toggles>
+   */
   procedure set_allow_toggles
   as
   begin
     pit.enter_mandatory;
     
-    param_admin.edit_parameter(
-      p_par_id => 'ALLOW_TOGGLE', 
-      p_par_pgr_id => 'PIT', 
-      p_par_boolean_value => utl_apex.get_value('ALLOW_TOGGLE') = utl_apex.C_TRUE);
-    
+    pit_app_api.set_allow_toggles(
+      p_allowed => utl_apex.get_value('ALLOW_TOGGLE') = utl_apex.C_TRUE);
+      
     pit.leave_mandatory;
   end set_allow_toggles;
   
   
+  /**
+    Function: is_default_context
+      See <pit_ui.is_default_context>
+   */
   function is_default_context
     return boolean
   as
@@ -547,24 +563,29 @@ as
   end is_default_context;
   
   
+  /**
+    Function: allows_toggles
+      See <pit_ui.allows_toggles>
+   */
   function allows_toggles
-    return utl_apex.flag_type
+    return boolean
   as
-    l_flag utl_apex.flag_type;
+    l_flag boolean;
   begin
     pit.enter_mandatory;
-    select par_boolean_value
-      into l_flag
-      from parameter_vw
-     where par_pgr_id = 'PIT'
-       and par_id = 'ALLOW_TOGGLE';
+    
+    l_flag := pit_app_api.allows_toggles;
     
     pit.leave_mandatory(
-      p_params => msg_params(msg_param('Result', l_flag)));
+      p_params => msg_params(msg_param('Result', utl_apex.get_bool(l_flag))));
     return l_flag;
   end allows_toggles;
     
   
+  /**
+    Procedure: set_language_settings
+      See <pit_ui.set_language_settings>
+   */
   procedure set_language_settings(
     p_pml_list in pit_util.max_sql_char)
   as
@@ -573,137 +594,182 @@ as
       p_params => msg_params(
                     msg_param('p_pml_list', p_pml_list)));
     
-    pit_admin.set_language_settings(p_pml_list);
+    pit_app_api.set_language_settings(p_pml_list);
     
     pit.leave_mandatory;
   end set_language_settings;
   
   
-  function validate_edit_pmg
+  /**
+    Function: edit_pmg_validate
+      See <pit_ui.edit_pmg_validate>
+   */
+  function edit_pmg_validate
     return boolean
   as
+    l_row pit_message_group%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pmg;
+    copy_edit_pmg(l_row);
     
-    g_edit_pmg_row.pmg_name := check_name(g_edit_pmg_row.pmg_name, 'PMG_NAME', 'EDIT_PMG');
-    
+    pit.start_message_collection;
+    pit_app_api.validate_message_group(l_row);
+    pit.stop_message_collection;
+      
     pit.leave_mandatory;
     return true;
-  end validate_edit_pmg;
+  exception
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        'NAME_MISSING', 'PMG_NAME',
+        'INVALID_SQL_NAME', 'PMG_NAME',
+        msg.PIT_PMG_ERROR_MARKER_INVALID, 'PMG_PREFIX'));
+      
+      pit.leave_mandatory;
+      return true;
+  end edit_pmg_validate;
   
   
-  procedure process_edit_pmg
+  /**
+    Function: edit_pmg_process
+      See <pit_ui.edit_pmg_process>
+   */
+  procedure edit_pmg_process
   as
+    l_row pit_message_group%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pmg;
+    copy_edit_pmg(l_row);
     
     case when utl_apex.inserting or utl_apex.updating then
-      pit_admin.merge_message_group(
-        p_pmg_name => g_edit_pmg_row.pmg_name,
-        p_pmg_description => g_edit_pmg_row.pmg_description);
+      pit_app_api.merge_message_group(l_row);
     else
-      pit_admin.delete_message_group(
-        p_pmg_name => g_edit_pmg_row.pmg_name, 
+      pit_app_api.delete_message_group(
+        p_pmg_name => l_row.pmg_name, 
         p_force => false);
     end case;
     
     pit.leave_mandatory;
-  end process_edit_pmg;
+  end edit_pmg_process;
   
   
-  function validate_edit_pms
+  /**
+    Function: edit_pms_validate
+      See <pit_ui.edit_pms_validate>
+   */
+  function edit_pms_validate
     return boolean
   as
+    l_row pit_message%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pms;
+    copy_edit_pms(l_row);
     
-    g_edit_pms_row.pms_name := check_name(g_edit_pms_row.pms_name, 'PMS_NAME', 'EDIT_PMS');
-    
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_pmg_name, 
-      p_page_item => 'PMS_PMG_NAME');
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_text,  
-      p_page_item => 'PMS_TEXT');
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pms_row.pms_pse_id,  
-      p_page_item => 'PMS_PSE_ID');
+    pit.start_message_collection;
+    pit_app_api.validate_message(l_row);
+    pit.stop_message_collection;
         
     pit.leave_mandatory;
     return true;
-  end validate_edit_pms;
+  exception
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        'NAME_MISSING', 'PMS_NAME',
+        msg.INVALID_SQL_NAME, 'PMS_NAME',
+        'PMS_PMG_NAME_MISSING', 'PMS_PMG_NAME',
+        'PMS_TEXT_MISSING', 'PMS_TEXT',
+        'PMS_PSE_ID_MISSING', 'PMS_PSE_ID',
+        msg.PIT_PMS_PREDEFINED_ERROR, 'PMS_CUSTOM_ERROR'));
+      
+      pit.leave_mandatory;
+      return true;
+  end edit_pms_validate;
   
   
-  procedure process_edit_pms
+  /**
+    Procedure: edit_pms_process
+      See <pit_ui.edit_pms_process>
+   */
+  procedure edit_pms_process
   as
+    l_row pit_message%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pms;
+    copy_edit_pms(l_row);
+    
     case when utl_apex.inserting or utl_apex.updating then
-      pit_admin.merge_message(
-        p_pms_name => g_edit_pms_row.pms_name,
-        p_pms_text => g_edit_pms_row.pms_text,
-        p_pms_pse_id => g_edit_pms_row.pms_pse_id,
-        p_pms_description => g_edit_pms_row.pms_description,
-        p_pms_pmg_name => g_edit_pms_row.pms_pmg_name,
-        p_pms_pml_name => g_edit_pms_row.pms_pml_name,
-        p_error_number => g_edit_pms_row.pms_custom_error);
+      pit_app_api.merge_message(l_row);
     else
-      pit_admin.delete_message(g_edit_pms_row.pms_name);
+      pit_app_api.delete_message(l_row.pms_name);
     end case;
     
     pit.leave_mandatory;
-  end process_edit_pms;
+  end edit_pms_process;
   
   
-  function validate_edit_pgr
+  /**
+    Function: edit_pgr_validate
+      See <pit_ui.edit_pgr_validate>
+   */
+  function edit_pgr_validate
     return boolean
   as
-    C_REGION_ID constant utl_apex.ora_name_type := 'EDIT_PGR';
+    C_REGION_ID constant pit_util.ora_name_type := 'EDIT_PGR';
+    l_row parameter_group%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pgr;
+    copy_edit_pgr(l_row);
     
-    g_edit_pgr_row.pgr_id := check_name(g_edit_pgr_row.pgr_id, 'PGR_ID', C_REGION_ID);
-    
-    utl_apex.assert_not_null(
-      p_condition => g_edit_pgr_row.pgr_description,
-      p_page_item => 'PGR_DESCRIPTION',
-      p_region_id => C_REGION_ID);
-      
+    pit.start_message_collection;
+    pit_app_api.validate_parameter_group(l_row);
+    pit.stop_message_collection;
+        
     pit.leave_mandatory;
     return true;
-  end validate_edit_pgr;
+  exception
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        'NAME_MISSING', 'PMS_NAME',
+        'INVALID_SQL_NAME', 'PMS_NAME',
+        'PGR_DESCRIPTION_MISSING', 'PGR_DESCRIPTION'));
+      
+      pit.leave_mandatory;
+      return true;
+  end edit_pgr_validate;
   
   
-  procedure process_edit_pgr
+  /**
+    Procedure: edit_pgr_process
+      See <pit_ui.edit_pgr_process>
+   */
+  procedure edit_pgr_process
   as
+    l_row parameter_group%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pgr;
+    copy_edit_pgr(l_row);
     
     case when utl_apex.inserting or utl_apex.updating then
-      param_admin.edit_parameter_group(
-        p_pgr_id => g_edit_pgr_row.pgr_id,
-        p_pgr_description => g_edit_pgr_row.pgr_description,
-        p_pgr_is_modifiable => g_edit_pgr_row.pgr_is_modifiable = utl_apex.C_TRUE);
+      pit_app_api.merge_parameter_group(l_row);
     else
-      param_admin.delete_parameter_group(g_edit_pgr_row.pgr_id, true);
+      pit_app_api.delete_parameter_group(l_row.pgr_id, true);
     end case;
     
     pit.leave_mandatory;
-  end process_edit_pgr;
+  end edit_pgr_process;
 
-  function validate_edit_pre
+
+  /**
+    Function: edit_pre_validate
+      See <pit_ui.edit_pre_validate>
+   */
+  function edit_pre_validate
     return boolean
   as
   begin
@@ -714,26 +780,35 @@ as
     
     pit.leave_mandatory;
     return true;
-  end validate_edit_pre;
+  end edit_pre_validate;
   
   
-  procedure process_edit_pre
+  /**
+    Procedure: edit_pre_process
+      See <pit_ui.edit_pre_process>
+   */
+  procedure edit_pre_process
   as
+    l_row parameter_realm%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_pre;
+    copy_edit_pre(l_row);
     case when utl_apex.inserting or utl_apex.updating then
-      param_admin.edit_parameter_realm(g_edit_pre_row);
+      pit_app_api.merge_parameter_realm(l_row);
     else
-      param_admin.delete_parameter_realm(g_edit_pre_row.pre_id);
+      pit_app_api.delete_parameter_realm(l_row.pre_id);
     end case;
     
     pit.leave_mandatory;
-  end process_edit_pre;
+  end edit_pre_process;
   
   
-  procedure initialize_edit_par
+  /**
+    Function: edit_par_initialize
+      See <pit_ui.edit_par_initialize>
+   */
+  procedure edit_par_initialize
   as
     l_pgr_id parameter_group.pgr_id%type;
     l_pgr_is_modifiable parameter_group.pgr_is_modifiable%type;
@@ -751,218 +826,214 @@ as
     utl_apex.set_value('P7_PGR_IS_MODIFIABLE', l_pgr_is_modifiable);
     
     pit.leave_mandatory;
-  end initialize_edit_par;
+  end edit_par_initialize;
   
   
-  function validate_edit_par
+  /**
+    Function: edit_par_validate
+      See <pit_ui.edit_par_validate>
+   */
+  function edit_par_validate
     return boolean
   as
+    l_row parameter_vw%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_par;
-    
-    g_edit_par_row.par_id := check_name(g_edit_par_row.par_id, 'PAR_ID', 'EDIT_PAR');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_par_row.par_integer_value, 
-      p_type => pit.type_integer,
-      p_page_item => 'PAR_INTEGER_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_par_row.par_integer_value, 
-      p_type => pit.type_number,
-      p_page_item => 'PAR_FLOAT_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_par_row.par_date_value, 
-      p_type => pit.type_date,
-      p_page_item => 'PAR_DATE_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_par_row.par_timestamp_value, 
-      p_type => pit.type_timestamp,
-      p_page_item => 'PAR_TIMESTAMP_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_par_row.par_xml_value, 
-      p_type => pit.type_xml,
-      p_page_item => 'PAR_XML_VALUE');
-    
-    utl_apex.assert_not_null(
-      p_condition => g_edit_par_row.par_pgr_id, 
-      p_page_item => 'PAR_PGR_ID');
-      
-    pit.leave_mandatory;
-    return true;
-  end validate_edit_par;
-  
-  
-  procedure process_edit_par
-  as
-    l_par_xml_value parameter_tab.par_xml_value%type;
-  begin
-    pit.enter_mandatory;
-    
-    copy_edit_par;
-    
-    if g_edit_par_row.par_xml_value is not null then
-      l_par_xml_value := xmltype(g_edit_par_row.par_xml_value);
-    end if;
-    
-    case when utl_apex.inserting or utl_apex.updating then
-      param_admin.edit_parameter(
-        p_par_id => g_edit_par_row.par_id,
-        p_par_pgr_id => g_edit_par_row.par_pgr_id,
-        p_par_description => g_edit_par_row.par_description,
-        p_par_string_value => g_edit_par_row.par_string_value,
-        p_par_xml_value => l_par_xml_value,
-        p_par_integer_value => g_edit_par_row.par_integer_value,
-        p_par_float_value => g_edit_par_row.par_float_value,
-        p_par_date_value => g_edit_par_row.par_date_value,
-        p_par_timestamp_value => g_edit_par_row.par_timestamp_value,
-        p_par_boolean_value => g_edit_par_row.par_boolean_value = utl_apex.C_TRUE,
-        p_par_is_modifiable => g_edit_par_row.par_is_modifiable = utl_apex.C_TRUE,
-        p_par_pat_id => g_edit_par_row.par_pat_id,
-        p_par_validation_string => g_edit_par_row.par_validation_string,
-        p_par_validation_message => g_edit_par_row.par_validation_message);
-    else
-      param_admin.delete_parameter(
-        p_par_id => g_edit_par_row.par_id,
-        p_par_pgr_id => g_edit_par_row.par_pgr_id);
-    end case;
-    
-    pit.leave_mandatory;
-  end process_edit_par;
-  
-  
-  function validate_edit_realm
-    return boolean
-  as
-  begin
-    pit.enter_mandatory;
-  
-    -- copy_edit_realm;
-    -- validation logic goes here. If it exists, uncomment COPY function
-  
-    pit.leave_mandatory;
-    return true;
-  end validate_edit_realm;
-  
-  
-  procedure process_edit_realm
-  as
-  begin
-    pit.enter_mandatory;
-  
-    copy_edit_realm;
-    case when utl_apex.inserting or utl_apex.updating then
-      param_admin.edit_parameter_realm(g_edit_realm_row);
-    when utl_apex.deleting then
-      param_admin.delete_parameter_realm(g_edit_realm_row.pre_id);
-    else
-      null;
-    end case;
-  
-    pit.leave_mandatory;
-  end process_edit_realm;
-  
-    
-  function validate_set_realm
-    return boolean
-  as
-  begin
-    pit.enter_mandatory;
-    
-    -- copy_set_realm;
-    -- validation logic goes here. If it exists, uncomment COPY function
-    
-    pit.leave_mandatory;
-    return true;
-  end validate_set_realm;
-  
-  
-  procedure process_set_realm
-  as
-  begin
-    pit.enter_mandatory;
-    
-    copy_set_realm;
-    case when utl_apex.updating then
-      param_admin.edit_parameter(
-        p_par_id => g_set_realm_row.par_id,
-        p_par_pgr_id => g_set_realm_row.par_pgr_id,
-        p_par_string_value => g_set_realm_row.par_string_value);
-    else
-      null;
-    end case;
-    
-    pit.leave_mandatory;
-  end process_set_realm;
-  
-  
-  function validate_edit_par_realm
-    return boolean
-  as
-  begin
-    pit.enter_mandatory;
-    
-    copy_edit_par_realm;
+    copy_edit_par(l_row);
     
     pit.start_message_collection;
-    param_admin.validate_realm_parameter(
-      p_par_id => g_edit_par_realm_row.pre_par_id,
-      p_par_pgr_id => g_edit_par_realm_row.pre_pgr_id,
-      p_par_string_value => g_edit_par_realm_row.pre_string_value,
-      p_par_integer_value => g_edit_par_realm_row.pre_integer_value,
-      p_par_float_value => g_edit_par_realm_row.pre_float_value,
-      p_par_date_value => g_edit_par_realm_row.pre_date_value,
-      p_par_timestamp_value => g_edit_par_realm_row.pre_timestamp_value,
-      p_par_boolean_value => g_edit_par_realm_row.pre_boolean_value = utl_apex.C_TRUE);
+    pit_app_api.validate_parameter(l_row);
+    pit.stop_message_collection;
+    
+    pit.leave_mandatory;
+    return true;
+  exception
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        'DATAYPE_MISMATCH_INTEGER', 'PAR_INTEGER_VALUE',
+        'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
+        'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',
+        'DATAYPE_MISMATCH_TIMESTAMP', 'PAR_TIMESTAMP_VALUE'));
+      
+      pit.leave_mandatory;
+      return true;
+  end edit_par_validate;
+  
+  
+  /**
+    Procedure: edit_par_process
+      See <pit_ui.edit_par_process>
+   */
+  procedure edit_par_process
+  as
+    l_par_xml_value parameter_tab.par_xml_value%type;
+    l_row parameter_vw%rowtype;
+  begin
+    pit.enter_mandatory;
+    
+    copy_edit_par(l_row);
+    
+    case when utl_apex.inserting or utl_apex.updating then
+      pit_app_api.merge_parameter(l_row);
+    else
+      pit_app_api.delete_parameter(
+        p_par_id => l_row.par_id,
+        p_par_pgr_id => l_row.par_pgr_id);
+    end case;
+    
+    pit.leave_mandatory;
+  end edit_par_process;
+  
+  
+  /**
+    Function: edit_realm_validate
+      See <pit_ui.edit_realm_validate>
+   */
+  function edit_realm_validate
+    return boolean
+  as
+    l_row parameter_realm%rowtype;
+  begin
+    pit.enter_mandatory;
+  
+    -- copy_edit_realm(l_row);
+    -- validation logic goes here. If it exists, uncomment COPY function
+  
+    pit.leave_mandatory;
+    return true;
+  end edit_realm_validate;
+  
+  
+  /**
+    Procedure: edit_realm_process
+      See <pit_ui.edit_realm_process>
+   */
+  procedure edit_realm_process
+  as
+    l_row parameter_realm%rowtype;
+  begin
+    pit.enter_mandatory;
+  
+    copy_edit_realm(l_row);
+    case when utl_apex.inserting or utl_apex.updating then
+      pit_app_api.merge_parameter_realm(l_row);
+    when utl_apex.deleting then
+      pit_app_api.delete_parameter_realm(l_row.pre_id);
+    else
+      null;
+    end case;
+  
+    pit.leave_mandatory;
+  end edit_realm_process;
+  
+    
+  /**
+    Function: set_realm_validate
+      See <pit_ui.set_realm_validate>
+   */
+  function set_realm_validate
+    return boolean
+  as
+    l_row parameter_vw%rowtype;
+  begin
+    pit.enter_mandatory;
+    
+    -- copy_set_realm(l_row);
+    -- validation logic goes here. If it exists, uncomment COPY function
+    
+    pit.leave_mandatory;
+    return true;
+  end set_realm_validate;
+  
+  
+  /**
+    Procedure: set_realm_process
+      See <pit_ui.set_realm_process>
+   */
+  procedure set_realm_process
+  as
+    l_row parameter_vw%rowtype;
+  begin
+    pit.enter_mandatory;
+    
+    copy_set_realm(l_row);
+    case when utl_apex.updating then
+      pit_app_api.merge_parameter(l_row);
+    else
+      null;
+    end case;
+    
+    pit.leave_mandatory;
+  end set_realm_process;
+  
+  
+  /**
+    Function: edit_par_realm_validate
+      See <pit_ui.edit_par_realm_validate>
+   */
+  function edit_par_realm_validate
+    return boolean
+  as
+    l_row parameter_vw%rowtype;
+  begin
+    pit.enter_mandatory;
+    
+    copy_edit_par_realm(l_row);
+    
+    pit.start_message_collection;
+    pit_app_api.validate_realm_parameter(l_row);
     pit.stop_message_collection;
   
     pit.leave_mandatory;
     return true;
   exception
-    when msg.&ERR_PRE.PIT_BULK_ERROR&ERR_POST. then
-      utl_apex.handle_bulk_errors(char_table());
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        'NAME_MISSING', 'PAR_ID',
+        'INVALID_SQL_NAME', 'PAR_ID',
+        'DATAYPE_MISMATCH_INTEGER', 'PAR_INTEGER_VALUE',
+        'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
+        'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',
+        'DATAYPE_MISMATCH_TIMESTAMP', 'PAR_TIMESTAMP_VALUE',
+        msg.PARAM_IS_NULL, 'PAR_ID',
+        msg.PARAM_NOT_MODIFIABLE, 'PAR_ID'));
       
       pit.leave_mandatory;
       return true;
-  end validate_edit_par_realm;
+  end edit_par_realm_validate;
   
   
-  procedure process_edit_par_realm
+  /**
+    Procedure: edit_par_realm_process
+      See <pit_ui.edit_par_realm_process>
+   */
+  procedure edit_par_realm_process
   as
-    
+    l_row parameter_vw%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_par_realm;
+    copy_edit_par_realm(l_row);
     
     if utl_apex.inserting or utl_apex.updating then
-      param_admin.edit_realm_parameter(
-        p_par_id => g_edit_par_realm_row.pre_par_id,
-        p_par_pgr_id => g_edit_par_realm_row.pre_pgr_id,
-        p_par_pre_id => g_edit_par_realm_row.pre_id,
-        p_par_string_value => g_edit_par_realm_row.pre_string_value,
-        p_par_integer_value => g_edit_par_realm_row.pre_integer_value,
-        p_par_float_value => g_edit_par_realm_row.pre_float_value,
-        p_par_date_value => g_edit_par_realm_row.pre_date_value,
-        p_par_timestamp_value => g_edit_par_realm_row.pre_timestamp_value,
-        p_par_boolean_value => g_edit_par_realm_row.pre_boolean_value = utl_apex.C_TRUE);
+      pit_app_api.merge_realm_parameter(l_row);
     else
-      param_admin.delete_realm_parameter(
-        p_par_id => g_edit_par_realm_row.pre_par_id,
-        p_par_pgr_id => g_edit_par_realm_row.pre_pgr_id,
-        p_par_pre_id => g_edit_par_realm_row.pre_id);
+      pit_app_api.delete_realm_parameter(
+        p_par_id => l_row.par_id,
+        p_par_pgr_id => l_row.par_pgr_id,
+        p_par_pre_id => l_row.par_pre_id);
     end if;
     
     pit.leave_mandatory;
-  end process_edit_par_realm;
+  end edit_par_realm_process;
   
   
-  function validate_export
+  /**
+    Function: export_validate
+      See <pit_ui.export_validate>
+   */
+  function export_validate
     return boolean
   as
   begin
@@ -1019,10 +1090,14 @@ as
     
     pit.leave_mandatory;
     return true;
-  end validate_export;
+  end export_validate;
   
   
-  procedure process_export
+  /**
+    Procedure: export_process
+      See <pit_ui.export_process>
+   */
+  procedure export_process
   as
   begin
     pit.enter_mandatory;
@@ -1032,31 +1107,31 @@ as
     case utl_apex.get_request
       when 'TRANSLATE_PMS' then
         translate_groups(
-          p_target => pit_admin.C_TARGET_PMS,
+          p_target => pit_app_api.C_TARGET_PMS,
           p_target_language => g_export_row.pms_pml_name,
           p_pmg_list => g_export_row.pms_pmg_list);
       when 'IMPORT_PMS' then
         import_translation(
-          p_target => pit_admin.C_TARGET_PMS);
+          p_target => pit_app_api.C_TARGET_PMS);
       when 'EXPORT_PMS' then
         export_groups(
-          p_target => pit_admin.C_TARGET_PMS, 
+          p_target => pit_app_api.C_TARGET_PMS, 
           p_pmg_list => g_export_row.pms_pmg_list);
       when 'TRANSLATE_PTI' then
         translate_groups(
-          p_target => pit_admin.C_TARGET_PTI,
+          p_target => pit_app_api.C_TARGET_PTI,
           p_target_language => g_export_row.pti_pml_name,
           p_pmg_list => g_export_row.pti_pmg_list);
       when 'IMPORT_PTI' then
         import_translation(
-          p_target => pit_admin.C_TARGET_PTI);
+          p_target => pit_app_api.C_TARGET_PTI);
       when 'EXPORT_PTI' then
         export_groups(
-          p_target => pit_admin.C_TARGET_PTI, 
+          p_target => pit_app_api.C_TARGET_PTI, 
           p_pmg_list => g_export_row.pti_pmg_list);
       when 'EXPORT_PAR' then
         export_groups(
-          p_target => pit_admin.C_TARGET_PAR, 
+          p_target => pit_app_api.C_TARGET_PAR, 
           p_pmg_list => g_export_row.par_pgr_list);
       when 'EXPORT_LOCAL_PAR' then
         export_local_parameters;
@@ -1068,64 +1143,60 @@ as
     end case;
     
     pit.leave_mandatory;
-  end process_export;
+  end export_process;
   
   
-  function validate_edit_module
+  /**
+    Function: edit_module_validate
+      See <pit_ui.edit_module_validate>
+   */
+  function edit_module_validate
     return boolean
   as
+    l_row parameter_vw%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_module;
+    copy_edit_module(l_row);
     
-    utl_apex.assert_datatype(
-      p_value => g_edit_module_row.par_integer_value, 
-      p_type => pit.type_integer,
-      p_page_item => 'PAR_INTEGER_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_module_row.par_integer_value, 
-      p_type => pit.type_number,
-      p_page_item => 'PAR_FLOAT_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_module_row.par_date_value, 
-      p_type => pit.type_date,
-      p_page_item => 'PAR_DATE_VALUE');
-    
-    utl_apex.assert_datatype(
-      p_value => g_edit_module_row.par_timestamp_value, 
-      p_type => pit.type_timestamp,
-      p_page_item => 'PAR_TIMESTAMP_VALUE');
+    pit.start_message_collection;
+    pit_app_api.validate_data_type(l_row);
+    pit.stop_message_collection;
     
     pit.leave_mandatory;
     return true;
-  end validate_edit_module;
+  exception
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        'DATAYPE_MISMATCH_INTEGER', 'PAR_INTEGER_VALUE',
+        'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
+        'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',
+        'DATAYPE_MISMATCH_TIMESTAMP', 'PAR_TIMESTAMP_VALUE'));
+      
+      pit.leave_mandatory;
+      return true;
+  end edit_module_validate;
   
   
-  procedure process_edit_module
+  /**
+    Procedure: edit_module_process
+      See <pit_ui.edit_module_process>
+   */
+  procedure edit_module_process
   as
+    l_row parameter_vw%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_module;
+    copy_edit_module(l_row);
     
     case 
       when utl_apex.updating then
-        param_admin.edit_parameter(
-          p_par_id => g_edit_module_row.par_id, 
-          p_par_pgr_id => g_edit_module_row.par_pgr_id,
-          p_par_string_value => g_edit_module_row.par_string_value,
-          p_par_date_value => g_edit_module_row.par_date_value,
-          p_par_timestamp_value => g_edit_module_row.par_timestamp_value,
-          p_par_boolean_value => utl_apex.get_bool(g_edit_module_row.par_boolean_value),
-          p_par_integer_value => g_edit_module_row.par_integer_value,
-          p_par_float_value => g_edit_module_row.par_float_value);
+        pit_app_api.merge_parameter(l_row);
       when utl_apex.deleting then
-        param_admin.delete_parameter(
-          p_par_id => g_edit_module_row.par_id, 
-          p_par_pgr_id => g_edit_module_row.par_pgr_id);
+        pit_app_api.delete_parameter(
+          p_par_id => l_row.par_id, 
+          p_par_pgr_id => l_row.par_pgr_id);
       else
         utl_apex.set_error(
           p_page_item => null,
@@ -1134,101 +1205,120 @@ as
     end case;
     
     pit.leave_mandatory;
-  end process_edit_module;
+  end edit_module_process;
   
     
-  function validate_edit_context
+  /**
+    Function: edit_context_validate
+      See <pit_ui.edit_context_validate>
+   */
+  function edit_context_validate
     return boolean
   as
+    l_row pit_ui_edit_context%rowtype;
   begin
     pit.enter_mandatory;
     
-    -- copy_edit_context;
+    -- copy_edit_context(l_row);
     -- validation logic goes here. If it exists, uncomment COPY function
     
     pit.leave_mandatory;
     return true;
-  end validate_edit_context;
+  end edit_context_validate;
   
   
-  procedure process_edit_context
+  /**
+    Procedure: edit_context_process
+      See <pit_ui.edit_context_process>
+   */
+  procedure edit_context_process
   as
+    l_row pit_ui_edit_context%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_context;
+    copy_edit_context(l_row);
     
     case when utl_apex.inserting or utl_apex.updating then
-      pit_admin.create_named_context(
-        p_context_name => g_edit_context_row.par_id,
-        p_log_level => g_edit_context_row.pse_id,
-        p_trace_level => g_edit_context_row.ptl_id,
-        p_trace_timing => g_edit_context_row.ctx_timing = pit_util.C_TRUE,
-        p_module_list => g_edit_context_row.ctx_output_modules,
-        p_comment => g_edit_context_row.par_description);
+      pit_app_api.create_named_context(
+        p_context_name => l_row.par_id,
+        p_log_level => l_row.pse_id,
+        p_trace_level => l_row.ptl_id,
+        p_trace_timing => l_row.ctx_timing = pit_util.C_TRUE,
+        p_module_list => l_row.ctx_output_modules,
+        p_comment => l_row.par_description);
         
       -- Propagate changed settings to all sessions
       pit.reset_context(false);
     else
-      pit_admin.delete_named_context(g_edit_context_row.par_id);
+      pit_app_api.delete_named_context(l_row.par_id);
     end case;
     
     pit.leave_mandatory;
-  end process_edit_context;
+  end edit_context_process;
   
   
-  function validate_edit_toggle
+  /**
+    Function: edit_toggle_validate
+      See <pit_ui.edit_toggle_validate>
+   */
+  function edit_toggle_validate
     return boolean
   as
+    l_row pit_ui_edit_toggle%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_toggle;
-
-    pit_util.check_toggle_settings(
-        p_toggle_name => g_edit_toggle_row.par_id,
-        p_module_list => g_edit_toggle_row.toggle_module_list,
-        p_context_name => g_edit_toggle_row.toggle_context_name);
+    copy_edit_toggle(l_row);
+    
+    pit.start_message_collection;
+    pit_app_api.validate_context_toggle(
+      p_toggle_name => l_row.par_id,
+      p_module_list => l_row.toggle_module_list,
+      p_context_name => l_row.toggle_context_name);
+    pit.stop_message_collection;
     
     pit.leave_mandatory;
     return true;
   exception
-    when msg.&ERR_PRE.INVALID_SQL_NAME&ERR_POST. then
-      utl_apex.set_error('PAR_ID', msg.INVALID_SQL_NAME);
+    when msg.PIT_BULK_ERROR_ERR then
+      utl_apex.handle_bulk_errors(char_table(
+        msg.INVALID_SQL_NAME, 'PAR_ID',
+        'TOGGLE_NAME_MISSING', 'PAR_ID',
+        'TOGGLE_NAME_TOO_LONG', 'PAR_ID',
+        'CONTEXT_NAME_MISSING', 'TOGGLE_CONTEXT_NAME',
+        'CONTEXT_NAME_MTOO_LONG', 'TOGGLE_CONTEXT_NAME',
+        msg.PIT_CONTEXT_MISSING, 'TOGGLE_CONTEXT_NAME'));
+      
       pit.leave_mandatory;
       return true;
-    when pit_util.CONTEXT_MISSING then
-      utl_apex.set_error('TOGGLE_CONTEXT_NAME', msg.PIT_CONTEXT_MISSING, msg_args(g_edit_toggle_row.toggle_context_name));
-      pit.leave_mandatory;
-      return true;
-    when pit_util.NAME_TOO_LONG then
-      utl_apex.set_error('PAR_ID', msg.PIT_NAME_TOO_LONG, msg_args(to_char(pit_util.C_MAX_LENGTH)));
-      pit.leave_mandatory;
-      return true;
-    when others then
-      raise;
-  end validate_edit_toggle;
+  end edit_toggle_validate;
   
   
-  procedure process_edit_toggle
+  /**
+    Procedure: edit_toggle_process
+      See <pit_ui.edit_toggle_process>
+   */
+  procedure edit_toggle_process
   as
+    l_row pit_ui_edit_toggle%rowtype;
   begin
     pit.enter_mandatory;
     
-    copy_edit_toggle;
+    copy_edit_toggle(l_row);
     case when utl_apex.inserting or utl_apex.updating then
-      pit_admin.create_context_toggle(
-        p_toggle_name => g_edit_toggle_row.par_id,
-        p_module_list => g_edit_toggle_row.toggle_module_list,
-        p_context_name => g_edit_toggle_row.toggle_context_name,
-        p_comment => g_edit_toggle_row.par_description);
+      pit_app_api.merge_context_toggle(
+        p_toggle_name => l_row.par_id,
+        p_module_list => l_row.toggle_module_list,
+        p_context_name => l_row.toggle_context_name,
+        p_comment => l_row.par_description);
     else
-      pit_admin.delete_context_toggle(
-        p_toggle_name => g_edit_toggle_row.par_id);
+      pit_app_api.delete_context_toggle(
+        p_toggle_name => l_row.par_id);
     end case;
     
     pit.leave_mandatory;
-  end process_edit_toggle;
+  end edit_toggle_process;
   
 end pit_ui;
 /

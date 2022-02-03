@@ -774,9 +774,7 @@ as
       Use this procedure to check whether an expression evaluates to true.
       
       If the assertion fails, an error is thrown. You may choose to throw a client
-      specific error message. If this parameter is not set, a default message
-      > msg.ASSERT_TRUE
-      is used.
+      specific error message. If this parameter is not set, a default message <msg.ASSERT_TRUE> is used.
         
     Parameters:
       p_condition  - Boolean expression to check.
@@ -801,13 +799,12 @@ as
       Use this procedure to check whether an expression is NULL.
       
       If the assertion fails, an error is thrown. You may choose to throw a client
-      specific error message. If this parameter is not set, a default message
-      > msg.ASSERT_IS_NULL
+      specific error message. If this parameter is not set, a default message <msg.ASSERT_IS_NULL>
       is used.
         
     Parameters:
       p_condition  - Boolean expression to check.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_TRUE>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_IS_NULL>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
       p_error_code - Optional error code, usable by external applications and to distinguish
@@ -852,13 +849,12 @@ as
       Use this procedure to check whether an expression is not NULL.
       
       If the assertion fails, an error is thrown. You may choose to throw a client
-      specific error message. If this parameter is not set, a default message
-      > msg.ASSERT_IS_NOT_NULL
+      specific error message. If this parameter is not set, a default message <msg.ASSERT_IS_NOT_NULL>
       is used.
         
     Parameters:
       p_condition  - Boolean expression to check.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_TRUE>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_IS_NOT_NULL>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
       p_error_code - Optional error code, usable by external applications and to distinguish
@@ -903,13 +899,12 @@ as
       Pass a select statement that is expected to return a row.
       If the statement does return a row, it will silently quit, otherwise
       it will throw a client specific error message. If this
-      parameter is not set, a default message 
-      > msg.ASSERT_EXISTS
+      parameter is not set, a default message <msg.ASSERT_EXISTS>
       is used.
         
     Parameters:
       p_stmt - SQL-statement that either returns rows or not.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_TRUE>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_EXISTS>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
       p_error_code - Optional error code, usable by external applications and to distinguish
@@ -941,13 +936,12 @@ as
       
       Pass a select statement that is expected to return no row.
       If the statement does return no row, it will silently quit, otherwise it will throw 
-      a client specific error message. If this parameter is not set, a default message 
-      > msg.ASSERT_NOT_EXISTS
+      a client specific error message. If this parameter is not set, a default message <msg.ASSERT_NOT_EXISTS>
       is used.
         
     Parameters:
       p_stmt - SQL-statement that either returns rows or not.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_TRUE>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_NOT_EXISTS>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
       p_error_code - Optional error code, usable by external applications and to distinguish

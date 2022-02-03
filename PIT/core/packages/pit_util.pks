@@ -49,6 +49,23 @@ as
     pti_name pit_translatable_item.pti_name%type,
     pti_display_name pit_translatable_item.pti_display_name%type,
     pti_description pit_translatable_item.pti_description%type);
+    
+    
+  /**
+    Type: predefined_error_rec
+      Record to store details for a named Oracle error
+      
+    Properties:
+      source_type - Type of data object in which the error is defined
+      owner - Owner of the data object that defines the error
+      package_name - Name of the data object that defines the error
+      error_name - Name of the error
+   */
+  type predefined_error_rec is record(
+    source_type pit_util.ora_name_type,
+    owner pit_util.ora_name_type,
+    package_name pit_util.ora_name_type,
+    error_name pit_util.ora_name_type);
 
   
   /** 
@@ -61,7 +78,6 @@ as
       context_missing - Is thrown if a context is missing
       name_too_long - Is thrown if a name exceeds the maximum length limitation
    */
-  invalid_sql_name exception;
   context_missing exception;
   name_too_long exception;
   
@@ -86,8 +102,10 @@ as
     return flag_type;
     
   C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
-  C_DEFAULT_CONTEXT constant ora_name_type := 'CONTEXT_DEFAULT';
-  C_ACTIVE_CONTEXT constant ora_name_type := 'CONTEXT_ACTIVE';
+  C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
+  C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';
+  C_DEFAULT_CONTEXT constant ora_name_type := C_CONTEXT_PREFIX || 'DEFAULT';
+  C_ACTIVE_CONTEXT constant ora_name_type := C_CONTEXT_PREFIX || 'ACTIVE';
   
   C_PARAMETER_GROUP constant varchar2(5) := 'PIT';
   /**
@@ -102,22 +120,6 @@ as
       formatted call stack.
    */
   function get_call_stack
-    return varchar2;
-    
-    
-  /**
-    Function: get_error_name
-      Helper to create the name for an exception constant in package <MSG>. 
-      Name is formed on the basis of params ERROR_PREFIX and ERROR_POSTFIX
-      
-    Parameter:
-      p_pms_name - Name of the message to create the exception name for
-      
-    Returns:
-      Exception name.
-   */
-  function get_error_name(
-    p_pms_name in pit_message.pms_name%type)
     return varchar2;
 
 
@@ -154,8 +156,41 @@ as
    */
   function get_user
     return ora_name_type;
+    
+    
+  /**
+    Function: check_error_number_exists
+      Method to check whether an Oracle error number is already a named error
+      
+    Parameter: 
+      p_error_number - Oracle error number to check
 
+    Returns:
+      Record with information to the predefined error, if it exists, NULL otherwise
+   */
+  function check_error_number_exists(
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_custom_error in pit_message.pms_custom_error%type)
+    return predefined_error_rec;
+    
+  /**
+    Function: get_max_message_length
+      Method retrieves the maximum length of a message for a given message group.
+      
+      The length is calculated by the maximum length of an Oracle name minus the
+      length of the actual error prefix of that message group.
+      
+    Parameter: 
+      p_pmg_name - Name of the message group to get the maximum length for.
 
+    Returns:
+      Record with information to the predefined error, if it exists, NULL otherwise
+   */
+  function get_max_message_length(
+    p_pmg_name in pit_message_group.pmg_name%type)
+    return binary_integer;
+    
+    
   /**
     Group: Text helper methods
    */

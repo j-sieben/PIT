@@ -14,28 +14,6 @@ as
   /**
     Group: Private type definitions
    */
-  /**
-    Type: predefined_error_rec
-      Record to store details for a named Oracle error
-      
-    Properties:
-      source_type - Type of data object in which the error is defined
-      owner - Owner of the data object that defines the error
-      package_name - Name of the data object that defines the error
-      error_name - Name of the error
-   */
-  type predefined_error_rec is record(
-    source_type pit_util.ora_name_type,
-    owner pit_util.ora_name_type,
-    package_name pit_util.ora_name_type,
-    error_name pit_util.ora_name_type);
-    
-  /**
-    Type predefined_error_t
-      Table that stores all predefined errors <PIT_ADMIN> found within the database
-      to prevent any overwrites of predefined errors.
-   */
-  type predefined_error_t is table of predefined_error_rec index by binary_integer;
   
   
   /**
@@ -72,7 +50,6 @@ as
       g_predefined_errors - List of predefined errors found in existing packages
       g_default_language - ORacle name of the default language
    */    
-  g_predefined_errors predefined_error_t;
   g_default_language pit_util.ora_name_type;
 
 
@@ -84,46 +61,6 @@ as
   /**
     Group: Generic helper methods
    */
-  /**
-    Procedure: initialize_error_list
-      Method to collect all predefined error names within the database.
-      Is called during package initiazation.
-   */
-  procedure initialize_error_list
-  as
-    cursor predefined_errors_cur is
-        with errors as(
-             select type source_type, owner, name package_name,
-                    upper(substr(text, instr(text, '(') + 1, instr(text, ')') - instr(text, '(') - 1)) init
-               from all_source a
-              where (owner in ('SYS') or owner like 'APEX%')
-                and upper(text) like '%PRAGMA EXCEPTION_INIT%'
-                    -- Next to internal PIT packages, some packages don't adhere to Oracles error strategy. Filter them out!
-                and name not in ('PIT_ADMIN', 'PIT_UTIL', 'DBMS_BDSQL'))
-      select source_type, owner, package_name,
-             -- don't convert to numbers here as it's possible that conversion errors occur
-             to_number(trim(replace(substr(init, instr(init, ',') + 1), '''', '')), '99999') error_number,
-             trim(substr(init, 1, instr(init, ',') - 1)) error_name
-        from errors
-       where trim(substr(init, 1, instr(init, ',') - 1)) is not null;
-    l_predefined_error predefined_error_rec;
-  begin
-    if g_predefined_errors.count = 0 then
-      -- scan all_source view for predefined Oracle errors
-      for err in predefined_errors_cur loop
-        begin
-          l_predefined_error.source_type := err.source_type;
-          l_predefined_error.owner := err.owner;
-          l_predefined_error.package_name := err.package_name;
-          l_predefined_error.error_name := err.error_name;
-          g_predefined_errors(err.error_number) := l_predefined_error;
-        exception
-          when others then
-            dbms_output.put_line('Error when trying to convert error number ' || err.error_number);
-        end;
-      end loop;
-    end if;
-  end initialize_error_list;
 
 
   /**
@@ -139,43 +76,39 @@ as
       exceptions from non wrapped sources.
       
     Parameters:
-      p_pms_name - Name of the message to check the error for
-      p_pms_custom_error - Error number for which a PIT message shall be created
+      p_row - Record of <PIT_MESSAGE>
    */
   procedure check_error(
-    p_pms_name in pit_message.pms_name%type,
-    p_pms_custom_error in pit_message.pms_custom_error%type)
+    p_row pit_message%rowtype)
   as
-    l_predefined_error predefined_error_rec;
+    l_predefined_error pit_util.predefined_error_rec;
     l_message varchar2(2000);
     l_message_length binary_integer;
-    l_error_regexp varchar2(1000);
-    C_ERROR_REGEXP constant varchar2(100) := q'~^(#NAME#|#NAME#_ERR)$~';
     C_MSG_TOO_LONG constant varchar2(200) := 
       q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
     C_PREDEFINED_ERROR constant varchar2(200) :=
       q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
   begin
-    initialize_error_list;
     
-    l_message_length := length(p_pms_name);
-    if l_message_length > pit_util.c_max_length - 4 then
+    l_message_length := length(p_row.pms_name);    
+    
+    if l_message_length > pit_util.get_max_message_length(p_row.pms_pmg_name) then
       l_message := pit_util.bulk_replace(C_MSG_TOO_LONG, char_table(
-                     '#MESSAGE#', p_pms_name,
+                     '#MESSAGE#', p_row.pms_name,
                      '#LENGTH#', l_message_length));
        raise_application_error(-20000, l_message);
     end if;
-    if g_predefined_errors.exists(p_pms_custom_error) then
-      l_error_regexp := replace(C_ERROR_REGEXP, '#NAME#', p_pms_name);
-      if not regexp_like(g_predefined_errors(p_pms_custom_error).error_name, l_error_regexp) then
-        l_predefined_error := g_predefined_errors(p_pms_custom_error);
-        l_message := pit_util.bulk_replace(C_PREDEFINED_ERROR, char_table(
-                       '#ERROR#', p_pms_custom_error,
-                       '#NAME#', l_predefined_error.error_name,
-                       '#OWNER#', l_predefined_error.owner,
-                       '#PKG#', l_predefined_error.package_name));
-        raise_application_error(-20000, l_message);
-      end if;
+    
+    l_predefined_error := pit_util.check_error_number_exists(
+                            p_pms_name => p_row.pms_name,
+                            p_pms_custom_error => p_row.pms_custom_error);
+    
+    if l_predefined_error.error_name is not null then
+      l_message := pit_util.bulk_replace(C_PREDEFINED_ERROR, char_table(
+                     '#ERROR#', p_row.pms_custom_error,
+                     '#NAME#', l_predefined_error.error_name,
+                     '#OWNER#', l_predefined_error.owner,
+                     '#PKG#', l_predefined_error.package_name));
     end if;
   end check_error;
   
@@ -196,7 +129,7 @@ as
   as
     cursor message_group_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
-      select pmg_name, pmg_description
+      select pmg_name, pmg_description, pmg_error_prefix, pmg_error_postfix
         from pit_message_group pmg
        where exists(
              select null
@@ -206,10 +139,12 @@ as
           or p_pmg_name is null
        order by pmg_name;
        
-    c_merge_group_template constant varchar2(200) := q'~    
+    c_merge_group_template constant pit_util.max_sql_char := q'~    
   pit_admin.merge_message_group(
     p_pmg_name => '#NAME#',
-    p_pmg_description => q'^#DESCRIPTION#^');
+    p_pmg_description => q'^#DESCRIPTION#^',
+    p_pmg_error_prefix => '#ERROR_PREFIX#',
+    p_pmg_error_postfix => '#ERROR_POSTFIX#');
 ~';
     l_chunk pit_util.max_char;
   begin
@@ -218,7 +153,9 @@ as
       l_chunk := l_chunk
               || pit_util.bulk_replace(c_merge_group_template, char_table(
                    '#NAME#', pmg.pmg_name,
-                   '#DESCRIPTION#', pmg.pmg_description));
+                   '#DESCRIPTION#', pmg.pmg_description,
+                   '#ERROR_PREFIX#', pmg.pmg_error_prefix,
+                   '#ERROR_POSTFIX#', pmg.pmg_error_postfix));
     end loop;
     return l_chunk;
   end get_export_group_script;
@@ -757,15 +694,20 @@ end;
     cursor message_cur is
         with messages as(
              select pms_name,
-                    case pms_custom_error when C_MAX_ERROR then pms_active_error else pms_custom_error end pms_custom_error
+                    case pms_custom_error when C_MAX_ERROR then pms_active_error else pms_custom_error end pms_custom_error,
+                    case when pmg_error_prefix is not null  then pmg_error_prefix || '_' end ||
+                    pms_name ||
+                    case when pmg_error_postfix is not null then '_' || pmg_error_postfix end pms_error_name
                from pit_message m
+               join pit_message_group
+                 on pms_pmg_name = pmg_name
               where pms_pml_name = g_default_language)
       select replace(l_constant_template, '#CONSTANT#', pms_name) constant_chunk,
              case when pms_custom_error is not null then
-               replace (l_exception_template, '#ERROR_NAME#', pit_util.get_error_name(pms_name))
+               replace (l_exception_template, '#ERROR_NAME#', pms_error_name)
              else null end exception_chunk,
              case when pms_custom_error is not null then
-               replace(replace(l_pragma_template, '#ERROR_NAME#', pit_util.get_error_name(pms_name)), '#ERROR#', pms_custom_error)
+               replace(replace(l_pragma_template, '#ERROR_NAME#', pms_error_name), '#ERROR#', pms_custom_error)
              else null end pragma_chunk
         from messages
        order by pms_name;
@@ -842,7 +784,7 @@ end;
       See <PIT_ADMIN.validate_message_group>
    */
   procedure validate_message_group(
-    p_row in pit_message_group%rowtype)
+    p_row in out nocopy pit_message_group%rowtype)
   as
   begin
     null;
@@ -855,12 +797,16 @@ end;
    */
   procedure merge_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
-    p_pmg_description in pit_message_group.pmg_description%type default null)
+    p_pmg_description in pit_message_group.pmg_description%type default null,
+    p_pmg_error_prefix in pit_message_group.pmg_error_prefix%type default '',
+    p_pmg_error_postfix in pit_message_group.pmg_error_postfix%type default 'ERR')
   as
     l_row pit_message_group%rowtype;
   begin
     l_row.pmg_name := p_pmg_name;
     l_row.pmg_description := p_pmg_description;
+    l_row.pmg_error_prefix := p_pmg_error_prefix;
+    l_row.pmg_error_postfix := p_pmg_error_postfix;
     
     merge_message_group(l_row);    
   end merge_message_group;
@@ -881,13 +827,17 @@ end;
     
     merge into pit_message_group t
     using (select p_row.pmg_name pmg_name,
-                  p_row.pmg_description pmg_description
+                  p_row.pmg_description pmg_description,
+                  p_row.pmg_error_prefix pmg_error_prefix,
+                  p_row.pmg_error_postfix pmg_error_postfix
              from dual) s
        on (t.pmg_name = s.pmg_name)
      when matched then update set
-          pmg_description = s.pmg_description
-     when not matched then insert(pmg_name, pmg_description)
-          values(s.pmg_name, s.pmg_description);          
+          t.pmg_description = s.pmg_description,
+          t.pmg_error_prefix = s.pmg_error_prefix,
+          t.pmg_error_postfix = s.pmg_error_postfix
+     when not matched then insert(pmg_name, pmg_description, pmg_error_prefix, pmg_error_postfix)
+          values(s.pmg_name, s.pmg_description, s.pmg_error_prefix, s.pmg_error_postfix);          
   end merge_message_group;
   
   
@@ -924,7 +874,7 @@ end;
   
     case
     when p_row.pms_pse_id in (C_FATAL, C_ERROR) and p_row.pms_custom_error not between C_MIN_ERROR and C_MAX_ERROR then
-      check_error(p_row.pms_name, p_row.pms_custom_error);
+      check_error(p_row);
     when p_row.pms_pse_id in (C_FATAL, C_ERROR) then
       p_row.pms_custom_error := C_MAX_ERROR;
     else

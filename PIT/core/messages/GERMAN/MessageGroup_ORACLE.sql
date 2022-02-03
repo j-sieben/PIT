@@ -16,7 +16,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -2292
+    p_error_number => -2292
   );
 
   pit_admin.merge_message(
@@ -26,7 +26,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 20,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -20000
+    p_error_number => -20000
   );
 
   pit_admin.merge_message(
@@ -36,7 +36,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1858
+    p_error_number => -1858
   );
 
   pit_admin.merge_message(
@@ -46,7 +46,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1861
+    p_error_number => -1861
   );
 
   pit_admin.merge_message(
@@ -56,7 +56,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1840
+    p_error_number => -1840
   );
 
   pit_admin.merge_message(
@@ -66,7 +66,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1847
+    p_error_number => -1847
   );
 
   pit_admin.merge_message(
@@ -76,7 +76,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1839
+    p_error_number => -1839
   );
 
   pit_admin.merge_message(
@@ -86,7 +86,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1843
+    p_error_number => -1843
   );
 
   pit_admin.merge_message(
@@ -96,7 +96,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1481
+    p_error_number => -1481
   );
 
   pit_admin.merge_message(
@@ -106,7 +106,17 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_pms_custom_error => -1841
+    p_error_number => -1841
+  );
+
+  pit_admin.merge_message(
+    p_pms_name => 'INVALID_SQL_NAME',
+    p_pms_pmg_name => 'ORACLE',
+    p_pms_text => q'^Der Bezeichner entspricht nicht den Vorgaben an einen SQL-Bezeichner. ""-kodierte Namen sind nicht erlaubt.^',
+    p_pms_description => q'^Der Bezeichner muss den Bennenungsregeln von SQL entsprechen. Zudem sind keine Namen erlaubt, die durch "-Zeichen maskiert sind.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -44003
   );
 
   commit;

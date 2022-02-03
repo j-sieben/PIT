@@ -149,15 +149,6 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'INVALID_SQL_NAME',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Der Bezeichner entspricht nicht den Vorgaben an einen SQL-Bezeichner. ""-kodierte Namen sind nicht erlaubt.^',
-    p_pms_description => q'^Der Bezeichner muss den Bennenungsregeln von SQL entsprechen. Zudem sind keine Namen erlaubt, die durch "-Zeichen maskiert sind.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -44003);
-
-  pit_admin.merge_message(
     p_pms_name => 'LONG_OP_WO_TRACE',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Die Verwendung von PIT.LONG_OP setzt einen vorherigen Aufruf von PIT.ENTER/LEAVE voraus.^',
@@ -432,6 +423,51 @@ begin
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Ein SQL-Fehler ist aufgetreten: #SQLERRM#^',
     p_pms_description => q'^Allgemeine Fehlermeldung. Nähere Informationen siehe im Meldungsparameter.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMG_ERROR_MARKER_MISSING',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Weder Präfix noch Postfix für Fehlermeldungen wurden angegeben.^',
+    p_pms_description => q'^Eine Meldungsgruppe benötigt eine Kennzeichnung für Fehler. Diese werden aus dem Default genommen, dürfen aber nicht NULL sein. Mindestens ein Wert muss belegt sein.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMG_ERROR_MARKER_INVALID',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Die Länge von Präfix und Postfix darf zusammen nicht mehr als 12 Zeichen betragen und mindestens Präfix oder Postfix muss definiert werden.^',
+    p_pms_description => q'^Das Präfix und/oder das Postfix für Fehlernamen müssen unter einer maximalen Länge bleiben, um Probleme bei mit der Namenskonvention auszuweichen.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMS_TOO_LONG',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Die Nachricht "#1#" darf nicht länger als #2# Zeichen sein, hat aber die Länge #3#.^',
+    p_pms_description => q'^Die Längenbeschränkung gilt wegen der hinzuzurechnenden Länge der Exception Pre- und Postfixes.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMS_PREDEFINED_ERROR',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Die Fehlernummer #1# ist ein vordefinierter Oracle-Fehler namens #2# in #3#.#4#. Bitte überschreiben Sie keine von Oracle vordefinierten Fehler.^',
+    p_pms_description => q'^Durch das Überschreiben eines vordefinierten Fehlers wird dieser unter seinem Namen nicht mehr gefangen.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PARAM_MISSING',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Das Element #LABEL# ist ein Pflichtelement.^',
+    p_pms_description => q'^Offensichtlich.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
     p_error_number => -20000);

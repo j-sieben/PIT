@@ -1,153 +1,331 @@
 create or replace package pit_ui
   authid definer
 as 
+  /** 
+    Package: PIT_UI
+      UI Package for the PIT APEX maintenance application
    
-  /** Getter method to retrieve the default PIT language. This language is defined upon installation of PIT and cannot be changed.
-   * %return Default language
+    Author:: 
+      Juergen Sieben, ConDeS GmbH
+      
+      Published under MIT licence
+   */
+  
+  /**
+    Group: Public Methods
+   */
+   
+  /**
+    Function: get_default_language
+      Getter method to retrieve the default PIT language. This language is defined upon installation of PIT and cannot be changed.
+      
+    Returns: 
+      Default language
    */
   function get_default_language
     return varchar2;
     
-    
-  /** Determine the ID of the websheet helper application
-   * %return ID fo the websheet helper application
-   * %usage  Is called to initialize the help system.
-   */
-  function get_help_websheet_id
-    return pls_integer;
-    
   
-  /** Wrapper around PIT_UTIL.harmonize_sql_name
-   * %param  p_item_name  Name of the page item containing the SQL name
-   * %param [p_prefix]    Optional prefix for the resulting name
-   * %usage  Is used to format an entered alphanumerical key according to the naming conventions of PIT
+  /** 
+    Procedure: harmonize_sql_name
+      Wrapper around PIT_UTIL.harmonize_sql_name.
+      
+      Is used to format an entered alphanumerical key according to the naming conventions of PIT.
+      
+    Parameters:
+      p_item_name - Name of the page item containing the SQL name
+      p_prefix - Optional prefix for the resulting name     
    */
   procedure harmonize_sql_name(
     p_item_name in varchar2,
     p_prefix in varchar2 default null);
     
   
-  /** Method to check whether translatable items are present.
-   * %usage  Is used to toggle the visibility of a region
+  /**
+    Function: has_translatable_items
+      Method to check whether translatable items are present. Is used to toggle the visibility of a region.
+      
+    Returns: 
+      TRUE if translatable items are present, FALSE if not.
    */
   function has_translatable_items
     return boolean;
     
   
-  /** Method to check whether local parameters are present.
-   * %usage  Is used to toggle the visibility of a region
+  /**
+    Function: has_local_parameters
+      Method to check whether local parameters are present. Is used to toggle the visibility of a region.
+      
+    Returns: 
+      TRUE if local parameters are present, FALSE if not.
    */
   function has_local_parameters
     return boolean;
     
   
-  /** Method to check whether toggle feature is switched on
-   * %usage  Is used to toggle the visibility of a region
+  /** 
+    Function: allows_toggles
+      Method to check whether toggle feature is switched on. Is used to toggle the visibility of a region.
+      
+    Returns: 
+      TRUE if toggle feature is switched on, FALSE if not.
    */
   function allows_toggles
-    return utl_apex.flag_type;
+    return boolean;
     
   
-  /** Method to set a new toggle value.
-   * %usage  Is called by the application via an AJAX call
+  /** 
+    Procedure: set_allow_toggles
+      Method to set a new toggle value. Is called by the application via an AJAX call.
    */
   procedure set_allow_toggles;
   
   
-  /** Method to check wether the actually selected context is the default context
-   * %return Flag to indicate that the context is the default context (TRUE) or not (FALSE)
-   * %usage  Is used to control the visibility and editability of page items
+  /**
+    Function: is_default_context
+      Method to check wether the actually selected context is the default context.
+      Is used to control the visibility and editability of page items.
+      
+    Returns: 
+      Flag to indicate that the context is the default context (TRUE) or not (FALSE)
    */
   function is_default_context
     return boolean;
    
    
-  /* Prozedur zur Verwaltung der Standardsprachen
-   * %param p_pml_list Liste der Sprachen in der Reihenfolge ihrer Verwendung
-   * %usage Wird verwendet, um die Spracheinstellungen fuer PIT einzustellen.
-   *        Die Standardsprache kann hier nicht geaendert werden, die wurde bei 
-   *        der Installation von PIT festgelegt. Hier kann nur definiert werden,
-   *        Welce Uebersetzungen mit welchem Vorrang verwendet werden sollen.
+  /**
+    Procedure: set_language_settings
+       Procedure for managing the default languages. Used to set the language settings for PIT.
+       
+       The default language cannot be changed here, it was set during the during the installation of PIT. 
+       Here you can only define which translations should be used with which priority.
+       
+      Parameter:
+        p_pml_list - List of languages in order of use.
    */
   procedure set_language_settings(
     p_pml_list in pit_util.max_sql_char);
     
     
-  /** Procedure to validate or process application pages
+  /** 
+    Function: edit_context_validate
+      Method to validate page EDIT_CONTEXT
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
    */
-  
-  function validate_edit_pms
+  function edit_context_validate
     return boolean;
   
-  procedure process_edit_pms;
+  /**
+    Procedure: edit_context_process
+      Mehod to persist user entries of page EDIT_CONTEXT
+   */
+  procedure edit_context_process;
   
   
-  function validate_edit_pmg
+  /** 
+    Function: edit_module_validate
+      Method to validate page EDIT_MODULE
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_module_validate
     return boolean;
   
-  procedure process_edit_pmg;
   
-   
-  function validate_edit_pgr
-    return boolean;
-  
-  procedure process_edit_pgr;
+  /**
+    Procedure: edit_module_process
+      Mehod to persist user entries of page EDIT_MODULE
+   */
+  procedure edit_module_process;
     
   
-  procedure initialize_edit_par;
+  /**
+    Procedure: edit_par_initialize
+      Method to initialize page values for page EDIT_PAR
+   */
+  procedure edit_par_initialize;
   
-  function validate_edit_par
+  /** 
+    Function: edit_par_validate
+      Method to validate page EDIT_PAR
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_par_validate
     return boolean;
   
-  procedure process_edit_par;
+  
+  /**
+    Procedure: edit_par_process
+      Mehod to persist user entries of page EDIT_PAR
+   */
+  procedure edit_par_process;
   
   
-  function validate_edit_realm
+  /** 
+    Function: edit_par_realm_validate
+      Method to validate page EDIT_PAR_REALM
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_par_realm_validate
     return boolean;
   
-  procedure process_edit_realm;
   
+  /**
+    Procedure: edit_par_realm_process
+      Mehod to persist user entries of page EDIT_PAR_REALM
+   */
+  procedure edit_par_realm_process;
   
-  function validate_set_realm
+   
+  /** 
+    Function: edit_pgr_validate
+      Method to validate page EDIT_PGR
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_pgr_validate
     return boolean;
   
-  procedure process_set_realm;
+  
+  /**
+    Procedure: edit_pgr_process
+      Mehod to persist user entries of page EDIT_PGR
+   */
+  procedure edit_pgr_process;
   
   
-  function validate_edit_par_realm
+  /** 
+    Function: edit_pmg_validate
+      Method to validate page EDIT_PMG
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_pmg_validate
     return boolean;
   
-  procedure process_edit_par_realm;
+  
+  /**
+    Procedure: edit_pmg_process
+      Mehod to persist user entries of page EDIT_PMG
+   */
+  procedure edit_pmg_process;
   
   
-  function validate_edit_pre
+  /** 
+    Function: edit_pms_validate
+      Method to validate page EDIT_PMS
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_pms_validate
     return boolean;
   
-  procedure process_edit_pre;
+  
+  /**
+    Procedure: edit_pms_process
+      Mehod to persist user entries of page EDIT_PMS
+   */
+  procedure edit_pms_process;
   
   
-  function validate_export
+  /** 
+    Function: edit_pre_validate
+      Method to validate page EDIT_PRE
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_pre_validate
     return boolean;
   
-  procedure process_export;
+  
+  /**
+    Procedure: edit_pre_process
+      Mehod to persist user entries of page EDIT_PRE
+   */
+  procedure edit_pre_process;
   
   
-  function validate_edit_module
+  /** 
+    Function: edit_realm_validate
+      Method to validate page EDIT_REALM
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_realm_validate
     return boolean;
   
-  procedure process_edit_module;
+  
+  /**
+    Procedure: edit_realm_process
+      Mehod to persist user entries of page EDIT_REALM
+   */
+  procedure edit_realm_process;
   
   
-  function validate_edit_context
+  /** 
+    Function: edit_toggle_validate
+      Method to validate page EDIT_TOGGLE
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function edit_toggle_validate
     return boolean;
   
-  procedure process_edit_context;
+  
+  /**
+    Procedure: edit_toggle_process
+      Mehod to persist user entries of page EDIT_TOGGLE
+   */
+  procedure edit_toggle_process;
   
   
-  function validate_edit_toggle
+  /** 
+    Function: export_validate
+      Method to validate page EXPORT
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function export_validate
     return boolean;
   
-  procedure process_edit_toggle;
+  
+  /**
+    Procedure: export_process
+      Mehod to persist user entries of page EXPORT
+   */
+  procedure export_process;
+  
+  
+  /** 
+    Function: set_realm_validate
+      Method to validate page SET_REALM_VALIDATE
+      
+    Returns:
+      Always TRUE, exceptions are registered on the APEX error stack
+   */
+  function set_realm_validate
+    return boolean;
+  
+  
+  /**
+    Procedure: set_realm_process
+      Mehod to persist user entries of page SET_REALM
+   */
+  procedure set_realm_process;
    
 end pit_ui;
 /

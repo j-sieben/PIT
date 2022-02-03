@@ -31,32 +31,103 @@ as
    */
   C_CTX_DEL constant char(1 byte) := '|';  
   C_TRUTHY constant flag_type := &C_TRUE.;
-  C_FALSY constant flag_type := &C_FALSE.;
+  C_FALSY constant flag_type :=  &C_FALSE.;
     
   /**
     Group: Private package variables
+   */    
+  /**
+    Type predefined_error_t
+      Table that stores all predefined errors <PIT_ADMIN> found within the database
+      to prevent any overwrites of predefined errors.
    */
+  type predefined_error_t is table of pit_util.predefined_error_rec index by binary_integer;
+  
+  type pmg_allowed_length_t is table of binary_integer index by pit_util.ora_name_type;
+  
   /**
     Variables: Parameter variables
       g_user - Variable to store result of SQL function USER;
-      g_error_prefix - Container for parameter ERROR_PREFIX
-      g_error_postfix - Container for parameter ERROR_POSTFIX
       g_call_stack_template - Container for parameter PIT_CALL_STACK_TEMPLATE
       g_error_stack_template - Container for parameter PIT_ERROR_STACK_TEMPLATE
       g_omit_pit_in_stack - Container for parameter OMIT_PIT_IN_STACK
       g_name_spelling varchar2(10 byte);
    */
   g_user ora_name_type;
-  g_error_prefix varchar2(5 byte);
-  g_error_postfix varchar2(5 byte);
   g_call_stack_template varchar2(1000 byte);
   g_error_stack_template varchar2(1000 byte);
   g_omit_pit_in_stack boolean;
   g_name_spelling varchar2(10 byte);
   
+  g_predefined_errors predefined_error_t;
+  g_pmg_allowed_length pmg_allowed_length_t;
+  
   /**
     Group: Private methods
    */
+  /**
+    Procedure: initialize_error_list
+      Method to collect all predefined error names within the database.
+      Is called during package initiazation.
+   */
+  procedure initialize_error_list
+  as
+    cursor predefined_errors_cur is
+        with errors as(
+             select type source_type, owner, name package_name,
+                    upper(substr(text, instr(text, '(') + 1, instr(text, ')') - instr(text, '(') - 1)) init
+               from all_source a
+              where (owner in ('SYS') or owner like 'APEX%')
+                and upper(text) like '%PRAGMA EXCEPTION_INIT%'
+                    -- Next to internal PIT packages, some packages don't adhere to Oracles error strategy. Filter them out!
+                and name not in ('PIT_ADMIN', 'PIT_UTIL', 'DBMS_BDSQL'))
+      select source_type, owner, package_name,
+             to_number(trim(replace(substr(init, instr(init, ',') + 1), '''', '')), '99999') error_number,
+             upper(trim(substr(init, 1, instr(init, ',') - 1))) error_name
+        from errors
+       where trim(substr(init, 1, instr(init, ',') - 1)) is not null;
+    l_predefined_error predefined_error_rec;
+  begin
+    if g_predefined_errors.count = 0 then
+      -- scan all_source view for predefined Oracle errors
+      for err in predefined_errors_cur loop
+        begin
+          l_predefined_error.source_type := err.source_type;
+          l_predefined_error.owner := err.owner;
+          l_predefined_error.package_name := err.package_name;
+          l_predefined_error.error_name := err.error_name;
+          g_predefined_errors(err.error_number) := l_predefined_error;
+        exception
+          when others then
+            dbms_output.put_line('Error when trying to convert error number ' || err.error_number);
+        end;
+      end loop;
+    end if;
+  end initialize_error_list;
+  
+  
+  procedure initialize_pmg_max_length
+  as
+    cursor pmg_length_cur is
+      with ora_name_length as (
+             select data_length
+               from all_tab_columns
+              where table_name = 'USER_TABLES'
+                and column_name = 'TABLE_NAME')
+      select pmg_name, 
+             data_length - 
+             (case when pmg_error_prefix is not null then length(pmg_error_prefix) + 1 else 0 end + 
+             case when pmg_error_postfix is not null then length(pmg_error_postfix) + 1 else 0 end) allowed_length
+        from pit_message_group
+       cross join ora_name_length;
+  begin
+    g_pmg_allowed_length.delete;
+    for pmg in pmg_length_cur loop
+      g_pmg_allowed_length(pmg.pmg_name) := pmg.allowed_length;
+    end loop;
+  end initialize_pmg_max_length;
+  
+  
   /**
     Procedure: append
       Method to append <P_CHUNK> to <P_TEXT>
@@ -134,28 +205,12 @@ as
   begin
     -- set package vars
     g_user := user;
-    g_error_prefix := param.get_string('ERROR_PREFIX', C_PARAMETER_GROUP);
-    if g_error_prefix is not null then
-      g_error_prefix := g_error_prefix || '_';
-    end if;
-    g_error_postfix := param.get_string('ERROR_POSTFIX', C_PARAMETER_GROUP);
-    if g_error_postfix is not null then
-      g_error_postfix := '_' || g_error_postfix;
-    end if;
-    
     g_call_stack_template := param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP);
     g_error_stack_template := param.get_string('PIT_ERROR_STACK_TEMPLATE', C_PARAMETER_GROUP);
     g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
     g_name_spelling := param.get_string(C_NAME_SPELLING, C_PARAMETER_GROUP);
-    
-    l_prefix_length := coalesce(length(g_error_prefix), 0) + coalesce(length(g_error_postfix), 0);
-    case when l_prefix_length > 4 then
-      raise_application_error(-20000, 'Length of Prefix and Postfix together may not exceed 2 characters or each may not exceed 3 characters when used alone.');
-    when l_prefix_length = 0 then
-      raise_application_error(-20000, 'At least one of Error and Postfix-Prefix has to be defined.');
-    else 
-      null;
-    end case;
+    initialize_error_list;
+    initialize_pmg_max_length;
   end initialize;
   
   
@@ -203,19 +258,6 @@ as
     
     return substrb(l_stack, 1, 2000);
   end get_call_stack;
-  
-  
-  /**
-    Function: get_error_name
-      See <PIT_UTIL.get_error_name>
-   */
-  function get_error_name(
-    p_pms_name in pit_message.pms_name%type)
-    return varchar2
-  as
-  begin
-    return g_error_prefix || p_pms_name || g_error_postfix;
-  end get_error_name;
   
   
   /**
@@ -290,6 +332,70 @@ as
   begin
     return g_user;
   end get_user;
+  
+  
+  /**
+    Function: get_max_message_length
+      See <PIT_UTIL.get_max_message_length>
+   */
+  function get_max_message_length(
+    p_pmg_name in pit_message_group.pmg_name%type)
+    return binary_integer
+  as
+    l_max_length binary_integer;
+  begin
+    if g_pmg_allowed_length.exists(p_pmg_name) then
+      l_max_length := g_pmg_allowed_length(p_pmg_name);
+    else
+      select 1
+        into l_max_length
+        from pit_message_group
+       where pmg_name = p_pmg_name;
+      initialize_pmg_max_length;
+      -- Try again
+      l_max_length := get_max_message_length(p_pmg_name);
+    end if;
+    
+    return l_max_length;
+  end get_max_message_length;
+    
+  
+  /**
+    Function: check_error_number_exists
+      See <PIT_UTIL.check_error_number_exists>
+   */
+  function check_error_number_exists(
+    p_pms_name in pit_message.pms_name%type,
+    p_pms_custom_error in pit_message.pms_custom_error%type)
+    return predefined_error_rec
+  as
+    l_error predefined_error_rec;
+    l_error_marker pit_util.ora_name_type;
+  begin
+    
+    case
+      when p_pms_custom_error is null then
+        null;
+      when g_predefined_errors.exists(p_pms_custom_error) then
+        -- predefined error found
+        l_error := g_predefined_errors(p_pms_custom_error);
+        -- Check that we didn't find the exception we want to create itself
+        select pmg_error_prefix || pmg_error_postfix
+          into l_error_marker
+          from pit_message_group
+          join pit_message
+            on pmg_name = pms_pmg_name
+         where pms_name = p_pms_name;
+        if p_pms_name = l_error.error_name 
+           or replace(replace(l_error.error_name, p_pms_name), '_') = l_error_marker then
+          l_error := null;
+        end if;
+      else
+        null;
+    end case;
+  
+    return l_error;
+  end check_error_number_exists;
   
   
   /**
@@ -448,8 +554,6 @@ as
     p_module_list in varchar2,
     p_context_name in ora_name_type)
   as
-    C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
-    C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';
     l_toggle_name max_sql_char;
     l_context_name ora_name_type;
     l_exists flag_type;

@@ -17,6 +17,7 @@ prompt &h3.Create synonyms
 @&tool_dir.create_synonym.sql pit
 @&tool_dir.create_synonym.sql pit_internal
 @&tool_dir.create_synonym.sql pit_admin
+@&tool_dir.create_synonym.sql pit_app_api
 @&tool_dir.create_synonym.sql pit_util
 @&tool_dir.create_synonym.sql utl_context
 

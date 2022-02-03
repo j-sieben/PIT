@@ -23,6 +23,6 @@ prompt &h3.Grant rights and create synonyms
 
 -- Tables and Views
 @tools/grant_access.sql "select, references" pit_message
-@tools/grant_access.sql read pit_message_language_v
+@tools/grant_access_with_grant.sql read pit_message_language_v
 @tools/grant_access.sql "select, references" pit_translatable_item
-@tools/grant_access.sql read pit_translatable_item_v
+@tools/grant_access_with_grant.sql read pit_translatable_item_v

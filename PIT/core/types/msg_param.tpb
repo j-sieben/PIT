@@ -91,7 +91,7 @@ as
  begin
    self.p_param := substrb(p_param, 1, 128);
    if p_value is not null then
-     self.p_value := substrb(p_value.getClobVal(), 1, 4000 - length(C_EXTENSION));
+     self.p_value := substr(p_value.getClobVal(), 1, 3900);
      if self.p_value != p_value.getClobVal() then
        self.p_value := self.p_value || C_EXTENSION;
      end if;

@@ -108,30 +108,26 @@ as
   /**
     Group: Message maintenance methods
    */
-  /** 
-    Procedure: validate_message_group
-      Procedure to validate a message group
-    
-    Parameter:
-      p_row  Record of a message group
-   */
-  procedure validate_message_group(
-    p_row in pit_message_group%rowtype);
-    
-    
   /**
     Procedure: merge_message_group
       Procedure to maintain message groups. Is used to create or change a message group. 
       Message groups do not have any special meaning other than sorting messages 
       for easier maintenance and export separation.
       
+      Optional parameters for error pre/postixes allow for a deviating definition for individual message groups.
+      This way, packages from other authors can be used without changing the complete package exceptions names.
+      
     Parameters:
       p_pmg_name - Name of the message group
       p_pmg_description - Optional description to describe the message group.
+      p_pmg_error_prefix - Optional prefix for derived exception names from message name.
+      p_pmg_error_postfix - Optional postfix for derived exception names from message name.
    */
   procedure merge_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
-    p_pmg_description in pit_message_group.pmg_description%type default null);
+    p_pmg_description in pit_message_group.pmg_description%type default null,
+    p_pmg_error_prefix in pit_message_group.pmg_error_prefix%type default '&ERROR_PRE.',
+    p_pmg_error_postfix in pit_message_group.pmg_error_postfix%type default '&ERROR_POST.');
     
     
   /**
@@ -158,17 +154,6 @@ as
   procedure delete_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_force in boolean default false);
-    
-
-  /* 
-    Procedure: validate_message
-      Procedure to validate a message
-    
-    Parameter:
-      p_row - Record of a message
-   */
-  procedure validate_message(
-    p_row in out nocopy pit_message%rowtype);
     
     
   /**

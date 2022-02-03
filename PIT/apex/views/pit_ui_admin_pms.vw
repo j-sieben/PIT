@@ -13,8 +13,7 @@ with session_state as(
          from pit_message pms
          join session_state s
            on pms.pms_pml_name = s.pml_name_default
-          and (pms.pms_pmg_name = s.pmg_name
-           or s.pmg_name is null)),
+          and pms.pms_pmg_name = s.pmg_name),
     translated_messages as (
        select /*+ no_merge (s) */
               pmt.rowid row_id, pms_name, pms_pml_name,
