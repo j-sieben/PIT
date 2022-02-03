@@ -12,6 +12,14 @@ prompt Connected &PIT_USER.
 
 prompt
 prompt &section.
+prompt &h1.Install additional packages required for APEX application
+
+prompt &s1.Package PIT_APP_API
+@core/packages/pit_app_api.pks
+@core/packages/pit_app_api.pkb
+
+prompt
+prompt &section.
 prompt &h1.Grant access to PIT to APEX client &REMOTE_USER.
 
 @parameters/grant_client.sql

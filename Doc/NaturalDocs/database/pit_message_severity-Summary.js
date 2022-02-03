@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:pit_message_severity","pit_message_severity");NDSummary.OnSummaryLoaded("Database:pit_message_severity",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[862,0,0,"pit_message_severity"]]);
+﻿NDFramePage.OnPageTitleLoaded("Database:pit_message_severity","pit_message_severity");NDSummary.OnSummaryLoaded("Database:pit_message_severity",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[100,0,0,"pit_message_severity"]]);

@@ -3,11 +3,9 @@ define core_dir=core/
 prompt
 prompt &h2.Granting access to PIT to &REMOTE_USER.
 
---prompt &h3.Clean up schema &REMOTE_USER.
---@&core_dir.clean_up_client.sql
 
 prompt &h3.Grant rights and create synonyms
--- Types
+prompt &s1.Types
 @tools/grant_access.sql execute char_table
 @tools/grant_access.sql execute clob_table
 @tools/grant_access.sql execute message_type
@@ -17,12 +15,16 @@ prompt &h3.Grant rights and create synonyms
 @tools/grant_access.sql execute msg_args_char
 @tools/grant_access.sql execute msg_param
 @tools/grant_access.sql execute msg_params
+
+prompt &s1.Packags
 @tools/grant_access.sql execute pit
 @tools/grant_access.sql execute pit_admin
 @tools/grant_access.sql execute pit_util
 
--- Tables and Views
+prompt &s1.Tables
 @tools/grant_access.sql "select, references" pit_message
-@tools/grant_access_with_grant.sql read pit_message_language_v
 @tools/grant_access.sql "select, references" pit_translatable_item
+
+prompt &s1.Views
+@tools/grant_access_with_grant.sql read pit_message_language_v
 @tools/grant_access_with_grant.sql read pit_translatable_item_v

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("is_",["Function"],[["is_default_context",,[["PIT_UI Body",,,,0,"File:apex/packages/pit_ui.pkb:PIT_UI_Body.is_default_context","SQLClass:PIT_UI_Body:is_default_context"],["PIT_UI",,,,0,"File:apex/packages/pit_ui.pks:PIT_UI.is_default_context","SQLClass:PIT_UI:is_default_context"]]]]);

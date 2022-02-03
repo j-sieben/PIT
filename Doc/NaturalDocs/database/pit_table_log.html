@@ -8,7 +8,7 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic864"></a><div class="CTopic TDatabaseTable LSQL first">
+<a name="Topic102"></a><div class="CTopic TDatabaseTable LSQL first">
  <div class="CTitle">pit_table_log</div>
  <div class="CBody"><p>table for log entry storage of module PIT_TABLE</p><div class="CHeading">Database Fields</div><table class="CDefinitionList"><tr><td class="CDLEntry">log_id</td><td class="CDLDefinition"><p>Primary key</p></td></tr><tr><td class="CDLEntry">log_date</td><td class="CDLDefinition"><p>Log entry timestamp. Required for PIT_TABLE.purge method</p></td></tr><tr><td class="CDLEntry">log_session_id</td><td class="CDLDefinition"><p>Session-Id, required to attach log messages to sessions</p></td></tr><tr><td class="CDLEntry">log_user_name</td><td class="CDLDefinition"><p>Connected database user</p></td></tr><tr><td class="CDLEntry">log_message_text</td><td class="CDLDefinition"><p>Log message text</p></td></tr><tr><td class="CDLEntry">log_message_name</td><td class="CDLDefinition"><p>Name of the PIT message. Can be used together wit MESSAGE_ARGS to construct a log in any language</p></td></tr><tr><td class="CDLEntry">log_message_args</td><td class="CDLDefinition"><p>MSG_ARG instance. Can be used together wit MESSAGE_NAME to construct a log in any language</p></td></tr><tr><td class="CDLEntry">log_message_stack</td><td class="CDLDefinition"><p>Error stack in case of error</p></td></tr><tr><td class="CDLEntry">log_message_backtrace</td><td class="CDLDefinition"><p>Call stack in case of error</p></td></tr><tr><td class="CDLEntry">log_severity</td><td class="CDLDefinition"><p>Severity of the message logged</p></td></tr></table></div>
 </div>

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("fro",["Function"],[["from",,[["PIT_UI Body","Helper methods to copy session state values from an APEX page",,,0,"File:apex/packages/pit_ui.pkb:PIT_UI_Body.Helper_methods_to_copy_session_state_values_from_an_APEX_page","SQLClass:PIT_UI_Body:Helper_methods_to_copy_session_state_values_from_an_APEX_page"]]]]);

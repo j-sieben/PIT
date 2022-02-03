@@ -8,25 +8,25 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Types"></a><a name="Topic7"></a><div class="CTopic TGroup LSQL first">
+<a name="Types"></a><a name="Topic122"></a><div class="CTopic TGroup LSQL first">
  <div class="CTitle">Types</div>
 </div>
 
-<a name="pit_default_adapter"></a><a name="Topic8"></a><div class="CTopic TType LSQL">
+<a name="pit_default_adapter"></a><a name="Topic123"></a><div class="CTopic TType LSQL">
  <div class="CTitle">pit_default_adapter</div>
  <div class="CBody"><p>Adapter code to be injected into the PIT installation. Detects session id and username</p><div class="CHeading">Properties</div><table class="CDefinitionList"><tr><td class="CDLEntry">environment</td><td class="CDLDefinition"><p>Name indicating which adapter is used to capture informations</p></td></tr><tr><td class="CDLEntry">status</td><td class="CDLDefinition"><p>Flag to indicate whether the module is ready to be used. If FALSE, it is skipped</p></td></tr></table></div>
 </div>
 
-<a name="Functions"></a><a name="Topic9"></a><div class="CTopic TGroup LSQL">
+<a name="Functions"></a><a name="Topic124"></a><div class="CTopic TGroup LSQL">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="get_session_details"></a><a name="Topic10"></a><div class="CTopic TFunction LSQL">
+<a name="get_session_details"></a><a name="Topic125"></a><div class="CTopic TFunction LSQL">
  <div class="CTitle">get_session_details</div>
  <div class="CBody"><p>Method to retrieve the session details.</p><p>Method retrieves session related information. This adapter is used as a fallback solution if no other adapter is provided. It defaults to CLIENT_IDENTIFIER, SID and no required context</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p_user_name</td><td class="CDLDefinition"><p>OUT parameter containing the user name&nbsp; (CLIENT_IDENTIFIER)</p></td></tr><tr><td class="CDLEntry">p_session_id</td><td class="CDLDefinition"><p>OUT parameter containing the session id (SID)</p></td></tr><tr><td class="CDLEntry">p_required_context</td><td class="CDLDefinition"><p>OUT parameter indicating whether PIT should change context. Not used here</p></td></tr></table></div>
 </div>
 
-<a name="pit_default_adapter(2)"></a><a name="Topic11"></a><div class="CTopic TFunction LSQL last">
+<a name="pit_default_adapter(2)"></a><a name="Topic126"></a><div class="CTopic TFunction LSQL last">
  <div class="CTitle">pit_default_adapter</div>
  <div class="CBody"><p>Constructor method. Sets ENVIRONMENT to DEFAULT and STATUS to TRUE</p></div>
 </div>

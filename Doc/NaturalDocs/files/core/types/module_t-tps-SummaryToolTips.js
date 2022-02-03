@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("File:core/types/module_t.tps",{2:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Object to store meta data for an output module.</div></div>"});

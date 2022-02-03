@@ -8,21 +8,21 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER"></a><a name="Topic459"></a><div class="CTopic TClass LSQL first">
+<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER"></a><a name="Topic853"></a><div class="CTopic TClass LSQL first">
  <div class="CTitle"><span class="Qualifier">Output Modules.&#8203;PIT_APEX.</span>&#8203;PIT_APEX_ADAPTER</div>
  <div class="CBody"><div class="CHeading">Author</div><p>Juergen Sieben, ConDeS GmbH</p></div>
 </div>
 
-<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER.Functions"></a><a name="Topic460"></a><div class="CTopic TGroup LSQL">
+<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER.Functions"></a><a name="Topic854"></a><div class="CTopic TGroup LSQL">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER.get_session_details"></a><a name="Topic527"></a><div class="CTopic TFunction LSQL">
+<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER.get_session_details"></a><a name="Topic855"></a><div class="CTopic TFunction LSQL">
  <div class="CTitle">get_session_details</div>
- <div class="CBody"><p>Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX.</p><p>This method detects the APEX session id, logged on user and debug status.</p><ul><li><p>If no APEX environment is present, this method is in unusable state and PIT falls back to the default adapter.</p></li><li><p>If APEX is in debug mode, PIT will switch on debuggin as well. The settings can be controlled by setting the respective PIT_APEX_TRG... parameters.</p></li></ul><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p_user_name</td><td class="CDLDefinition"><p>User actually logged on at the active APEX application</p></td></tr><tr><td class="CDLEntry">p_session_id</td><td class="CDLDefinition"><p>Session Id of the APEX session</p></td></tr><tr><td class="CDLEntry">p_required_context</td><td class="CDLDefinition"><p>If APEX is set to debug, this parameter will contain the name of a context as given by <a href="../../../../index.html#File:modules/pit_apex/packages/pit_apex_pkg.pks:Output_Modules.PIT_APEX.PIT_APEX_PKG.get_apex_triggered_context" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,511);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >PIT_APEX_PKG.GET_APEX_TRIGGERED_CONTEXT</a>.&nbsp; This way, PIT will switch on logging for the actual session if APEX mandates for it.</p></td></tr></table></div>
+ <div class="CBody"><p>Method derives user name and session id from the APEX environment, if available and harmonizes PIT logging with APEX.</p><p>This method detects the APEX session id, logged on user and debug status.</p><ul><li><p>If no APEX environment is present, this method is in unusable state and PIT falls back to the default adapter.</p></li><li><p>If APEX is in debug mode, PIT will switch on debuggin as well. The settings can be controlled by setting the respective PIT_APEX_TRG... parameters.</p></li></ul><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p_user_name</td><td class="CDLDefinition"><p>User actually logged on at the active APEX application</p></td></tr><tr><td class="CDLEntry">p_session_id</td><td class="CDLDefinition"><p>Session Id of the APEX session</p></td></tr><tr><td class="CDLEntry">p_required_context</td><td class="CDLDefinition"><p>If APEX is set to debug, this parameter will contain the name of a context as given by <a href="../../../../index.html#File:modules/pit_apex/packages/pit_apex_pkg.pks:Output_Modules.PIT_APEX.PIT_APEX_PKG.get_apex_triggered_context" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,859);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >PIT_APEX_PKG.GET_APEX_TRIGGERED_CONTEXT</a>.&nbsp; This way, PIT will switch on logging for the actual session if APEX mandates for it.</p></td></tr></table></div>
 </div>
 
-<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER.pit_apex_adapter"></a><a name="Topic533"></a><div class="CTopic TFunction LSQL last">
+<a name="Output_Modules.PIT_APEX.PIT_APEX_ADAPTER.pit_apex_adapter"></a><a name="Topic856"></a><div class="CTopic TFunction LSQL last">
  <div class="CTitle">pit_apex_adapter</div>
  <div class="CBody"><p>Constructor method. It will mark this adapter as valid if an APEX session context is detected and invalid if not.</p></div>
 </div>

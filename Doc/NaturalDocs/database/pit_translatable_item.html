@@ -8,7 +8,7 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Topic867"></a><div class="CTopic TDatabaseTable LSQL first">
+<a name="Topic105"></a><div class="CTopic TDatabaseTable LSQL first">
  <div class="CTitle">pit_translatable_item</div>
  <div class="CBody"><p>Central translatable item repository in various languages.</p><div class="CHeading">Database Fields</div><table class="CDefinitionList"><tr><td class="CDLEntry">pti_id</td><td class="CDLDefinition"><p>ID of the translatable item, part of the PK in conjunction with PIT_PML_NAME</p></td></tr><tr><td class="CDLEntry">pti_pml_name</td><td class="CDLDefinition"><p>Part of the PK, reference to PIT_MESSAGE_LANGUAGE. Taken from Oracle v$nls_valid_values</p></td></tr><tr><td class="CDLEntry">pti_pmg_name</td><td class="CDLDefinition"><p>Part of the PK, reference to PIT_MESSAGE_GROUP, criteria to group messages and translatables items per group</p></td></tr><tr><td class="CDLEntry">pti_name</td><td class="CDLDefinition"><p>Name. Optionally contains replacement anchors</p></td></tr><tr><td class="CDLEntry">pti_display_name</td><td class="CDLDefinition"><p>Display name. Used for UI display purposes. Optionally contains replacement anchors</p></td></tr><tr><td class="CDLEntry">pti_description</td><td class="CDLDefinition"><p>Help text or further description. No replacement anchors allowed</p></td></tr><tr><td class="CDLEntry">pti_uid</td><td class="CDLDefinition"><p>Virtual column as a surrogate primary key for references</p></td></tr><tr><td class="CDLEntry">pti_upmg</td><td class="CDLDefinition"><p>Virtual column as a surrogate primary key for references</p></td></tr></table></div>
 </div>

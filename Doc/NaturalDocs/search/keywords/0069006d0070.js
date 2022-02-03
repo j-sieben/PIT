@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("imp",["Function"],[["import_translation",,[["PIT_UI Body",,,,0,"File:apex/packages/pit_ui.pkb:PIT_UI_Body.import_translation","SQLClass:PIT_UI_Body:import_translation"]]]]);

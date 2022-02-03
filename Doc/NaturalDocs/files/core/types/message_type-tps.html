@@ -8,25 +8,25 @@
 
 <body onload="NDLoader.OnLoad('Content');" class="NDPage NDContentPage">
 
-<a name="Types"></a><a name="Topic52"></a><div class="CTopic TGroup LSQL first">
+<a name="Types"></a><a name="Topic177"></a><div class="CTopic TGroup LSQL first">
  <div class="CTitle">Types</div>
 </div>
 
-<a name="message_type"></a><a name="Topic53"></a><div class="CTopic TType LSQL">
+<a name="message_type"></a><a name="Topic178"></a><div class="CTopic TType LSQL">
  <div class="CTitle">message_type</div>
  <div class="CBody"><p>Core message type. Is used to collect the message, severity and other useful information around messages</p><div class="CHeading">Properties</div><table class="CDefinitionList"><tr><td class="CDLEntry">id</td><td class="CDLDefinition"><p>Technical key</p></td></tr><tr><td class="CDLEntry">message_name</td><td class="CDLDefinition"><p>Name of the message</p></td></tr><tr><td class="CDLEntry">affected_id</td><td class="CDLDefinition"><p>Subject ID to which the message relates</p></td></tr><tr><td class="CDLEntry">error_code</td><td class="CDLDefinition"><p>Error code of the entry. May be used to divide several occurences of the same message name.</p></td></tr><tr><td class="CDLEntry">session_id</td><td class="CDLDefinition"><p>ID of the session as delivered by the adapter in use</p></td></tr><tr><td class="CDLEntry">user_name</td><td class="CDLDefinition"><p>Name of the user as delivered by the adapter in use</p></td></tr><tr><td class="CDLEntry">message_text</td><td class="CDLDefinition"><p>Tect of the message in the actually valid translation</p></td></tr><tr><td class="CDLEntry">message_description</td><td class="CDLDefinition"><p>Optional descriptive text, mostly used ot explain what to do in case of errors</p></td></tr><tr><td class="CDLEntry">severity</td><td class="CDLDefinition"><p>Severity of the message</p></td></tr><tr><td class="CDLEntry">stack</td><td class="CDLDefinition"><p>In case of error: Call stack</p></td></tr><tr><td class="CDLEntry">backtrace</td><td class="CDLDefinition"><p>in case of error: Error stack</p></td></tr><tr><td class="CDLEntry">error_number</td><td class="CDLDefinition"><p>Either an Oracle error code or one of the range -20999 .. -20000. Only applicable if level is error or fatal</p></td></tr><tr><td class="CDLEntry">message_args</td><td class="CDLDefinition"><p>List of arguments passed into the message.</p></td></tr></table></div>
 </div>
 
-<a name="Functions"></a><a name="Topic54"></a><div class="CTopic TGroup LSQL">
+<a name="Functions"></a><a name="Topic179"></a><div class="CTopic TGroup LSQL">
  <div class="CTitle">Functions</div>
 </div>
 
-<a name="format_icu"></a><a name="Topic55"></a><div class="CTopic TFunction LSQL">
+<a name="format_icu"></a><a name="Topic180"></a><div class="CTopic TFunction LSQL">
  <div class="CTitle">format_icu</div>
  <div class="CBody"><p>Method that is called if the message is formatted by the ICU functionality.&nbsp; Implemented in Java</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p_msg</td><td class="CDLDefinition"><p>Message text to format</p></td></tr><tr><td class="CDLEntry">p_params</td><td class="CDLDefinition"><p>Parameter values, either in JSON format or as a key-value list</p></td></tr><tr><td class="CDLEntry">p_locale</td><td class="CDLDefinition"><p>Language of the message</p></td></tr><tr><td class="CDLEntry">l_status</td><td class="CDLDefinition"><p>Status message,</p></td></tr><tr><td class="CDLEntry">l_error_message</td><td class="CDLDefinition"><p>Formatted message</p></td></tr></table></div>
 </div>
 
-<a name="message_type(2)"></a><a name="Topic56"></a><div class="CTopic TFunction LSQL last">
+<a name="message_type(2)"></a><a name="Topic181"></a><div class="CTopic TFunction LSQL last">
  <div class="CTitle">message_type</div>
  <div class="CBody"><p>Constructor function</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p_message_name</td><td class="CDLDefinition"><p>Name of the message</p></td></tr><tr><td class="CDLEntry">p_message_language</td><td class="CDLDefinition"><p>Language of the message</p></td></tr><tr><td class="CDLEntry">p_affected_id</td><td class="CDLDefinition"><p>Error code of the entry. May be used to divide several occurences of the same message name.</p></td></tr><tr><td class="CDLEntry">p_error_code</td><td class="CDLDefinition"><p>Error code of the entry. May be used to divide several occurences of the same message name.</p></td></tr><tr><td class="CDLEntry">p_session_id</td><td class="CDLDefinition"><p>ID of the session as delivered by the adapter in use</p></td></tr><tr><td class="CDLEntry">p_user_name</td><td class="CDLDefinition"><p>Name of the user as delivered by the adapter in use</p></td></tr><tr><td class="CDLEntry">p_msg_args</td><td class="CDLDefinition"><p>List of arguments passed into the message.</p></td></tr></table></div>
 </div>

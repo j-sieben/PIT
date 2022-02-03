@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core/types/module_t.tps","module_t.tps");NDSummary.OnSummaryLoaded("File:core/types/module_t.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[1,0,0,"Types","Types"],[2,0,1,"module_t","module_t"]]);

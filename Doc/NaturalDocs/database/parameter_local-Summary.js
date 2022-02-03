@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:parameter_local","parameter_local");NDSummary.OnSummaryLoaded("Database:parameter_local",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[855,0,0,"parameter_local"]]);
+﻿NDFramePage.OnPageTitleLoaded("Database:parameter_local","parameter_local");NDSummary.OnSummaryLoaded("Database:parameter_local",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[93,0,0,"parameter_local"]]);

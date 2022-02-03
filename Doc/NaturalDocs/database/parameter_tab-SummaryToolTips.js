@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("Database:parameter_tab",{857:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Central parameter table</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("Database:parameter_tab",{95:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Central parameter table</div></div>"});

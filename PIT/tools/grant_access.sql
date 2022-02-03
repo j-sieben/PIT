@@ -6,6 +6,6 @@ begin
   end if;
 exception
   when others then
-    dbms_output.put_line('&s1.Grant on &2. unsuccesful: ' || substr(sqlerrm));
+    dbms_output.put_line('&s1.Grant on &2. unsuccesful: ' || substr(sqlerrm, 12));
 end;
 /
