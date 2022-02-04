@@ -623,7 +623,7 @@ as
     when msg.PIT_BULK_ERROR_ERR then
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PMG_NAME',
-        'INVALID_SQL_NAME', 'PMG_NAME',
+        msg.INVALID_SQL_NAME, 'PMG_NAME',
         msg.PIT_PMG_ERROR_MARKER_INVALID, 'PMG_PREFIX'));
       
       pit.leave_mandatory;
@@ -735,7 +735,7 @@ as
     when msg.PIT_BULK_ERROR_ERR then
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PMS_NAME',
-        'INVALID_SQL_NAME', 'PMS_NAME',
+        msg.INVALID_SQL_NAME, 'PMS_NAME',
         'PGR_DESCRIPTION_MISSING', 'PGR_DESCRIPTION'));
       
       pit.leave_mandatory;
@@ -991,7 +991,7 @@ as
     when msg.PIT_BULK_ERROR_ERR then
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PAR_ID',
-        'INVALID_SQL_NAME', 'PAR_ID',
+        msg.INVALID_SQL_NAME, 'PAR_ID',
         'DATAYPE_MISMATCH_INTEGER', 'PAR_INTEGER_VALUE',
         'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
         'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',

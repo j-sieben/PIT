@@ -483,6 +483,15 @@ begin
     p_pms_pml_name => 'GERMAN',
     p_error_number => null);
 
+  pit_admin.merge_message(
+    p_pms_name => 'INVALID_SQL_NAME',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Ungültiger SQL-Name. #1#. Bitte geben Sie einen Namen an, der den Oracle-Namenskonventionen entspricht^',
+    p_pms_description => q'^Da einige Bezeichner auch als Oracle-Namen verwendet werden (zum Beispiel als Konstanten), müssen sie den Oracle-Namenskonventionen entsprechen.^',
+    p_pms_pse_id => 40,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => null);
+
   commit;
   pit_admin.create_message_package;
 end;

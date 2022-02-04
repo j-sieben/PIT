@@ -111,7 +111,7 @@ as
     pit.leave_detailed;
     return l_harmonized_name;
   exception
-    when msg.INVALID_SQL_NAME_ERR then
+    when dbms_assert.INVALID_SQL_NAME then
       pit.error(
         p_message_name => msg.INVALID_SQL_NAME,
         p_msg_args => msg_args(p_name));
