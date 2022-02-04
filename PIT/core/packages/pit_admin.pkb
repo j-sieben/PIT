@@ -798,8 +798,8 @@ end;
   procedure merge_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_pmg_description in pit_message_group.pmg_description%type default null,
-    p_pmg_error_prefix in pit_message_group.pmg_error_prefix%type default '',
-    p_pmg_error_postfix in pit_message_group.pmg_error_postfix%type default 'ERR')
+    p_pmg_error_prefix in pit_message_group.pmg_error_prefix%type default '&EXCEPTION_PREFIX.',
+    p_pmg_error_postfix in pit_message_group.pmg_error_postfix%type default '&EXCEPTION_POSTFIX.')
   as
     l_row pit_message_group%rowtype;
   begin

@@ -1,8 +1,8 @@
 create table pit_message_group(
   pmg_name &ORA_NAME_TYPE.,
   pmg_description varchar2(200 char),
-  pmg_error_prefix varchar2(6 byte) default '&EXCEPTION_PRE.',
-  pmg_error_postfix varchar2(6 byte) default '&EXCEPTION_POST.',
+  pmg_error_prefix varchar2(6 byte) default '&EXCEPTION_PREFIX.',
+  pmg_error_postfix varchar2(6 byte) default '&EXCEPTION_POSTFIX.',
   constraint pk_pmg_id primary key(pmg_name)
 ) organization index tablespace &DEFAULT_TABLESPACE.;
 
