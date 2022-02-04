@@ -44,9 +44,8 @@ select pml_name default_language
   from &PIT_USER..pit_message_language_v
  where pml_default_order = 10;
  
-select case when utl_apex.get_apex_version between 5 and 18.5 then '05_1'
-            when utl_apex.get_apex_version between 19 and 20.1 then '19_1'
-            else '20_2' end apex_version
+select /*case when utl_apex.get_apex_version between 19 and 20.1 then '19_1'*/
+       '20_2' apex_version
   from dual;
 
 @init/settings.sql

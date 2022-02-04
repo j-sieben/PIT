@@ -27,6 +27,10 @@ begin
       dbms_output.put_line('&s1.Your version of UTL_APEX is outdated. Please update your version first');
       l_requirements_given := false;
     end if;
+    if utl_apex.get_apex_version <= 20.1 then
+      dbms_output.put_line('&s1.The administration application requires APEX in version 20.2 and higher.');
+      l_requirements_given := false;
+    end if;
   exception
     when x_does_not_exist then
       dbms_output.put_line('&s1.UTL_APEX is required by this package. You can get it from GitHub as well.');

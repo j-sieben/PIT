@@ -621,6 +621,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PMG_NAME',
         msg.INVALID_SQL_NAME, 'PMG_NAME',
@@ -676,6 +677,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PMS_NAME',
         msg.INVALID_SQL_NAME, 'PMS_NAME',
@@ -733,6 +735,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PMS_NAME',
         msg.INVALID_SQL_NAME, 'PMS_NAME',
@@ -850,6 +853,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         'DATAYPE_MISMATCH_INTEGER', 'PAR_INTEGER_VALUE',
         'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
@@ -989,6 +993,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         'NAME_MISSING', 'PAR_ID',
         msg.INVALID_SQL_NAME, 'PAR_ID',
@@ -1167,6 +1172,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         'DATAYPE_MISMATCH_INTEGER', 'PAR_INTEGER_VALUE',
         'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
@@ -1282,6 +1288,7 @@ as
     return true;
   exception
     when msg.PIT_BULK_ERROR_ERR then
+      -- Map error codes to page item names
       utl_apex.handle_bulk_errors(char_table(
         msg.INVALID_SQL_NAME, 'PAR_ID',
         'TOGGLE_NAME_MISSING', 'PAR_ID',
