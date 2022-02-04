@@ -1,13 +1,10 @@
 begin
 
-  pit_admin.delete_message_group(
-    p_pmg_name => 'ORACLE'
-  );
-  
   pit_admin.merge_message_group(
     p_pmg_name => 'ORACLE',
-    p_pmg_description => q'^Meldungen für Oracle-Fehler^'
-  );
+    p_pmg_description => q'^Messages for Oracle Errors^',
+    p_pmg_error_prefix => '',
+    p_pmg_error_postfix => 'ERR');
 
   pit_admin.merge_message(
     p_pms_name => 'CHILD_RECORD_FOUND',
@@ -16,8 +13,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -2292
-  );
+    p_error_number => -2292);
 
   pit_admin.merge_message(
     p_pms_name => 'CONVERSION_IMPOSSIBLE',
@@ -26,8 +22,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 20,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000
-  );
+    p_error_number => -20000);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_DATE',
@@ -36,8 +31,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1858
-  );
+    p_error_number => -1858);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_DATE_FORMAT',
@@ -46,8 +40,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1861
-  );
+    p_error_number => -1861);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_DATE_LENGTH',
@@ -56,8 +49,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1840
-  );
+    p_error_number => -1840);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_DAY',
@@ -66,8 +58,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1847
-  );
+    p_error_number => -1847);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_DAY_FOR_MONTH',
@@ -76,8 +67,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1839
-  );
+    p_error_number => -1839);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_MONTH',
@@ -86,8 +76,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1843
-  );
+    p_error_number => -1843);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_NUMBER_FORMAT',
@@ -96,8 +85,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1481
-  );
+    p_error_number => -1481);
 
   pit_admin.merge_message(
     p_pms_name => 'INVALID_YEAR',
@@ -106,18 +94,7 @@ begin
     p_pms_description => q'^^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -1841
-  );
-
-  pit_admin.merge_message(
-    p_pms_name => 'INVALID_SQL_NAME',
-    p_pms_pmg_name => 'ORACLE',
-    p_pms_text => q'^Der Bezeichner entspricht nicht den Vorgaben an einen SQL-Bezeichner. ""-kodierte Namen sind nicht erlaubt.^',
-    p_pms_description => q'^Der Bezeichner muss den Bennenungsregeln von SQL entsprechen. Zudem sind keine Namen erlaubt, die durch "-Zeichen maskiert sind.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -44003
-  );
+    p_error_number => -1841);
 
   commit;
   pit_admin.create_message_package;

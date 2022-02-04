@@ -481,7 +481,7 @@ as
     pit.leave_mandatory(
       p_params => msg_params(msg_param('Result', l_name)));
   exception
-    when msg.INVALID_SQL_NAME_ERR then
+    when dbms_assert.INVALID_SQL_NAME then
       -- leave the error display for the page validation, as an interactive grid does not support dynamic validation
       null;
   end harmonize_sql_name;

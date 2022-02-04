@@ -2,7 +2,18 @@ begin
 
   pit_admin.merge_message_group(
     p_pmg_name => 'PIT',
-    p_pmg_description => q'^Core PIT messages and translatable items^');
+    p_pmg_description => q'^Core PIT messages and translatable items^',
+    p_pmg_error_prefix => '',
+    p_pmg_error_postfix => 'ERR');
+
+  pit_admin.merge_message(
+    p_pms_name => 'ASSERT_DATATYPE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^#1# is not of data type #2#.^',
+    p_pms_description => q'^An unsuccessful attempt was made to convert a value to the specified data type. Check the value.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => -20000);
 
   pit_admin.merge_message(
     p_pms_name => 'ASSERTION_FAILED',
@@ -54,15 +65,6 @@ begin
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^A value was expected to be equal, but was not.^',
     p_pms_description => q'^Obviously^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'ASSERT_DATATYPE',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^#1# is not of data type #2#.^',
-    p_pms_description => q'^An unsuccessful attempt was made to convert a value to the specified data type. Check the value.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
@@ -147,15 +149,6 @@ begin
     p_pms_pse_id => 30,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'INVALID_SQL_NAME',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^The identifier does not correspond to the specifications for an SQL identifier. ""-encoded names are not allowed.^',
-    p_pms_description => q'^The identifier must comply with the naming rules of SQL. In addition, names masked by "-characters are not allowed.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => -44003);
 
   pit_admin.merge_message(
     p_pms_name => 'LONG_OP_WO_TRACE',
@@ -434,6 +427,60 @@ begin
     p_pms_description => q'^General error message. For more information, see the message parameter.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'AMERICAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'WEBSOCKET_MESSAGE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^#1#: #2#^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => 70,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMG_ERROR_MARKER_MISSING',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Neither prefix nor postfix for error messages were specified.^',
+    p_pms_description => q'^A message group needs a flag for errors. These are taken from the default, but must not be NULL. At least one value must be assigned.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMG_ERROR_MARKER_INVALID',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^The length of prefix and postfix together must not exceed 12 characters and at least prefix or postfix must be defined.^',
+    p_pms_description => q'^The prefix and/or postfix for error names must remain below a maximum length to avoid problems with the naming convention.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMS_TOO_LONG',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^The message "#1#" must not be longer than #2# characters, but has the length #3#.^',
+    p_pms_description => q'^The length restriction applies because of the length of exception prefixes and postfixes to be added.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMS_PREDEFINED_ERROR',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^The error number #1# is a predefined Oracle error named #2# in #3#.#4#. Please do not overwrite Oracle predefined errors.^',
+    p_pms_description => q'^By overwriting a predefined error, it will no longer be trapped under its name.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PARAM_MISSING',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^The #LABEL# element is a mandatory element.^',
+    p_pms_description => q'^Obviously.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
     p_error_number => -20000);
 
   commit;

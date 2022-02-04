@@ -2,13 +2,15 @@ begin
 
   pit_admin.merge_message_group(
     p_pmg_name => 'PIT',
-    p_pmg_description => q'^Core PIT messages and translatable items^');
+    p_pmg_description => q'^Core PIT messages and translatable items^',
+    p_pmg_error_prefix => '',
+    p_pmg_error_postfix => 'ERR');
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERTION_FAILED',
+    p_pms_name => 'ASSERT_DATATYPE',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Assertion schlug fehl.^',
-    p_pms_description => q'^Offensichtlich^',
+    p_pms_text => q'^#1# ist nicht vom Datentyp #2#.^',
+    p_pms_description => q'^Es wurde erfolglos versucht, einen Wert in den angegebenen Datentyp zu konvertieren. Prüfen Sie den Wert.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
     p_error_number => -20000);
@@ -18,6 +20,15 @@ begin
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Eine Anweisung soll Zeilen liefern, tut es aber nicht.^',
     p_pms_description => q'^Offensichtlich.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'ASSERTION_FAILED',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Assertion schlug fehl.^',
+    p_pms_description => q'^Offensichtlich^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
     p_error_number => -20000);
@@ -59,15 +70,6 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_DATATYPE',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^#1# ist nicht vom Datentyp #2#.^',
-    p_pms_description => q'^Es wurde erfolglos versucht, einen Wert in den angegebenen Datentyp zu konvertieren. Prüfen Sie den Wert.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
     p_pms_name => 'CASE_NOT_FOUND',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1# bei Ausführung von CASE-Anweisung nicht gefunden.^',
@@ -101,7 +103,7 @@ begin
     p_pms_description => q'^Ein Kontext kann im Regelfall dann nicht initialisiert werden, wenn ungültige Einstellungen für die einzelnen Parameter übergeben wurden.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => null);
+    p_error_number => -20000);
 
   pit_admin.merge_message(
     p_pms_name => 'CTX_DEFAULT_CREATION_ERROR',
@@ -374,6 +376,24 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
+    p_pms_name => 'PIT_NO_CONTEXT_SETTINGS',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Es konnten keine Einstellungen für das Logging gefunden werden.^',
+    p_pms_description => q'^Es wurde versucht, Werte für das Logging aus dem gloablen Kontext zu lesen. Das misslang aber. Prüfen Sie, ob PIT korrekt initialisiert ist.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PARAM_MISSING',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Das Element #LABEL# ist ein Pflichtelement.^',
+    p_pms_description => q'^Offensichtlich.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
     p_pms_name => 'PIT_PARAM_OUT_OF_RANGE',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Parameter #1# soll in (#2#) enthalten sein, war aber #3#.^',
@@ -390,6 +410,42 @@ begin
     p_pms_pse_id => 70,
     p_pms_pml_name => 'GERMAN',
     p_error_number => null);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMG_ERROR_MARKER_INVALID',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Die Länge von Präfix und Postfix darf zusammen nicht mehr als 12 Zeichen betragen und mindestens Präfix oder Postfix muss definiert werden.^',
+    p_pms_description => q'^Das Präfix und/oder das Postfix für Fehlernamen müssen unter einer maximalen Länge bleiben, um Probleme bei mit der Namenskonvention auszuweichen.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMG_ERROR_MARKER_MISSING',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Weder Präfix noch Postfix für Fehlermeldungen wurden angegeben.^',
+    p_pms_description => q'^Eine Meldungsgruppe benötigt eine Kennzeichnung für Fehler. Diese werden aus dem Default genommen, dürfen aber nicht NULL sein. Mindestens ein Wert muss belegt sein.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMS_PREDEFINED_ERROR',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Die Fehlernummer #1# ist ein vordefinierter Oracle-Fehler namens #2# in #3#.#4#. Bitte überschreiben Sie keine von Oracle vordefinierten Fehler.^',
+    p_pms_description => q'^Durch das Überschreiben eines vordefinierten Fehlers wird dieser unter seinem Namen nicht mehr gefangen.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PMS_TOO_LONG',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Die Nachricht "#1#" darf nicht länger als #2# Zeichen sein, hat aber die Länge #3#.^',
+    p_pms_description => q'^Die Längenbeschränkung gilt wegen der hinzuzurechnenden Länge der Exception Pre- und Postfixes.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
 
   pit_admin.merge_message(
     p_pms_name => 'PIT_READ_MODULE_LIST',
@@ -410,15 +466,6 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'PIT_NO_CONTEXT_SETTINGS',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Es konnten keine Einstellungen für das Logging gefunden werden.^',
-    p_pms_description => q'^Es wurde versucht, Werte für das Logging aus dem gloablen Kontext zu lesen. Das misslang aber. Prüfen Sie, ob PIT korrekt initialisiert ist.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
     p_pms_name => 'SQL_ERROR',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Ein SQL-Fehler ist aufgetreten: #SQLERRM#^',
@@ -428,49 +475,13 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'PIT_PMG_ERROR_MARKER_MISSING',
+    p_pms_name => 'WEBSOCKET_MESSAGE',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Weder Präfix noch Postfix für Fehlermeldungen wurden angegeben.^',
-    p_pms_description => q'^Eine Meldungsgruppe benötigt eine Kennzeichnung für Fehler. Diese werden aus dem Default genommen, dürfen aber nicht NULL sein. Mindestens ein Wert muss belegt sein.^',
-    p_pms_pse_id => 30,
+    p_pms_text => q'^#1#: #2#^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => 70,
     p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PIT_PMG_ERROR_MARKER_INVALID',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Die Länge von Präfix und Postfix darf zusammen nicht mehr als 12 Zeichen betragen und mindestens Präfix oder Postfix muss definiert werden.^',
-    p_pms_description => q'^Das Präfix und/oder das Postfix für Fehlernamen müssen unter einer maximalen Länge bleiben, um Probleme bei mit der Namenskonvention auszuweichen.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PIT_PMS_TOO_LONG',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Die Nachricht "#1#" darf nicht länger als #2# Zeichen sein, hat aber die Länge #3#.^',
-    p_pms_description => q'^Die Längenbeschränkung gilt wegen der hinzuzurechnenden Länge der Exception Pre- und Postfixes.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PIT_PMS_PREDEFINED_ERROR',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Die Fehlernummer #1# ist ein vordefinierter Oracle-Fehler namens #2# in #3#.#4#. Bitte überschreiben Sie keine von Oracle vordefinierten Fehler.^',
-    p_pms_description => q'^Durch das Überschreiben eines vordefinierten Fehlers wird dieser unter seinem Namen nicht mehr gefangen.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PIT_PARAM_MISSING',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Das Element #LABEL# ist ein Pflichtelement.^',
-    p_pms_description => q'^Offensichtlich.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
+    p_error_number => null);
 
   commit;
   pit_admin.create_message_package;

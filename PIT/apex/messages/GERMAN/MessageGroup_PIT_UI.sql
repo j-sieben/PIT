@@ -5,8 +5,9 @@ begin
     
   pit_admin.merge_message_group(
     p_pmg_name => 'PIT_UI',
-    p_pmg_description => 'Messages for the PIT_UI'
-  );
+    p_pmg_description => 'Messages for the PIT_UI',
+    p_pmg_error_prefix => '',
+    p_pmg_error_postfix => 'ERR');
   
   pit_admin.merge_message(
     p_pms_name => 'PIT_INVALID_INTEGER',
