@@ -192,9 +192,9 @@ as
     pit.enter_detailed('copy_set_realm');
     
     g_page_values := utl_apex.get_page_values('SET_REALM');
-    p_row.par_id := utl_apex.get(g_page_values, 'par_id');
-    p_row.par_pgr_id := utl_apex.get(g_page_values, 'par_pgr_id');
-    p_row.par_string_value := utl_apex.get(g_page_values, 'par_string_value');
+    p_row.par_id := 'REALM';
+    p_row.par_pgr_id := 'PIT';
+    p_row.par_string_value := utl_apex.get(g_page_values, 'pre_id');
     
     pit.leave_detailed;
   end copy_set_realm;

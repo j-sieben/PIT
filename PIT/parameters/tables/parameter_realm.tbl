@@ -1,5 +1,5 @@
 create table parameter_realm(
-    pre_id &ORA_NAME_TYPE., 
+  pre_id &ORA_NAME_TYPE., 
 	pre_description varchar2(255 byte), 
 	pre_is_active &FLAG_TYPE. default &C_TRUE., 
   constraint parameter_realm_pk primary key (pre_id) enable,

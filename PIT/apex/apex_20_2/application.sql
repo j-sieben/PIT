@@ -28,7 +28,7 @@ prompt APPLICATION 135 - PIT-Administration
 -- Application Export:
 --   Application:     135
 --   Name:            PIT-Administration
---   Date and Time:   14:16 Friday February 4, 2022
+--   Date and Time:   16:49 Friday February 4, 2022
 --   Exported By:     BUCH_ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -90,7 +90,7 @@ wwv_flow_api.create_flow(
 ,p_accept_old_checksums=>false
 ,p_compatibility_mode=>'19.2'
 ,p_flow_language=>'de'
-,p_flow_language_derived_from=>'BROWSER'
+,p_flow_language_derived_from=>'SESSION'
 ,p_direction_right_to_left=>'N'
 ,p_flow_image_prefix => nvl(wwv_flow_application_install.get_image_prefix,'')
 ,p_authentication=>'PLUGIN'
@@ -114,7 +114,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_friendly_url=>'N'
 ,p_last_updated_by=>'BUCH_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20220204141051'
+,p_last_upd_yyyymmddhh24miss=>'20220204164652'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>6
 ,p_ui_type_name => null
@@ -11120,7 +11120,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>unistr('G\00FCltigkeitsbereich')
+,p_translate_to_text=>'Validity range'
 ,p_translate_from_text=>unistr('G\00FCltigkeitsbereich')
 );
 wwv_flow_api.create_translation(
@@ -11133,7 +11133,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'Beschreibung'
+,p_translate_to_text=>'Description'
 ,p_translate_from_text=>'Beschreibung'
 );
 wwv_flow_api.create_translation(
@@ -11395,6 +11395,19 @@ wwv_flow_api.create_translation(
 ,p_template_translatable=>'N'
 ,p_translate_to_text=>'UPPER'
 ,p_translate_from_text=>'UPPER'
+);
+wwv_flow_api.create_translation(
+ p_id=>wwv_flow_api.id(112284517429072704)
+,p_page_id=>101
+,p_translated_flow_id=>131
+,p_translate_to_id=>wwv_flow_api.id(288174541150139683.131)
+,p_translate_from_id=>wwv_flow_api.id(288174541150139683)
+,p_translate_column_id=>21
+,p_translate_to_lang_code=>'en'
+,p_translation_specific_to_item=>'NO'
+,p_template_translatable=>'N'
+,p_translate_to_text=>'apex_lang.emit_language_selector_list;'
+,p_translate_from_text=>'apex_lang.emit_language_selector_list;'
 );
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(241165287950212585)
@@ -12072,6 +12085,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Load XLIFF file'
 ,p_translate_from_text=>unistr('\00DCbersetzung laden')
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258281196948666954)
 ,p_page_id=>3
@@ -12098,9 +12114,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Create Context'
 ,p_translate_from_text=>'Kontext erstellen'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258281573626666954)
 ,p_page_id=>12
@@ -12241,8 +12254,8 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'Log In'
-,p_translate_from_text=>'Log In'
+,p_translate_to_text=>'Log in'
+,p_translate_from_text=>'Anmelden'
 );
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258283751346666954)
@@ -13024,6 +13037,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Parameter group'
 ,p_translate_from_text=>'Parmetergruppe'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258295967851666962)
 ,p_page_id=>10
@@ -13050,9 +13066,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Language'
 ,p_translate_from_text=>'Sprache'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258296604905666962)
 ,p_page_id=>2
@@ -13967,6 +13980,9 @@ wwv_flow_api.create_translation(
 'select row_id, par_id, par_pgr_id, toggle_module_list, toggle_context_name',
 '  from pit_ui_admin_pit_toggle'))
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258310795279666981)
 ,p_page_id=>9
@@ -13980,9 +13996,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'htp.p(apex_lang.message(''HELP_TOGGLE''));'
 ,p_translate_from_text=>'htp.p(apex_lang.message(''HELP_TOGGLE''));'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258310970013666981)
 ,p_page_id=>9
@@ -14348,7 +14361,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'- Select laguage'
+,p_translate_to_text=>'- select laguage'
 ,p_translate_from_text=>unistr('- Sprache w\00E4hlen -')
 );
 wwv_flow_api.create_translation(
@@ -14361,7 +14374,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'- select'
+,p_translate_to_text=>'- please select'
 ,p_translate_from_text=>unistr('- bitte w\00E4hlen')
 );
 wwv_flow_api.create_translation(
@@ -14374,7 +14387,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>unistr('- bitte w\00E4hlen')
+,p_translate_to_text=>'- please select'
 ,p_translate_from_text=>unistr('- bitte w\00E4hlen')
 );
 wwv_flow_api.create_translation(
@@ -14400,7 +14413,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>unistr('- bitte w\00E4hlen')
+,p_translate_to_text=>'- please select'
 ,p_translate_from_text=>unistr('- bitte w\00E4hlen')
 );
 wwv_flow_api.create_translation(
@@ -14803,6 +14816,9 @@ wwv_flow_api.create_translation(
 ,p_translate_from_text=>'Optionale Fehlernummer.<br>Muss bei eigenen Fehlern nicht angegeben werden, dient dem Mappen Oracle-definierter Fehler auf Fehlermeldungen.<br>Wird eine Fehlernummer doppelt belegt, wird ein Fehler geworfen.<br>Insbesondere darf keine Fehlernummer im'
 ||' Bereich - 20999 bis -20001 angegben werden, PIT verwaltet diese Fehlernummer automatisch.'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258324531325667145)
 ,p_translated_flow_id=>131
@@ -14816,9 +14832,6 @@ wwv_flow_api.create_translation(
 ,p_translate_from_text=>unistr('<p>Der Validierungsstring wird genutzt, um den Parameterwert zu pr\00FCfen.</p><p>Es stehen folgende Textanker zur Verf\00FCgung, um den Parameterwert zu referenzieren:<ul><li>#STRING#</li><li>#DATE#</li><li>#FLOAT#</li><li>#INTEGER#</li><li>#BOOLEAN#</li></')
 ||'ul></p>'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258324750439667145)
 ,p_translated_flow_id=>131
@@ -15663,6 +15676,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'APEX_APPLICATION_TEMP_FILES'
 ,p_translate_from_text=>'APEX_APPLICATION_TEMP_FILES'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258337664367667396)
 ,p_page_id=>16
@@ -15689,9 +15705,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'N'
 ,p_translate_from_text=>'N'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258338079059667400)
 ,p_page_id=>12
@@ -16654,6 +16667,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'PLSQL_CODE'
 ,p_translate_from_text=>'PLSQL_CODE'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258353098141667425)
 ,p_page_id=>10
@@ -16680,9 +16696,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'CLEAR_CACHE_CURRENT_PAGE'
 ,p_translate_from_text=>'CLEAR_CACHE_CURRENT_PAGE'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258353495290667425)
 ,p_page_id=>3
@@ -17610,6 +17623,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'PLSQL'
 ,p_translate_from_text=>'PLSQL'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258367629406667462)
 ,p_page_id=>6
@@ -17636,9 +17652,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'N'
 ,p_translate_from_text=>'N'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258368096596667464)
 ,p_page_id=>3
@@ -17915,19 +17928,6 @@ wwv_flow_api.create_translation(
 ,p_translate_from_text=>'N'
 );
 wwv_flow_api.create_translation(
- p_id=>wwv_flow_api.id(258372871286667489)
-,p_page_id=>101
-,p_translated_flow_id=>131
-,p_translate_to_id=>wwv_flow_api.id(288174541150139683.131)
-,p_translate_from_id=>wwv_flow_api.id(288174541150139683)
-,p_translate_column_id=>308
-,p_translate_to_lang_code=>'en'
-,p_translation_specific_to_item=>'NO'
-,p_template_translatable=>'N'
-,p_translate_to_text=>'N'
-,p_translate_from_text=>'N'
-);
-wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258373095744667489)
 ,p_page_id=>16
 ,p_translated_flow_id=>131
@@ -18162,19 +18162,6 @@ wwv_flow_api.create_translation(
 ,p_translate_from_text=>'HTML'
 );
 wwv_flow_api.create_translation(
- p_id=>wwv_flow_api.id(258376650209667492)
-,p_page_id=>101
-,p_translated_flow_id=>131
-,p_translate_to_id=>wwv_flow_api.id(288174541150139683.131)
-,p_translate_from_id=>wwv_flow_api.id(288174541150139683)
-,p_translate_column_id=>309
-,p_translate_to_lang_code=>'en'
-,p_translation_specific_to_item=>'NO'
-,p_template_translatable=>'N'
-,p_translate_to_text=>'TEXT'
-,p_translate_from_text=>'TEXT'
-);
-wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258376888402667492)
 ,p_page_id=>16
 ,p_translated_flow_id=>131
@@ -18362,19 +18349,6 @@ wwv_flow_api.create_translation(
 ,p_translated_flow_id=>131
 ,p_translate_to_id=>wwv_flow_api.id(290064432451675208.131)
 ,p_translate_from_id=>wwv_flow_api.id(290064432451675208)
-,p_translate_column_id=>310
-,p_translate_to_lang_code=>'en'
-,p_translation_specific_to_item=>'NO'
-,p_template_translatable=>'N'
-,p_translate_to_text=>'Y'
-,p_translate_from_text=>'Y'
-);
-wwv_flow_api.create_translation(
- p_id=>wwv_flow_api.id(258379854241667495)
-,p_page_id=>101
-,p_translated_flow_id=>131
-,p_translate_to_id=>wwv_flow_api.id(288174541150139683.131)
-,p_translate_from_id=>wwv_flow_api.id(288174541150139683)
 ,p_translate_column_id=>310
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
@@ -18579,7 +18553,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'# Meldungen'
+,p_translate_to_text=>'# Messages'
 ,p_translate_from_text=>'# Meldungen'
 );
 wwv_flow_api.create_translation(
@@ -18595,9 +18569,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Par Id'
 ,p_translate_from_text=>'Par Id'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258383468922667686)
 ,p_page_id=>2
@@ -18611,6 +18582,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Error ID'
 ,p_translate_from_text=>'Fehler-ID'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258383648049667686)
 ,p_page_id=>7
@@ -19560,9 +19534,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'N'
 ,p_translate_from_text=>'N'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258398221467667695)
 ,p_page_id=>8
@@ -19576,6 +19547,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'VALUE'
 ,p_translate_from_text=>'VALUE'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258398473833667695)
 ,p_page_id=>2
@@ -20522,7 +20496,7 @@ wwv_flow_api.create_translation(
 ,p_translate_to_lang_code=>'en'
 ,p_translation_specific_to_item=>'NO'
 ,p_template_translatable=>'N'
-,p_translate_to_text=>'- select'
+,p_translate_to_text=>'- please select'
 ,p_translate_from_text=>unistr('- bitte w\00E4hlen')
 );
 wwv_flow_api.create_translation(
@@ -20551,9 +20525,6 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'<i class="fa fa-pencil"/>'
 ,p_translate_from_text=>'<i class="fa fa-pencil"/>'
 );
-end;
-/
-begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258413828997667762)
 ,p_page_id=>4
@@ -20567,6 +20538,9 @@ wwv_flow_api.create_translation(
 ,p_translate_to_text=>'Create Message Group'
 ,p_translate_from_text=>'Meldungsgruppe erstellen'
 );
+end;
+/
+begin
 wwv_flow_api.create_translation(
  p_id=>wwv_flow_api.id(258414024953667762)
 ,p_page_id=>8
@@ -20976,7 +20950,7 @@ wwv_flow_api.create_message(
 ,p_message_text=>'Nein'
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167999441223065)
+ p_id=>wwv_flow_api.id(112290982629246693)
 ,p_name=>'BOOLEAN_N'
 ,p_message_text=>'No'
 );
@@ -20987,7 +20961,7 @@ wwv_flow_api.create_message(
 ,p_message_text=>'Ja'
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167932088223065)
+ p_id=>wwv_flow_api.id(112290877832246693)
 ,p_name=>'BOOLEAN_Y'
 ,p_message_text=>'Yes'
 );
@@ -21003,7 +20977,7 @@ wwv_flow_api.create_message(
 ||unistr('CTIVE\00AB werden intern verwendet und sind daher nicht erlaubt.</p>')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167555085223063)
+ p_id=>wwv_flow_api.id(112290484407246693)
 ,p_name=>'HELP_CONTEXT'
 ,p_message_text=>wwv_flow_string.join(wwv_flow_t_varchar2(
 '<p>A context summarizes the debug and trace behavior of PIT under one name.</p><p>.',
@@ -21019,7 +20993,7 @@ wwv_flow_api.create_message(
 ||unistr('b es bei der Installation des Ausgabemoduls Probleme gab oder ob das Modul einsatzbereit ist.<br>Spalte \00BBaktiv\00AB zeigt an, ob das Modul aktuell zur Ausgabe von Meldungen verwendet wird.</p>')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167408644223063)
+ p_id=>wwv_flow_api.id(112290363678246693)
 ,p_name=>'HELP_OUTPUT_MODULES'
 ,p_message_text=>wwv_flow_string.join(wwv_flow_t_varchar2(
 'Output modules are used to send messages from PIT to tables, files, APEX or any other destination.',
@@ -21035,7 +21009,7 @@ wwv_flow_api.create_message(
 ||unistr('jeweils ein benannter Kontext zugeordnet wird.<br>Wird eines dieser Packages ausgef\00FChrt, schaltet PIT den zugeordneten Kontext aktiv. Wird das Package verlassen, wird wieder der vorherige Kontext aktiv.')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167595310223063)
+ p_id=>wwv_flow_api.id(112290595832246693)
 ,p_name=>'HELP_TOGGLE'
 ,p_message_text=>'Debugging can be set globally for all application packages by using contexts.<br>In addition, it is possible to enable or disable logging for individual packages. To do this, a list of packages is managed, to each of which a named context is assigned'
 ||'.<br>If one of these packages is executed, PIT activates the assigned context. If the package is left, the previous context becomes active again.'
@@ -21050,7 +21024,7 @@ wwv_flow_api.create_message(
 ,p_message_text=>unistr('Falls Sie die Meldungen \00FCbersetzen m\00F6chten, w\00E4hlen Sie eine Zielsprache.')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167783496223063)
+ p_id=>wwv_flow_api.id(112290693688246693)
 ,p_name=>'HINT_PMS'
 ,p_message_text=>'If you want to translate the messages, select a target language.'
 );
@@ -21061,7 +21035,7 @@ wwv_flow_api.create_message(
 ,p_message_text=>unistr('Falls Sie die Begriffe \00FCbersetzen m\00F6chten, w\00E4hlen Sie eine Zielsprache.')
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241167870922223065)
+ p_id=>wwv_flow_api.id(112290795604246693)
 ,p_name=>'HINT_PTI'
 ,p_message_text=>'If you want to translate the translatable items, select a target language.'
 );
@@ -21078,7 +21052,7 @@ wwv_flow_api.create_message(
 ||'Exception-Block des Codes fangen Sie dann den benannten Oracle-Fehler und geben die spezifische Nachricht aus.</p>'
 );
 wwv_flow_api.create_message(
- p_id=>wwv_flow_api.id(241168105202223065)
+ p_id=>wwv_flow_api.id(112291043184246693)
 ,p_name=>'ORACLE_ERROR_HINT'
 ,p_message_text=>'<h2>Oracle error mapping</h2><p>If you want to map an Oracle error to a PIT message, please note:</p><ul><li>Apredefined errors cannot be overwritten (e.g. NO_DATA_FOUND)</li><li>Oracle error numbers can only be overwritten once by PIT</li></ul><p>Si'
 ||'nce Oracle errors can only be mapped once, the identifier should be chosen as generically as possible. <br>Use a naming convention with schema or area prefixes. Note that these error mappings must be used across all errors and therefore require an ap'
@@ -21490,8 +21464,8 @@ wwv_flow_api.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_required_role=>'MUST_NOT_BE_PUBLIC_USER'
 ,p_help_text=>'No help is available for this page.'
-,p_last_updated_by=>'ADC_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20220127142313'
+,p_last_updated_by=>'BUCH_ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20220204164531'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(288193165551352769)
@@ -21536,13 +21510,12 @@ wwv_flow_api.create_region_column(
 ,p_display_sequence=>10
 ,p_value_alignment=>'CENTER'
 ,p_link_target=>'f?p=&APP_ID.:EDIT_PMS:&SESSION.::&DEBUG.:RP:P3_ROWID:&ROW_ID.'
-,p_link_text=>'<i class="fa fa-pencil"/>'
+,p_link_text=>'<span aria-label="Edit"><span class="fa fa-edit" aria-hidden="true" title="Bearbeiten"></span></span>'
 ,p_enable_filter=>true
 ,p_filter_is_required=>false
 ,p_filter_lov_type=>'DISTINCT'
 ,p_use_as_row_header=>false
 ,p_enable_sort_group=>false
-,p_enable_control_break=>false
 ,p_enable_hide=>true
 ,p_is_primary_key=>true
 ,p_include_in_export=>false
@@ -23047,8 +23020,8 @@ wwv_flow_api.create_page(
 ,p_javascript_code=>'var htmldb_delete_message=''"DELETE_CONFIRM_MSG"'';'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_protection_level=>'C'
-,p_last_updated_by=>'ADC_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20220125170909'
+,p_last_updated_by=>'BUCH_ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20220204163019'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(259846133795849508)
@@ -23116,15 +23089,16 @@ wwv_flow_api.create_page_item(
 ,p_prompt=>unistr('G\00FCltigkeitsbereich')
 ,p_source=>'PRE_ID'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_DISPLAY_ONLY'
+,p_display_as=>'NATIVE_SELECT_LIST'
 ,p_named_lov=>'LOV_PARAMETER_REALM'
+,p_lov_display_null=>'YES'
+,p_cHeight=>1
 ,p_field_template=>wwv_flow_api.id(288168365490139663)
 ,p_item_template_options=>'#DEFAULT#'
 ,p_is_persistent=>'N'
 ,p_lov_display_extra=>'NO'
-,p_attribute_01=>'Y'
-,p_attribute_02=>'VALUE'
-,p_attribute_04=>'Y'
+,p_attribute_01=>'NONE'
+,p_attribute_02=>'N'
 );
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(223391252037365660)
@@ -23133,20 +23107,11 @@ wwv_flow_api.create_page_item(
 ,p_item_sequence=>20
 ,p_item_plug_id=>wwv_flow_api.id(259846133795849508)
 ,p_item_source_plug_id=>wwv_flow_api.id(259846133795849508)
-,p_prompt=>'Beschreibung'
 ,p_source=>'PRE_DESCRIPTION'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_TEXTAREA'
-,p_cSize=>30
-,p_cMaxlength=>255
-,p_cHeight=>5
-,p_field_template=>wwv_flow_api.id(288168365490139663)
-,p_item_template_options=>'#DEFAULT#'
+,p_display_as=>'NATIVE_HIDDEN'
 ,p_is_persistent=>'N'
 ,p_attribute_01=>'Y'
-,p_attribute_02=>'N'
-,p_attribute_03=>'N'
-,p_attribute_04=>'BOTH'
 );
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(223391379075365661)
@@ -23155,19 +23120,11 @@ wwv_flow_api.create_page_item(
 ,p_item_sequence=>30
 ,p_item_plug_id=>wwv_flow_api.id(259846133795849508)
 ,p_item_source_plug_id=>wwv_flow_api.id(259846133795849508)
-,p_prompt=>'aktiv'
 ,p_source=>'PRE_IS_ACTIVE'
 ,p_source_type=>'REGION_SOURCE_COLUMN'
-,p_display_as=>'NATIVE_TEXT_FIELD'
-,p_cSize=>30
-,p_cMaxlength=>1
-,p_field_template=>wwv_flow_api.id(288168365490139663)
-,p_item_template_options=>'#DEFAULT#'
+,p_display_as=>'NATIVE_HIDDEN'
 ,p_is_persistent=>'N'
-,p_attribute_01=>'N'
-,p_attribute_02=>'N'
-,p_attribute_04=>'TEXT'
-,p_attribute_05=>'BOTH'
+,p_attribute_01=>'Y'
 );
 wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(259808490369291679)
@@ -23245,8 +23202,8 @@ wwv_flow_api.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_required_role=>'MUST_NOT_BE_PUBLIC_USER'
 ,p_help_text=>unistr('F\00FCr diese Seite ist keine Hilfe verf\00FCgbar.')
-,p_last_updated_by=>'ADC_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20220127142249'
+,p_last_updated_by=>'BUCH_ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20220204164603'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(277657363790632895)
@@ -23510,7 +23467,7 @@ wwv_flow_api.create_region_column(
 ,p_display_sequence=>10
 ,p_value_alignment=>'CENTER'
 ,p_link_target=>'f?p=&APP_ID.:EDIT_PAR:&SESSION.::&DEBUG.:RP,7:P7_PAR_ID,P7_PAR_PGR_ID:&PAR_ID.,&PGR_ID.'
-,p_link_text=>'<i class="fa fa-pencil"/>'
+,p_link_text=>'<span aria-label="Edit"><span class="fa fa-edit" aria-hidden="true" title="Bearbeiten"></span></span>'
 ,p_use_as_row_header=>false
 ,p_enable_hide=>true
 ,p_escape_on_http_output=>true
@@ -23655,7 +23612,7 @@ wwv_flow_api.create_page_button(
 ,p_button_template_id=>wwv_flow_api.id(288168834695139665)
 ,p_button_image_alt=>unistr('G\00FCltigkeitsbereich setzen')
 ,p_button_position=>'REGION_TEMPLATE_EDIT'
-,p_button_redirect_url=>'f?p=&APP_ID.:SET_REALM:&SESSION.::&DEBUG.:RP,:P5_PRE_ID:REALM'
+,p_button_redirect_url=>'f?p=&APP_ID.:SET_REALM:&SESSION.::&DEBUG.:RP,:P5_PRE_ID:DEV'
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(247764126316346691)
@@ -25146,8 +25103,8 @@ wwv_flow_api.create_page(
 ,p_page_template_options=>'#DEFAULT#'
 ,p_required_role=>'MUST_NOT_BE_PUBLIC_USER'
 ,p_help_text=>unistr('F\00FCr diese Seite ist keine Hilfe verf\00FCgbar.')
-,p_last_updated_by=>'ADC_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20220125170238'
+,p_last_updated_by=>'BUCH_ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20220204164652'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(283226037627995435)
@@ -25292,8 +25249,9 @@ wwv_flow_api.create_report_columns(
 ,p_query_column_id=>1
 ,p_column_alias=>'ROW_ID'
 ,p_column_display_sequence=>1
+,p_use_as_row_header=>'N'
 ,p_column_link=>'f?p=&APP_ID.:EDIT_TOGGLE:&SESSION.::&DEBUG.:RP:P12_ROWID:#ROW_ID#'
-,p_column_linktext=>'<i class="fa fa-pencil"/>'
+,p_column_linktext=>'<span aria-label="Edit"><span class="fa fa-edit" aria-hidden="true" title="Bearbeiten"></span></span>'
 ,p_column_alignment=>'CENTER'
 ,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
@@ -25396,8 +25354,9 @@ wwv_flow_api.create_report_columns(
 ,p_column_alias=>'MODULE_ID'
 ,p_column_display_sequence=>1
 ,p_column_heading=>'&nbsp;'
+,p_use_as_row_header=>'N'
 ,p_column_link=>'f?p=&APP_ID.:EDIT_MODULE:&SESSION.::&DEBUG.:RP:P11_PIT_MODULE:#MODULE_ID#'
-,p_column_linktext=>'<i class="fa fa-pencil"/>'
+,p_column_linktext=>'<span aria-label="Edit"><span class="fa fa-edit" aria-hidden="true" title="Bearbeiten"></span></span>'
 ,p_column_alignment=>'CENTER'
 ,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
@@ -25488,8 +25447,9 @@ wwv_flow_api.create_report_columns(
 ,p_column_alias=>'ROW_ID'
 ,p_column_display_sequence=>1
 ,p_column_heading=>'&nbsp;'
+,p_use_as_row_header=>'N'
 ,p_column_link=>'f?p=&APP_ID.:EDIT_CONTEXT:&SESSION.::&DEBUG.:RP:P10_ROWID:#ROW_ID#'
-,p_column_linktext=>'<i class="fa fa-pencil"/>'
+,p_column_linktext=>'<span aria-label="Edit"><span class="fa fa-edit" aria-hidden="true" title="Bearbeiten"></span></span>'
 ,p_disable_sort_column=>'N'
 ,p_derived_column=>'N'
 ,p_include_in_export=>'Y'
@@ -27866,11 +27826,15 @@ wwv_flow_api.create_page(
 ,p_warn_on_unsaved_changes=>'N'
 ,p_first_item=>'AUTO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
+,p_javascript_code_onload=>'$(".a-LinksList-item").addClass("t-Button").addClass("t-Button--pill");'
+,p_inline_css=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'.a-LinksList--lang {text-align: center;}',
+'a.a-LinksList-link {position: relative; z-index: 2;}'))
 ,p_step_template=>wwv_flow_api.id(288136172408139643)
 ,p_page_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'Y'
-,p_last_updated_by=>'APP_ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20201221134959'
+,p_last_updated_by=>'BUCH_ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20220204161116'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(288174541150139683)
@@ -27879,9 +27843,9 @@ wwv_flow_api.create_page_plug(
 ,p_plug_template=>wwv_flow_api.id(288147917539139651)
 ,p_plug_display_sequence=>10
 ,p_plug_display_point=>'BODY'
-,p_attribute_01=>'N'
-,p_attribute_02=>'TEXT'
-,p_attribute_03=>'Y'
+,p_plug_source=>'apex_lang.emit_language_selector_list;'
+,p_plug_source_type=>'NATIVE_PLSQL'
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(288174906424139687)
@@ -27892,11 +27856,8 @@ wwv_flow_api.create_page_button(
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(288168834695139665)
 ,p_button_is_hot=>'Y'
-,p_button_image_alt=>'Log In'
+,p_button_image_alt=>'Anmelden'
 ,p_button_position=>'REGION_TEMPLATE_CREATE'
-,p_button_alignment=>'LEFT'
-,p_grid_new_row=>'Y'
-,p_grid_new_column=>'Y'
 );
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(288174685299139687)
