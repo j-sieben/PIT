@@ -22,6 +22,15 @@ create or replace type msg_param force as object(
     return self as result,
   /**
     Function: msg_param
+      Constructor function for values of type CLOB
+   */
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in clob)
+    return self as result,
+  /**
+    Function: msg_param
       Constructor function for values of type DATE
    */
   constructor function msg_param(

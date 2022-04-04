@@ -9,8 +9,24 @@ as
    C_EXTENSION constant varchar2(10 byte) := '...';
  begin
    self.p_param := substrb(p_param, 1, 128);
-   self.p_value := substrb(p_value, 1, 4000 - length(C_EXTENSION));
+   self.p_value := substrb(p_value, 1, 2000);
    if self.p_value != p_value then
+     self.p_value := self.p_value || C_EXTENSION;
+   end if;
+   return;
+ end;
+ 
+ constructor function msg_param(
+   self in out nocopy msg_param,
+   p_param in varchar2,
+   p_value in clob)
+   return self as result
+ as
+   C_EXTENSION constant varchar2(10 byte) := '...';
+ begin
+   self.p_param := substrb(p_param, 1, 128);
+   self.p_value := dbms_lob.substr(p_value, 2000, 1);
+   if dbms_lob.getlength(p_value) > 2000 then
      self.p_value := self.p_value || C_EXTENSION;
    end if;
    return;
@@ -91,7 +107,7 @@ as
  begin
    self.p_param := substrb(p_param, 1, 128);
    if p_value is not null then
-     self.p_value := substr(p_value.getClobVal(), 1, 3900);
+     self.p_value := substr(p_value.getClobVal(), 1, 2000);
      if self.p_value != p_value.getClobVal() then
        self.p_value := self.p_value || C_EXTENSION;
      end if;

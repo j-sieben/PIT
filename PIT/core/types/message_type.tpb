@@ -63,7 +63,7 @@ as
     self.message_args := p_msg_args;
     
     if sqlcode != 0 then
-      self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 11));
+      self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 12));
       self.stack := pit_util.get_call_stack;
       self.backtrace := pit_util.get_error_stack;
     end if;

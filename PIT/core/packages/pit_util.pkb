@@ -30,8 +30,8 @@ as
       C_FALSY - Boolean FALSE as <flag_type
    */
   C_CTX_DEL constant char(1 byte) := '|';  
-  C_TRUTHY constant flag_type := &C_TRUE.;
-  C_FALSY constant flag_type :=  &C_FALSE.;
+  C_TRUTHY constant flag_type := 'Y';--&C_TRUE.;
+  C_FALSY constant flag_type :=  'N';--&C_FALSE.;
     
   /**
     Group: Private package variables

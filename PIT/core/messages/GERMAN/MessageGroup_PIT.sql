@@ -70,15 +70,6 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'CASE_NOT_FOUND',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^#1# bei Ausführung von CASE-Anweisung nicht gefunden.^',
-    p_pms_description => q'^Eine Option wurde übergeben, für die kein Handler in einer CASE-Anweisung vorlag und die keinen ELSE-Zweig enthält.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
     p_pms_name => 'CTX_CHANGED',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Kontext auf #1# gesetzt.^',
