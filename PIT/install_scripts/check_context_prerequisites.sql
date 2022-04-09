@@ -1,4 +1,5 @@
 
+set termout off
 create or replace function get_install_script
 return varchar2
 as
@@ -18,8 +19,13 @@ begin
   end;
   
   -- Try to find the context (dynamic SQL to avoid compilation problems if no grant exists)
-  execute immediate q'^select count(*) from dba_context where namespace = 'PIT_CTX_' || user^'
-    into l_is_installed;
+  begin
+    execute immediate q'^select count(*) from dba_context where namespace = 'PIT_CTX_' || user^'
+      into l_is_installed;
+  exception
+    when others then
+      l_is_installed := 0;
+  end;
    
   if l_is_installed = 0 then
     dbms_output.put_line('&s1.Globally accessible context not present, trying to create it');
@@ -41,7 +47,6 @@ begin
   return l_script;
 end;
 /
-set termout off
 column script new_value SCRIPT
 column msg new_value MSG
 column with_context new_value WITH_CONTEXT
