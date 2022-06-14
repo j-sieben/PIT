@@ -5,7 +5,7 @@ read OWNER
 echo ${OWNER}
 
 echo -n "Enter password for ${OWNER} [ENTER] "
-read CLIENTPWD
+read -s CLIENTPWD
 
 echo -n "Enter service name for the database or PDB [ENTER] "
 read SERVICE
@@ -16,15 +16,11 @@ read REMOTEOWNER
 echo ${REMOTEOWNER}
 
 echo -n "Enter password for ${REMOTEOWNER} [ENTER] "
-read REMOTEPWD
+read -s REMOTEPWD
 
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 
-echo @install_scripts/grant_client_access.sql ${USER} | sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE}
+sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE} @./install_scripts/grant_client_access.sql
 
-echo @install_scripts/create_client_synonyms.sql | sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE}
-
-pause
-EOF
-
+sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE} @./install_scripts/create_client_synonyms.sql

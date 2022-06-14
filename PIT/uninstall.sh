@@ -16,6 +16,3 @@ export NLS_LANG
 sqlplus /nolog<<EOF
 connect ${SYSPWD} as sysdba 
 @pit_uninstall ${OWNER} ${USER}
-pause
-EOF
-

@@ -5,7 +5,7 @@ read OWNER
 echo ${OWNER}
 
 echo -n "Enter password for ${OWNER} [ENTER] "
-read CLIENTPWD
+read -s CLIENTPWD
 
 echo -n "Enter service name for the database or PDB [ENTER] "
 read SERVICE
@@ -16,7 +16,7 @@ read REMOTEOWNER
 echo ${REMOTEOWNER}
 
 echo -n "Enter password for ${REMOTEOWNER} [ENTER] "
-read REMOTEPWD
+read -s REMOTEPWD
 
 echo -n "Enter APEX workspace where this application should be installed at [ENTER] "
 read APPWS
@@ -33,10 +33,6 @@ echo ${APPID}
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 
-echo @install_scripts/grant_apex_access.sql ${REMOTEOWNER} | sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE}
+echo @./install_scripts/grant_apex_access.sql ${REMOTEOWNER} | sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE}
 
-echo @install_scripts/install_apex.sql ${APPWD} ${APPALIAS} ${APPID} | sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE}
-
-pause
-EOF
-
+echo @./install_scripts/install_apex.sql ${APPWD} ${APPALIAS} ${APPID} | sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE}
