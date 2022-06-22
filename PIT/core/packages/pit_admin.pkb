@@ -41,6 +41,8 @@ as
   C_FATAL constant binary_integer := 20;
   C_ERROR constant binary_integer := 30;
   C_DEFAULT_LANGUAGE constant number := 10;
+  C_EXCEPTION_PREFIX constant varchar2(4) := '&EXCEPTION_PREFIX.';
+  C_EXCEPTION_POSTFIX constant varchar2(4) := '&EXCEPTION_POSTFIX.';
   
   /**
     Group: Private package variables
@@ -86,6 +88,8 @@ as
     l_message_length binary_integer;
     C_MSG_TOO_LONG constant varchar2(200) := 
       q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
+    C_ERROR_MUST_BE_NEGATIVE constant varchar2(200) := 
+      q'~Predefined error numbers must be negative.~';
     C_PREDEFINED_ERROR constant varchar2(200) :=
       q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
   begin
@@ -97,6 +101,10 @@ as
                      '#MESSAGE#', p_row.pms_name,
                      '#LENGTH#', l_message_length));
        raise_application_error(-20000, l_message);
+    end if;  
+    
+    if p_row.pms_custom_error >= 0 then
+       raise_application_error(-20000, C_ERROR_MUST_BE_NEGATIVE);
     end if;
     
     l_predefined_error := pit_util.check_error_number_exists(
@@ -798,15 +806,15 @@ end;
   procedure merge_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_pmg_description in pit_message_group.pmg_description%type default null,
-    p_pmg_error_prefix in pit_message_group.pmg_error_prefix%type default '&EXCEPTION_PREFIX.',
-    p_pmg_error_postfix in pit_message_group.pmg_error_postfix%type default '&EXCEPTION_POSTFIX.')
+    p_pmg_error_prefix in pit_message_group.pmg_error_prefix%type default null,
+    p_pmg_error_postfix in pit_message_group.pmg_error_postfix%type default null)
   as
     l_row pit_message_group%rowtype;
   begin
     l_row.pmg_name := p_pmg_name;
     l_row.pmg_description := p_pmg_description;
-    l_row.pmg_error_prefix := p_pmg_error_prefix;
-    l_row.pmg_error_postfix := p_pmg_error_postfix;
+    l_row.pmg_error_prefix := coalesce(p_pmg_error_prefix, C_EXCEPTION_PREFIX);
+    l_row.pmg_error_postfix := coalesce(p_pmg_error_postfix, C_EXCEPTION_POSTFIX);
     
     merge_message_group(l_row);    
   end merge_message_group;
