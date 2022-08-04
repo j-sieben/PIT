@@ -42,6 +42,7 @@ prompt &h3.Create UI-VIEWS
 @&tools.install_view pit_ui_lov_parameter_realm
 @&tools.install_view pit_ui_lov_parameter_type
 @&tools.install_view pit_ui_lov_trace_level
+@&tools.install_view pit_ui_lov_uttm_type
 
 prompt &h3.Create UI-MESSAGES
 @@&apex_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PIT_UI.sql

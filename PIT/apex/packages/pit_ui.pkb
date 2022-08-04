@@ -22,7 +22,8 @@ as
     pms_pml_name pit_message_language.pml_name%TYPE,
     pti_pmg_list char_table,
     pti_pml_name pit_message_language.pml_name%TYPE,
-    par_pgr_list char_table
+    par_pgr_list char_table,
+    uttm_type_list char_table
   );
   g_export_row export_rec;
 
@@ -210,6 +211,7 @@ as
     utl_text.string_to_table(utl_apex.get_value('pti_pmg_list'), g_export_row.pti_pmg_list);
     g_export_row.pti_pml_name := utl_apex.get_value('pti_pml_name');
     utl_text.string_to_table(utl_apex.get_value('par_pgr_list'), g_export_row.par_pgr_list);
+    utl_text.string_to_table(utl_apex.get_value('uttm_type_list'), g_export_row.uttm_type_list);
     
     pit.leave_detailed;
   end copy_export;
@@ -394,7 +396,7 @@ as
     l_zip_file blob;
   begin
     pit.enter_mandatory(
-      p_action => 'expor_groups',
+      p_action => 'export_groups',
       p_params => msg_params(
                     msg_param('p_target', p_target)));
                     
@@ -428,7 +430,7 @@ as
   
   
   /**
-    Procedure: explrt_local_parameters
+    Procedure: export_local_parameters
       Method to export local parameters. Is used to export all locally overwritten or defined parameters.
    */
   procedure export_local_parameters
@@ -442,6 +444,47 @@ as
     
     pit.leave_mandatory;
   end export_local_parameters;
+  
+  
+  /**
+    Procedure: export_utl_text_templates
+      Method to export UTL_TEXT templates. Is used to export all as defined in the list of UTTM_TYPES.
+   */
+  procedure export_utl_text_templates(
+    p_uttm_list in char_table)
+  as
+    l_clob clob;
+    l_group_file_name pit_util.ora_name_type;
+    l_zip_file_name pit_util.ora_name_type;
+    l_zip_file blob;
+  begin
+    pit.enter_mandatory(
+      p_action => 'export_utl_text_templates');
+                    
+    l_zip_file_name := 'ExportUTTM.zip';
+         
+    for i in 1 .. p_uttm_list.count loop
+      l_group_file_name := 'utl_text_templates_' || p_uttm_list(i) || '.sql';
+      l_clob := utl_text.get_templates(char_table(p_uttm_list(i)));
+                   
+      apex_zip.add_file(
+        p_zipped_blob => l_zip_file,
+        p_file_name => l_group_file_name,
+        p_content => utl_text.clob_to_blob(l_clob));
+    end loop;
+      
+    apex_zip.finish(l_zip_file);
+                 
+    utl_apex.download_blob(
+      p_blob => l_zip_file,
+      p_file_name => l_zip_file_name);
+    
+    pit.leave_mandatory;
+  exception
+    when others then
+      pit.handle_exception(msg.SQL_ERROR);
+      raise;
+  end export_utl_text_templates;
   
   
   /**
@@ -1086,6 +1129,11 @@ as
           p_page_item => 'PAR_PGR_LIST');
       when 'EXPORT_LOCAL_PAR' then
         null;
+      when 'EXPORT_UTTM' then
+        utl_apex.assert(
+          p_condition => g_export_row.uttm_type_list.count > 0, 
+          p_message_name => msg.PIT_UI_PARAMETER_REQUIRED,
+          p_page_item => 'PTI_UTTM_LIST');
       else
         utl_apex.set_error(
           p_page_item => null,
@@ -1140,6 +1188,8 @@ as
           p_pmg_list => g_export_row.par_pgr_list);
       when 'EXPORT_LOCAL_PAR' then
         export_local_parameters;
+      when 'EXPORT_UTTM' then
+        export_utl_text_templates(g_export_row.uttm_type_list);
       else
         utl_apex.set_error(
           p_page_item => null,
