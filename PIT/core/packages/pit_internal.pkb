@@ -653,6 +653,7 @@ as
     log_event(p_severity, p_message_name, p_msg_args, p_affected_id, p_error_code);
     
     if p_severity = C_LEVEL_FATAL then
+      pit_call_stack.initialize;
       raise_error(C_LEVEL_FATAL, p_message_name, p_msg_args, p_affected_id, p_error_code);
     else
       g_active_message := null;
