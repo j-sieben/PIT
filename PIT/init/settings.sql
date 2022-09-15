@@ -1,12 +1,12 @@
 set termout off
 -- Choose your FLAG_TYPE datatype to adhere to your local conventions
-define FLAG_TYPE="char(1 byte)";
-define C_TRUE="'Y'";
-define C_FALSE="'N'";
+-- define FLAG_TYPE="char(1 byte)";
+-- define C_TRUE="'Y'";
+-- define C_FALSE="'N'";
 
---define FLAG_TYPE="number(1, 0)";
---define C_TRUE=1;
---define C_FALSE=0;
+define FLAG_TYPE="number(1, 0)";
+define C_TRUE=1;
+define C_FALSE=0;
    
 -- Comment the following query out if you want to assign a specific tablespace for new users
 col default_tablespace new_val DEFAULT_TABLESPACE format a128

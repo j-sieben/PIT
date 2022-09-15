@@ -18,7 +18,7 @@ select /*+ no_merge (s)*/
          decode(par.par_timestamp_value, null, null, ', Timestamp: ' || to_char(par.par_timestamp_value, s.timestamp_format)) ||
          decode(par.par_boolean_value, null, null, ', Boolean: ' || case par.par_boolean_value when s.c_true then 'true' else 'false' end),
          ', ') par_value,
-       case coalesce(par.par_is_modifiable, pgr.pgr_is_modifiable) when 'Y' then s.flg_true else flg_false end par_is_modifiable,
+       case coalesce(par.par_is_modifiable, pgr.pgr_is_modifiable) when s.c_true then s.flg_true else flg_false end par_is_modifiable,
        par.par_validation_string
   from parameter_vw par
   join parameter_group pgr

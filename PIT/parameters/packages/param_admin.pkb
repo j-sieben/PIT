@@ -11,8 +11,8 @@ as
       Published under MIT licence
    */
   
-  c_true constant char(1 byte) := 'Y';--&FLAG_TYPE. := &C_TRUE.;
-  c_false constant char(1 byte) := 'N';--&FLAG_TYPE. := &C_FALSE.;
+  c_true constant &FLAG_TYPE. := &C_TRUE.;
+  c_false constant &FLAG_TYPE. := &C_FALSE.;
 
   /**
     Group: Helper Methods

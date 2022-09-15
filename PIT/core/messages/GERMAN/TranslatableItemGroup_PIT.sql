@@ -7,19 +7,19 @@ begin
     p_pmg_error_postfix => 'ERR');
 
   pit_admin.merge_translatable_item(
-    p_pti_id => 'BOOLEAN_N',
+    p_pti_id => 'BOOLEAN_&C_FALSE.',
     p_pti_pml_name => q'^GERMAN^',
     p_pti_pmg_name => q'^PIT^',
-    p_pti_name => q'^N^',
+    p_pti_name => q'^&C_FALSE.^',
     p_pti_display_name => q'^Nein^',
     p_pti_description => q'^Boolescher Wert für FALSCH^'
   );
 
   pit_admin.merge_translatable_item(
-    p_pti_id => 'BOOLEAN_Y',
+    p_pti_id => 'BOOLEAN_&C_TRUE.',
     p_pti_pml_name => q'^GERMAN^',
     p_pti_pmg_name => q'^PIT^',
-    p_pti_name => q'^Y^',
+    p_pti_name => q'^&C_TRUE.^',
     p_pti_display_name => q'^Ja^',
     p_pti_description => q'^Boolescher Wert für WAHR^'
   );

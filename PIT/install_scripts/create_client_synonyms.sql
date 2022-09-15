@@ -47,4 +47,4 @@ prompt &h1.Registering PIT output modules
 
 prompt &h1.Finished PIT client registration
 
-exit
+pause
