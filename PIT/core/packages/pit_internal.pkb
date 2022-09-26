@@ -417,14 +417,14 @@ as
     -- initialize
     g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_error_code);
     
-    if g_active_message.severity <= coalesce(p_log_threshold, C_LEVEL_ALL) then
+    if g_active_message.severity <= p_log_threshold then
       -- temporarily set the new context without raising the context change event
       l_preset_context := pit_context.get_context;
       pit_context.set_context(
         p_log_level => p_log_threshold,
         p_trace_level => l_preset_context.trace_level,
         p_trace_timing => l_preset_context.trace_timing,
-        p_log_modules => p_log_modules,
+        p_log_modules => coalesce(p_log_modules, pit_context.get_active_module_list),
         p_context_has_changed => l_context_has_changed);
         
       raise_event(

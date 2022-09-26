@@ -669,6 +669,27 @@ as
     return g_active_modules;
   end get_active_modules;
   
+  
+  /**
+    Function: get_active_module_list
+      See <PIT_INTERNAL.get_active_module_list>
+   */
+  function get_active_module_list
+  return varchar2
+  as
+    l_module pit_util.ora_name_type;
+    l_module_list pit_util.max_char;
+  begin
+    l_module := g_active_modules.FIRST;
+    l_module_list := l_module;
+    l_module := g_active_modules.NEXT(l_module);
+    while l_module is not null loop
+      l_module_list := l_module_list || ',' || l_module;
+      l_module := g_active_modules.NEXT(l_module);
+    end loop;
+    return l_module_list;
+  end get_active_module_list;
+  
   /**
     Function: report_module_status
       See <PIT_INTERNAL.report_module_status>
