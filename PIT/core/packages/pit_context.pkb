@@ -749,7 +749,11 @@ as
       raise invalid_trace_flag;
     end if;
     if l_args(4) is not null then
-      l_log_modules := pit_util.string_to_table(l_args(4));
+      if instr(l_args(4), ',') > 0 then
+        l_log_modules := pit_util.string_to_table(l_args(4), ',');
+      else
+        l_log_modules := pit_util.string_to_table(l_args(4));
+      end if;
       for i in 1 .. l_log_modules.count loop
         if not g_all_modules.exists(l_log_modules(i)) then
           raise_application_error(-20003, 'Unknown log module ' || l_log_modules(i));
