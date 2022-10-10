@@ -13,9 +13,6 @@ set /p DefaulTablespace=Optionally enter default tablespace:
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-echo Installing PIT at user %InstallUser% on %SID%, language %DefaultLanguage%. Continue?
-pause
-
-echo @install_scripts/install.sql %DefaultLanguage% %DefaultTablespace% | sqlplus %InstallUser%/%PWD%@%SID% 
+sqlplus %InstallUser%/%PWD%@%SID%  @install_scripts/install.sql %DefaultLanguage% %DefaultTablespace%
 
 @echo off

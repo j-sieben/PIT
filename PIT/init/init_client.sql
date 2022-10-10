@@ -5,24 +5,29 @@ set feedback off
 set lines 120
 set pages 9999
 whenever sqlerror exit
+
+
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".    - "
+
 set termout off
 
--- make parameter 1 optional
-col 1 new_val 1
 col pit_user new_val PIT_USER format a128
 col remote_user new_val REMOTE_USER format a128
 
-select '' "1"
-  from dual
- where null is not null;
  
-select owner pit_user, 
-       case when instr('&1.', '[') > 0 
+select case when instr('&1.', '[') > 0 
        then substr(upper('&1.'), instr('&1.', '[') + 1, length('&1.') - instr('&1.', '[') - 1)
-       else coalesce(upper('&1.'), user) end remote_user
-  from all_objects
- where object_name = 'PIT'
-   and object_type = 'PACKAGE';
+       else coalesce(upper('&1.'), user) end pit_user, 
+       case when instr('&2.', '[') > 0 
+       then substr(upper('&2.'), instr('&2.', '[') + 1, length('&2.') - instr('&2.', '[') - 1)
+       else coalesce(upper('&2.'), user) end remote_user
+  from dual;
+  
+define INSTALL_USER = &PIT_USER.
  
 -- Define length of ORA_NAME_TYPE according to oracle version
 col ora_name_type new_val ORA_NAME_TYPE format a128
@@ -32,10 +37,4 @@ select lower(data_type) || '(' || data_length || case char_used when 'B' then ' 
   from all_tab_columns
  where table_name = 'USER_TABLES'
    and column_name = 'TABLE_NAME';
-
-define section="********************************************************************************"
-define h1="*** "
-define h2="**  "
-define h3="*   "
-define s1=".    - "
 set termout on

@@ -18,6 +18,6 @@ for /f "tokens=*" %%a in ('%RemotePWD%') do set RemotePWD=%%a
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-echo @install_scripts/grant_client_access %RemoteUser% |sqlplus %InstallUser%/%InstallPWD%@%SID% 
+echo @install_scripts/grant_client_access %InstallUser% %RemoteUser% | sqlplus %InstallUser%/%InstallPWD%@%SID% 
 
-echo @install_scripts/create_client_synonyms | sqlplus %RemoteUser%/%RemotePWD%@%SID%
+echo @install_scripts/create_client_synonyms %InstallUser% %RemoteUser% | sqlplus %RemoteUser%/%RemotePWD%@%SID%

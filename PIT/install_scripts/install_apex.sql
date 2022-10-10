@@ -11,12 +11,15 @@
   -- UTL_APEX must be installed. As this installation needs access to PIT as well, requirement 1 is satisfied
   
   Parameters:
-  -- 1: APEX workspace name, into which the APEX application will be installed. Needs access to Owner of PIT
-  -- 2: ALIAS of the APEX-application. 
-  -- 3: APP_ID of the APEX-application.
+  -- 1: Owner of PIT
+  -- 2. APEX schema
+  -- 3: APEX workspace name, into which the APEX application will be installed. Needs access to Owner of PIT
+  -- 4: ALIAS of the APEX-application. 
+  -- 5: APP_ID of the APEX-application.
 */
 
-@init/init_apex.sql &1. &2. &3.
+@init/init_apex.sql &1. &2. &3. &4. &5.
+@init/settings.sql
 
 prompt &h1.Checking installation prerequisites
 @install_scripts/check_apex_prerequisites.sql

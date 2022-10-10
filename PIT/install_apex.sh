@@ -33,6 +33,6 @@ echo ${APPID}
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 
-echo @./install_scripts/grant_apex_access.sql ${REMOTEOWNER} | sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE}
+sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE} @./install_scripts/grant_apex_access.sql ${OWNER} ${REMOTEOWNER}
 
-echo @./install_scripts/install_apex.sql ${APPWD} ${APPALIAS} ${APPID} | sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE}
+sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE} @./install_scripts/install_apex.sql ${OWNER} ${REMOTEOWNER} ${APPWD} ${APPALIAS} ${APPID}

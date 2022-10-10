@@ -6,7 +6,7 @@
   Parameter:
   - REMOTE_USER:  database user who will be enabled to use PIT
 */
-@init/init_client.sql &1
+@init/init_client.sql &1. &2.
 
 prompt Connected &PIT_USER.
 

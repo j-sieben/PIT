@@ -21,5 +21,3 @@ set nls_lang=GERMAN_GERMANY.AL32UTF8
 echo @install_scripts/revoke_client %RemoteUser%| sqlplus %InstallUser%/%InstallPWD%@%SID%
 
 echo @install_scripts/unregister_client | sqlplus %RemoteUser%/%RemotePWD%@%SID%
-
-pause

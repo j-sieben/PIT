@@ -465,7 +465,7 @@ as
          
     for i in 1 .. p_uttm_list.count loop
       l_group_file_name := 'utl_text_templates_' || p_uttm_list(i) || '.sql';
-      l_clob := utl_text.get_templates(char_table(p_uttm_list(i)));
+      l_clob := utl_text_admin.get_templates(char_table(p_uttm_list(i)));
                    
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,

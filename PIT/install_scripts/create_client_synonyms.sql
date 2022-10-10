@@ -9,17 +9,20 @@
 
 set termout off
 
-@init/init_client.sql
+@init/init_client.sql &1. &2.
 
--- Overwrite PIT_USER from init_client
-col pit_user new_val PIT_USER format a128
-select owner pit_user
-  from all_objects
- where object_type = 'PACKAGE'
-   and object_name = 'PIT';
-   
+prompt &s1.Checking whether PIT exists at user &PIT_USER.
+declare
+  l_pit_exists binary_integer;
 begin
-  if '&PIT_USER.' is null then
+  select count(*)
+    into l_pit_exists
+    from all_objects
+   where object_type = 'PACKAGE'
+     and object_name = 'PIT'
+     and owner = '&PIT_USER.';
+     
+  if l_pit_exists = 0 then
     raise_application_error(-20000, 'No PIT installation found. Check whether the grants have been set.');
   end if;
 end;
@@ -47,4 +50,5 @@ prompt &h1.Registering PIT output modules
 
 prompt &h1.Finished PIT client registration
 
-pause
+exit
+

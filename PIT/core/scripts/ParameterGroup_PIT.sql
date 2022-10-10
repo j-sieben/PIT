@@ -1,3 +1,6 @@
+declare
+  is_true varchar2(10) := replace(&C_TRUE., '''');
+  is_false varchar2(10) := replace(&C_FALSE., '''');
 begin
 
   param_admin.edit_parameter_group(
@@ -34,8 +37,8 @@ begin
   param_admin.edit_parameter(
     p_par_id => 'CONTEXT_DEBUG'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Named context, switches logging on [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (' || &C_TRUE. || ',' || &C_FALSE. || ')|MODULE_LIST]'
-   ,p_par_string_value => '70|50|' || &C_TRUE. || '|PIT_CONSOLE'
+   ,p_par_description => 'Named context, switches logging on [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (' || is_true || ',' || is_false || ')|MODULE_LIST]'
+   ,p_par_string_value => '70|50|' || is_true || '|PIT_CONSOLE'
    ,p_par_boolean_value => null
    ,p_par_is_modifiable => null
   );
@@ -43,8 +46,8 @@ begin
   param_admin.edit_parameter(
     p_par_id => 'CONTEXT_DEFAULT'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Named context, default values [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (' || &C_TRUE. || ',' || &C_FALSE. || ')|MODULE_LIST]'
-   ,p_par_string_value => '30|10|' || &C_FALSE. || '|PIT_TABLE:PIT_APEX'
+   ,p_par_description => 'Named context, default values [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (' || is_true || ',' || is_false || ')|MODULE_LIST]'
+   ,p_par_string_value => '30|10|' || is_false || '|PIT_TABLE:PIT_APEX'
    ,p_par_boolean_value => null
    ,p_par_is_modifiable => null
   );
@@ -52,8 +55,8 @@ begin
   param_admin.edit_parameter(
     p_par_id => 'CONTEXT_OFF'
    ,p_par_pgr_id => 'PIT'
-   ,p_par_description => 'Named context, switches logging off [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (' || &C_TRUE. || ',' || &C_FALSE. || ')|MODULE_LIST]'
-   ,p_par_string_value => '10|10|' || &C_FALSE. || '|'
+   ,p_par_description => 'Named context, switches logging off [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (' || is_true || ',' || is_false || ')|MODULE_LIST]'
+   ,p_par_string_value => '10|10|' || is_false || '|'
    ,p_par_boolean_value => null
    ,p_par_is_modifiable => null
   );

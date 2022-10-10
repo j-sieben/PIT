@@ -4,11 +4,12 @@
   Call this script either directly or by using the bat/sh script files.
   
   Parameter:
+  - PIT_USER: Owner of PIT
   - REMOTE_USER:  database user who will be enabled to use PIT
 */
-@init/init_client.sql &1
+@init/init_client.sql &1. &2.
 
-prompt Connected &PIT_USER.
+prompt Connected &PIT_USER., granting access to &REMOTE_USER.
 
 prompt
 prompt &section.
