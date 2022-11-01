@@ -117,6 +117,7 @@ as
                      '#NAME#', l_predefined_error.error_name,
                      '#OWNER#', l_predefined_error.owner,
                      '#PKG#', l_predefined_error.package_name));
+       raise_application_error(-20000, l_message);
     end if;
   end check_error;
   
@@ -177,22 +178,26 @@ as
       p_pmg_name - Message group to filter output
       p_file_name - Out parameter that provides the file name for the Script file
       p_script - Out parameter that contains the SQL script created
+      p_pml_name - Optional target language. Retrieves all messages in a translated language, if present.
    */
   procedure script_messages(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_file_name out nocopy pit_util.ora_name_type,
-    p_script out nocopy clob)
+    p_script out nocopy clob,
+    p_pml_name in pit_message_language.pml_name%type default null)
   as
     cursor message_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
       select m.*, rank() over (partition by pms_name order by pml_default_order) rang
         from pit_message m
-        join pit_message_language ml
-          on m.pms_pml_name = ml.pml_name
-       where ml.pml_default_order > 0
-         and (m.pms_pmg_name = p_pmg_name
-          or p_pmg_name is null)
-       order by m.pms_name, ml.pml_default_order;
+        join (select pml_name, max(pml_default_order) pml_default_order
+                from pit_message_language_v
+               where pml_default_order > 0
+               group by pml_name) ml
+          on pms_pml_name = pml_name
+       where pms_pmg_name = p_pmg_name
+          or p_pmg_name is null
+       order by pms_name, pml_default_order;
     l_chunk pit_util.max_char;
     C_START constant varchar2(200) := q'~begin
 ~';
@@ -218,8 +223,13 @@ end;
     p_pms_description => q'^#DESCRIPTION#^',
     p_pms_pml_name => '#LANGUAGE#');
 ~';
+    l_actual_language varchar2(128 byte);
   begin
     -- Initialize
+    if p_pml_name is not null then
+      l_actual_language := substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1);
+      dbms_session.set_nls('NLS_LANGUAGE', p_pml_name);
+    end if;
     p_file_name := 'MessageGroup_' || p_pmg_name || '.sql';
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
@@ -240,17 +250,23 @@ end;
                      '#LANGUAGE#', msg.pms_pml_name,
                      '#ERRNO#', coalesce(to_char(msg.pms_custom_error), 'null')));
       else
-        l_chunk := l_chunk
-                || pit_util.bulk_replace(C_TRANSLATE_TEMPLATE, char_table(
-                     '#NAME#', msg.pms_name,
-                     '#TEXT#', msg.pms_text,
-                     '#DESCRIPTION#', msg.pms_description,
-                     '#LANGUAGE#', msg.pms_pml_name));
+        if p_pml_name is null then
+          l_chunk := l_chunk
+                  || pit_util.bulk_replace(C_TRANSLATE_TEMPLATE, char_table(
+                       '#NAME#', msg.pms_name,
+                       '#TEXT#', msg.pms_text,
+                       '#DESCRIPTION#', msg.pms_description,
+                       '#LANGUAGE#', msg.pms_pml_name));
+        end if;
       end case;
     end loop;
 
     pit_util.clob_append(p_script, l_chunk);
     pit_util.clob_append(p_script, C_END);
+    
+    if p_pml_name is not null then
+      dbms_session.set_nls('NLS_LANGUAGE', l_actual_language);
+    end if;
   end script_messages;
   
   
@@ -266,17 +282,20 @@ end;
   procedure script_translatable_items(
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_file_name out nocopy pit_util.ora_name_type,
-    p_script out nocopy clob)
+    p_script out nocopy clob,
+    p_pml_name in pit_message_language.pml_name%type default null)
   as
     cursor pti_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
       select i.*, rank() over (partition by pti_id order by pml_default_order) rang
         from pit_translatable_item i
-        join pit_message_language ml
-          on i.pti_pml_name = ml.pml_name
-       where ml.pml_default_order > 0
-         and i.pti_pmg_name = p_pmg_name
-       order by i.pti_id, ml.pml_default_order;
+        join (select pml_name, max(pml_default_order) pml_default_order
+                from pit_message_language_v
+               where pml_default_order > 0
+               group by pml_name) ml
+          on pti_pml_name = pml_name
+       where pti_pmg_name = p_pmg_name
+       order by i.pti_id, pml_default_order;
     l_chunk pit_util.max_char;
     C_START constant varchar2(200) := q'~begin
 ~';
@@ -294,8 +313,13 @@ end;
     p_pti_description => q'^#PTI_DESCRIPTION_NAME#^'
   );
 ~';
+    l_actual_language varchar2(128 byte);
   begin
     -- Initialize
+    if p_pml_name is not null then
+      l_actual_language := substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1);
+      dbms_session.set_nls('NLS_LANGUAGE', p_pml_name);
+    end if;
     p_file_name := 'TranslatableItemGroup_' || p_pmg_name || '.sql';
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
@@ -314,6 +338,10 @@ end;
     end loop;
     
     pit_util.clob_append(p_script, C_END);
+    
+    if p_pml_name is not null then
+      dbms_session.set_nls('NLS_LANGUAGE', l_actual_language);
+    end if;
   end script_translatable_items;
   
   
@@ -1241,15 +1269,16 @@ end;
     p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
     p_file_name out nocopy pit_util.ora_name_type,
-    p_script out nocopy clob)
+    p_script out nocopy clob,
+    p_target_language in pit_message_language.pml_name%type default null)
   as
   begin
   
     case p_target
     when C_TARGET_PMS then
-      script_messages(p_pmg_name, p_file_name, p_script);
+      script_messages(p_pmg_name, p_file_name, p_script, p_target_language);
     when C_TARGET_PTI then
-      script_translatable_items(p_pmg_name, p_file_name, p_script);
+      script_translatable_items(p_pmg_name, p_file_name, p_script, p_target_language);
     when C_TARGET_PAR then
       p_script := param_admin.export_parameter_group(p_pmg_name);
       p_file_name := 'ParameterGroup_' || p_pmg_name || '.sql';

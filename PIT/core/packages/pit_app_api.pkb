@@ -296,7 +296,8 @@ as
     p_target pit_util.ora_name_type,
     p_group_name in pit_util.ora_name_type,
     p_group_file_name out nocopy pit_util.ora_name_type,
-    p_script out nocopy clob)
+    p_script out nocopy clob,
+    p_target_language in pit_message_language.pml_name%type default null)
   as
   begin
     case 
@@ -305,7 +306,8 @@ as
           p_pmg_name => p_group_name,
           p_target => p_target,
           p_file_name => p_group_file_name,
-          p_script => p_script);
+          p_script => p_script,
+          p_target_language => p_target_language);
       when p_target = pit_app_api.C_TARGET_PAR then
         p_script := param_admin.export_parameter_group(p_group_name);
         p_group_file_name := 'ParameterGroup_' || p_group_name || '.sql';

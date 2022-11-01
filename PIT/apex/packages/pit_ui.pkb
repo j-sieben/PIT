@@ -388,7 +388,8 @@ as
    */
   procedure export_groups(
     p_target pit_util.ora_name_type,
-    p_pmg_list in char_table)
+    p_pmg_list in char_table,
+    p_target_language in pit_util.ora_name_type)
   as
     l_clob clob;
     l_group_file_name pit_util.ora_name_type;
@@ -407,7 +408,8 @@ as
         p_target => p_target,
         p_group_name => p_pmg_list(i),
         p_group_file_name => l_group_file_name,
-        p_script => l_clob);
+        p_script => l_clob,
+        p_target_language => p_target_language);
                    
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,
@@ -1169,7 +1171,8 @@ as
       when 'EXPORT_PMS' then
         export_groups(
           p_target => pit_app_api.C_TARGET_PMS, 
-          p_pmg_list => g_export_row.pms_pmg_list);
+          p_pmg_list => g_export_row.pms_pmg_list,
+          p_target_language => g_export_row.pms_pml_name);
       when 'TRANSLATE_PTI' then
         translate_groups(
           p_target => pit_app_api.C_TARGET_PTI,
@@ -1181,11 +1184,13 @@ as
       when 'EXPORT_PTI' then
         export_groups(
           p_target => pit_app_api.C_TARGET_PTI, 
-          p_pmg_list => g_export_row.pti_pmg_list);
+          p_pmg_list => g_export_row.pti_pmg_list,
+          p_target_language => g_export_row.pms_pml_name);
       when 'EXPORT_PAR' then
         export_groups(
           p_target => pit_app_api.C_TARGET_PAR, 
-          p_pmg_list => g_export_row.par_pgr_list);
+          p_pmg_list => g_export_row.par_pgr_list,
+          p_target_language => g_export_row.pms_pml_name);
       when 'EXPORT_LOCAL_PAR' then
         export_local_parameters;
       when 'EXPORT_UTTM' then
