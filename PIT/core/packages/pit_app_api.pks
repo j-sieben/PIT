@@ -30,11 +30,46 @@ as
    */
   
   /**
+    Group: Subtypes
+   */
+  subtype pit_name_type is pit_util.ora_name_type;
+  subtype pit_flag_type is pit_util.flag_type;
+  
+  /*
+    Types: Types for editing master data
+      parameter_group_rowtype - Row of PARAMETER_GROUP
+      parameter_realm_rowtype - Row of PARAMETER_REALM
+      parameter_v_rowtype - Row of PARAMETER_V
+      pit_message_rowtype - Row of PIT_MESSAGE
+      pit_message_group_rowtype - Row of PIT_MESSAGE_GROUP
+   */
+  subtype parameter_group_rowtype is parameter_group%rowtype;
+  type parameter_group_table is table of parameter_group_rowtype;
+  subtype parameter_type_rowtype is parameter_type%rowtype;
+  type parameter_type_table is table of parameter_type_rowtype;
+  subtype parameter_realm_rowtype is parameter_realm%rowtype;
+  type parameter_realm_table is table of parameter_realm_rowtype;
+  subtype parameter_realm_v_rowtype is parameter_realm_v%rowtype;
+  type parameter_realm_v_table is table of parameter_realm_v_rowtype;
+  subtype parameter_v_rowtype is parameter_v%rowtype;
+  type parameter_table is table of parameter_v_rowtype;
+  subtype pit_message_rowtype is pit_message%rowtype;
+  type pit_message_table is table of pit_message_rowtype;
+  subtype pit_message_group_rowtype is pit_message_group%rowtype;
+  type pit_message_group_table is table of pit_message_group_rowtype;
+  subtype pit_message_severity_rowtype is pit_message_severity_v%rowtype;
+  type pit_message_severity_table is table of pit_message_severity_rowtype;
+  subtype pit_message_language_rowtype is pit_message_language_v%rowtype;
+  type pit_message_language_table is table of pit_message_language_rowtype;
+  subtype pit_trace_level_rowtype is pit_trace_level_v%rowtype;
+  type pit_trace_level_table is table of pit_trace_level_rowtype;
+  
+  /**
     Group: Public Constants
    */
   /** 
     Constants: Export groups
-      Target distinguish between areas of similar items to streamline the API
+      Target distinguishes between areas of similar items to streamline the API
       
       C_TARGET_PMS - Messages
       C_TARGET_PTI - Translatable Items
@@ -43,6 +78,99 @@ as
   C_TARGET_PMS constant pit_util.ora_name_type := pit_admin.C_TARGET_PMS;
   C_TARGET_PTI constant pit_util.ora_name_type := pit_admin.C_TARGET_PTI;
   C_TARGET_PAR constant pit_util.ora_name_type := pit_admin.C_TARGET_PAR;
+  
+  /**
+    Group: Data access methods
+   */
+  /**
+    Function: get_pit_message_table
+      Method to return the contet of PIT_MESSAGE
+   */
+  function get_pit_message_table
+    return pit_message_table
+    pipelined;
+    
+  
+  /**
+    Function: get_parameter_type_table
+      Method to return the contet of PARAMETER_TYPE
+   */
+  function get_parameter_type_table
+    return parameter_type_table
+    pipelined;
+    
+  
+  /**
+    Function: get_parameter_realm_table
+      Method to return the contet of PARAMETER_REALM
+   */
+  function get_parameter_realm_table
+    return parameter_realm_table
+    pipelined;
+    
+  
+  /**
+    Function: get_parameter_realm_view
+      Method to return the contet of PARAMETER_REALM_V
+   */
+  function get_parameter_realm_view
+    return parameter_realm_v_table
+    pipelined;
+    
+  
+  /**
+    Function: get_parameter_group_table
+      Method to return the contet of PARAMETER_GROUP
+   */
+  function get_parameter_group_table
+    return parameter_group_table
+    pipelined;
+    
+  
+  /**
+    Function: get_parameter_table
+      Method to return the contet of PARAMETER
+   */
+  function get_parameter_table
+    return parameter_table
+    pipelined;
+    
+  
+  /**
+    Function: get_pit_message_language_table
+      Method to return the contet of PIT_MESSAGE_SEVERITY_V
+   */
+  function get_pit_message_language_table
+    return pit_message_language_table
+    pipelined;
+    
+  
+  /**
+    Function: get_pit_message_language_table
+      Method to return the contet of PIT_MESSAGE_LANGUAGE_V
+   */
+  function get_pit_message_severity_table
+    return pit_message_severity_table
+    pipelined;
+    
+  
+  /**
+    Function: get_pit_message_group_table
+      Method to return the contet of PIT_MESSAGE_GROUP
+   */
+  function get_pit_message_group_table
+    return pit_message_group_table
+    pipelined;
+    
+  
+  /**
+    Function: get_pit_trace_level_table
+      Method to return the contet of PIT_TRACE_LEVEL_V
+   */
+  function get_pit_trace_level_table
+    return pit_trace_level_table
+    pipelined;
+  
   
   /**
     Group: Public Methods
@@ -116,6 +244,43 @@ as
     p_module_list in varchar2,
     p_comment in varchar2 default null);
     
+  
+  /**
+    Function: has_translatable_items
+      Method to check whether translatable items are present. Is used to toggle the visibility of a region.
+      
+    Returns: 
+      TRUE if translatable items are present, FALSE if not.
+   */
+  function has_translatable_items
+    return boolean;
+    
+  
+  /**
+    Function: has_local_parameters
+      Method to check whether local parameters are present. Is used to toggle the visibility of a region.
+      
+    Returns: 
+      TRUE if local parameters are present, FALSE if not.
+   */
+  function has_local_parameters
+    return boolean;
+    
+    
+  /**
+    Function: parameter_group_is_modifiable
+      Method checks whether the parameter group requested is modifiable
+      
+    Parameter
+      p_pgr_id - ID of the parameter group
+      
+    Returns:
+      pit_util.C_TRUE if parameter group is modifable, pit_util.C_FALSE if not
+   */
+  function parameter_group_is_modifiable(
+    p_pgr_id in pit_name_type)
+    return pit_flag_type;
+    
     
   /**
     Procedure: delete_context_toggle
@@ -127,9 +292,8 @@ as
   procedure delete_context_toggle(
     p_toggle_name in varchar2); 
     
-    
   /**
-    Procedure: delete_message
+    Procedure: delete_pit_message
       Procedure to delete a single pit_message. Will delete all translations as well. Is called to remove mistyped
       or unnecessary messages in all languages. Will not commit nor re-create the <MSG> package.
       
@@ -137,13 +301,13 @@ as
       p_pms_name - Name of the message to delete
       p_pms_pml_name - Optional language of the message to delete. If null, all translations are deleted, otherwise only the translated message
    */
-  procedure delete_message(
+  procedure delete_pit_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_pml_name in pit_message_language.pml_name%type default null);
     
     
   /** 
-    Procedure: delete_message_group
+    Procedure: delete_pit_message_group
       Procedure to delete a message group. Does not delete a message group if messages exists within that group,
       unless specified by setting the <P_FORCE> parameter to true. Will not commit nor re-create the <MSG> package.
    
@@ -152,7 +316,7 @@ as
       p_force - Flag to indicate whether deleting this group should delete all messages of this group.
                 Defaults to FALSE: If messages exists, an error is thrown
    */
-  procedure delete_message_group(
+  procedure delete_pit_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_force in boolean default false);
     
@@ -177,8 +341,8 @@ as
       p_par_pgr_id - Name of the parameter group   
    */
   procedure delete_parameter(
-    p_par_id in parameter_tab.par_id%type,
-    p_par_pgr_id in parameter_tab.par_pgr_id%type);
+    p_par_id in parameter_v.par_id%type,
+    p_par_pgr_id in parameter_v.par_pgr_id%type);
     
   
   /** 
@@ -219,13 +383,13 @@ as
       p_par_pre_id - Name of the parameter realm
    */
   procedure delete_realm_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type);
     
     
   /**
-    Procedure: export_group
+    Procedure: export_parameter_group
       Method to create a script for all parameters within a parameter group as a clob instance.
       
       Is called to create an installation file as CLOB to be downloaded at the clients browser
@@ -275,21 +439,46 @@ as
       Procedure to merge a message. Overload with a row record.
       
     Parameter:
-      p_row  Record  of PIT_MESSAGE%ROWTYPE
+      p_row - Record of PIT_MESSAGE_ROWTYPE
    */
   procedure merge_message(
-    p_row in out nocopy pit_message%rowtype);    
+    p_row in out nocopy pit_message_rowtype);    
+    
+    
+  /**
+    Procedure: delete_message
+      Procedure to delete a message. Overload with a row record.
+      
+    Parameter:
+      p_row - Record of PIT_MESSAGE_ROWTYPE
+   */
+  procedure delete_message(
+    p_row in out nocopy pit_message_rowtype);    
     
     
   /**
     Procedure: merge_message_group
-      Procedure to matain a message group. Overload with a row record.
+      Procedure to maintain a message group.
     
     Parameter:
-      p_row  Record of a message group
+      p_row - Record of a message group
    */
   procedure merge_message_group(
-    p_row in out nocopy pit_message_group%rowtype);
+    p_row in out nocopy pit_message_group_rowtype);
+    
+    
+  /**
+    Procedure: delete_message_group
+      Procedure to delete a message group. Overload with a row record.
+    
+    Parameter:
+      p_row - Record of a message group
+      p_force - Flag to indicate whether the message group should be deleted
+                including all messages and translatable items
+   */
+  procedure delete_message_group(
+    p_row in pit_message_group_rowtype,
+    p_force in boolean);
     
     
   /** 
@@ -297,11 +486,11 @@ as
       Method to edit a parameter
       
     Parameter:
-      p_row - Record of PARAMETER_VW
+      p_row - Record of PARAMETER_V
    */
   procedure merge_parameter(
-    p_row in parameter_vw%rowtype);
-  
+    p_row in parameter_v_rowtype);
+    
   
   /** 
     Procedure: merge_parameter_group
@@ -314,7 +503,7 @@ as
       p_row - PARAMETER_GROUP record to validate
    */
   procedure merge_parameter_group(
-    p_row in parameter_group%rowtype);
+    p_row in parameter_group_rowtype);
 
 
   /** 
@@ -328,7 +517,7 @@ as
       p_row - PARAMETER_REALM record
    */
   procedure merge_parameter_realm(
-    p_row in parameter_realm%rowtype);
+    p_row in parameter_realm_rowtype);
     
     
   /**
@@ -336,10 +525,10 @@ as
       Sets a realm parameter value.
       
     Parameter:
-      p_row - Record of <PARAMETER_VW> with the parameter
+      p_row - Record of <PARAMETER_V> with the parameter
    */
   procedure merge_realm_parameter(
-    p_row in parameter_vw%rowtype);
+    p_row in parameter_v_rowtype);
     
     
   /**
@@ -394,7 +583,7 @@ as
       Method to check whether a toggle has valid settings
     
     Parameters: 
-      p_toggle_name - Record of <PARAMETER_VW> with the actual parameter values to check.
+      p_toggle_name - Record of <PARAMETER_V> with the actual parameter values to check.
       p_context_name . Nmae of the context to switch logging to
       p_module_list - List of packages or procedures that toggle pit settings
       
@@ -417,7 +606,7 @@ as
       Method to check whether a parameter value conforms to the parameter data types.
     
     Parameter: 
-      p_row - Record of <PARAMETER_VW> with the actual parameter values to check.
+      p_row - Record of <PARAMETER_V> with the actual parameter values to check.
       
     Raises:
       DATAYPE_MISMATCH_INTEGER - if an integer parameter value is not a valid integer
@@ -426,7 +615,7 @@ as
       DATAYPE_MISMATCH_TIMESTAMP - if an integer parameter value is a valid timestamp
    */
   procedure validate_data_type(
-    p_row in parameter_vw%rowtype);
+    p_row in parameter_v_rowtype);
     
     
   /**
@@ -442,7 +631,7 @@ as
       msg.PIT_PMG_ERROR_MARKER_INVALID - if prefix/postfix length are too long
    */
   procedure validate_message_group(
-    p_row in out nocopy pit_message_group%rowtype);
+    p_row in out nocopy pit_message_group_rowtype);
     
     
   /**
@@ -461,7 +650,7 @@ as
       msg.PIT_PMS_PREDEFINED_ERROR - if the Oracle error number is already a named exception
    */
   procedure validate_message(
-    p_row in out nocopy pit_message%rowtype);
+    p_row in out nocopy pit_message_rowtype);
     
     
   /** 
@@ -480,7 +669,7 @@ as
       DATAYPE_MISMATCH_TIMESTAMP - if an integer parameter value is a valid timestamp
    */
   procedure validate_parameter(
-    p_row in out nocopy parameter_vw%rowtype);
+    p_row in out nocopy parameter_v_rowtype);
     
   
   /** 
@@ -488,7 +677,7 @@ as
       Method to validate a parameter group entry prior to writing it to db
       
     Parameter:
-      p_row - Recorid if <PARAMETER_GROUP> with the values to check
+      p_row - Record of <PARAMETER_GROUP> with the values to check
       
     Raises:
       NAME_MISSING - if the message name is null
@@ -496,7 +685,7 @@ as
       PGR_DESCRIPTION_MISSING - if the description text is missing
    */
   procedure validate_parameter_group(
-    p_row in out nocopy parameter_group%rowtype);
+    p_row in out nocopy parameter_group_rowtype);
     
   
   /**
@@ -504,7 +693,7 @@ as
       Method to validate a realm based parameter if a validation string exists.
       
     Parameter:
-      p_row - Record of PARAMETER_VW with the parameter to check
+      p_row - Record of PARAMETER_V with the parameter to check
     
     Raises:
       NAME_MISSING - if the message name is null
@@ -517,7 +706,7 @@ as
       msg.PARAM_NOT_MODIFIABLE - if it is not allow to modify this parameter
    */
   procedure validate_realm_parameter(
-    p_row in out nocopy parameter_vw%rowtype);
+    p_row in out nocopy parameter_v_rowtype);
     
 end pit_app_api;
 /

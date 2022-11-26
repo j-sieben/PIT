@@ -26,8 +26,8 @@ as
   /**
     Constants: Other constants
       C_CTX_DEL - Delimiter between context values in string representation
-      C_TRUTHY - Boolean TRUE as <flag_type
-      C_FALSY - Boolean FALSE as <flag_type
+      C_TRUTHY - Boolean TRUE as <flag_type>
+      C_FALSY - Boolean FALSE as <flag_type>
    */
   C_CTX_DEL constant char(1 byte) := '|';  
   C_TRUTHY constant flag_type := &C_TRUE.;
@@ -57,6 +57,7 @@ as
   g_call_stack_template varchar2(1000 byte);
   g_error_stack_template varchar2(1000 byte);
   g_omit_pit_in_stack boolean;
+  g_omit_pkg_list varchar2(1000 byte);
   g_name_spelling varchar2(10 byte);
   
   g_predefined_errors predefined_error_t;
@@ -189,7 +190,9 @@ as
     l_ignore boolean := false;
   begin
     if g_omit_pit_in_stack then
-      l_ignore := p_subprogram like 'PIT%' and p_subprogram != 'PIT_UI';
+      l_ignore := (upper(p_subprogram) like 'PIT%' and p_subprogram != 'PIT_UI') 
+               or (instr(g_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
+               or (upper(p_subprogram) like 'MESSAGE_TYPE%');
     end if;
     return l_ignore;
   end ignore_subprogram;
@@ -208,6 +211,7 @@ as
     g_call_stack_template := param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP);
     g_error_stack_template := param.get_string('PIT_ERROR_STACK_TEMPLATE', C_PARAMETER_GROUP);
     g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
+    g_omit_pkg_list := ':' ||param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
     g_name_spelling := param.get_string(C_NAME_SPELLING, C_PARAMETER_GROUP);
     initialize_error_list;
     initialize_pmg_max_length;
@@ -472,13 +476,19 @@ as
     p_name in varchar2)
     return varchar2
   as
+    C_ANONYMOUS_BLOCK constant ora_name_type := '__ANONYMOUS_BLOCK';
     l_harmonized_name max_sql_char;
   begin
-    l_harmonized_name := p_name;
-    if substr(upper(p_name), 1, length(p_prefix)) != upper(p_prefix) then
-      l_harmonized_name := p_prefix || l_harmonized_name;
-    end if;
-    return upper(l_harmonized_name);
+    l_harmonized_name := upper(p_name);
+    case 
+      when l_harmonized_name = C_ANONYMOUS_BLOCK then
+        l_harmonized_name:= initcap(trim(replace(l_harmonized_name, '_', ' ')));
+      when substr(upper(p_name), 1, length(p_prefix)) != upper(p_prefix) then
+        l_harmonized_name := p_prefix || l_harmonized_name;
+      else
+        null;
+    end case;
+    return l_harmonized_name;
   end harmonize_name;
   
   

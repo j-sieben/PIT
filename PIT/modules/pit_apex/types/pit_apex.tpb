@@ -2,6 +2,14 @@ create or replace type body pit_apex as
 
   /** Implementation of type PIT_APEX */
    
+   overriding member procedure tweet(
+    self in out nocopy pit_apex,
+      p_message in message_type)
+   as
+   begin
+      pit_apex_pkg.tweet(p_message);
+   end tweet;
+   
    overriding member procedure log(
     self in out nocopy pit_apex,
       p_message in message_type)

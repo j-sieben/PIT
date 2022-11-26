@@ -193,7 +193,7 @@ as
   procedure log_error(
     p_message in message_type)
   as
-    C_ITEM_LABEL varchar2(128 byte) := '#ITEMLABEL#';
+    C_ITEM_LABEL pit_util.ora_name_type := '#ITEMLABEL#';
     l_label varchar2(100);
     l_message varchar2(1000);
   begin
@@ -282,6 +282,21 @@ as
 
 
   /**
+    Function: tweet
+      see <PIT_APEX_PKG.tweet>
+   */
+  procedure tweet(
+    p_message in message_type)
+  as
+  begin
+    if valid_environment then
+      apex_debug.trace(p_message.message_text);
+    end if;
+  end tweet;
+
+
+
+  /**
     Function: log
       see <PIT_APEX_PKG.log>
    */
@@ -366,7 +381,7 @@ as
     l_message.put('backtrace', p_message.backtrace);
     l_message.put('error_number', to_char(p_message.error_number));
 
-    pit.log(msg.WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
+    pit.log(msg.PIT_WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
     l_response := apex_web_service.make_rest_request(
                     p_url => g_websocket_server,
                     p_http_method => 'GET',
@@ -383,8 +398,8 @@ as
   is
     l_message message_type;
     l_message_language varchar2(64);
-    l_param_list varchar2(32767);
-    l_next_param varchar2(32767);
+    l_param_list pit_util.max_char;
+    l_next_param pit_util.max_char;
   begin
     if valid_environment then
       apex_debug.enter(

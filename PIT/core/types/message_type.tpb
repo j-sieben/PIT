@@ -2,7 +2,6 @@ create or replace type body message_type
 as
   /** Implements the MESSAGE_TYPE functionality */
   
-  /** Contructor method. Auto detects the required language */
   constructor function message_type(
     self in out nocopy message_type,
     p_message_name in varchar2,
@@ -10,17 +9,45 @@ as
     p_affected_id in varchar2,
     p_error_code in varchar2,
     p_session_id in varchar2,
+    p_schema_name in varchar2,
+    p_user_name in varchar2,
+    p_msg_args msg_args)
+    return self as result
+  as
+  begin
+    self := message_type(
+              p_message_name => p_message_name,
+              p_message_language => p_message_language,
+              p_affected_ids => msg_params(msg_param('ID', p_affected_id)),
+              p_error_code => p_error_code,
+              p_session_id => p_session_id,
+              p_schema_name => p_schema_name,
+              p_user_name => p_user_name,
+              p_msg_args => p_msg_args);
+    self.affected_id := p_affected_id;
+    return;
+  end;
+
+  /** Contructor method. Auto detects the required language */
+  constructor function message_type(
+    self in out nocopy message_type,
+    p_message_name in varchar2,
+    p_message_language in varchar2,
+    p_affected_ids in msg_params,
+    p_error_code in varchar2,
+    p_session_id in varchar2,
+    p_schema_name in varchar2,
     p_user_name in varchar2,
     p_msg_args msg_args)
     return self as result
   as
     C_FAILURE constant number := 1;
-    l_locale varchar2(100 byte);
-    l_language varchar2(100 byte);
-    l_territory varchar2(100 byte);
-    l_status number(1, 0);
+    l_locale &ORA_NAME_TYPE.;
+    l_language &ORA_NAME_TYPE.;
+    l_territory &ORA_NAME_TYPE.;
+    l_status &FLAG_TYPE.;
     l_error_message varchar2(1000 byte);
-    l_json_parameters varchar2(32767 byte);
+    l_json_parameters pit_util.max_char;
     -- Cursor to detect replacement anchors and separate their inner structure
     cursor anchor_cur(p_message_text in varchar2) is
       with regex as(
@@ -54,13 +81,16 @@ as
       from pit_message_v
      where pms_name = p_message_name;
      
-    self.id := pit_log_seq.nextval;
-    self.message_name := p_message_name;
-    self.affected_id := p_affected_id;
+    self.id := pit_drv_log_seq.nextval;
+    self.message_name := p_message_name;    
+    self.affected_ids := p_affected_ids;
     self.error_code := p_error_code;
     self.session_id := p_session_id;
+    self.schema_name := p_schema_name;
     self.user_name := p_user_name;
     self.message_args := p_msg_args;
+    
+    pit_util.get_module_and_action(self.module, self.action);
     
     if sqlcode != 0 then
       self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 12));
@@ -70,42 +100,17 @@ as
 
     -- replace anchors with msg params
     if p_msg_args is not null then
-      if upper(p_msg_args(1)) = 'FORMAT_ICU' then
-        l_language := sys_context('USERENV', 'LANGUAGE');
-        l_territory := substr(l_language, instr(l_language, '_') + 1, instr(l_language, '.') - instr(l_language, '_') - 1);
-        l_language := substr(l_language, 1, instr(l_language, '_') -1);
-        l_locale := utl_i18n.map_locale_to_iso(l_language, l_territory);
-        if p_msg_args.count = 2 then
-          l_json_parameters := p_msg_args(2);
-        else
-          l_json_parameters := '{';
-          for i in 2 .. p_msg_args.count loop
-            if mod(i, 2) = 0 then
-              if i > 2 then
-                l_json_parameters := l_json_parameters || ',';
-              end if;
-              l_json_parameters := l_json_parameters || '"' || p_msg_args(i) || '":"' || p_msg_args(i+1) || '"';
-            end if;
-          end loop;
-          l_json_parameters := l_json_parameters || '}';
-        end if;
-        self.message_text := message_type.format_icu(self.message_text, l_json_parameters, l_locale, l_status, l_error_message);
-        if l_status = C_FAILURE then
-            raise_application_error(-20000, l_error_message);
-        end if;
-      else
-        for a in anchor_cur(self.message_text) loop
-          if a.valid_anchor_name = 1 then
-            if p_msg_args.count >= a.anchor then
-              if p_msg_args(a.anchor) is not null then
-                self.message_text := replace(self.message_text, a.replacement_string, a.prefix || p_msg_args(a.anchor) || a.postfix);
-              else
-                self.message_text := replace(self.message_text, a.replacement_string, a.null_value);
-              end if;
+      for a in anchor_cur(self.message_text) loop
+        if a.valid_anchor_name = 1 then
+          if p_msg_args.count >= a.anchor then
+            if p_msg_args(a.anchor) is not null then
+              self.message_text := replace(self.message_text, a.replacement_string, a.prefix || p_msg_args(a.anchor) || a.postfix);
+            else
+              self.message_text := replace(self.message_text, a.replacement_string, a.null_value);
             end if;
           end if;
-        end loop;
-      end if;
+        end if;
+      end loop;
     end if;
     
     return;

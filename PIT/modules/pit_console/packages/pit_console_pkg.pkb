@@ -36,7 +36,6 @@ as
   g_leave_template varchar2(2000);
   g_level_indicator varchar2(10);
 
-
   /**
     Group: Helper Methods
    */
@@ -131,6 +130,7 @@ as
     end if;
     l_message :=
       replace(replace(replace(replace(p_template, '#MESSAGE#', l_unit_name), '#POSTFIX#', l_postfix), '#TIMING#', l_timing), '#LEVEL#', l_indent);
+      
     print(l_message);
   end print_call_stack;
   
@@ -138,6 +138,20 @@ as
   /**
     Group: Interface 
    */
+  /**
+    Procedure: tweet
+      see <PIT_CONSOLE_PKG.tweet>
+   */
+  procedure tweet(
+    p_message in message_type)
+  as
+    l_module pit_util.ora_name_type;
+    l_action pit_util.ora_name_type;
+  begin
+    dbms_output.put_line(p_message.module || '.' || p_message.action || ': ' || p_message.message_text);
+  end tweet;
+  
+  
   /**
     Procedure: log
       see <PIT_CONSOLE_PKG.log>
@@ -207,7 +221,7 @@ as
   begin
     dbms_output.put_line(
       pit.get_message_text(
-        msg.CTX_CHANGED,
+        msg.PIT_CTX_CHANGED,
         msg_args(p_ctx.trace_settings)));
   end context_changed;
 

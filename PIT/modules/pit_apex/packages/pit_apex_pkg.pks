@@ -26,6 +26,18 @@ as
   
   
   /**
+    Procedure: tweet
+      Method to tweet a message to the APEX debug stack.
+      Method implements the <PIT_APEX.tweet> member procedure and writes the message attributes to the APEX debug stack.
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure tweet(
+    p_message in message_type);
+  
+  
+  /**
     Procedure: log
       Method to write log information to the APEX debug stack.
       Method implements the <PIT_APEX.log> member procedure and writes the message attributes to the APEX debug stack.

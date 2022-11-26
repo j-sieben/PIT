@@ -5,6 +5,14 @@ create or replace type pit_console force under pit_module(
    */
   
   /** 
+    Procedure: tweet
+      See <PIT_MODULE.log>
+   */
+  overriding member procedure tweet(
+    self in out nocopy pit_console,
+    p_message in message_type),
+  
+  /** 
     Procedure: log
       See <PIT_MODULE.log>
    */

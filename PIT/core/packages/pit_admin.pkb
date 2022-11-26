@@ -117,7 +117,6 @@ as
                      '#NAME#', l_predefined_error.error_name,
                      '#OWNER#', l_predefined_error.owner,
                      '#PKG#', l_predefined_error.package_name));
-       raise_application_error(-20000, l_message);
     end if;
   end check_error;
   
@@ -194,10 +193,11 @@ as
                 from pit_message_language_v
                where pml_default_order > 0
                group by pml_name) ml
-          on pms_pml_name = pml_name
-       where pms_pmg_name = p_pmg_name
-          or p_pmg_name is null
-       order by pms_name, pml_default_order;
+          on m.pms_pml_name = ml.pml_name
+       where ml.pml_default_order > 0
+         and (m.pms_pmg_name = p_pmg_name
+          or p_pmg_name is null)
+       order by m.pms_name, ml.pml_default_order;
     l_chunk pit_util.max_char;
     C_START constant varchar2(200) := q'~begin
 ~';
@@ -223,7 +223,7 @@ end;
     p_pms_description => q'^#DESCRIPTION#^',
     p_pms_pml_name => '#LANGUAGE#');
 ~';
-    l_actual_language varchar2(128 byte);
+    l_actual_language &ORA_NAME_TYPE.;
   begin
     -- Initialize
     if p_pml_name is not null then
@@ -293,9 +293,10 @@ end;
                 from pit_message_language_v
                where pml_default_order > 0
                group by pml_name) ml
-          on pti_pml_name = pml_name
-       where pti_pmg_name = p_pmg_name
-       order by i.pti_id, pml_default_order;
+          on i.pti_pml_name = ml.pml_name
+       where ml.pml_default_order > 0
+         and i.pti_pmg_name = p_pmg_name
+       order by i.pti_id, ml.pml_default_order;
     l_chunk pit_util.max_char;
     C_START constant varchar2(200) := q'~begin
 ~';
@@ -313,7 +314,7 @@ end;
     p_pti_description => q'^#PTI_DESCRIPTION_NAME#^'
   );
 ~';
-    l_actual_language varchar2(128 byte);
+    l_actual_language &ORA_NAME_TYPE.;
   begin
     -- Initialize
     if p_pml_name is not null then
@@ -367,8 +368,8 @@ end;
              '/xliff'
              passing p_xliff
              columns
-               pml_name varchar2(128 byte) path '@trgLang',
-               pmg_name varchar2(128 byte) path 'file/@id');
+               pml_name &ORA_NAME_TYPE. path '@trgLang',
+               pmg_name &ORA_NAME_TYPE. path 'file/@id');
   end analyze_xliff;
 
 
@@ -405,7 +406,7 @@ end;
                     '/xliff/file/unit'
                     passing p_xliff
                     columns
-                      pms_name varchar2(128 byte) path '@id',
+                      pms_name &ORA_NAME_TYPE. path '@id',
                       text_translation clob path 'segment[@id="TEXT"]/target',
                       description_translation clob path 'segment[@id="DESC"]/target') d
              left join pit_message m
@@ -463,7 +464,7 @@ end;
                     '/xliff/file/unit'
                     passing p_xliff
                     columns
-                      pti_id varchar2(128 byte) path '@id',
+                      pti_id &ORA_NAME_TYPE. path '@id',
                       pti_name clob path 'segment[@id="NAME"]/target',
                       pti_display_name clob path 'segment[@id="DISP"]/target',
                       pti_description clob path 'segment[@id="DESC"]/target')) s
@@ -715,13 +716,28 @@ end;
     C_R constant varchar2(2) := chr(10);
 
     l_sql_text clob := 'create or replace package ' || C_PACKAGE_NAME || ' as' || C_R || '  /** Generated package to provide message constants and exceptions*/' || C_R;
-    l_constant_template varchar2(200) :=
+    l_constant_template pit_util.max_sql_char :=
       q'~  #CONSTANT# constant pit_util.ora_name_type := '#CONSTANT#';~' || C_R;
-    l_exception_template varchar2(200) :=
+    l_exception_template pit_util.max_sql_char :=
       '  #ERROR_NAME# exception;' || C_R;
-    l_pragma_template varchar2(200) :=
+    l_pragma_template pit_util.max_sql_char :=
       '  pragma exception_init(#ERROR_NAME#, #ERROR#);' || C_R;
-    l_end_clause varchar2(20) := 'end ' || C_PACKAGE_NAME || ';';
+    l_end_clause pit_util.max_sql_char := q'[
+  
+  function get_messages(
+    p_pmg_name in pit_message_group.pmg_name%type default null)
+    return char_table
+    pipelined;
+    
+  function check_is_message(
+    p_message_name in pit_message.pms_id%type default null)
+    return boolean;
+    
+  function check_is_error(
+    p_message_name in pit_message.pms_id%type default null)
+    return boolean;
+
+end ]' || C_PACKAGE_NAME || ';';
 
     l_constants clob := C_R || '  -- CONSTANTS:' || C_R;
     l_exceptions clob := C_R || '  -- EXCEPTIONS:' || C_R;
