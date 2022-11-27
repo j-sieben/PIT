@@ -25,17 +25,6 @@ create or replace type pit_module force as object(
     p_ctx in pit_context_type),
     
   /** 
-    Procedure: tweet
-      Method is called for lightweight developer output
-      
-    Parameter: 
-      p_message - Instance of PIT_TWEET message
-   */
-  member procedure tweet(
-    self in out nocopy pit_module,
-    p_message in message_type),
-    
-  /** 
     Procedure: log
       Method is called for debugging, error handling and the like
       

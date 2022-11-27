@@ -40,7 +40,7 @@ as
   C_TRACE_LE_DETAILED constant boolean := true;
   C_TRACE_LE_ALL constant boolean := true;
   
-  C_HAS_GLOBAL_CONTEXT constant boolean := FALSE;
+  C_HAS_GLOBAL_CONTEXT constant boolean := &WITH_CONTEXT.;
   
   /** 
     Constants: Export groups

@@ -47,184 +47,6 @@ as
   
   
   /**
-    Group: Data access methods
-   */
-  /**
-    Function: get_parameter_type_table
-      See <pit_app_api.get_parameter_type_table>
-   */
-  function get_parameter_type_table
-    return parameter_type_table
-    pipelined
-  as
-    cursor parameter_type_cur is
-      select *
-        from parameter_type;
-  begin
-    for r in parameter_type_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_parameter_type_table;
-  
-  
-  /**
-    Function: get_parameter_realm_table
-      See <pit_app_api.get_parameter_realm_table>
-   */
-  function get_parameter_realm_table
-    return parameter_realm_table
-    pipelined
-  as
-    cursor parameter_realm_cur is
-      select *
-        from parameter_realm;
-  begin
-    for r in parameter_realm_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_parameter_realm_table;
-  
-  
-  /**
-    Function: get_parameter_realm_view
-      See <pit_app_api.get_parameter_realm_view>
-   */
-  function get_parameter_realm_view
-    return parameter_realm_v_table
-    pipelined
-  as
-    cursor parameter_realm_v_cur is
-      select *
-        from parameter_realm_v;
-  begin
-    for r in parameter_realm_v_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_parameter_realm_view;
-      
-    
-  /**
-    Function: get_parameter_table
-      See <pit_app_api.get_parameter_table>
-   */
-  function get_parameter_table
-    return parameter_table
-    pipelined
-  as
-    cursor parameter_cur is
-      select *
-        from parameter_v;
-  begin
-    for r in parameter_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_parameter_table;
-  
-  
-  /**
-    Function: get_pit_message_severity_table
-      See <pit_app_api.get_pit_message_severity_table>
-   */
-  function get_pit_message_severity_table
-    return pit_message_severity_table
-    pipelined
-  as
-    cursor pit_message_severity_cur is
-      select *
-        from pit_message_severity_v;
-  begin
-    for r in pit_message_severity_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_pit_message_severity_table;
-  
-  
-  /**
-    Function: get_pit_message_group_table
-      See <pit_app_api.get_pit_message_group_table>
-   */
-  function get_pit_message_group_table
-    return pit_message_group_table
-    pipelined
-  as
-    cursor pit_message_group_cur is
-      select *
-        from pit_message_group;
-  begin
-    for r in pit_message_group_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_pit_message_group_table;
-  
-  
-  /**
-    Function: get_pit_message_language_table
-      See <pit_app_api.get_pit_message_language_table>
-   */
-  function get_pit_message_language_table
-    return pit_message_language_table
-    pipelined
-  as
-    cursor pit_message_language_cur is
-      select *
-        from pit_message_language_v;
-  begin
-    for r in pit_message_language_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_pit_message_language_table;
-  
-  
-  /**
-    Function: get_pit_trace_level_table
-      See <pit_app_api.get_pit_trace_level_table>
-   */
-  function get_pit_trace_level_table
-    return pit_trace_level_table
-    pipelined
-  as
-    cursor pit_trace_level_cur is
-      select *
-        from pit_trace_level_v;
-  begin
-    for r in pit_trace_level_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_pit_trace_level_table;
-  
-  /**
     Group: Public Methods
    */
   /**
@@ -238,7 +60,7 @@ as
   begin
     select par_boolean_value
       into l_flag
-      from parameter_v
+      from parameter_vw
      where par_pgr_id = 'PIT'
        and par_id = 'ALLOW_TOGGLE';
        
@@ -291,7 +113,7 @@ as
   exception
     when dbms_assert.INVALID_SQL_NAME then
       pit.error(
-        p_message_name => msg.PIT_INVALID_SQL_NAME,
+        p_message_name => msg.INVALID_SQL_NAME,
         p_msg_args => msg_args(p_name));
       return p_name;
     when others then
@@ -306,43 +128,6 @@ as
         raise;
       end if;
   end check_name;
-  
-  
-  /**
-    Function: has_translatable_items
-      See <pit_app_api.has_translatable_items>
-   */
-  function has_translatable_items
-    return boolean
-  as
-  begin
-    return true;
-  end has_translatable_items; 
-  
-  
-  /**
-    Function: has_local_parameters
-      See <pit_app_api.has_local_parameters>
-   */
-  function has_local_parameters
-    return boolean
-  as
-  begin
-    return true;
-  end has_local_parameters;   
-  
-  
-  /**
-    Function: parameter_group_is_modifiable
-      See <pit_app_api.parameter_group_is_modifiable>
-   */
-  function parameter_group_is_modifiable(
-    p_pgr_id in pit_name_type)
-    return pit_flag_type
-  as
-  begin
-    return pit_util.C_TRUE;
-  end parameter_group_is_modifiable;    
   
   
   /**
@@ -397,35 +182,13 @@ as
   begin
     pit_admin.delete_context_toggle(p_toggle_name);
   end delete_context_toggle;
-      
-    
+  
+  
   /**
-    Function: get_pit_message_table
-      See <pit_app_api.get_pit_message_table>
+    Procedure: delete_message
+      See <pit_app_api.delete_message>
    */
-  function get_pit_message_table
-    return pit_message_table
-    pipelined
-  as
-    cursor pit_message_cur is
-      select *
-        from pit_message;
-  begin
-    for r in pit_message_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_pit_message_table;
-    
-    
-  /**
-    Procedure: delete_pit_message
-      See <pit_app_api.delete_pit_message>
-   */
-  procedure delete_pit_message(
+  procedure delete_message(
     p_pms_name in pit_message.pms_name%type,
     p_pms_pml_name in pit_message_language.pml_name%type default null)
   as
@@ -433,14 +196,14 @@ as
     pit_admin.delete_message(
       p_pms_name => p_pms_name,
       p_pms_pml_name => p_pms_pml_name);
-  end delete_pit_message;
+  end delete_message;
   
   
   /**
-    Procedure: delete_pit_message_group
-      See <pit_app_api.delete_pit_message_group>
+    Procedure: delete_message_group
+      See <pit_app_api.delete_message_group>
    */
-  procedure delete_pit_message_group(
+  procedure delete_message_group(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_force in boolean default false)
   as
@@ -448,7 +211,7 @@ as
     pit_admin.delete_message_group(
       p_pmg_name => p_pmg_name,
       p_force => p_force);
-  end delete_pit_message_group;
+  end delete_message_group;
   
   
   /**
@@ -468,36 +231,14 @@ as
       See <pit_app_api.delete_parameter>
    */
   procedure delete_parameter(
-    p_par_id in parameter_v.par_id%type,
-    p_par_pgr_id in parameter_v.par_pgr_id%type)
+    p_par_id in parameter_tab.par_id%type,
+    p_par_pgr_id in parameter_tab.par_pgr_id%type)
   as
   begin
     param_admin.delete_parameter(
       p_par_id => p_par_id,
       p_par_pgr_id => p_par_pgr_id);
   end delete_parameter;
-      
-    
-  /**
-    Function: get_parameter_group_table
-      See <pit_app_api.get_parameter_group_table>
-   */
-  function get_parameter_group_table
-    return parameter_group_table
-    pipelined
-  as
-    cursor parameter_group_cur is
-      select *
-        from parameter_group;
-  begin
-    for r in parameter_group_cur loop
-      pipe row (r);
-    end loop;
-    return;
-  exception
-    when NO_DATA_NEEDED then
-      null;
-  end get_parameter_group_table;
   
   
   /**
@@ -535,8 +276,8 @@ as
       See <pit_app_api.delete_realm_parameter>
    */
   procedure delete_realm_parameter(
-    p_par_id parameter_v.par_id%type,
-    p_par_pgr_id parameter_v.par_pgr_id%type,
+    p_par_id parameter_vw.par_id%type,
+    p_par_pgr_id parameter_vw.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type)
   as
   begin
@@ -600,7 +341,7 @@ as
       See <pit_app_api.merge_message>
    */
   procedure merge_message(
-    p_row in out nocopy pit_message_rowtype)
+    p_row in out nocopy pit_message%rowtype)
   as
   begin
     pit_admin.merge_message(p_row);
@@ -608,23 +349,11 @@ as
   
   
   /**
-    Procedure: delete_message
-      See <pit_app_api.delete_message>
-   */
-  procedure delete_message(
-    p_row in out nocopy pit_message_rowtype)
-  as
-  begin
-    pit_admin.delete_message(p_row.pms_name);
-  end delete_message;
-  
-  
-  /**
     Procedure: merge_message_group
       See <pit_app_api.merge_message_group>
    */
   procedure merge_message_group(
-    p_row in out nocopy pit_message_group_rowtype)
+    p_row in out nocopy pit_message_group%rowtype)
   as
   begin
     pit_admin.merge_message_group(p_row);
@@ -632,26 +361,11 @@ as
   
   
   /**
-    Procedure: delete_message_group
-      See <pit_app_api.delete_message_group>
-   */
-  procedure delete_message_group(
-    p_row in pit_message_group_rowtype,
-    p_force in boolean)
-  as
-  begin
-    pit_admin.delete_message_group(
-      p_pmg_name => p_row.pmg_name, 
-      p_force => false);
-  end delete_message_group;
-  
-  
-  /**
     Procedure: merge_parameter
       See <pit_app_api.merge_parameter>
    */
   procedure merge_parameter(
-    p_row in parameter_v_rowtype)
+    p_row in parameter_vw%rowtype)
   as
   begin
     param_admin.edit_parameter(p_row);
@@ -663,7 +377,7 @@ as
       See <pit_app_api.merge_parameter_group>
    */
   procedure merge_parameter_group(
-    p_row in parameter_group_rowtype)
+    p_row in parameter_group%rowtype)
   as
   begin
     param_admin.edit_parameter_group(p_row);
@@ -675,7 +389,7 @@ as
       See <pit_app_api.merge_parameter_realm>
    */
   procedure merge_parameter_realm(
-    p_row in parameter_realm_rowtype)
+    p_row in parameter_realm%rowtype)
   as
   begin
     param_admin.edit_parameter_realm(p_row);
@@ -687,7 +401,7 @@ as
       See <pit_app_api.merge_realm_parameter>
    */
   procedure merge_realm_parameter(
-    p_row in parameter_v_rowtype)
+    p_row in parameter_vw%rowtype)
   as
   begin
     param_admin.edit_realm_parameter(p_row);
@@ -780,7 +494,7 @@ as
       See <pit_app_api.validate_data_type>
    */
   procedure validate_data_type(
-    p_row parameter_v_rowtype)
+    p_row parameter_vw%rowtype)
   as
   begin
     pit.enter_mandatory;
@@ -814,7 +528,7 @@ as
       See <pit_app_api.validate_message_group>
    */
   procedure validate_message_group(
-    p_row in out nocopy pit_message_group_rowtype)
+    p_row in out nocopy pit_message_group%rowtype)
   as
     l_prefix_length binary_integer;
   begin
@@ -842,7 +556,7 @@ as
       See <pit_app_api.validate_message>
    */
   procedure validate_message(
-    p_row in out nocopy pit_message_rowtype)
+    p_row in out nocopy pit_message%rowtype)
   as
     l_predefined_error pit_util.predefined_error_rec;
   begin
@@ -895,7 +609,7 @@ as
       See <pit_app_api.validate_parameter>
    */
   procedure validate_parameter(
-    p_row in out nocopy parameter_v_rowtype)
+    p_row in out nocopy parameter_vw%rowtype)
   as
   begin
     
@@ -934,7 +648,7 @@ as
       See <pit_app_api.validate_parameter_group>
    */
   procedure validate_parameter_group(
-    p_row in out nocopy parameter_group_rowtype)
+    p_row in out nocopy parameter_group%rowtype)
   as
   begin
     
@@ -953,9 +667,9 @@ as
       See <pit_app_api.validate_realm_parameter>
    */
   procedure validate_realm_parameter(
-    p_row in out nocopy parameter_v_rowtype)
+    p_row in out nocopy parameter_vw%rowtype)
   as
-    l_par_id parameter_v.par_id%type;
+    l_par_id parameter_vw.par_id%type;
     l_is_modifiable boolean;
   begin
     
@@ -971,11 +685,11 @@ as
     else
       pit.assert_not_null(
         p_condition => p_row.par_id,
-        p_message_name => msg.PIT_PARAM_IS_NULL,
+        p_message_name => msg.PARAM_IS_NULL,
         p_msg_args => msg_args(l_par_id));
       pit.assert(
         p_condition => l_is_modifiable,
-        p_message_name => msg.PIT_PARAM_NOT_MODIFIABLE,
+        p_message_name => msg.PARAM_NOT_MODIFIABLE,
         p_msg_args => msg_args(p_row.par_id));
     end if;
   end validate_realm_parameter;

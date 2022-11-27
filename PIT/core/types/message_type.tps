@@ -9,9 +9,6 @@ create or replace type message_type force is object(
       affected_id - Subject ID to which the message relates
       error_code - Error code of the entry. May be used to divide several occurences of the same message name.
       session_id - ID of the session as delivered by the adapter in use
-      schema_name - Name of the schema
-      module - Name of the package where the message was raised
-      action - Name of the package method the message was raised
       user_name - Name of the user as delivered by the adapter in use
       message_text - Tect of the message in the actually valid translation
       message_description - Optional descriptive text, mostly used ot explain what to do in case of errors
@@ -23,13 +20,9 @@ create or replace type message_type force is object(
    */
   id number,
   message_name &ORA_NAME_TYPE.,
-  affected_id varchar2(4000 byte),       
-  affected_ids msg_params,             
+  affected_id varchar2(50 char),
   error_code varchar2(30 char),
   session_id varchar2(64 byte),
-  schema_name &ORA_NAME_TYPE.,
-  module &ORA_NAME_TYPE.,
-  action &ORA_NAME_TYPE.,
   user_name &ORA_NAME_TYPE.,
   message_text clob,
   message_description clob,
@@ -38,6 +31,27 @@ create or replace type message_type force is object(
   backtrace varchar2(2000 byte),
   error_number number (5,0),
   message_args msg_args,
+  /**
+    Function: format_icu
+      Method that is called if the message is formatted by the ICU functionality.
+      Implemented in Java
+      
+    Parameters:
+      p_msg - Message text to format
+      p_params - Parameter values, either in JSON format or as a key-value list
+      p_locale - Language of the message
+      l_status - Status message,
+      l_error_message - Formatted message
+   */
+  static function format_icu(
+    p_msg in varchar2,
+    p_params in varchar2,
+    p_locale in varchar2,
+    l_status out number,
+    l_error_message out varchar2)
+    return varchar2
+  as language java name
+    'icu.ICU.format(java.lang.String, java.lang.String, java.lang.String, int[], java.lang.String[]) return java.lang.String',
   /**
     Function: message_type
       Constructor function
@@ -58,18 +72,6 @@ create or replace type message_type force is object(
     p_affected_id in varchar2,
     p_error_code in varchar2,
     p_session_id in varchar2,
-    p_schema_name in varchar2,        
-    p_user_name in varchar2,
-    p_msg_args msg_args)
-    return self as result,
-  constructor function message_type(       
-    self in out nocopy message_type,
-    p_message_name in varchar2,
-    p_message_language in varchar2,
-    p_affected_ids in msg_params,
-    p_error_code in varchar2,
-    p_session_id in varchar2,
-    p_schema_name in varchar2,
     p_user_name in varchar2,
     p_msg_args msg_args)
     return self as result)
