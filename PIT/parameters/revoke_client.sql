@@ -6,5 +6,5 @@
 @tools/revoke_access.sql "select, references" parameter_realm
 @tools/revoke_access.sql "select, references" parameter_tab
 @tools/revoke_access.sql "select, references" parameter_type
-@tools/revoke_access.sql select parameter_core_vw
-@tools/revoke_access.sql select parameter_realm_vw
+@tools/revoke_access.sql select parameter_core_v
+@tools/revoke_access.sql select parameter_realm_v

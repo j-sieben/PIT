@@ -63,7 +63,39 @@ as
   /**
     Group: Generic helper methods
    */
-
+  /**
+    Function: replace_anchors
+      Helper to replace a list of anchors with their actual values, maintaining spelling.
+      
+      Is used to replace anchors in file names in a spelling-aware manner: If the anchor
+      is in lowercase, the replacement will be in lowercase as well and vice versa.
+      
+    Parameters:
+      p_text - Text to replace the values at
+      p_chunks - char_table instance with the anchors and replacements.
+      
+    Returns:
+      Replaced text
+   */
+  function replace_anchors(
+    p_text in varchar2,
+    p_chunks in char_table)
+  return varchar2
+  as
+    l_text varchar2(200 byte);
+  begin
+    l_text := p_text;
+    for i in 1 .. p_chunks.count loop
+      if mod(i, 2) = 1 then
+        l_text := replace(replace(replace(l_text, 
+                    '#' || lower(p_chunks(i)) || '#', lower(p_chunks(i+1))),
+                    '#' || upper(p_chunks(i)) || '#', upper(p_chunks(i+1))),
+                    '#' || initcap(p_chunks(i)) || '#', initcap(p_chunks(i+1)));
+      end if;
+    end loop;
+    return l_text;
+  end replace_anchors;
+  
 
   /**
     Procedure: check_error
@@ -230,7 +262,8 @@ end;
       l_actual_language := substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1);
       dbms_session.set_nls('NLS_LANGUAGE', p_pml_name);
     end if;
-    p_file_name := 'MessageGroup_' || p_pmg_name || '.sql';
+    p_file_name := param.get_string('EXPORT_FILE_NAME_PMS', 'PIT');
+    p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name));
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
@@ -320,7 +353,8 @@ end;
       l_actual_language := substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1);
       dbms_session.set_nls('NLS_LANGUAGE', p_pml_name);
     end if;
-    p_file_name := 'TranslatableItemGroup_' || p_pmg_name || '.sql';
+    p_file_name := param.get_string('EXPORT_FILE_NAME_PTI', 'PIT');
+    p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name));
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
@@ -1281,7 +1315,8 @@ end;
       script_translatable_items(p_pmg_name, p_file_name, p_script, p_target_language);
     when C_TARGET_PAR then
       p_script := param_admin.export_parameter_group(p_pmg_name);
-      p_file_name := 'ParameterGroup_' || p_pmg_name || '.sql';
+      p_file_name := param.get_string('EXPORT_FILE_NAME_PAR', 'PIT');
+      p_file_name := replace_anchors(p_file_name, char_table('PGR', p_pmg_name));
     else
       null;
     end case;
@@ -1324,10 +1359,12 @@ end;
 
     case p_target
       when C_TARGET_PMS then
-        p_file_name := 'MessageTranslation_' || p_pmg_name || '_to_' || p_target_language || '.xlf';
+        p_file_name := param.get_string('TRANSLATION_FILE_NAME_PMS', 'PIT');
+        p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name, 'PML', p_target_language));
         p_xliff := get_pms_xml(p_target_language, p_pmg_name);
       when C_TARGET_PTI then
-        p_file_name := 'TranslatableItemsTranslation_' || p_pmg_name || '_to_' || p_target_language || '.xlf';
+        p_file_name := param.get_string('TRANSLATION_FILE_NAME_PTI', 'PIT');
+        p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name, 'PML', p_target_language));
         p_xliff := get_pti_xml(p_target_language, p_pmg_name);
       else
         null;

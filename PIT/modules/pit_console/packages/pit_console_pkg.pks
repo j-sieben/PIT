@@ -10,6 +10,18 @@ as
    */
     
   /** 
+    Procedure: tweet
+      Method to tweet information to the console
+      Method implements the <PIT_CONSOLE> log member procedure and  writes the message attributes to the console.
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure tweet (
+    p_message in message_type);
+    
+    
+  /** 
     Procedure: log
       Method to write log information to the console
       Method implements the <PIT_CONSOLE> log member procedure and  writes the message attributes to the console.

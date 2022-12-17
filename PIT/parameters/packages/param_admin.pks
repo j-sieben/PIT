@@ -14,6 +14,16 @@ as
   /**
     Group: Public Methods
    */
+  /**
+    Procedure: set_import_mode
+      Method sets the package to import mode to allow for import of non modifiable parameters.
+      
+    Parameter:
+      p_mode - Flag to indicate whether the package is in import mode (TRUE) or not (FALSE)
+   */
+  procedure set_import_mode(
+    p_mode in boolean);
+    
   
   /**
     Function: get_parameter_settings
@@ -25,13 +35,13 @@ as
       p_par_pgr_id - Name of the parameter group
       
     Returns:
-      Row of PARAMETER_VW that contains all parameter related data 
+      Row of PARAMETER_V that contains all parameter related data 
       with the exception of the actual parameter values
    */
   function get_parameter_settings(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw%rowtype;
+    return parameter_v%rowtype;
     
   
   /** 
@@ -90,7 +100,20 @@ as
     p_pgr_id in parameter_group.pgr_id%type,
     p_force in boolean default false);
 
-
+  /** 
+    Procedure: harmonize_parameter_group
+      Method to harmonize local and default parameters after import.
+      
+      Is called after importing a parameter group. It searches for local parameters
+      which do not exist in the default parameter list anymore and deletes them
+      
+    Parameter:
+      p_pgr_id - Name of the parameter group
+   */
+  procedure harmonize_parameter_group(
+    p_pgr_id in parameter_group.pgr_id%type);
+    
+    
   /** 
     Procedure: edit_parameter_realm
       Method to change the definition of a parameter realm.
@@ -135,6 +158,10 @@ as
   procedure delete_parameter_realm(
     p_pre_id in parameter_realm.pre_id%type,
     p_force in boolean default false);
+    
+    
+  procedure validate_parameter_realm(
+    p_pre_id in parameter_realm%rowtype);
 	
   
   /**
@@ -163,7 +190,7 @@ as
       p_parameter - Parameter to check
    */
   procedure validate_parameter(
-    p_row in parameter_vw%rowtype);
+    p_row in parameter_v%rowtype);
 	
   
   /**
@@ -208,10 +235,10 @@ as
       Method to edit a parameter
       
     Parameter:
-      p_row - Record of PARAMETER_VW
+      p_row - Record of PARAMETER_v
    */
   procedure edit_parameter(
-    p_row in parameter_vw%rowtype);
+    p_row in parameter_v%rowtype);
     
   
   /**
@@ -232,10 +259,10 @@ as
       Method to validate a realm based parameter if a validation string exists.
       
     Parameter:
-      p_row - Record of PARAMETER_VW with the parameter to check
+      p_row - Record of PARAMETER_v with the parameter to check
    */
   procedure validate_realm_parameter(
-    p_row in out nocopy parameter_vw%rowtype);
+    p_row in out nocopy parameter_v%rowtype);
    
    
   /**
@@ -260,16 +287,15 @@ as
       p_par_boolean_value - Boolean parameter value
    */
   procedure edit_realm_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type,
-    p_par_string_value in parameter_vw.par_string_value%type default null,
-    p_par_raw_value in parameter_vw.par_raw_value%type default null,
-    p_par_xml_value in parameter_vw.par_xml_value%type default null,
-    p_par_integer_value in parameter_vw.par_integer_value%type default null,
-    p_par_float_value in parameter_vw.par_float_value%type default null,
-    p_par_date_value in parameter_vw.par_date_value%type default null,
-    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_string_value in parameter_v.par_string_value%type default null,
+    p_par_xml_value in parameter_v.par_xml_value%type default null,
+    p_par_integer_value in parameter_v.par_integer_value%type default null,
+    p_par_float_value in parameter_v.par_float_value%type default null,
+    p_par_date_value in parameter_v.par_date_value%type default null,
+    p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null);
     
     
@@ -278,10 +304,10 @@ as
       Sets a realm parameter value.
       
     Parameter:
-      p_row - Record of <PARAMETER_VW> with the parameter
+      p_row - Record of <PARAMETER_v> with the parameter
    */
   procedure edit_realm_parameter(
-    p_row in parameter_vw%rowtype);
+    p_row in parameter_v%rowtype);
     
   
   /** 
@@ -294,8 +320,8 @@ as
       p_par_pre_id - Name of the parameter realm
    */
   procedure delete_realm_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type);   
     
     
@@ -312,6 +338,10 @@ as
     p_pgr_id in parameter_group.pgr_id%type)
     return clob;
     
+    
+  function export_local_parameters(
+    p_pgr_id in parameter_group.pgr_id%type default null)
+    return clob;    
     
 end param_admin;
 /

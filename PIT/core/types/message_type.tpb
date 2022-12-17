@@ -2,7 +2,6 @@ create or replace type body message_type
 as
   /** Implements the MESSAGE_TYPE functionality */
   
-  /** Contructor method. Auto detects the required language */
   constructor function message_type(
     self in out nocopy message_type,
     p_message_name in varchar2,
@@ -10,6 +9,34 @@ as
     p_affected_id in varchar2,
     p_error_code in varchar2,
     p_session_id in varchar2,
+    p_schema_name in varchar2,
+    p_user_name in varchar2,
+    p_msg_args msg_args)
+    return self as result
+  as
+  begin
+    self := message_type(
+              p_message_name => p_message_name,
+              p_message_language => p_message_language,
+              p_affected_ids => msg_params(msg_param('ID', p_affected_id)),
+              p_error_code => p_error_code,
+              p_session_id => p_session_id,
+              p_schema_name => p_schema_name,
+              p_user_name => p_user_name,
+              p_msg_args => p_msg_args);
+    self.affected_id := p_affected_id;
+    return;
+  end;
+
+  /** Contructor method. Auto detects the required language */
+  constructor function message_type(
+    self in out nocopy message_type,
+    p_message_name in varchar2,
+    p_message_language in varchar2,
+    p_affected_ids in msg_params,
+    p_error_code in varchar2,
+    p_session_id in varchar2,
+    p_schema_name in varchar2,
     p_user_name in varchar2,
     p_msg_args msg_args)
     return self as result
@@ -55,12 +82,15 @@ as
      where pms_name = p_message_name;
      
     self.id := pit_log_seq.nextval;
-    self.message_name := p_message_name;
-    self.affected_id := p_affected_id;
+    self.message_name := p_message_name;    
+    self.affected_ids := p_affected_ids;
     self.error_code := p_error_code;
     self.session_id := p_session_id;
+    self.schema_name := p_schema_name;
     self.user_name := p_user_name;
     self.message_args := p_msg_args;
+    
+    pit_util.get_module_and_action(self.module, self.action);
     
     if sqlcode != 0 then
       self.message_text := replace(self.message_text, '#SQLERRM#', substr(sqlerrm, 12));
@@ -104,8 +134,8 @@ as
               end if;
             end if;
           end if;
-        end loop;
-      end if;
+        end if;
+      end loop;
     end if;
     
     return;

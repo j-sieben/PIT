@@ -106,6 +106,7 @@ as
       p_message_name - Name of the message to log
       p_msg_args - List of replacement values for the message
       p_affected_id - ID of an object that is affected by this message
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Additional error code, used in external applications
       
     Returns:
@@ -115,6 +116,7 @@ as
     p_message_name in pit_util.ora_name_type,
     p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2)
     return message_type;    
        
@@ -134,6 +136,21 @@ as
     p_message_name in pit_util.ora_name_type,
     p_msg_args in msg_args)
     return clob;
+    
+    
+  /** 
+    Function: get_message_severity
+      Returns the severity of a PIT message.
+      
+    Parameters:
+      p_message_name - Name of the message to log
+      
+    Returns:
+      Severrity of the requested message.
+   */
+  function get_message_severity(
+    p_message_name in pit_util.ora_name_type)
+    return binary_integer;
     
 
   /** 
@@ -171,6 +188,7 @@ as
       p_message_name - Name of the message to log
       p_msg_args - List of replacement values for the message
       p_affected_id - ID of an object that is affected by this message
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Additional error code, used in external applications
       p_params - Instance of <MSG_PARAMS> with a list of key-value pairs representing parameter name and -value.
    */
@@ -179,6 +197,7 @@ as
     p_message_name in pit_util.ora_name_type default null,
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
 
@@ -199,6 +218,20 @@ as
     p_severity in binary_integer default null);  
     
     
+  /**
+    Procedure: tweet
+      Lightweight message for temporary comments additiona debug information.
+      
+      Does not require full messages, will not translate nor will it generate
+      environment information such as call stack or error stack information.
+      
+    Parameter:
+      p_message - Textmessage to tweet
+   */
+  procedure tweet(
+    p_message in varchar2);
+    
+    
   /** 
     Procedure: log_event
       Logs messages. It takes the message_name and constructs an instance of <MESSAGE_TYPE> for it. 
@@ -210,6 +243,7 @@ as
       p_message_name - Name of the message to log
       p_msg_args - List of replacement values for the message
       p_affected_id - Optional ID of an item a log entry relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Additional error code, used in external applications and to distinguish
                      several occurences of the same message.
    */
@@ -218,6 +252,7 @@ as
     p_message_name in pit_util.ora_name_type default null,
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null);
   
 
@@ -232,6 +267,7 @@ as
     Parameters:
       p_message_name - Name of the message to log
       p_affected_id - Optional ID of an item a log entry relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Additional error code, used in external applications
       p_msg_args - List of replacement values for the message
       p_log_threshold - Threshold that is taken as a comparison to the message
@@ -243,6 +279,7 @@ as
   procedure log_explicit(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2,
     p_msg_args in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
@@ -286,6 +323,7 @@ as
   procedure notify(
     p_message_name in pit_util.ora_name_type,
     p_affected_id in pit_util.max_sql_char,
+    p_affected_ids in msg_params default null,
     p_msg_args in msg_args,
     p_log_threshold in pit_message.pms_pse_id%type,
     p_log_modules in pit_util.max_sql_char);
@@ -341,6 +379,7 @@ as
       p_message_name - Name of the message to raise 
       p_msg_args - List of replacement values for the message
       p_affected_id - ID of an object that is affected by this message
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Additional error code, used in external applications
    */
   procedure raise_error(
@@ -348,6 +387,7 @@ as
     p_message_name in pit_util.ora_name_type default null,
     p_msg_args in msg_args default null,
     p_affected_id in pit_util.max_sql_char default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null);
     
   

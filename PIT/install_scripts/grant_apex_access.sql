@@ -23,19 +23,7 @@ prompt
 prompt &section.
 prompt &h1.Grant access to PIT to APEX client &REMOTE_USER.
 
-@parameters/grant_client.sql
-
-@apex/grant_client.sql
-
-prompt
-prompt &section.
-prompt &h1.Grant access to PIT output modules
-@modules/pit_console/grant_client.sql
-@modules/pit_table/grant_client.sql
-@modules/pit_apex/grant_client.sql
---@modules/pit_test/grant_client.sql
-@modules/pit_file/grant_client.sql
---@modules/pit_mail/grant_client.sql
+@tools/grant_access.sql execute pit_app_api
 
 prompt &h1.Finished PIT APEX grants
 

@@ -1,9 +1,9 @@
 begin
-  param_admin.edit_parameter_group(
+/*  param_admin.edit_parameter_group(
     p_pgr_id => 'PIT',
     p_pgr_description => 'Parameter for PIT',
     p_pgr_is_modifiable => true
-  );
+  );*/
 
   param_admin.edit_parameter(
     p_par_id => 'PIT_FILE_DIRECTORY'

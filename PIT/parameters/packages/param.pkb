@@ -6,10 +6,9 @@ as
   C_TRUE constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
   C_FALSE constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
   c_max_char_length constant number := 32767;
-  c_max_raw_length constant number := 2000;
   C_DEFAULT_REALM constant parameter_local.pal_pre_id%type := 'DEFAULT';
   
-  g_parameter_rec parameter_vw%rowtype;
+  g_parameter_rec parameter_v%rowtype;
 
   /* Helper */  
 
@@ -22,7 +21,7 @@ as
     p_boolean_value in boolean)
     return varchar2
   as
-    l_boolean parameter_vw.par_boolean_value%type;
+    l_boolean parameter_v.par_boolean_value%type;
   begin
     case
       when p_boolean_value is null then
@@ -50,7 +49,7 @@ as
   begin
     select *
       into g_parameter_rec
-      from parameter_vw
+      from parameter_v
      where par_id = p_par_id
        and par_pgr_id = p_par_pgr_id;
   exception
@@ -61,18 +60,17 @@ as
 
   /* INTERFACE */    
   procedure validate_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
-    p_par_string_value in parameter_vw.par_string_value%type default null,
-    p_par_raw_value in parameter_vw.par_raw_value%type default null,
-    p_par_xml_value in parameter_vw.par_xml_value%type default null,
-    p_par_integer_value in parameter_vw.par_integer_value%type default null,
-    p_par_float_value in parameter_vw.par_float_value%type default null,
-    p_par_date_value in parameter_vw.par_date_value%type default null,
-    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
+    p_par_string_value in parameter_v.par_string_value%type default null,
+    p_par_xml_value in parameter_v.par_xml_value%type default null,
+    p_par_integer_value in parameter_v.par_integer_value%type default null,
+    p_par_float_value in parameter_v.par_float_value%type default null,
+    p_par_date_value in parameter_v.par_date_value%type default null,
+    p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null)
   as
-    l_boolean_value parameter_vw.par_boolean_value%type;
+    l_boolean_value parameter_v.par_boolean_value%type;
     l_is_modifiable boolean;
   begin
   
@@ -84,7 +82,6 @@ as
     
     if l_is_modifiable then
       g_parameter_rec.par_string_value := p_par_string_value;
-      g_parameter_rec.par_raw_value := p_par_raw_value;
       g_parameter_rec.par_xml_value := p_par_xml_value;
       g_parameter_rec.par_integer_value := p_par_integer_value;
       g_parameter_rec.par_float_value := p_par_float_value;
@@ -106,16 +103,15 @@ as
   
   /* SETTER */
   procedure set_multiple(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type,
-    p_par_string_value in parameter_vw.par_string_value%type default null,
-    p_par_raw_value in parameter_vw.par_raw_value%type default null,
-    p_par_xml_value in parameter_vw.par_xml_value%type default null,
-    p_par_integer_value in parameter_vw.par_integer_value%type default null,
-    p_par_float_value in parameter_vw.par_float_value%type default null,
-    p_par_date_value in parameter_vw.par_date_value%type default null,
-    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_string_value in parameter_v.par_string_value%type default null,
+    p_par_xml_value in parameter_v.par_xml_value%type default null,
+    p_par_integer_value in parameter_v.par_integer_value%type default null,
+    p_par_float_value in parameter_v.par_float_value%type default null,
+    p_par_date_value in parameter_v.par_date_value%type default null,
+    p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null)
   as
   begin    
@@ -123,7 +119,6 @@ as
       p_par_id => p_par_id,
       p_par_pgr_id => p_par_pgr_id,
       p_par_string_value => p_par_string_value,
-      p_par_raw_value => p_par_raw_value,
       p_par_xml_value => p_par_xml_value,
       p_par_integer_value => p_par_integer_value,
       p_par_float_value => p_par_float_value,
@@ -136,7 +131,6 @@ as
       using (select g_parameter_rec.par_id pal_id,
                     g_parameter_rec.par_pgr_id pal_pgr_id,
                     g_parameter_rec.par_string_value pal_string_value,
-                    g_parameter_rec.par_raw_value pal_raw_value,
                     g_parameter_rec.par_xml_value pal_xml_value,
                     g_parameter_rec.par_integer_value pal_integer_value,
                     g_parameter_rec.par_float_value pal_float_value,
@@ -148,7 +142,6 @@ as
          and t.pal_pgr_id = s.pal_pgr_id)
        when matched then update set
             t.pal_string_value = s.pal_string_value,
-            t.pal_raw_value = s.pal_raw_value,
             t.pal_xml_value = s.pal_xml_value,
             t.pal_integer_value = s.pal_integer_value,
             t.pal_float_value = s.pal_float_value,
@@ -156,10 +149,10 @@ as
             t.pal_timestamp_value = s.pal_timestamp_value,
             t.pal_boolean_value = s.pal_boolean_value
        when not matched then insert
-            (pal_id, pal_pgr_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
+            (pal_id, pal_pgr_id, pal_string_value, pal_xml_value, pal_integer_value, 
              pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
             values
-            (s.pal_id, s.pal_pgr_id, s.pal_string_value, s.pal_raw_value, s.pal_xml_value, s.pal_integer_value, 
+            (s.pal_id, s.pal_pgr_id, s.pal_string_value, s.pal_xml_value, s.pal_integer_value, 
              s.pal_float_value, s.pal_date_value, s.pal_timestamp_value, s.pal_boolean_value);
     else
       param_admin.edit_realm_parameter(  
@@ -167,7 +160,6 @@ as
         p_par_pgr_id => p_par_pgr_id,
         p_par_pre_id => p_par_pre_id,
         p_par_string_value => p_par_string_value,
-        p_par_raw_value => p_par_raw_value,
         p_par_xml_value => p_par_xml_value,
         p_par_integer_value => p_par_integer_value,
         p_par_float_value => p_par_float_value,
@@ -179,7 +171,7 @@ as
   
   
   procedure set_string(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
     p_par_value in varchar2,
     p_par_pre_id in parameter_realm.pre_id%type default null)
@@ -193,9 +185,9 @@ as
   end set_string;
   
   procedure set_clob(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_string_value%type,
+    p_par_value in parameter_v.par_string_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
@@ -205,39 +197,11 @@ as
       p_par_pre_id => p_par_pre_id,
       p_par_string_value => p_par_value);
   end set_clob;
-  
-  procedure set_raw(
-    p_par_id in parameter_vw.par_id%type,
-    p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in raw,
-    p_par_pre_id in parameter_realm.pre_id%type default null)
-  as
-  begin
-    set_multiple(
-      p_par_id => p_par_id,
-      p_par_pgr_id => p_par_pgr_id,
-      p_par_pre_id => p_par_pre_id,
-      p_par_raw_value => to_blob(p_par_value));
-  end set_raw;
-  
-  procedure set_blob(
-    p_par_id in parameter_vw.par_id%type,
-    p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_pre_id in parameter_realm.pre_id%type,
-    p_par_value in parameter_vw.par_raw_value%type)
-  as
-  begin
-    set_multiple(
-      p_par_id => p_par_id,
-      p_par_pgr_id => p_par_pgr_id,
-      p_par_pre_id => p_par_pre_id,
-      p_par_raw_value => p_par_value);
-  end set_blob;
 
   procedure set_xml(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_xml_value%type,
+    p_par_value in parameter_v.par_xml_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
@@ -249,9 +213,9 @@ as
   end set_xml;
 
   procedure set_float(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_float_value%type,
+    p_par_value in parameter_v.par_float_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
@@ -263,9 +227,9 @@ as
   end set_float;
 
   procedure set_integer(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_integer_value%type,
+    p_par_value in parameter_v.par_integer_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
@@ -277,9 +241,9 @@ as
   end set_integer;
 
   procedure set_date(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_date_value%type,
+    p_par_value in parameter_v.par_date_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
@@ -291,9 +255,9 @@ as
   end set_date;
 
   procedure set_timestamp(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_timestamp_value%type,
+    p_par_value in parameter_v.par_timestamp_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as
   begin
@@ -305,7 +269,7 @@ as
   end set_timestamp;
 
   procedure set_boolean(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
     p_par_value in boolean,
     p_par_pre_id in parameter_realm.pre_id%type default null)
@@ -321,7 +285,7 @@ as
 
   /* GETTER */
   function get_string(
-   p_par_id in parameter_vw.par_id%type,
+   p_par_id in parameter_v.par_id%type,
    p_par_pgr_id in parameter_group.pgr_id%type)
    return varchar2
   as
@@ -331,39 +295,19 @@ as
   end get_string;
   
   function get_clob(
-   p_par_id in parameter_vw.par_id%type,
+   p_par_id in parameter_v.par_id%type,
    p_par_pgr_id in parameter_group.pgr_id%type)
-   return parameter_vw.par_string_value%type
+   return parameter_v.par_string_value%type
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
     return g_parameter_rec.par_string_value;
   end get_clob;
-  
-  function get_raw(
-   p_par_id in parameter_vw.par_id%type,
-   p_par_pgr_id in parameter_group.pgr_id%type)
-   return raw
-  as
-  begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return dbms_lob.substr(g_parameter_rec.par_raw_value, c_max_raw_length, 1);
-  end get_raw;
-  
-  function get_blob(
-   p_par_id in parameter_vw.par_id%type,
-   p_par_pgr_id in parameter_group.pgr_id%type)
-   return parameter_vw.par_raw_value%type
-  as
-  begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_raw_value;
-  end get_blob;
 
   function get_xml(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_xml_value%type
+    return parameter_v.par_xml_value%type
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -371,9 +315,9 @@ as
   end get_xml;
 
   function get_float(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_float_value%type
+    return parameter_v.par_float_value%type
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -381,9 +325,9 @@ as
   end get_float;
 
   function get_integer(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_integer_value%type
+    return parameter_v.par_integer_value%type
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -391,9 +335,9 @@ as
   end get_integer;
 
   function get_date(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_date_value%type
+    return parameter_v.par_date_value%type
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -401,9 +345,9 @@ as
   end get_date;
 
   function get_timestamp(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_timestamp_value%type
+    return parameter_v.par_timestamp_value%type
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -411,7 +355,7 @@ as
   end get_timestamp;
 
   function get_boolean(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
     return boolean
   as
@@ -422,7 +366,7 @@ as
   
   
   procedure reset_parameter(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type default null)
   as

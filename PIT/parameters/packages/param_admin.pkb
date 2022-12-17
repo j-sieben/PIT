@@ -11,8 +11,11 @@ as
       Published under MIT licence
    */
   
-  c_true constant &FLAG_TYPE. := &C_TRUE.;
-  c_false constant &FLAG_TYPE. := &C_FALSE.;
+  C_TRUE constant &FLAG_TYPE. := &C_TRUE.;
+  C_FALSE constant &FLAG_TYPE. := &C_FALSE.;
+  C_PRE_ALL constant parameter_realm.pre_id%type := 'ALLE';
+  
+  g_import_mode boolean;
 
   /**
     Group: Helper Methods
@@ -33,8 +36,8 @@ as
   as
     l_boolean parameter_tab.par_boolean_value%type;
   begin
-    l_boolean := case when p_value then c_true
-                      when not p_value then c_false
+    l_boolean := case when p_value then C_TRUE
+                      when not p_value then C_FALSE
                       else null end;
     return l_boolean;
   end convert_boolean;
@@ -233,7 +236,8 @@ as
       Installation script for all local parameters of a parameter group
    */
   function get_local_parameters(
-    p_pgr_id in parameter_group.pgr_id%type)
+    p_pgr_id in parameter_group.pgr_id%type,
+    p_realm in binary_integer)
     return clob
   as
     cursor local_param_cur(p_pgr_id in varchar2) is
@@ -261,7 +265,8 @@ as
                else 'null'
              end par_value
         from parameter_local p
-       where pal_pgr_id = p_pgr_id
+       where (pal_pgr_id = p_pgr_id or p_pgr_id is null)
+         and ((p_realm = 1 and pal_pre_id != C_PRE_ALL) or (p_realm = 0 and pal_pre_id = C_PRE_ALL))
        order by pal_id;
   
     C_LOCAL_PARAM_TEMPLATE constant varchar2(32767) := q'^
@@ -301,15 +306,27 @@ as
     Group: Public Methods
    */
   /**
+    Procedure: set_import_mode
+      See <PARAM_ADMIN.set_import_mode>
+   */
+  procedure set_import_mode(
+    p_mode in boolean)
+  as
+  begin
+    g_import_mode := p_mode;
+  end set_import_mode;
+  
+  
+  /**
     Procedure: get_parameter_settings
       See <PARAM_ADMIN.get_parameter_settings>
    */
   function get_parameter_settings(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw%rowtype
+    return parameter_v%rowtype
   as
-    l_row parameter_vw%rowtype;
+    l_row parameter_v%rowtype;
     l_pgr_is_modifiable parameter_group.pgr_is_modifiable%type := C_FALSE;
   begin
     select -- If group cannot be modified, override individual setting, otherwise parameter setting
@@ -329,20 +346,20 @@ as
            l_row.par_validation_string,
            l_row.par_validation_message
       from parameter_group pg
-      left join
-           (select *
-              from parameter_vw p
-             where par_id = p_par_id) p
+      join parameter_v p
         on pg.pgr_id = p.par_pgr_id
-     where pg.pgr_id = p_pgr_id;
+     where pg.pgr_id = p_pgr_id
+       and p.par_id = p_par_id;
      
      return l_row;
   exception
     when no_data_found then
-      l_row.par_is_modifiable := C_FALSE;
+      l_row.par_id := p_par_id;
+      l_row.par_pgr_id := p_pgr_id;
+      l_row.par_is_modifiable := C_TRUE;
       l_row.par_validation_string := null;
       l_row.par_validation_message := null;
-      raise;
+    return l_row;
   end get_parameter_settings;
   
   
@@ -420,10 +437,37 @@ as
        where pal_pgr_id = p_pgr_id;
       delete from parameter_tab
        where par_pgr_id = p_pgr_id;
+    else
+      delete from parameter_local
+       where pal_pgr_id = p_pgr_id
+         and pal_pre_id != C_PRE_ALL;
+      delete from parameter_group
+       where pgr_id = p_pgr_id
+         and not exists(
+             select null
+               from parameter_local
+              where pal_pgr_id = p_pgr_id);
     end if;
-    delete from parameter_group
-     where pgr_id = p_pgr_id;
   end delete_parameter_group;
+  
+  
+  /**
+    Procedure: harmonize_parameter_group
+      See <PARAM_ADMIN.harmonize_parameter_group>
+   */
+  procedure harmonize_parameter_group(
+    p_pgr_id in parameter_group.pgr_id%type)
+  as
+  begin
+    delete from parameter_local
+     where pal_pgr_id = p_pgr_id
+       and not exists(
+           select null
+             from parameter_tab
+            where par_pgr_id = p_pgr_id
+              and par_id = pal_id);
+    commit;
+  end harmonize_parameter_group;
   
   
   /**
@@ -453,6 +497,8 @@ as
     p_row in parameter_realm%rowtype)
   as
   begin
+    validate_parameter_realm(p_row);
+    
     merge into parameter_realm t
     using (select p_row.pre_id pre_id,
                   p_row.pre_description pre_description,
@@ -484,6 +530,14 @@ as
     delete from parameter_realm
      where pre_id = p_pre_id;
   end delete_parameter_realm;
+
+
+  procedure validate_parameter_realm(
+    p_pre_id in parameter_realm%rowtype)
+  as
+  begin
+    null;
+  end validate_parameter_realm;
   
 
   /**
@@ -514,18 +568,18 @@ as
       See <PARAM_ADMIN.validate_parameter>
    */
   procedure validate_parameter(
-    p_row in parameter_vw%rowtype)
+    p_row in parameter_v%rowtype)
   as
     l_pgr_is_modifiable parameter_tab.par_is_modifiable%type;
     l_stmt varchar2(4000 byte);
     l_valid pls_integer;
   begin
-    select coalesce(max(pgr_is_modifiable), c_true)
+    select coalesce(max(pgr_is_modifiable), C_TRUE)
       into l_pgr_is_modifiable
       from parameter_group
      where pgr_id = p_row.par_pgr_id;
      
-    if l_pgr_is_modifiable = C_TRUE then
+    if l_pgr_is_modifiable = C_TRUE or g_import_mode then
       -- Validiere Parameter
       if p_row.par_validation_string is not null then
         -- Erzeuge Validierungsanweisung
@@ -534,7 +588,7 @@ as
         l_stmt := replace(l_stmt, '#DATE#', case when p_row.par_date_value is not null then 'timestamp ''' || to_char(p_row.par_date_value, 'yyyy-mm-dd hh24:mi:ss') || '''' else 'NULL' end);
         l_stmt := replace(l_stmt, '#FLOAT#', p_row.par_float_value);
         l_stmt := replace(l_stmt, '#INTEGER#', p_row.par_integer_value);
-        l_stmt := replace(l_stmt, '#BOOLEAN#', case when p_row.par_boolean_value = C_TRUE then dbms_assert.enquote_literal(C_TRUE) else dbms_assert.enquote_literal(C_FALSE) end);
+        l_stmt := replace(l_stmt, '#BOOLEAN#', case when coalesce(p_row.par_boolean_value, C_TRUE) = C_TRUE then dbms_assert.enquote_literal(C_TRUE) else dbms_assert.enquote_literal(C_FALSE) end);
         l_stmt := 'begin if ' || l_stmt || ' then :x := 1; else :x := 0; end if; end;';
         -- Validiere den Ausdruck
         begin
@@ -574,7 +628,7 @@ as
     p_par_validation_string in parameter_tab.par_validation_string%type default null,
     p_par_validation_message in parameter_tab.par_validation_message%type default null) 
   as
-    l_row parameter_vw%rowtype;
+    l_row parameter_v%rowtype;
   begin
     -- copy parameters to record instance
     l_row.par_id := p_par_id;
@@ -602,7 +656,7 @@ as
       See <PARAM_ADMIN.edit_parameter>
    */
   procedure edit_parameter(
-    p_row in parameter_vw%rowtype)
+    p_row in parameter_v%rowtype)
   as
   begin
     validate_parameter(p_row);
@@ -670,24 +724,28 @@ as
       See <PARAM_ADMIN.validate_realm_parameter>
    */
   procedure validate_realm_parameter(
-    p_row in out nocopy parameter_vw%rowtype)
+    p_row in out nocopy parameter_v%rowtype)
   as
-    l_is_modifiable boolean;
+    param_value_invalid exception;
+    param_not_modifiable exception;
+    pragma exception_init(param_value_invalid, -20000);
+    pragma exception_init(param_not_modifiable, -20001);
+    l_parameter_rec parameter_v%rowtype;
   begin
-  
-    p_row := get_parameter_settings(
+    l_parameter_rec := p_row;
+    l_parameter_rec := get_parameter_settings(
                          p_par_id => p_row.par_id,
                          p_pgr_id => p_row.par_pgr_id);
     
-    l_is_modifiable := p_row.par_id is not null and p_row.par_is_modifiable = C_TRUE;
+    if l_parameter_rec.par_is_modifiable = C_TRUE then
     
-    if l_is_modifiable then
-      param_admin.validate_parameter(p_row);
+                           
+      param_admin.validate_parameter(l_parameter_rec);
     else
-      if p_row.par_id is not null then
+      if l_parameter_rec.par_id is not null then
         raise_application_error(-20000, 'Parameter not existing');
       else
-        raise_application_error(-20000, 'Parameter not modifiable');
+        raise_application_error(-20001, 'Parameter not modifiable');
       end if;
     end if;
   
@@ -699,26 +757,24 @@ as
       See <PARAM_ADMIN.edit_realm_parameter>
    */
   procedure edit_realm_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type,
-    p_par_string_value in parameter_vw.par_string_value%type default null,
-    p_par_raw_value in parameter_vw.par_raw_value%type default null,
-    p_par_xml_value in parameter_vw.par_xml_value%type default null,
-    p_par_integer_value in parameter_vw.par_integer_value%type default null,
-    p_par_float_value in parameter_vw.par_float_value%type default null,
-    p_par_date_value in parameter_vw.par_date_value%type default null,
-    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_string_value in parameter_v.par_string_value%type default null,
+    p_par_xml_value in parameter_v.par_xml_value%type default null,
+    p_par_integer_value in parameter_v.par_integer_value%type default null,
+    p_par_float_value in parameter_v.par_float_value%type default null,
+    p_par_date_value in parameter_v.par_date_value%type default null,
+    p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null)
   as
-    l_row parameter_vw%rowtype;
+    l_row parameter_v%rowtype;
   begin 
   
     l_row.par_id := p_par_id;
     l_row.par_pgr_id := p_par_pgr_id;
     l_row.par_pre_id := p_par_pre_id;
     l_row.par_string_value := p_par_string_value;
-    l_row.par_raw_value := p_par_raw_value;
     l_row.par_xml_value := p_par_xml_value;
     l_row.par_integer_value := p_par_integer_value;
     l_row.par_float_value := p_par_float_value;
@@ -736,9 +792,9 @@ as
       See <PARAM_ADMIN.edit_realm_parameter>
    */
   procedure edit_realm_parameter(
-    p_row in parameter_vw%rowtype)
+    p_row in parameter_v%rowtype)
   as
-    l_row parameter_vw%rowtype;
+    l_row parameter_v%rowtype;
   begin
   
     l_row := p_row;
@@ -749,7 +805,6 @@ as
                   p_row.par_pgr_id pal_pgr_id,
                   p_row.par_pre_id pal_pre_id,
                   p_row.par_string_value pal_string_value,
-                  p_row.par_raw_value pal_raw_value,
                   p_row.par_xml_value pal_xml_value,
                   p_row.par_integer_value pal_integer_value,
                   p_row.par_float_value pal_float_value,
@@ -763,7 +818,6 @@ as
        and decode(t.pal_pre_id, s.pal_pre_id, 0, 1) = 0)
      when matched then update set
           t.pal_string_value = s.pal_string_value,
-          t.pal_raw_value = s.pal_raw_value,
           t.pal_xml_value = s.pal_xml_value,
           t.pal_integer_value = s.pal_integer_value,
           t.pal_float_value = s.pal_float_value,
@@ -771,10 +825,10 @@ as
           t.pal_timestamp_value = s.pal_timestamp_value,
           t.pal_boolean_value = s.pal_boolean_value
      when not matched then insert
-          (pal_id, pal_pgr_id, pal_pre_id, pal_string_value, pal_raw_value, pal_xml_value, pal_integer_value, 
+          (pal_id, pal_pgr_id, pal_pre_id, pal_string_value, pal_xml_value, pal_integer_value, 
            pal_float_value, pal_date_value, pal_timestamp_value, pal_boolean_value)
           values
-          (s.pal_id, s.pal_pgr_id, s.pal_pre_id, s.pal_string_value, s.pal_raw_value, s.pal_xml_value, s.pal_integer_value, 
+          (s.pal_id, s.pal_pgr_id, s.pal_pre_id, s.pal_string_value, s.pal_xml_value, s.pal_integer_value, 
            s.pal_float_value, s.pal_date_value, s.pal_timestamp_value, s.pal_boolean_value);
     
   end edit_realm_parameter;
@@ -785,8 +839,8 @@ as
       See <PARAM_ADMIN.delete_realm_parameter>
    */
   procedure delete_realm_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type)
   as
   begin
@@ -804,27 +858,60 @@ as
   function export_parameter_group(
     p_pgr_id in parameter_group.pgr_id%type)
     return clob
-  as       
+  as
        
     l_script clob;
     l_chunk clob;
     l_clause varchar2(32767);
+    c_start constant varchar2(2000) := q'~set define ~
+    
+begin
+  param_admin.set_import_mode(true);
+  
+~';
+    c_end constant varchar2(2000) := q'~
+  
+  param_admin.harmonize_parameter_group('#PGR_ID#');
+  
+  param_admin.set_import_mode(false);
+  commit;
+end;~' || chr(10) || '/' || chr(10) || 'set define &' || chr(10);
+
+  begin
+    dbms_lob.createtemporary(l_script, false, dbms_lob.call);
+    dbms_lob.append(l_script, c_start);
+    dbms_lob.append(l_script, get_parameter_group(p_pgr_id));
+    dbms_lob.append(l_script, get_parameters(p_pgr_id));
+    --dbms_lob.append(l_script, get_parameter_realms(p_pgr_id));
+    dbms_lob.append(l_script, get_local_parameters(p_pgr_id, p_realm => 1));
+    dbms_lob.append(l_script, REPLACE(C_END, '#PGR_ID#', p_pgr_id));
+    return l_script;
+  end export_parameter_group;
+  
+  
+  /**
+    Procedure: export_local_parameters
+      See <PARAM_ADMIN.export_local_parameters>
+   */
+  function export_local_parameters(
+    p_pgr_id in parameter_group.pgr_id%type default null)
+    return clob
+  as
+    l_script clob;
     c_start constant varchar2(2000) := q'~begin
 ~';
     c_end constant varchar2(2000) := q'~
+    
   commit;
 end;
 /~';
   begin
     dbms_lob.createtemporary(l_script, false, dbms_lob.call);
     dbms_lob.append(l_script, c_start);
-    dbms_lob.append(l_script, get_parameter_group(p_pgr_id));
-    dbms_lob.append(l_script, get_parameters(p_pgr_id));
-    dbms_lob.append(l_script, get_parameter_realms(p_pgr_id));
-    dbms_lob.append(l_script, get_local_parameters(p_pgr_id));
-    dbms_lob.append(l_script, C_END);
+    dbms_lob.append(l_script, get_local_parameters(p_pgr_id, p_realm => 0));
+    dbms_lob.append(l_script, REPLACE(C_END, '#PGR_ID#', p_pgr_id));
     return l_script;
-  end export_parameter_group;
+  end export_local_parameters;
 
        
 end param_admin;

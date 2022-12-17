@@ -17,7 +17,7 @@ col install_user new_val INSTALL_USER format a30
 col remote_user new_val REMOTE_USER format a30
 col default_language new_val DEFAULT_LANGUAGE format a30
 
-define APEX_ALIAS =&4.
+define APEX_ALIAS = &4.
 define APP_ID = &5.
 
 
@@ -31,7 +31,7 @@ select case when instr('&1.', '[') > 0
   
 define PIT_USER = &INSTALL_USER.
    
-set termout on
+set termout off
 declare
   l_ws_exists binary_integer;
 begin
@@ -47,7 +47,7 @@ begin
 end;
 /
 
-set termout off
+set termout on
  
 select pml_name default_language
   from &PIT_USER..pit_message_language_v
@@ -56,8 +56,9 @@ select pml_name default_language
 col apex_version new_val APEX_VERSION format a30
 col apex_ws new_val APEX_WS format a30
 
-select /*case when utl_apex.get_apex_version between 19 and 20.1 then '19_1'*/
-       '20_2' apex_version, upper('&3.') apex_ws
+select case 
+         when utl_apex.get_apex_version between 19 and 22.1 then '20_2'
+         else '22_2' end apex_version, upper('&3.') apex_ws
   from dual;
  
 -- Define length of ORA_NAME_TYPE according to oracle version

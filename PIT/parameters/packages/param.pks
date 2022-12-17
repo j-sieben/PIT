@@ -9,15 +9,14 @@ as
    * %throws {*} - param_value_invalid_err, if validation failed or parameter does not exist or parameter is not modifiable
    */
   procedure validate_parameter(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
-    p_par_string_value in parameter_vw.par_string_value%type default null,
-    p_par_raw_value in parameter_vw.par_raw_value%type default null,
-    p_par_xml_value in parameter_vw.par_xml_value%type default null,
-    p_par_integer_value in parameter_vw.par_integer_value%type default null,
-    p_par_float_value in parameter_vw.par_float_value%type default null,
-    p_par_date_value in parameter_vw.par_date_value%type default null,
-    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
+    p_par_string_value in parameter_v.par_string_value%type default null,
+    p_par_xml_value in parameter_v.par_xml_value%type default null,
+    p_par_integer_value in parameter_v.par_integer_value%type default null,
+    p_par_float_value in parameter_v.par_float_value%type default null,
+    p_par_date_value in parameter_v.par_date_value%type default null,
+    p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null);
    
    
@@ -31,16 +30,15 @@ as
    *         - You have a software that sets parameters generically which does not know what the type of the value is
    */
   procedure set_multiple(
-    p_par_id parameter_vw.par_id%type,
-    p_par_pgr_id parameter_vw.par_pgr_id%type,
+    p_par_id parameter_v.par_id%type,
+    p_par_pgr_id parameter_v.par_pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type,
-    p_par_string_value in parameter_vw.par_string_value%type default null,
-    p_par_raw_value in parameter_vw.par_raw_value%type default null,
-    p_par_xml_value in parameter_vw.par_xml_value%type default null,
-    p_par_integer_value in parameter_vw.par_integer_value%type default null,
-    p_par_float_value in parameter_vw.par_float_value%type default null,
-    p_par_date_value in parameter_vw.par_date_value%type default null,
-    p_par_timestamp_value in parameter_vw.par_timestamp_value%type default null,
+    p_par_string_value in parameter_v.par_string_value%type default null,
+    p_par_xml_value in parameter_v.par_xml_value%type default null,
+    p_par_integer_value in parameter_v.par_integer_value%type default null,
+    p_par_float_value in parameter_v.par_float_value%type default null,
+    p_par_date_value in parameter_v.par_date_value%type default null,
+    p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null);
    
   /** Sets a String parameter value
@@ -51,7 +49,7 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_string(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
     p_par_value in varchar2,
     p_par_pre_id in parameter_realm.pre_id%type default null);
@@ -64,36 +62,10 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_clob(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_string_value%type,
+    p_par_value in parameter_v.par_string_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
-   
-  /** Sets a Raw parameter value (cast to varchar2)
-   * %param  p_par_id         Name of the parameter
-   * %param  p_par_pgr_id     Name of the parameter group
-   * %param  p_par_value      Value of the parameter
-   * %param [p_par_pre_id]    Name of the parameter realm
-   * %usage  Is called by the end user to set a new parameter value
-   */
-  procedure set_raw(
-    p_par_id in parameter_vw.par_id%type,
-    p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in raw,
-    p_par_pre_id in parameter_realm.pre_id%type default null);
-   
-  /** Sets a BLOB parameter value
-   * %param  p_par_id         Name of the parameter
-   * %param  p_par_pgr_id     Name of the parameter group
-   * %param  p_par_value      Value of the parameter
-   * %param [p_par_pre_id]    Name of the parameter realm
-   * %usage  Is called by the end user to set a new parameter value
-   */
-  procedure set_blob(
-    p_par_id in parameter_vw.par_id%type,
-    p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_pre_id in parameter_realm.pre_id%type,
-    p_par_value in parameter_vw.par_raw_value%type);
 
   /** Sets an XML parameter value
    * %param  p_par_id         Name of the parameter
@@ -103,9 +75,9 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_xml(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_xml_value%type,
+    p_par_value in parameter_v.par_xml_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
 
   /** Sets a String parameter value
@@ -116,9 +88,9 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_float(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_float_value%type,
+    p_par_value in parameter_v.par_float_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
 
   /** Sets a String parameter value
@@ -129,9 +101,9 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_integer(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_integer_value%type,
+    p_par_value in parameter_v.par_integer_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
 
   /** Sets a String parameter value
@@ -142,9 +114,9 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_date(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_date_value%type,
+    p_par_value in parameter_v.par_date_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
 
   /** Sets a String parameter value
@@ -155,9 +127,9 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_timestamp(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
-    p_par_value in parameter_vw.par_timestamp_value%type,
+    p_par_value in parameter_v.par_timestamp_value%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
 
   /** Sets a String parameter value
@@ -168,7 +140,7 @@ as
    * %usage  Is called by the end user to set a new parameter value
    */
   procedure set_boolean(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
     p_par_value in boolean,
     p_par_pre_id in parameter_realm.pre_id%type default null);
@@ -181,7 +153,7 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_string(
-   p_par_id in parameter_vw.par_id%type,
+   p_par_id in parameter_v.par_id%type,
    p_par_pgr_id in parameter_group.pgr_id%type)
    return varchar2;
 
@@ -192,32 +164,10 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_clob(
-   p_par_id in parameter_vw.par_id%type,
+   p_par_id in parameter_v.par_id%type,
    p_par_pgr_id in parameter_group.pgr_id%type)
-   return parameter_vw.par_string_value%type;
-
-  /** Reads a parameter value
-   * %param  p_par_id  Name of the parameter
-   * %param  p_par_pgr_id  Name of the parameter group
-   * %return RAW value
-   * %usage  Is called by the end user to get a parameter value
-   */
-  function get_raw(
-   p_par_id in parameter_vw.par_id%type,
-   p_par_pgr_id in parameter_group.pgr_id%type)
-   return raw;
-
-  /** Reads a parameter value
-   * %param  p_par_id  Name of the parameter
-   * %param  p_par_pgr_id  Name of the parameter group
-   * %return RAW value
-   * %usage  Is called by the end user to get a parameter value
-   */
-  function get_blob(
-   p_par_id in parameter_vw.par_id%type,
-   p_par_pgr_id in parameter_group.pgr_id%type)
-   return parameter_vw.par_raw_value%type;
-
+   return parameter_v.par_string_value%type;
+   
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
    * %param  p_par_pgr_id  Name of the parameter group
@@ -225,9 +175,9 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_xml(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_xml_value%type;
+    return parameter_v.par_xml_value%type;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -236,9 +186,9 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_float(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_float_value%type;
+    return parameter_v.par_float_value%type;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -247,9 +197,9 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_integer(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_integer_value%type;
+    return parameter_v.par_integer_value%type;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -258,9 +208,9 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_date(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_date_value%type;
+    return parameter_v.par_date_value%type;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -269,9 +219,9 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_timestamp(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_vw.par_timestamp_value%type;
+    return parameter_v.par_timestamp_value%type;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -280,7 +230,7 @@ as
    * %usage  Is called by the end user to get a parameter value
    */
   function get_boolean(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
     return boolean;
     
@@ -292,7 +242,7 @@ as
    * %usage  Is used to remove a local setting. If removed, the default parameter value is active again.
    */
   procedure reset_parameter(
-    p_par_id in parameter_vw.par_id%type,
+    p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type,
     p_par_pre_id in parameter_realm.pre_id%type default null);
     
