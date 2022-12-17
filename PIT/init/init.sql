@@ -35,9 +35,8 @@ select '' "2"
   from dual
  where null is not null;
  
-select property_value ts
-  from database_properties 
- where property_name = 'DEFAULT_PERMANENT_TABLESPACE';
+select default_tablespace ts
+  from user_users;
  
 define default_tablespace = &2. &ts.
 undefine ts

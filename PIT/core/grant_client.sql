@@ -18,6 +18,7 @@ prompt &h3.Packages
 @tools/grant_access.sql execute pit
 @tools/grant_access.sql execute pit_admin
 @tools/grant_access.sql execute pit_util
+@tools/grant_access.sql execute pit_app_api
 
 prompt &h3.Tables
 @tools/grant_access.sql "select, references" pit_message

@@ -138,6 +138,20 @@ as
     return boolean;
     
     
+  /**
+    Procedure: tweet
+      Lightweight message for temporary comments additiona debug information.
+      
+      Does not require full messages, will not translate nor will it generate
+      environment information such as call stack or error stack information.
+      
+    Parameter:
+      p_message - Textmessage to tweet
+   */
+  procedure tweet(
+    p_message in varchar2);
+    
+    
   /** 
     Procedure: verbose
       Captures debug information, level <level_verbose>
@@ -150,11 +164,13 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
    */  
   procedure verbose(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null);
     
     
   /** 
@@ -169,11 +185,13 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
    */  
   procedure debug(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null);
     
     
   /** 
@@ -190,11 +208,13 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
    */  
   procedure info(
     p_message_name in varchar2,
     p_msg_args msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null);
     
     
   /** 
@@ -209,11 +229,13 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
    */  
   procedure warn(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
-    p_affected_id in varchar2 default null);
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null);
     
     
   /** 
@@ -228,12 +250,14 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code -  Optional error code, usable by external applications
    */
   procedure error(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null);
     
     
@@ -248,12 +272,14 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code -  Optional error code, usable by external applications
    */
   procedure fatal(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null);
     
   
@@ -273,6 +299,7 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Optional error code, usable by external applications
       p_log_threshold - Optional log level for the log process. Should the
                         severity of the requested message be higher than this level, it
@@ -286,6 +313,7 @@ as
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_log_threshold in number default null,
     p_log_modules in varchar2 default null); 
@@ -324,6 +352,7 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Optional error code, usable by external applications
       p_params - Instance of <msg_params> with a list of key-value pairs representing parameter name and -value.
    
@@ -333,6 +362,7 @@ as
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
     
@@ -351,6 +381,7 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Optional error code, usable by external applications
       p_params - Instance of <msg_params> with a list of key-value pairs representing parameter name and -value.
    */
@@ -358,6 +389,7 @@ as
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
   
@@ -377,6 +409,7 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Optional error code, usable by external applications
       p_params - Instance of <msg_params> with a list of key-value pairs representing parameter name and -value.
    
@@ -388,6 +421,7 @@ as
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
   
@@ -400,6 +434,7 @@ as
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
     
@@ -667,6 +702,7 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to        
       p_log_threshold - Optional log level for the log process. Should the
                         severity of the requested message be higher than this level, it
                         won't get logged. If null, the message is logged if it's severity
@@ -680,6 +716,7 @@ as
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_log_threshold in number default null,
     p_log_modules in varchar2 default null);
   
@@ -721,10 +758,10 @@ as
     Returns:
       Translated and parameterized message text as CLOB
    */
-  function get_message_text(
+  /*function get_message_text(
     p_message_name in varchar2,
     p_msg_args in msg_args_char)
-    return clob;
+    return clob;*/
     
   
   /** 
@@ -737,6 +774,7 @@ as
       p_message_name - Name of the Message
       p_msg_args - Optional list of message parameters
       p_affected_id - Optional reference to an object the message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Optional error code, usable by external applications
       
     Returns:
@@ -746,6 +784,7 @@ as
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null)
     return message_type;
     
@@ -774,22 +813,28 @@ as
       Use this procedure to check whether an expression evaluates to true.
       
       If the assertion fails, an error is thrown. You may choose to throw a client
-      specific error message. If this parameter is not set, a default message <msg.ASSERT_TRUE> is used.
+      specific error message. If this parameter is not set, a default message <msg.PIT_ASSERT_TRUE> is used.
         
     Parameters:
       p_condition  - Boolean expression to check.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_TRUE>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.PIT_ASSERT_TRUE>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to 
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.  
+      p_severity - Optional severity, overrides the message severity. If NULL,
+                   the message severity takes precedence, if (and only if) its
+                   severity is more severe than <pit.LEVEL_ERROR>.  
    */
   procedure assert(
     p_condition in boolean,
-    p_message_name in varchar2 default msg.ASSERT_TRUE,
+    p_message_name in varchar2 default msg.PIT_ASSERT_TRUE,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
   
   
   /** 
@@ -799,23 +844,29 @@ as
       Use this procedure to check whether an expression is NULL.
       
       If the assertion fails, an error is thrown. You may choose to throw a client
-      specific error message. If this parameter is not set, a default message <msg.ASSERT_IS_NULL>
+      specific error message. If this parameter is not set, a default message <msg.PIT_ASSERT_IS_NULL>
       is used.
         
     Parameters:
       p_condition  - Boolean expression to check.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_IS_NULL>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.PIT_ASSERT_IS_NULL>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to 
       p_error_code - Optional error code, usable by external applications and to distinguish
-                     several occurences of the same message.  
+                     several occurences of the same message. 
+      p_severity - Optional severity, overrides the message severity. If NULL,
+                   the message severity takes precedence, if (and only if) its
+                   severity is more severe than <pit.LEVEL_ERROR>.
    */
   procedure assert_is_null(
     p_condition in varchar2,
-    p_message_name in varchar2 default msg.ASSERT_IS_NULL,
+    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NULL,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
@@ -824,10 +875,12 @@ as
    */
   procedure assert_is_null(
     p_condition in number,
-    p_message_name in varchar2 default msg.ASSERT_IS_NULL,
+    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NULL,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
@@ -836,10 +889,12 @@ as
    */
   procedure assert_is_null(
     p_condition in date,
-    p_message_name in varchar2 default msg.ASSERT_IS_NULL,
+    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NULL,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
   
   
   /**
@@ -849,23 +904,29 @@ as
       Use this procedure to check whether an expression is not NULL.
       
       If the assertion fails, an error is thrown. You may choose to throw a client
-      specific error message. If this parameter is not set, a default message <msg.ASSERT_IS_NOT_NULL>
+      specific error message. If this parameter is not set, a default message <msg.PIT_ASSERT_IS_NOT_NULL>
       is used.
         
     Parameters:
       p_condition  - Boolean expression to check.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_IS_NOT_NULL>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.PIT_ASSERT_IS_NOT_NULL>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to   
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.  
+      p_severity - Optional severity, overrides the message severity. If NULL,
+                   the message severity takes precedence, if (and only if) its
+                   severity is more severe than <pit.LEVEL_ERROR>.
    */
   procedure assert_not_null(
     p_condition in varchar2,
-    p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
+    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NOT_NULL,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /**
@@ -874,10 +935,12 @@ as
    */
   procedure assert_not_null(
     p_condition in number,
-    p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
+    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NOT_NULL,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /**
@@ -886,10 +949,12 @@ as
    */
   procedure assert_not_null(
     p_condition in date,
-    p_message_name in varchar2 default msg.ASSERT_IS_NOT_NULL,
+    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NOT_NULL,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
@@ -899,72 +964,88 @@ as
       Pass a select statement that is expected to return a row.
       If the statement does return a row, it will silently quit, otherwise
       it will throw a client specific error message. If this
-      parameter is not set, a default message <msg.ASSERT_EXISTS>
+      parameter is not set, a default message <msg.PIT_ASSERT_EXISTS>
       is used.
         
     Parameters:
       p_stmt - SQL-statement that either returns rows or not.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_EXISTS>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.PIT_ASSERT_EXISTS>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to   
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.  
+      p_severity - Optional severity, overrides the message severity. If NULL,
+                   the message severity takes precedence, if (and only if) its
+                   severity is more severe than <pit.LEVEL_ERROR>.
    */
   procedure assert_exists(
     p_stmt in varchar2,
-    p_message_name in varchar2 default msg.ASSERT_EXISTS,
+    p_message_name in varchar2 default msg.PIT_ASSERT_EXISTS,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
     Procedure: assert_exists
       Asserts that <P_CURSOR> returns at least one row. Overload for SYS_REFCURSOR.
    */
-   procedure assert_exists(
-     p_cursor in out nocopy sys_refcursor,
-     p_message_name in varchar2 default msg.ASSERT_EXISTS,
-     p_msg_args msg_args := null,
-     p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null);
+  procedure assert_exists(
+    p_cursor in out nocopy sys_refcursor,
+    p_message_name in varchar2 default msg.PIT_ASSERT_EXISTS,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
-    Procedure: assert_exists
+    Procedure: assert_not_exists
       Asserts that <P_STMT> does not return a row. Overload for text statements.
       
       Pass a select statement that is expected to return no row.
       If the statement does return no row, it will silently quit, otherwise it will throw 
-      a client specific error message. If this parameter is not set, a default message <msg.ASSERT_NOT_EXISTS>
+      a client specific error message. If this parameter is not set, a default message <msg.PIT_ASSERT_NOT_EXISTS>
       is used.
         
     Parameters:
       p_stmt - SQL-statement that either returns rows or not.
-      p_message_name - Optional name of the message. Defaults to <msg.ASSERT_NOT_EXISTS>. References package <MSG>
+      p_message_name - Optional name of the message. Defaults to <msg.PIT_ASSERT_NOT_EXISTS>. References package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to   
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.  
+      p_severity - Optional severity, overrides the message severity. If NULL,
+                   the message severity takes precedence, if (and only if) its
+                   severity is more severe than <pit.LEVEL_ERROR>.
    */
   procedure assert_not_exists(
     p_stmt in varchar2,
-    p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
+    p_message_name in varchar2 default msg.PIT_ASSERT_NOT_EXISTS,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
-    p_error_code in varchar2 default null);
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
     Procedure: assert_not_exists
       Asserts that <P_CURSOR> does not return a row. Overload for SYS_REFCURSOR.
    */
-   procedure assert_not_exists(
-     p_cursor in out nocopy sys_refcursor,
-     p_message_name in varchar2 default msg.ASSERT_NOT_EXISTS,
-     p_msg_args msg_args := null,
-     p_affected_id in varchar2 default null,
-     p_error_code in varchar2 default null);
+  procedure assert_not_exists(
+    p_cursor in out nocopy sys_refcursor,
+    p_message_name in varchar2 default msg.PIT_ASSERT_NOT_EXISTS,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null,
+    p_severity in binary_integer default null);
     
     
   /** 
@@ -980,20 +1061,26 @@ as
       p_message_name - Name of the message. Reference to package <MSG>
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.
       p_accept_null - Optional flag to indicate whether a value must be present. Defaults to TRUE, allowing NULL values.
                       If set to FALSE, <P_VALUE> must contain a valueFALSE.
+      p_severity - Optional severity, overrides the message severity. If NULL,
+                   the message severity takes precedence, if (and only if) its
+                   severity is more severe than <pit.LEVEL_ERROR>.
    */
    procedure assert_datatype(
      p_value in varchar2,
      p_type in varchar2,
      p_format_mask in varchar2 default null,
-     p_message_name in varchar2 default msg.ASSERT_DATATYPE,
+     p_message_name in varchar2 default msg.PIT_ASSERT_DATATYPE,
      p_msg_args msg_args := null,
      p_affected_id in varchar2 default null,
+     p_affected_ids in msg_params default null,
      p_error_code in varchar2 default null,
-     p_accept_null in boolean default true);
+     p_accept_null in boolean default true,
+     p_severity in binary_integer default null);
   
     
   /**

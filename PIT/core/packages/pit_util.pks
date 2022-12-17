@@ -25,8 +25,8 @@ as
       small_char - VARCHAR2 with 255 byte length
       sign_type - One character, used for signs apart from boolean flags
    */
-  c_max_length constant binary_integer := &ORA_MAX_LENGTH.;
-  subtype ora_name_type is &ORA_NAME_TYPE.;
+  c_max_length constant binary_integer := 128;
+  subtype ora_name_type is varchar2(128 byte);
   subtype flag_type is &FLAG_TYPE.;
   subtype max_char is varchar2(32767 byte);
   subtype max_sql_char is varchar2(4000 byte);
@@ -101,7 +101,7 @@ as
   function c_false
     return flag_type;
     
-  C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
+  C_DEFAULT_LANGUAGE constant ora_name_type := 'GERMAN';
   C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
   C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';
   C_DEFAULT_CONTEXT constant ora_name_type := C_CONTEXT_PREFIX || 'DEFAULT';

@@ -10,8 +10,13 @@
 set termout off
 
 @init/init_client.sql &1. &2.
+     
+col default_tablespace new_val DEFAULT_TABLESPACE format a128
+select default_tablespace
+  from user_users;
 
 prompt &s1.Checking whether PIT exists at user &PIT_USER.
+    
 declare
   l_pit_exists binary_integer;
 begin

@@ -2,6 +2,16 @@ create or replace type body pit_console
 as
   /** Implementation of PIT CONSOLE output module */
   
+  overriding member procedure tweet(
+    self in out nocopy pit_console,
+    p_message in message_type)
+  as
+  begin
+    if p_message.severity <= fire_threshold then
+       pit_console_pkg.tweet(p_message);
+    end if;
+  end tweet;
+  
   
   overriding member procedure log(
     self in out nocopy pit_console,

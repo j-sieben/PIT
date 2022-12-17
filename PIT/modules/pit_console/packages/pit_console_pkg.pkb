@@ -139,6 +139,18 @@ as
     Group: Interface 
    */
   /**
+    Procedure: tweet
+      see <PIT_CONSOLE_PKG.tweet>
+   */
+  procedure tweet(
+    p_message in message_type)
+  as
+  begin
+    print(replace(g_message_template, '#MESSAGE#', p_message.message_text));
+  end tweet;
+  
+  
+  /**
     Procedure: log
       see <PIT_CONSOLE_PKG.log>
    */
@@ -207,7 +219,7 @@ as
   begin
     dbms_output.put_line(
       pit.get_message_text(
-        msg.CTX_CHANGED,
+        msg.PIT_CTX_CHANGED,
         msg_args(p_ctx.trace_settings)));
   end context_changed;
 

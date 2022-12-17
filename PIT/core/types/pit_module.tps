@@ -1,4 +1,6 @@
-create or replace type pit_module force as object(
+create or replace type pit_module force 
+  authid definer
+as object(
   /** 
     Package: PIT_MODULE
       Abstract output module for PIT.
@@ -10,7 +12,7 @@ create or replace type pit_module force as object(
       stack - If this module is unusable, this property contains information about the reason.
    */
   fire_threshold integer,
-  status &ORA_NAME_TYPE.,
+  status varchar2(128 byte),
   stack varchar2(2000 byte),
   
   /**
@@ -23,6 +25,17 @@ create or replace type pit_module force as object(
   member procedure context_changed(
     self in out nocopy pit_module,
     p_ctx in pit_context_type),
+    
+  /** 
+    Procedure: tweet
+      Method is called for lightweight developer output
+      
+    Parameter: 
+      p_message - Instance of PIT_TWEET message
+   */
+  member procedure tweet(
+    self in out nocopy pit_module,
+    p_message in message_type),
     
   /** 
     Procedure: log

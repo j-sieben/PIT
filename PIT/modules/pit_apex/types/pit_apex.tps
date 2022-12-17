@@ -1,4 +1,4 @@
-create type pit_apex under pit_module
+create or replace type pit_apex under pit_module
 (
    
   /** 
@@ -8,6 +8,14 @@ create type pit_apex under pit_module
     Author::
       Juergen Sieben, ConDeS GmbH
    */
+  
+  /** 
+    Procedure: tweet
+      See <PIT_MODULE.tweet>
+   */
+  overriding member procedure tweet(
+    self in out nocopy pit_apex,
+    p_message in message_type),
   
   /** 
     Procedure: log

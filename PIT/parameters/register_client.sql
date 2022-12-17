@@ -16,12 +16,12 @@ prompt &h3.Create synonyms
 @&tools.create_synonym.sql parameter_tab
 @&tools.create_synonym.sql parameter_type
 
-@&tools.create_synonym.sql parameter_core_vw
-@&tools.create_synonym.sql parameter_realm_vw
+@&tools.create_synonym.sql parameter_core_v
+@&tools.create_synonym.sql parameter_realm_v
 
 prompt &h3.Create PIT user tables and views
 prompt &s1.Create table PARAMETER_LOCAL
 @&param_dir.tables/parameter_local.tbl
 
-prompt &s1.Create view PARAMETER_VW
-@&param_dir.views/parameter_vw.vw
+prompt &s1.Create view PARAMETER_V
+@&param_dir.views/parameter_v.vw

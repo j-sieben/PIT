@@ -8,11 +8,6 @@ define C_FALSE="'N'";
 -- define C_TRUE=1;
 -- define C_FALSE=0;
    
--- Comment the following query out if you want to assign a specific tablespace for new users
-col default_tablespace new_val DEFAULT_TABLESPACE format a128
-select property_value default_tablespace
-  from database_properties 
- where property_name = 'DEFAULT_PERMANENT_TABLESPACE';
    
 -- ADJUST THIS SETTINGS IF YOU WANT ANOTHER ERROR PRE- OR POSTFIX
 -- CAVE: Max length per setting is 3 bytes or 1 byte when using pre- and postfix

@@ -11,6 +11,14 @@ as
     null;
   end context_changed;
   
+  member procedure tweet(
+    self in out nocopy pit_module,
+    p_message in message_type)
+  as
+  begin
+    null;
+  end tweet;
+  
   member procedure log (
     self in out nocopy pit_module,
     p_message in message_type)

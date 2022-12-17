@@ -10,20 +10,8 @@
 
 prompt
 prompt &section.
-prompt &h1.Registering PIT, found at &PIT_USER. at APEX client &REMOTE_USER.
+prompt &h1.Registering PIT_APP_API, found at &PIT_USER. at APEX client &REMOTE_USER.
 
-@parameters/register_client.sql
+@parameters/register_apex.sql
 
-@apex/register_client.sql
-
-prompt
-prompt &section.
-prompt &h1.Registering PIT output modules
-@modules/pit_console/register_client.sql
-@modules/pit_table/register_client.sql
-@modules/pit_apex/register_client.sql
---@modules/pit_test/register_client.sql
-@modules/pit_file/register_client.sql
---@modules/pit_mail/register_client.sql
-
-prompt &h1.Finished PIT client registration
+prompt &h1.Finished PIT apex registration
