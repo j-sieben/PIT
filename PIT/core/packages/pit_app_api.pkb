@@ -547,6 +547,7 @@ as
   procedure export_group(
     p_target pit_util.ora_name_type,
     p_group_name in pit_util.ora_name_type,
+    p_target_language in pit_util.ora_name_type,
     p_group_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
   as
@@ -554,6 +555,7 @@ as
     pit_admin.create_installation_script(
       p_pmg_name => p_group_name,
       p_target => p_target,
+      p_target_language => p_target_language,
       p_file_name => p_group_file_name,
       p_script => p_script);
   end export_group;

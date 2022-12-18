@@ -373,10 +373,12 @@ as
       
     Parameters:
       p_target - Type of export items. One of PMS, PAR or PTI
+      p_target_language - If not null, this controls the language in which the group is exported, if applicable
       p_pmg_list - Colon separated list of translatable item group names.
    */
   procedure export_groups(
     p_target pit_util.ora_name_type,
+    p_target_language in pit_util.ora_name_type,
     p_pmg_list in char_table)
   as
     l_clob clob;
@@ -395,6 +397,7 @@ as
       pit_app_api.export_group(
         p_target => p_target,
         p_group_name => p_pmg_list(i),
+        p_target_language => p_target_language,
         p_group_file_name => l_group_file_name,
         p_script => l_clob);
                    
@@ -1171,7 +1174,8 @@ as
           p_target => pit_app_api.C_TARGET_PMS);
       when 'EXPORT_PMS' then
         export_groups(
-          p_target => pit_app_api.C_TARGET_PMS, 
+          p_target => pit_app_api.C_TARGET_PMS,
+          p_target_language => g_export_row.pms_pml_name,
           p_pmg_list => g_export_row.pms_pmg_list);
       when 'TRANSLATE_PTI' then
         translate_groups(
@@ -1183,11 +1187,13 @@ as
           p_target => pit_app_api.C_TARGET_PTI);
       when 'EXPORT_PTI' then
         export_groups(
-          p_target => pit_app_api.C_TARGET_PTI, 
+          p_target => pit_app_api.C_TARGET_PTI,
+          p_target_language => g_export_row.pti_pml_name,
           p_pmg_list => g_export_row.pti_pmg_list);
       when 'EXPORT_PAR' then
         export_groups(
-          p_target => pit_app_api.C_TARGET_PAR, 
+          p_target => pit_app_api.C_TARGET_PAR,
+          p_target_language => null,
           p_pmg_list => g_export_row.par_pgr_list);
       when 'EXPORT_LOCAL_PAR' then
         export_local_parameters;
