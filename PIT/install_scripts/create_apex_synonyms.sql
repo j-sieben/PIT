@@ -10,8 +10,7 @@
 
 prompt
 prompt &section.
-prompt &h1.Registering PIT_APP_API, found at &PIT_USER. at APEX client &REMOTE_USER.
-
-@parameters/register_apex.sql
+prompt create APEX synonyms
+@core/register_client.sql
 
 prompt &h1.Finished PIT apex registration

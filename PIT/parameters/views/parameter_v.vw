@@ -12,7 +12,7 @@ create or replace view parameter_v as
        par_pat_id,
        par_validation_string,
        par_validation_message,
-       case when pal_id is not null then pit_util.C_TRUE else pit_util.C_FALSE end par_is_local
+       case when pal_id is not null then &C_TRUE. else &C_FALSE. end par_is_local
   from parameter_core_v
   full join parameter_local
     on par_id = pal_id

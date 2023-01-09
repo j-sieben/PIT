@@ -102,7 +102,15 @@ begin
     p_par_id => 'OMIT_PIT_IN_STACK'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Flag to indicate whether PIT package method calls should be contained in the call and error stack'
-   ,p_par_boolean_value => true
+   ,p_par_boolean_value => false
+   ,p_par_is_modifiable => null
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'OMIT_PKG_IN_STACK'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Comma separated list of additional package names that should not be contained in the call and error stack'
+   ,p_par_string_value => ''
    ,p_par_is_modifiable => null
   );
 

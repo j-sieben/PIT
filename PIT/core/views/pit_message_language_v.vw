@@ -9,15 +9,17 @@
     pml_rank - Ranking information of the langauges
  */
 create or replace view pit_message_language_v as
-with data as(
+with available_languages as(
        select pml_name, pml_display_name, pml_default_order
          from pit_message_language
-        where case when pml_default_order > 0 then pml_default_order else 1 end > 0
-       union all
-       select pml_name, pml_display_name, 100
+        where pml_default_order > 1),
+     session_language as(
+       select pml_name, pml_display_name, 100 pml_default_order
          from pit_message_language
         where pml_name = substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1))
-select pml_name, pml_display_name, pml_default_order, rank() over (order by pml_default_order desc) pml_rank
-  from data;
+select a.pml_name, a.pml_display_name, coalesce(s.pml_default_order, a.pml_default_order) pml_default_order, rank() over (order by coalesce(s.pml_default_order, a.pml_default_order) desc) pml_rank
+  from available_languages a
+  left join session_language s
+    on a.pml_name = s.pml_name;
     
 comment on table pit_message_language_v is 'PIT_MESSAGE_LANGUAGE values with all available translations and default language';

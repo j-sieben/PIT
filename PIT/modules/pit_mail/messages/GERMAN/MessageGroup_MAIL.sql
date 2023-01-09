@@ -23,7 +23,7 @@ begin
     p_pms_pml_name => 'GERMAN');
   
   pit_admin.merge_message(
-    p_pms_name => 'INVALID_MIME_TYPE',
+    p_pms_name => 'MAIL_INVALID_MIME_TYPE',
     p_pms_pmg_name => 'MAIL',
     p_pms_text => q'^Ungültiger Mime-Typ:#1#^',
     p_pms_description => q'^Der Typ der zu übertragenden Datei ist ein Format, das von MAIL nicht unterstützt wird.^',

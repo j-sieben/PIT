@@ -1,4 +1,4 @@
-create or replace package body pita_ui 
+create or replace package body pita_ui
 as
   /** 
     Package: PITA_UI Body
@@ -459,7 +459,7 @@ as
     for i in 1 .. p_uttm_list.count loop
       l_group_file_name := param.get_string('EXPORT_FILE_NAME_PAR', 'PIT');
       l_group_file_name := replace(replace(l_group_file_name, '#TYPE#', p_uttm_list(i)), '#type#', lower(p_uttm_list(i)));
-      l_clob := utl_text_admin.get_templates(char_table(p_uttm_list(i)));
+      l_clob := utl_text_admin.get_template_script(char_table(p_uttm_list(i)));
                    
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,
@@ -1050,8 +1050,8 @@ as
         'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
         'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',
         'DATAYPE_MISMATCH_TIMESTAMP', 'PAR_TIMESTAMP_VALUE',
-        msg.PIT_PARAM_IS_NULL, 'PAR_ID',
-        msg.PIT_PARAM_NOT_MODIFIABLE, 'PAR_ID'));
+        msg.PARAM_IS_NULL, 'PAR_ID',
+        msg.PARAM_NOT_MODIFIABLE, 'PAR_ID'));
       
       pit.leave_mandatory;
       return true;

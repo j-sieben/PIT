@@ -62,6 +62,7 @@ prompt &s1.Merge trace levels and message severities
 
 prompt &s1.Create internal messages
 @&tools.run_language_script MessageGroup_PIT
+@&tools.run_language_script MessageGroup_PARAM
 @&tools.run_language_script MessageGroup_ORACLE
 
 prompt &h2.Create CORE package declarations

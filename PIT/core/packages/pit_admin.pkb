@@ -455,9 +455,7 @@ end;
          (s.pms_name, s.pms_pml_name, s.pms_pmg_name, s.pms_text,
           s.pms_description, s.pms_pse_id, s.pms_custom_error);
           
-    update pit_message_language
-       set pml_default_order = greatest(pml_default_order, 50)
-     where pml_name = l_pml_name;
+    register_translation(l_pml_name);
      
     commit;
   exception
@@ -511,9 +509,7 @@ end;
          (s.pti_id, s.pti_pml_name, s.pti_pmg_name, 
           s.pti_name, s.pti_display_name, s.pti_description);
           
-    update pit_message_language
-       set pml_default_order = greatest(pml_default_order, 50)
-     where pml_name = l_pml_name;
+    register_translation(l_pml_name);
           
     commit;
   exception
@@ -908,7 +904,7 @@ end;
           t.pmg_error_prefix = s.pmg_error_prefix,
           t.pmg_error_postfix = s.pmg_error_postfix
      when not matched then insert(pmg_name, pmg_description, pmg_error_prefix, pmg_error_postfix)
-          values(s.pmg_name, s.pmg_description, s.pmg_error_prefix, s.pmg_error_postfix);          
+          values(s.pmg_name, s.pmg_description, s.pmg_error_prefix, s.pmg_error_postfix);
   end merge_message_group;
   
   
@@ -1015,6 +1011,11 @@ end;
             (pms_name, pms_pmg_name, pms_pml_name, pms_text, pms_description, pms_pse_id, pms_custom_error)
           values
             (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_description, s.pms_pse_id, s.pms_custom_error);
+            
+    if p_row.pms_pml_name != g_default_language then
+      register_translation(p_row.pms_pml_name);
+    end if;
+    
     commit;
 
   exception

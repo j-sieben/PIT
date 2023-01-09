@@ -46,8 +46,6 @@ begin
   end if;
 end;
 /
-
-set termout on
  
 select pml_name default_language
   from &PIT_USER..pit_message_language_v
