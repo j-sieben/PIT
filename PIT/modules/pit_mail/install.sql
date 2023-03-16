@@ -5,9 +5,6 @@ prompt &h1.Module PIT_MAIL
 
 @&install_dir.check_prerequisites.sql
 
-prompt &h2.Delete existing types and packages
-@&install_dir.clean_up_install.sql
-
 prompt &h2.Grant user rights to &PIT_USER.
 @&tools.run_script user_grants
 

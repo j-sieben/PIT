@@ -3,8 +3,6 @@
 prompt
 prompt &section.
 prompt &h1.Module PIT_FILE
-prompt &h2.Clean up existing installation
-@&install_dir.clean_up_install.sql
 
 prompt
 prompt &h2.Checking prerequites

@@ -380,7 +380,7 @@ as
     l_message.put('backtrace', p_message.backtrace);
     l_message.put('error_number', to_char(p_message.error_number));
 
-    pit.log(msg.PIT_WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
+ --   pit.log(msg.PIT_WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
     l_response := apex_web_service.make_rest_request(
                     p_url => g_websocket_server,
                     p_http_method => 'GET',

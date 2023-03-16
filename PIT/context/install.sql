@@ -1,8 +1,5 @@
 @init/set_folders context
 
-prompt &h3.Remove existing installation
-@&install_dir.clean_up.sql
-
 prompt &h3.Installing context parameters
 @&tools.run_script ParameterGroup_CONTEXT
 

@@ -1,9 +1,6 @@
 
 @init/set_folders.sql core
 
-prompt &h2.Remove existing installation
-@&install_dir.clean_up_install.sql
-
 prompt &h2.Create sequences
 @&tools.check_has_sequence pit_log_seq
 @&tools.check_has_sequence pit_translatable_item_seq
