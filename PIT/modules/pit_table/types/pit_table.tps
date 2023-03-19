@@ -1,4 +1,4 @@
-create type pit_table under pit_module(
+create or replace type pit_table under pit_module(
   
    
   /** 
