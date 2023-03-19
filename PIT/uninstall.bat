@@ -10,6 +10,6 @@ for /f "tokens=*" %%a in ('%PWD%') do set PWD=%%a
 set /p SID=Enter service name for the database or PDB:
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-sqlplus %InstallUser%/%PWD%@%SID% @install_scripts/uninstall.sql %InstallUser% %RemoteUser%
+sqlplus %InstallUser%/"%PWD%"@%SID% @install_scripts/uninstall.sql %InstallUser% %RemoteUser%
 
 pause

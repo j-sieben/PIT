@@ -101,7 +101,7 @@ as
   function c_false
     return flag_type;
     
-  C_DEFAULT_LANGUAGE constant ora_name_type := 'GERMAN';
+  C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
   C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
   C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';
   C_DEFAULT_CONTEXT constant ora_name_type := C_CONTEXT_PREFIX || 'DEFAULT';

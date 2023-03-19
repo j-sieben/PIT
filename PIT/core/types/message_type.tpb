@@ -134,8 +134,8 @@ as
               end if;
             end if;
           end if;
-        end if;
-      end loop;
+        end loop;
+      end if;
     end if;
     
     return;

@@ -7,7 +7,7 @@ begin
     p_pmg_error_postfix => 'ERR');
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_DATATYPE',
+    p_pms_name => 'PIT_ASSERT_DATATYPE',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1# is not of data type #2#.^',
     p_pms_description => q'^An unsuccessful attempt was made to convert a value to the specified data type. Check the value.^',
@@ -16,7 +16,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERTION_FAILED',
+    p_pms_name => 'PIT_ASSERTION_FAILED',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Assertion failed.^',
     p_pms_description => q'^Obviously^',
@@ -25,7 +25,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_EXISTS',
+    p_pms_name => 'PIT_ASSERT_EXISTS',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^A statement was expected to return rows, but did not.^',
     p_pms_description => q'^Obviously^',
@@ -34,7 +34,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_IS_NOT_NULL',
+    p_pms_name => 'PIT_ASSERT_IS_NOT_NULL',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1# was expected, but was null.^',
     p_pms_description => q'^Obviously^',
@@ -43,7 +43,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_IS_NULL',
+    p_pms_name => 'PIT_ASSERT_IS_NULL',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^A value was expected to be null, but was [#1#].^',
     p_pms_description => q'^Obviously^',
@@ -52,7 +52,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_NOT_EXISTS',
+    p_pms_name => 'PIT_ASSERT_NOT_EXISTS',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^A statement was expected to return no rows, but did.^',
     p_pms_description => q'^Obviously^',
@@ -61,7 +61,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'ASSERT_TRUE',
+    p_pms_name => 'PIT_ASSERT_TRUE',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^A value was expected to be equal, but was not.^',
     p_pms_description => q'^Obviously^',
@@ -70,7 +70,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'CASE_NOT_FOUND',
+    p_pms_name => 'PIT_CASE_NOT_FOUND',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^#1# not found when executing CASE statement^',
     p_pms_description => q'^An option was passed for which no handler was present in a CASE statement and which does not contain an ELSE branch.^',
@@ -79,7 +79,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_CHANGED',
+    p_pms_name => 'PIT_CTX_CHANGED',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Context set to ##1#.^',
     p_pms_description => q'^^',
@@ -88,7 +88,7 @@ begin
     p_error_number => null);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_CREATED',
+    p_pms_name => 'PIT_CTX_CREATED',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Context ##1# created and added to the available contexts list.^',
     p_pms_description => q'^A context collects log settings under one name.^',
@@ -97,7 +97,7 @@ begin
     p_error_number => null);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_CREATION_ERROR',
+    p_pms_name => 'PIT_CTX_CREATION_ERROR',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Error initializing a new context.^',
     p_pms_description => q'^As a rule, a context cannot be initialized if invalid settings were passed for the individual parameters.^',
@@ -106,7 +106,7 @@ begin
     p_error_number => null);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_DEFAULT_CREATION_ERROR',
+    p_pms_name => 'PIT_CTX_DEFAULT_CREATION_ERROR',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Default Context could not be created.^',
     p_pms_description => q'^The default context is created by initialization parameters. Make sure that no invalid entries are contained there.^',
@@ -115,7 +115,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_INVALID_CONTEXT',
+    p_pms_name => 'PIT_CTX_INVALID_CONTEXT',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Context #1# does not exist. Please provide a valid context name that is controlled by #2#.^',
     p_pms_description => q'^Create a context using UTL_CONTEXT.CREATE_CONTEXT before you use it^',
@@ -124,7 +124,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_MISSING',
+    p_pms_name => 'PIT_CTX_MISSING',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Tried to call context ##1# but it is not existing.^',
     p_pms_description => q'^Create a context using PIT_ADMIN.CREATE_NAMED_CONTEXT before you use it^',
@@ -133,7 +133,7 @@ begin
     p_error_number => null);
 
   pit_admin.merge_message(
-    p_pms_name => 'CTX_NO_CONTEXT',
+    p_pms_name => 'PIT_CTX_NO_CONTEXT',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Context cannot be null. Please provide a valid context name.^',
     p_pms_description => q'^Obviously^',
@@ -142,7 +142,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'IMPOSSIBLE_CONVERSION',
+    p_pms_name => 'PIT_IMPOSSIBLE_CONVERSION',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Invalid conversion of element value "#1#" and format mask "#2#" to type #3#.^',
     p_pms_description => q'^The element value could not be converted correctly when automatically determining a date or numeric value.^',
@@ -151,55 +151,10 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'LONG_OP_WO_TRACE',
+    p_pms_name => 'PIT_LONG_OP_WO_TRACE',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Use of PIT.LONG_OP requires PIT.ENTER/LEAVE usage.^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PARAM_ADMIN_MODE_REQUIRED',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Requested change requires admin mode.^',
-    p_pms_description => q'^To make changes, you must be logged in as administrator.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PARAM_IS_NULL',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^The requested parameter #1# doesn't exist.^',
-    p_pms_description => q'^^',
-    p_pms_pse_id => 40,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => null);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PARAM_NOT_EXTENDABLE',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Parameter-Group does not allow for new parameters.^',
-    p_pms_description => q'^Parameter groups can prohibit changes by the end user. This is the case here, the parameters cannot be changed.^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PARAM_NOT_FOUND',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Parameter #1# does not exist.^',
-    p_pms_description => q'^Obviously^',
-    p_pms_pse_id => 30,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'PARAM_NOT_MODIFIABLE',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Parameter #1# is not allowed to be changed.^',
-    p_pms_description => q'^A parameter can be defined as not changeable, in contrast to the settings of the parameter group. This is the case here.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
@@ -421,22 +376,13 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'SQL_ERROR',
+    p_pms_name => 'PIT_SQL_ERROR',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^SQL Error occurred: #SQLERRM#^',
     p_pms_description => q'^General error message. For more information, see the message parameter.^',
     p_pms_pse_id => 30,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
-
-  pit_admin.merge_message(
-    p_pms_name => 'WEBSOCKET_MESSAGE',
-    p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^#1#: #2#^',
-    p_pms_description => q'^^',
-    p_pms_pse_id => 70,
-    p_pms_pml_name => 'AMERICAN',
-    p_error_number => null);
 
   pit_admin.merge_message(
     p_pms_name => 'PIT_PMG_ERROR_MARKER_MISSING',
@@ -453,7 +399,7 @@ begin
     p_pms_text => q'^The length of prefix and postfix together must not exceed 12 characters and at least prefix or postfix must be defined.^',
     p_pms_description => q'^The prefix and/or postfix for error names must remain below a maximum length to avoid problems with the naming convention.^',
     p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
 
   pit_admin.merge_message(
@@ -462,7 +408,7 @@ begin
     p_pms_text => q'^The message "#1#" must not be longer than #2# characters, but has the length #3#.^',
     p_pms_description => q'^The length restriction applies because of the length of exception prefixes and postfixes to be added.^',
     p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
 
   pit_admin.merge_message(
@@ -471,7 +417,7 @@ begin
     p_pms_text => q'^The error number #1# is a predefined Oracle error named #2# in #3#.#4#. Please do not overwrite Oracle predefined errors.^',
     p_pms_description => q'^By overwriting a predefined error, it will no longer be trapped under its name.^',
     p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
 
   pit_admin.merge_message(
@@ -480,16 +426,25 @@ begin
     p_pms_text => q'^The #LABEL# element is a mandatory element.^',
     p_pms_description => q'^Obviously.^',
     p_pms_pse_id => 30,
-    p_pms_pml_name => 'GERMAN',
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'INVALID_SQL_NAME',
+    p_pms_name => 'PIT_INVALID_SQL_NAME',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Invalid SQL name. #1#. Please specify a name that conforms to Oracle naming conventions.^',
     p_pms_description => q'^Since some identifiers are also used as Oracle names (for example, as constants), they must conform to Oracle naming conventions.^',
     p_pms_pse_id => 40,
-    p_pms_pml_name => 'GERMAN',
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_TWEET',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Tweet: #1#^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => 40,
+    p_pms_pml_name => 'AMERICAN',
     p_error_number => null);
 
   commit;

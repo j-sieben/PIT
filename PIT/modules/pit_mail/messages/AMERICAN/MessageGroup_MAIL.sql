@@ -23,7 +23,7 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'INVALID_MIME_TYPE',
+    p_pms_name => 'MAIL_INVALID_MIME_TYPE',
     p_pms_pmg_name => 'MAIL',
     p_pms_text => q'^Invalid mime type:#1#^',
     p_pms_description => q'^The type of file to be transferred is a format that is not supported by MAIL.^',

@@ -400,17 +400,22 @@ as
     
     
   /**
-    Procedure: export_parameter_group
+    Procedure: export_group
       Method to create a script for all parameters within a parameter group as a clob instance.
       
       Is called to create an installation file as CLOB to be downloaded at the clients browser
       
-    Parameter:
-      p_pgr_id - Parameter group to create a clob installation file for
+    Parameters:
+      p_target - Type of group to export.One of the C_TARGET... constants of this package
+      p_group_name - Parameter group to create a clob installation file for
+      p_target_language - If not null, this language exports the respective group in the request language, if applicable
+      p_group_file_name - Out parameter containing the export group file name. Based on respective parameter value
+      p_scrip - CLOB based output script, ready for integration in a ZIP file or similar
    */
   procedure export_group(
     p_target pit_util.ora_name_type,
     p_group_name in pit_util.ora_name_type,
+    p_target_language in pit_util.ora_name_type,
     p_group_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob);
     

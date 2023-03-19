@@ -21,6 +21,6 @@ read -s REMOTEPWD
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 
-sqlplus ${OWNER}/${CLIENTPWD}@${SERVICE} @./install_scripts/grant_client_access.sql ${OWNER} ${REMOTEOWNER}
+sqlplus ${OWNER}/"${CLIENTPWD}"@${SERVICE} @./install_scripts/grant_client_access.sql ${OWNER} ${REMOTEOWNER}
 
-sqlplus ${REMOTEOWNER}/${REMOTEPWD}@${SERVICE} @./install_scripts/create_client_synonyms.sql ${OWNER} ${REMOTEOWNER}
+sqlplus ${REMOTEOWNER}/"${REMOTEPWD}"@${SERVICE} @./install_scripts/create_client_synonyms.sql ${OWNER} ${REMOTEOWNER}

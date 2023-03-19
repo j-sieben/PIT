@@ -172,15 +172,11 @@ as
       p_pmg_name in pit_message_group.pmg_name%type) is
       select pmg_name, pmg_description, pmg_error_prefix, pmg_error_postfix
         from pit_message_group pmg
-       where exists(
-             select null
-               from pit_message
-              where pms_pmg_name = pmg_name)
-         and pmg_name = p_pmg_name
+       where pmg_name = p_pmg_name
           or p_pmg_name is null
        order by pmg_name;
        
-    c_merge_group_template constant pit_util.max_sql_char := q'~    
+    C_MERGE_GROUP_TEMPLATE constant pit_util.max_sql_char := q'~    
   pit_admin.merge_message_group(
     p_pmg_name => '#NAME#',
     p_pmg_description => q'^#DESCRIPTION#^',
@@ -192,7 +188,7 @@ as
 
     for pmg in message_group_cur(p_pmg_name) loop
       l_chunk := l_chunk
-              || pit_util.bulk_replace(c_merge_group_template, char_table(
+              || pit_util.bulk_replace(C_MERGE_GROUP_TEMPLATE, char_table(
                    '#NAME#', pmg.pmg_name,
                    '#DESCRIPTION#', pmg.pmg_description,
                    '#ERROR_PREFIX#', pmg.pmg_error_prefix,
@@ -320,22 +316,23 @@ end;
   as
     cursor pti_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
-      select i.*, rank() over (partition by pti_id order by pml_default_order) rang
-        from pit_translatable_item i
-        join (select pml_name, max(pml_default_order) pml_default_order
-                from pit_message_language_v
-               where pml_default_order > 0
-               group by pml_name) ml
-          on pti_pml_name = pml_name
-       where pti_pmg_name = p_pmg_name
-       order by i.pti_id, pml_default_order;
+        with data as (
+               select i.*, rank() over (partition by pti_id order by pml_default_order desc) rang
+                 from pit_translatable_item i
+                 join (select pml_name, max(pml_default_order) pml_default_order
+                         from pit_message_language_v
+                        where pml_default_order > 0
+                        group by pml_name) ml
+                   on pti_pml_name = pml_name
+                where pti_pmg_name = p_pmg_name
+                order by i.pti_id, pml_default_order)
+        select *
+          from data
+         where rang = 1;
     l_chunk pit_util.max_char;
-    C_START constant varchar2(200) := q'~begin
-~';
-    C_END constant varchar2(200) := q'~
-  commit;
-end;
-/~';
+    C_CR constant pit_util.sign_type := chr(10);
+    C_START constant pit_util.max_sql_char := q'~set define off#CR##CR#begin#CR#~';
+    C_END constant pit_util.max_sql_char := q'~#CR#  commit;#CR#end;#CR#/#CR##CR#set define on~';       
     C_PTI_TEMPLATE constant varchar2(300) := q'~
   pit_admin.merge_translatable_item(
     p_pti_id => '#PTI_ID#',
@@ -356,7 +353,7 @@ end;
     p_file_name := param.get_string('EXPORT_FILE_NAME_PTI', 'PIT');
     p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name));
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
-    pit_util.clob_append(p_script, C_START);
+    pit_util.clob_append(p_script, replace(C_START, '#CR#', C_CR));
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
 
     for pti in pti_cur(p_pmg_name) loop
@@ -371,7 +368,7 @@ end;
       pit_util.clob_append(p_script, l_chunk);
     end loop;
     
-    pit_util.clob_append(p_script, C_END);
+    pit_util.clob_append(p_script, replace(C_END, '#CR#', C_CR));
     
     if p_pml_name is not null then
       dbms_session.set_nls('NLS_LANGUAGE', l_actual_language);
@@ -458,9 +455,7 @@ end;
          (s.pms_name, s.pms_pml_name, s.pms_pmg_name, s.pms_text,
           s.pms_description, s.pms_pse_id, s.pms_custom_error);
           
-    update pit_message_language
-       set pml_default_order = greatest(pml_default_order, 50)
-     where pml_name = l_pml_name;
+    register_translation(l_pml_name);
      
     commit;
   exception
@@ -513,6 +508,8 @@ end;
          values
          (s.pti_id, s.pti_pml_name, s.pti_pmg_name, 
           s.pti_name, s.pti_display_name, s.pti_description);
+          
+    register_translation(l_pml_name);
           
     commit;
   exception
@@ -700,7 +697,7 @@ end;
       from pit_message_language
      where pml_default_order > 0
      order by pml_default_order
-     fetch first 1 rows only;
+     fetch first 1 row only;
   end initialize;
 
 
@@ -907,7 +904,7 @@ end;
           t.pmg_error_prefix = s.pmg_error_prefix,
           t.pmg_error_postfix = s.pmg_error_postfix
      when not matched then insert(pmg_name, pmg_description, pmg_error_prefix, pmg_error_postfix)
-          values(s.pmg_name, s.pmg_description, s.pmg_error_prefix, s.pmg_error_postfix);          
+          values(s.pmg_name, s.pmg_description, s.pmg_error_prefix, s.pmg_error_postfix);
   end merge_message_group;
   
   
@@ -1014,6 +1011,11 @@ end;
             (pms_name, pms_pmg_name, pms_pml_name, pms_text, pms_description, pms_pse_id, pms_custom_error)
           values
             (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_description, s.pms_pse_id, s.pms_custom_error);
+            
+    if p_row.pms_pml_name != g_default_language then
+      register_translation(p_row.pms_pml_name);
+    end if;
+    
     commit;
 
   exception

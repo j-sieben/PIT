@@ -39,6 +39,29 @@ create or replace type message_type force is object(
   error_number number (5,0),
   message_args msg_args,
   /**
+    Function: format_icu
+      Method to format a message text using an external Java library and the standard ICU
+      
+    Parameters:
+      p_msg - Message text to format
+      p_params - Parameters to control the formatting
+      p_locale - Language settings
+      l_status - Status message (0 = OK)
+      l_error_message - Error message if status is != 0
+      
+    Returns:
+      Formatted language according to the locale settings.
+   */
+  static function format_icu(
+    p_msg in varchar2,
+    p_params in varchar2,
+    p_locale in varchar2,
+    l_status out number,
+    l_error_message out varchar2)
+    return varchar2
+  as language java name
+    'icu.ICU.format(java.lang.String, java.lang.String, java.lang.String, int[], java.lang.String[]) return java.lang.String',
+  /**
     Function: message_type
       Constructor function
       

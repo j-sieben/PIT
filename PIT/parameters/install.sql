@@ -1,7 +1,5 @@
 @init/set_folders parameters
 
-prompt &h2.Clean up existing installations
-@&install_dir.clean_up_install.sql
 
 prompt &h2.Create parameter tables
 @&tools.check_has_table parameter_group

@@ -1,9 +1,6 @@
 
 @init/set_folders.sql core
 
-prompt &h2.Remove existing installation
-@&install_dir.clean_up_install.sql
-
 prompt &h2.Create sequences
 @&tools.check_has_sequence pit_log_seq
 @&tools.check_has_sequence pit_translatable_item_seq
@@ -62,7 +59,8 @@ prompt &s1.Merge trace levels and message severities
 
 prompt &s1.Create internal messages
 @&tools.run_language_script MessageGroup_PIT
-@&tools.run_language_script MessageGroup_ORACLE
+@&tools.run_language_script MessageGroup_PARAM
+@&tools.run_language_script MessageGroup_ORA
 
 prompt &h2.Create CORE package declarations
 @&tools.install_package_spec msg
