@@ -21,5 +21,7 @@ prompt &h3.Create synonyms
 -- Tables and Views
 @&tool_dir.create_synonym.sql pit_message
 @&tool_dir.create_synonym.sql pit_message_language
+@&tool_dir.create_synonym.sql pit_translatable_item
+@&tool_dir.create_synonym.sql pit_message_v
 @&tool_dir.create_synonym.sql pit_message_language_v
 @&tool_dir.create_synonym.sql pit_translatable_item_v

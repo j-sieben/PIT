@@ -26,4 +26,5 @@ prompt &h3.Tables
 
 prompt &h3.Views
 @tools/grant_access_with_grant.sql read pit_message_language_v
+@tools/grant_access_with_grant.sql read pit_message_v
 @tools/grant_access_with_grant.sql read pit_translatable_item_v
