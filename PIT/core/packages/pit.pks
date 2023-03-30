@@ -802,6 +802,20 @@ as
   function get_active_message
     return message_type;
     
+  
+  /** 
+    Function: get_active_message_text
+      Retrieves the message text of the actually instantiated message instance.
+      
+      If a message was created, it is sometimes useful to get access to the actually created message,
+      fi when building some logic on the error_code of the message. This method grants access to this message.
+      
+    Returns:
+      Message text that has been instantiated by PIT before
+   */
+  function get_active_message_text
+    return clob;
+    
     
   /**
     Group: Assertion methods

@@ -601,6 +601,16 @@ as
   end get_active_message;
   
   
+  function get_active_message_text
+    return clob
+  as
+    l_message message_type;
+  begin
+    l_message := pit_internal.get_active_message;
+    return l_message.message_text;
+  end get_active_message_text;
+  
+  
   /****************************** ASSERTIONS *********************************/
 /**
     Procedure: raise_assertion_finding
