@@ -1,1 +1,1 @@
-﻿NDMenu.OnSectionLoaded("database.js",[[1,"flow_variable_event_log"],[1,"parameter_group"],[1,"parameter_local"],[1,"parameter_realm"],[1,"parameter_tab"],[1,"parameter_type"],[1,"pit_message"],[1,"pit_message_group"],[1,"pit_message_language"],[1,"pit_message_severity"],[1,"pit_table_call_stack"],[1,"pit_table_log"],[1,"pit_table_params"],[1,"pit_trace_level"],[1,"pit_translatable_item"],[1,"utl_text_templates"]]);
+﻿NDMenu.OnSectionLoaded("database.js",[[1,"pit_message_language_v"]]);

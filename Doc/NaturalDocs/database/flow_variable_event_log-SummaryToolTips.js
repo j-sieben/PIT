@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("Database:flow_variable_event_log",{});

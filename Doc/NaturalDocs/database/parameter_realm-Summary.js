@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:parameter_realm","parameter_realm");NDSummary.OnSummaryLoaded("Database:parameter_realm",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[94,0,0,"parameter_realm"]]);

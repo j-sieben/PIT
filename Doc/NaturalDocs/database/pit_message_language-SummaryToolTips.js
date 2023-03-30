@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("Database:pit_message_language",{99:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Lookup-table for message languages.</div></div>"});

@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("Database:pit_message_severity",{100:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Lookup-table for message severities.</div></div>"});

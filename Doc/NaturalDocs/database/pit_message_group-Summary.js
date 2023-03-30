@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:pit_message_group","pit_message_group");NDSummary.OnSummaryLoaded("Database:pit_message_group",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[98,0,0,"pit_message_group"]]);

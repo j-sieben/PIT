@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("Database:pit_table_log",{102:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">table for log entry storage of module PIT_TABLE</div></div>"});

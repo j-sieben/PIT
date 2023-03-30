@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:pit_table_log","pit_table_log");NDSummary.OnSummaryLoaded("Database:pit_table_log",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[102,0,0,"pit_table_log"]]);

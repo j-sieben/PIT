@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("utl",["DatabaseTable"],[["utl_text_templates",,[[,,,,0,"File:core/tables/pit_message.tbl:utl_text_templates","Database:utl_text_templates"]]]]);

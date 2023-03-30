@@ -1,1 +1,0 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:pit_table_params","pit_table_params");NDSummary.OnSummaryLoaded("Database:pit_table_params",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[103,0,0,"pit_table_params"]]);
