@@ -459,7 +459,7 @@ as
     for i in 1 .. p_uttm_list.count loop
       l_group_file_name := param.get_string('EXPORT_FILE_NAME_PAR', 'PIT');
       l_group_file_name := replace(replace(l_group_file_name, '#TYPE#', p_uttm_list(i)), '#type#', lower(p_uttm_list(i)));
-      l_clob := utl_text_admin.get_template_script(char_table(p_uttm_list(i)));
+      l_clob := utl_text_admin.get_templates(char_table(p_uttm_list(i)));
                    
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,
