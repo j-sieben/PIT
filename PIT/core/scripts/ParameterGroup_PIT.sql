@@ -10,6 +10,24 @@ begin
   );
 
   param_admin.edit_parameter(
+    p_par_id => 'PIT_TWEET_REALMS'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Tweet messages are allowed only in the given realms'
+   ,p_par_string_value => q'^DEV^'
+   ,p_par_boolean_value => null
+   ,p_par_is_modifiable => null
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'REALM'
+   ,p_par_pgr_id => 'PIT'
+   ,p_par_description => 'Environment we are installing into'
+   ,p_par_string_value => q'^PROD^'
+   ,p_par_boolean_value => null
+   ,p_par_is_modifiable => null
+  );
+
+  param_admin.edit_parameter(
     p_par_id => 'ADAPTER_PREFERENCE'
    ,p_par_pgr_id => 'PIT'
    ,p_par_description => 'Order in which PIT tries to use adapter preferences (left ot right)'
