@@ -1,1 +1,1 @@
-﻿NDContentPage.OnToolTipsLoaded({113:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Adapter code to be injected into the PIT installation. Detects session id and username</div></div>"});
+﻿NDContentPage.OnToolTipsLoaded({111:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Adapter code to be injected into the PIT installation. Detects session id and username</div></div>"});
