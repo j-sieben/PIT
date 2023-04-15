@@ -23,18 +23,18 @@ as
       C_MESSAGE_TEMPLATE - Parameter name for the MESSAGE-Template
       C_LEVEL_INDICATOR - Parameter name for the indent level indicator
    */
-  C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
-  C_PIT_CONSOLE constant varchar2(20) := 'PIT_CONSOLE';
-  C_FIRE_THRESHOLD constant varchar2(30 char) := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
-  C_ENTER_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_ENTER_TEMPLATE';
-  C_LEAVE_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_LEAVE_TEMPLATE';
-  C_MESSAGE_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_MSG_TEMPLATE';
-  C_LEVEL_INDICATOR  constant varchar2(30 char) := C_PIT_CONSOLE || '_LEVEL_INDICATOR';
+  C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
+  C_PIT_CONSOLE constant pit_util.ora_name_type := 'PIT_CONSOLE';
+  C_FIRE_THRESHOLD constant pit_util.ora_name_type := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
+  C_ENTER_TEMPLATE constant pit_util.ora_name_type := C_PIT_CONSOLE || '_ENTER_TEMPLATE';
+  C_LEAVE_TEMPLATE constant pit_util.ora_name_type := C_PIT_CONSOLE || '_LEAVE_TEMPLATE';
+  C_MESSAGE_TEMPLATE constant pit_util.ora_name_type := C_PIT_CONSOLE || '_MSG_TEMPLATE';
+  C_LEVEL_INDICATOR  constant pit_util.ora_name_type := C_PIT_CONSOLE || '_LEVEL_INDICATOR';
 
-  g_message_template varchar2(2000);
-  g_enter_template varchar2(2000);
-  g_leave_template varchar2(2000);
-  g_level_indicator varchar2(10);
+  g_message_template pit_util.max_sql_char;
+  g_enter_template pit_util.max_sql_char;
+  g_leave_template pit_util.max_sql_char;
+  g_level_indicator pit_util.ora_name_type;
 
 
   /**
@@ -85,14 +85,14 @@ as
     p_call_stack in pit_call_stack_type,
     p_template in varchar2)
   as
-    l_unit_name varchar2(257 byte);
-    l_indent varchar2(2000);
+    l_unit_name pit_util.small_char;
+    l_indent pit_util.max_sql_char;
     l_indent_length binary_integer;
-    l_timing varchar2(100);
+    l_timing pit_util.ora_name_type;
     l_message pit_util.max_char;
     l_postfix pit_util.max_char;
-    l_param varchar2(1000);
-    C_ETC constant varchar2(10 char) := '...'; 
+    l_param pit_util.max_sql_char;
+    C_ETC constant pit_util.small_char := '...'; 
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;
@@ -229,7 +229,7 @@ as
       see <PIT_CONSOLE_PKG.initialize_module>
    */
   procedure initialize_module(
-    self in out pit_console)
+    self in out nocopy pit_console)
   as
   begin
     self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);

@@ -1,12 +1,11 @@
 create or replace force view pita_ui_admin_pms as
 with session_state as(
-       select /*+ no_merge */
+       select /*+ no_merge */ distinct
               utl_apex.get_string('P2_PMG_NAME') pmg_name,
               utl_apex.get_string('P2_PML_NAME') pml_name,
               pml_name pml_name_default,
               pml_display_name
-         from table(pit_app_api.get_pit_message_language_table)
-        where pml_default_order = 10),
+         from table(pit_app_api.get_pit_message_language_table)),
     messages as(
        select pms_name, pms_pmg_name, pms_pml_name, pms_pse_id, pms_custom_error, pms_active_error, 
               dbms_lob.substr(pms_text, 4000, 1) pms_text, 

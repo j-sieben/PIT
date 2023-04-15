@@ -14,7 +14,7 @@ create table pit_translatable_item(
    constraint pti_pmg_name_fk foreign key (pti_pmg_name)
       references pit_message_group(pmg_name) on delete cascade,
    constraint chk_pti_pmg_name check(pti_pmg_name is not null)
-) tablespace &DEFAULT_TABLESPACE.;
+) ;
 
 create index idx_pti_pmg_name_fk on pit_translatable_item(pti_pmg_name);
 

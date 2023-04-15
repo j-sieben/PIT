@@ -9,10 +9,9 @@ for /f "tokens=*" %%a in ('%PWD%') do set PWD=%%a
 
 set /p SID=Enter service name for the database or PDB:
 set /p DefaultLanguage=Enter default language for messages (GERMAN or AMERICAN):
-set /p DefaulTablespace=Optionally enter default tablespace:
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage% %DefaultTablespace%
+sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage%
 
 @echo off

@@ -26,20 +26,6 @@ end;
 /
 
 set termout off
-   
--- Calculate standard value for default tablespace
-col 2 new_val 2
-col ts new_val ts
-
-select '' "2"
-  from dual
- where null is not null;
- 
-select default_tablespace ts
-  from user_users;
- 
-define default_tablespace = &2. &ts.
-undefine ts
 
 -- Define length of ORA_NAME_TYPE according to oracle version
 col ora_name_type new_val ORA_NAME_TYPE format a128

@@ -14,11 +14,7 @@ echo -n "Enter default language for messages (GERMAN or AMERICAN) [ENTER] "
 read DEFAULT_LANGUAGE
 echo ${DEFAULT_LANGUAGE}
 
-echo -n "Optionally enter default tablespace [ENTER] "
-read DEFAULT_TABLESPACE
-echo ${DEFAULT_TABLESPACE}
-
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
 
-sqlplus ${OWNER}/"${PWD}"@${SERVICE} @./install_scripts/install ${DEFAULT_LANGUAGE} ${DEFAULT_TABLESPACE}
+sqlplus ${OWNER}/"${PWD}"@${SERVICE} @./install_scripts/install ${DEFAULT_LANGUAGE}

@@ -17,7 +17,7 @@ create table pit_message(
    constraint pms_pse_id_fk foreign key (pms_pse_id)
       references pit_message_severity(pse_id),
    constraint pms_text_nn check (pms_text is not null)
-) tablespace &DEFAULT_TABLESPACE.;
+);
 
 comment on table pit_message is 'central log message repository in various languages.';
 comment on column pit_message.pms_name is 'Unique message name. Used to reference the message as a constant in package MSG.';
@@ -31,12 +31,12 @@ comment on column pit_message.pms_active_error is 'If a custom error number of -
 comment on column pit_message.pms_id is 'Virtual column as a surrogate primary key for references';
 
 
-create index pit_pms_pml_name_fk_idx on pit_message(pms_pml_name) tablespace &DEFAULT_TABLESPACE.;
+create index pit_pms_pml_name_fk_idx on pit_message(pms_pml_name) ;
 -- Unique conditional index to prevent server errors to be initialized more than once
 create unique index pms_custom_error_u on pit_message(
   case 
   when coalesce(pms_custom_error, -20000) != -20000 
    and pms_pml_name = '&DEFAULT_LANGUAGE.'
   then pms_custom_error
-  else null end) tablespace &DEFAULT_TABLESPACE.;
+  else null end) ;
 
