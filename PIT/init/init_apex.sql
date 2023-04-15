@@ -42,14 +42,16 @@ begin
    where workspace = upper('&3.');
  
   if l_ws_exists = 0 then
-    raise_application_error(-20000, 'Workspace &1. does not exist. Please choose an existing workspace');
+    raise_application_error(-20000, 'Workspace &3. does not exist. Please choose an existing workspace');
   end if;
 end;
 /
  
 select pml_name default_language
-  from &PIT_USER..pit_message_language_v
- where pml_default_order = 10;
+  from pit_message_language_v
+ where pml_default_order in (10, 100)
+ order by pml_default_order
+ fetch first 1 row only;
  
 col apex_version new_val APEX_VERSION format a30
 col apex_ws new_val APEX_WS format a30
