@@ -2,10 +2,14 @@ define apex_dir=apex/
 define apex_version_dir=&apex_dir.apex_&APEX_VERSION.
 define view_dir=&apex_dir.views/
 define tools=tools/
+define scripts=scripts/
 
 prompt &h2.Installation in Schema &REMOTE_USER.
 prompt &h3.Grant OBJECT privileges and create local synonyms if necessary
 @install_scripts/create_apex_synonyms.sql
+
+prompt &h3.export_parameter_groups
+@&scripts.merge_parameter_group_pita_ui
 
 prompt &h3.Create UI-VIEWS
 --@&tools.install_view apex_ui_list_menu -- Part of UTL_APEX, no need to overwrite

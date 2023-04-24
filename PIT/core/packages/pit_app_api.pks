@@ -409,14 +409,12 @@ as
       p_target - Type of group to export.One of the C_TARGET... constants of this package
       p_group_name - Parameter group to create a clob installation file for
       p_target_language - If not null, this language exports the respective group in the request language, if applicable
-      p_group_file_name - Out parameter containing the export group file name. Based on respective parameter value
       p_scrip - CLOB based output script, ready for integration in a ZIP file or similar
    */
   procedure export_group(
     p_target pit_util.ora_name_type,
     p_group_name in pit_util.ora_name_type,
     p_target_language in pit_util.ora_name_type,
-    p_group_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob);
     
     
@@ -578,14 +576,14 @@ as
       p_target_language - Oracle supported language name to tranlsate the items to
       p_pmg_name - Group to filter the items to translate
       p_target - Type of items to translate <C_TARGET_PMS>|<C_TARGET_PTI>
-      p_file_name - Out parameter that provides the file name for the XLIFF file
+      p_file_name - File name for the XLIFF file (is included into the file)
       p_xliff - Out parameter that contains the XLIFF file created
    */
   procedure translate_group(
     p_target_language in pit_message_language.pml_name%type,
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
+    p_file_name in pit_util.ora_name_type,
     p_xliff out nocopy xmltype);
     
     

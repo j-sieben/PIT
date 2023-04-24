@@ -175,12 +175,10 @@ as
 
     Parameters:
       p_pmg_name - Message group to filter output
-      p_file_name - Out parameter that provides the file name for the Script file
       p_script - Out parameter that contains the SQL script created
    */
   procedure script_messages(
     p_pmg_name in pit_message_group.pmg_name%type,
-    p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
   as
     cursor message_cur(
@@ -220,7 +218,6 @@ end;
 ~';
   begin
     -- Initialize
-    p_file_name := 'MessageGroup_' || p_pmg_name || '.sql';
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
@@ -260,12 +257,10 @@ end;
 
     Parameters:
       p_pmg_name - Message group to filter output
-      p_file_name - Out parameter that provides the file name for the Script file
       p_script - Out parameter that contains the SQL script created
    */
   procedure script_translatable_items(
     p_pmg_name in pit_message_group.pmg_name%type default null,
-    p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
   as
     cursor pti_cur(
@@ -296,7 +291,6 @@ end;
 ~';
   begin
     -- Initialize
-    p_file_name := 'TranslatableItemGroup_' || p_pmg_name || '.sql';
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
@@ -1255,7 +1249,6 @@ end ]' || C_PACKAGE_NAME || ';';
   procedure create_installation_script(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob,
     p_target_language in pit_message_language.pml_name%type default null)
   as
@@ -1263,12 +1256,11 @@ end ]' || C_PACKAGE_NAME || ';';
 
     case p_target
     when C_TARGET_PMS then
-      script_messages(p_pmg_name, p_file_name, p_script);
+      script_messages(p_pmg_name, p_script);
     when C_TARGET_PTI then
-      script_translatable_items(p_pmg_name, p_file_name, p_script);
+      script_translatable_items(p_pmg_name, p_script);
     when C_TARGET_PAR then
       p_script := param_admin.export_parameter_group(p_pmg_name);
-      p_file_name := 'ParameterGroup_' || p_pmg_name || '.sql';
     else
       null;
     end case;
@@ -1285,12 +1277,10 @@ end ]' || C_PACKAGE_NAME || ';';
     return clob
   as
     l_script clob;
-    l_file_name pit_util.ora_name_type;
   begin
     create_installation_script(
       p_pmg_name => p_pmg_name,
       p_target => p_target,
-      p_file_name => l_file_name,
       p_script => l_script);
     return l_script;
   end get_installation_script;
@@ -1304,21 +1294,10 @@ end ]' || C_PACKAGE_NAME || ';';
     p_target_language in pit_message_language.pml_name%type,
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
+    p_file_name in pit_util.ora_name_type,
     p_xliff out nocopy xmltype)
   as
   begin
-
-    case p_target
-      when C_TARGET_PMS then
-        p_file_name := 'MessageTranslation_' || p_pmg_name || '_to_' || p_target_language || '.xlf';
-        p_xliff := get_pms_xml(p_target_language, p_pmg_name);
-      when C_TARGET_PTI then
-        p_file_name := 'TranslatableItemsTranslation_' || p_pmg_name || '_to_' || p_target_language || '.xlf';
-        p_xliff := get_pti_xml(p_target_language, p_pmg_name);
-      else
-        null;
-    end case;
 
     -- Wrap xml in XLIFF envelope
     with params as(

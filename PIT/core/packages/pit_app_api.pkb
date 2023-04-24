@@ -548,7 +548,6 @@ as
     p_target pit_util.ora_name_type,
     p_group_name in pit_util.ora_name_type,
     p_target_language in pit_util.ora_name_type,
-    p_group_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob)
   as
   begin
@@ -556,7 +555,6 @@ as
       p_pmg_name => p_group_name,
       p_target => p_target,
       p_target_language => p_target_language,
-      p_file_name => p_group_file_name,
       p_script => p_script);
   end export_group;
   
@@ -717,7 +715,7 @@ as
     p_target_language in pit_message_language.pml_name%type,
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
+    p_file_name in pit_util.ora_name_type,
     p_xliff out nocopy xmltype)
   as
   begin
@@ -956,11 +954,11 @@ as
     else
       pit.assert_not_null(
         p_condition => p_row.par_id,
-        p_message_name => msg.PARAM_IS_NULL,
+        p_message_name => msg.PIT_PARAM_IS_NULL,
         p_msg_args => msg_args(l_par_id));
       pit.assert(
         p_condition => l_is_modifiable,
-        p_message_name => msg.PARAM_NOT_MODIFIABLE,
+        p_message_name => msg.PIT_PARAM_NOT_MODIFIABLE,
         p_msg_args => msg_args(p_row.par_id));
     end if;
   end validate_realm_parameter;

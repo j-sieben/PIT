@@ -400,14 +400,12 @@ as
     Parameters:
       p_pmg_name - Message group to filter output
       p_target - Type of items to translate <C_TARGET_PMS>|<C_TARGET_PTI>|<C_TARGET_PAR>
-      p_file_name - Out parameter that provides the file name for the Script file
       p_script - Out parameter that contains the SQL script created
       p_target_language - Optional target language. Useful, if you need to get all messages in a different default language, if present.
    */
   procedure create_installation_script(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob,
     p_target_language in pit_message_language.pml_name%type default null);
     
@@ -442,14 +440,14 @@ as
       p_target_language - Oracle supported language name to tranlsate the items to
       p_pmg_name - Group to filter the items to translate
       p_target - Type of items to translate <C_TARGET_PMS>|<C_TARGET_PTI>
-      p_file_name - Out parameter that provides the file name for the XLIFF file
+      p_file_name - File name for the XLIFF file (is included into the file)
       p_xliff - Out parameter that contains the XLIFF file created
    */
   procedure create_translation_xml(
     p_target_language in pit_message_language.pml_name%type,
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
+    p_file_name in pit_util.ora_name_type,
     p_xliff out nocopy xmltype);
     
   

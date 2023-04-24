@@ -14,6 +14,9 @@ as
     Group: Public Methods
    */
    
+  -- Constants
+  C_PMG constant  pit_util.ora_name_type := 'PITA_UI';
+  
   -- Global Variables
   g_page_values utl_apex.page_value_t;
   
@@ -282,6 +285,7 @@ as
     l_xliff xmltype;
     l_group_file_name pit_util.ora_name_type;
     l_zip_file_name pit_util.ora_name_type;
+    l_file_name_template pit_util.ora_name_type;
     l_zip_file blob;
   begin
     pit.enter_mandatory(
@@ -289,10 +293,21 @@ as
       p_params => msg_params(
                     msg_param('p_target', p_target),
                     msg_param('p_target_language', p_target_language)));
-                    
-    l_zip_file_name := 'Translation.zip';
+      
+    l_zip_file_name := param.get_string(p_target || '_TRANSLATE_ZIP_FILE_NAME', C_PMG);
+    l_zip_file_name := replace(replace(l_zip_file_name,
+                         '#TARGET#', p_target),
+                         '#LANGUAGE#', p_target_language);
+                         
+    l_file_name_template := param.get_string(p_target || '_TRANSLATE_FILE_NAME', C_PMG);                    
+    l_file_name_template := replace(replace(l_file_name_template,
+                              '#TARGET#', p_target),
+                              '#LANGUAGE#', p_target_language);
     
     for i in 1 .. p_pmg_list.count loop
+      l_group_file_name := replace(replace(l_file_name_template,
+                             '#PMG#', p_pmg_list(i)),
+                             '#pmg#', lower(p_pmg_list(i)));
       pit_app_api.translate_group(
         p_target_language => p_target_language,
         p_pmg_name => p_pmg_list(i),
@@ -382,8 +397,9 @@ as
     p_pmg_list in char_table)
   as
     l_clob clob;
-    l_group_file_name pit_util.ora_name_type;
     l_zip_file_name pit_util.ora_name_type;
+    l_file_name_template pit_util.ora_name_type;
+    l_group_file_name pit_util.ora_name_type;
     l_zip_file blob;
   begin
     pit.enter_mandatory(
@@ -391,14 +407,17 @@ as
       p_params => msg_params(
                     msg_param('p_target', p_target)));
                     
-    l_zip_file_name := 'Export.zip';
+    l_zip_file_name := param.get_string(p_target || '_EXPORT_ZIP_FILE_NAME', C_PMG);
+    l_file_name_template := param.get_string(p_target || '_EXPORT_FILE_NAME', C_PMG);
          
     for i in 1 .. p_pmg_list.count loop
+      l_group_file_name := replace(replace(l_file_name_template,
+                             '#PMG#', p_pmg_list(i)),
+                             '#pmg#', lower(p_pmg_list(i)));
       pit_app_api.export_group(
         p_target => p_target,
         p_group_name => p_pmg_list(i),
         p_target_language => p_target_language,
-        p_group_file_name => l_group_file_name,
         p_script => l_clob);
                    
       apex_zip.add_file(
@@ -446,24 +465,26 @@ as
     p_uttm_list in char_table)
   as
     l_clob clob;
-    l_group_file_name pit_util.ora_name_type;
     l_zip_file_name pit_util.ora_name_type;
+    l_file_name_template pit_util.ora_name_type;
     l_zip_file blob;
   begin
     pit.enter_mandatory(
       p_action => 'export_utl_text_templates');
                     
-    l_zip_file_name := 'ExportUTTM.zip';
+    l_zip_file_name := param.get_string('TEXT_TEMPLATES_ZIP_FILE_NAME', C_PMG);
+    l_file_name_template := param.get_string('TEST_TEMPLATES_FILE_NAME', C_PMG);
     utl_text.set_ignore_missing_anchors(true);
          
     for i in 1 .. p_uttm_list.count loop
-      l_group_file_name := param.get_string('EXPORT_FILE_NAME_PAR', 'PIT');
-      l_group_file_name := replace(replace(l_group_file_name, '#TYPE#', p_uttm_list(i)), '#type#', lower(p_uttm_list(i)));
-      l_clob := utl_text_admin.get_template_script(char_table(p_uttm_list(i)));
+      select uttm_text
+        into l_clob
+        from utl_text_templates
+       where uttm_type = p_uttm_list(i);
                    
       apex_zip.add_file(
         p_zipped_blob => l_zip_file,
-        p_file_name => l_group_file_name,
+        p_file_name => replace(l_file_name_template, '#PMG#', p_uttm_list(i)),
         p_content => utl_text.clob_to_blob(l_clob));
     end loop;
       
@@ -1050,8 +1071,8 @@ as
         'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
         'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',
         'DATAYPE_MISMATCH_TIMESTAMP', 'PAR_TIMESTAMP_VALUE',
-        msg.PARAM_IS_NULL, 'PAR_ID',
-        msg.PARAM_NOT_MODIFIABLE, 'PAR_ID'));
+        msg.PIT_PARAM_IS_NULL, 'PAR_ID',
+        msg.PIT_PARAM_NOT_MODIFIABLE, 'PAR_ID'));
       
       pit.leave_mandatory;
       return true;
