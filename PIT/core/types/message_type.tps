@@ -25,7 +25,7 @@ create or replace type message_type force is object(
   message_name varchar2(128 byte),
   affected_id varchar2(4000 byte),       
   affected_ids msg_params,             
-  error_code varchar2(30 char),
+  error_code varchar2(128 byte),
   session_id varchar2(64 byte),
   schema_name varchar2(128 byte),
   module varchar2(128 byte),
