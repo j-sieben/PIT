@@ -696,6 +696,11 @@ as
     p_params in msg_params)
   as
   begin
+    if g_collect_mode then
+      g_message_stack := pit_message_table();
+      g_collect_mode := false;
+    end if;
+    
     log_event(p_severity, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     
     if p_severity = C_LEVEL_FATAL then
