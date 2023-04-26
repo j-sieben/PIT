@@ -407,7 +407,7 @@ as
         -- fallback, is used if a SQL exception was raised outside of PIT
         g_active_message := get_message(C_SQL_ERROR, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
       else 
-        -- if used with SQL_EXCEPTION, code may re raise the exception explicitly
+        -- if used with HANDLE_EXCEPTION, code may re raise the exception explicitly
         null;
       end case;
 
