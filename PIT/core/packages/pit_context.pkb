@@ -562,7 +562,7 @@ as
   return boolean
   as
   begin
-    return pit_util.to_bool(g_context.trace_timing);
+    return pit_util.to_bool(g_context.allow_toggle);
   end allows_toggle;
   
   
