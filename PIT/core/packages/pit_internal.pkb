@@ -313,10 +313,10 @@ as
     Group: Public methods
    */
   /**
-    Procedure: initialize
+    Procedure: initialize_pit
       See <PIT_INTERNAL.initialize>
    */
-  procedure initialize
+  procedure initialize_pit
   as
     l_unavailable_modules pit_module_list;
   begin
@@ -341,7 +341,7 @@ as
     
     -- initialize helper packages
     pit_context.initialize;
-    pit_call_stack.initialize;
+    pit_call_stack.initialize_call_stack;
     g_message_stack := pit_message_table();
     
     load_adapter;
@@ -352,7 +352,7 @@ as
     for i in 1 .. l_unavailable_modules.count loop
       log_event(C_LEVEL_WARN, C_FAIL_MODULE_INIT, msg_args(l_unavailable_modules(i).module_name, l_unavailable_modules(i).module_stack));    
     end loop;
-  end initialize;
+  end initialize_pit;
   
   
   /**
@@ -704,7 +704,7 @@ as
     log_event(p_severity, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     
     if p_severity = C_LEVEL_FATAL then
-      pit_call_stack.initialize;
+      pit_call_stack.initialize_call_stack;
       raise_error(C_LEVEL_FATAL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     else
       g_active_message := null;
@@ -1101,6 +1101,6 @@ as
 
 
 begin
-  initialize;
+  initialize_pit;
 end pit_internal;
 /

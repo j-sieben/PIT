@@ -155,7 +155,7 @@ as
   function get_string(
    p_par_id in parameter_v.par_id%type,
    p_par_pgr_id in parameter_group.pgr_id%type)
-   return varchar2;
+   return varchar2 result_cache;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -188,7 +188,7 @@ as
   function get_float(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_float_value%type;
+    return parameter_v.par_float_value%type result_cache;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -199,7 +199,7 @@ as
   function get_integer(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_integer_value%type;
+    return parameter_v.par_integer_value%type result_cache;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -210,7 +210,7 @@ as
   function get_date(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_date_value%type;
+    return parameter_v.par_date_value%type result_cache;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -221,7 +221,7 @@ as
   function get_timestamp(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_timestamp_value%type;
+    return parameter_v.par_timestamp_value%type result_cache;
 
   /** Reads a parameter value
    * %param  p_par_id  Name of the parameter
@@ -232,7 +232,7 @@ as
   function get_boolean(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return boolean;
+    return boolean result_cache;
     
   
   /** Method to reset a parameter to its default value

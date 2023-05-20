@@ -3,8 +3,8 @@ as
 
   /** Package to read and write parameter values */
 
-  C_TRUE constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
-  C_FALSE constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
+  C_TRUE constant parameter_group.pgr_is_modifiable%type := 'Y';--&C_TRUE.;
+  C_FALSE constant parameter_group.pgr_is_modifiable%type := 'N';--&C_FALSE.;
   c_max_char_length constant number := 32767;
   C_DEFAULT_REALM constant parameter_local.pal_pre_id%type := 'DEFAULT';
   
@@ -287,7 +287,7 @@ as
   function get_string(
    p_par_id in parameter_v.par_id%type,
    p_par_pgr_id in parameter_group.pgr_id%type)
-   return varchar2
+   return varchar2 result_cache
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -317,7 +317,7 @@ as
   function get_float(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_float_value%type
+    return parameter_v.par_float_value%type result_cache
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -327,7 +327,7 @@ as
   function get_integer(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_integer_value%type
+    return parameter_v.par_integer_value%type result_cache
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -337,7 +337,7 @@ as
   function get_date(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_date_value%type
+    return parameter_v.par_date_value%type result_cache
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -347,7 +347,7 @@ as
   function get_timestamp(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return parameter_v.par_timestamp_value%type
+    return parameter_v.par_timestamp_value%type result_cache
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);
@@ -357,7 +357,7 @@ as
   function get_boolean(
     p_par_id in parameter_v.par_id%type,
     p_par_pgr_id in parameter_group.pgr_id%type)
-    return boolean
+    return boolean result_cache
   as
   begin
     get_parameter(p_par_id, p_par_pgr_id);

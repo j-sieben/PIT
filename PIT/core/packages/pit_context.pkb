@@ -47,15 +47,14 @@ as
    */
   /**
     Variables: Context related variables
-      g_client_id - ID of the actually connected client, if necessary for the context to work
+      g_client_id - ID of the actually connected client, is necessary for the context to work
       g_context_list - List of avaialable contexts. Is initialized with all existing context upon first usage
       g_local_context - Locale memory structure used as a replacement for a globally accessed context if this does not exist
       g_toggle_list - List of avaialable toggles. Is initialized with the requested context upon first usage
-      g_context - Context instance catually in use
+      g_context - Context instance actually in use
       g_all_modules - List of all output modules that are installed
       g_available_modules - List of all modules which are available for logging (meaning: status = msg.MODULE_INSTANTIATED)
       g_active_modules - List of all modules which are available and actually registered for logging
-      g_warn_if_unusable_modules - Flag to indicate whether output modules which couldn't be instantiated should be reported
    */
   g_client_id pit_util.ora_name_type;
   g_context_list context_list_tab;
@@ -64,7 +63,6 @@ as
   g_all_modules pit_module_tab;
   g_available_modules pit_module_tab;
   g_active_modules pit_module_tab;
-  g_warn_if_unusable_modules boolean;
   
 
   /**
@@ -284,11 +282,7 @@ as
       pit_util.to_bool(
         param.get_boolean(
           p_par_id => C_ALLOW_TOGGLE, 
-          p_par_pgr_id => C_PARAM_GROUP));
-    g_warn_if_unusable_modules := 
-      param.get_boolean(
-        p_par_id => C_WARN_IF_UNUSABLE_MODULES, 
-        p_par_pgr_id => C_PARAM_GROUP);                                    
+          p_par_pgr_id => C_PARAM_GROUP));                          
     
     $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
     -- Examine whether context settings mandates for client id information

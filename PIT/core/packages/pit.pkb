@@ -5,9 +5,6 @@ as
    
    
   /*************************** PACKAGE VARIABLES ********************************/
-  g_module pit_util.ora_name_type;
-  g_owner pit_util.ora_name_type;
-  g_lineno binary_integer;
   
   
   /******************************* INTERFACE ************************************/
@@ -15,8 +12,7 @@ as
   procedure initialize
   as
   begin
-    g_owner := user;
-    pit_internal.initialize;
+    pit_internal.initialize_pit;
   end initialize;
   
   
