@@ -1,15 +1,15 @@
 create or replace package body pit_call_stack
 as
-  /** 
+  /**
     Package: PIT_CALL_STACK Body
       Implementation of call stack functionality for PIT.
-   
-    Author:: 
+
+    Author::
       Juergen Sieben, ConDeS GmbH
-      
+
       Published under MIT licence
    */
-  
+
   /**
     Group: Private global Variables
    */
@@ -23,10 +23,10 @@ as
   /**
     Group: Private call stack maintenance methods
    */
-  /** 
+  /**
     Procedure: maintain_application_info
       Helper to maintain Application Info. Called from <PUSH_STACK>/<POP_STACK> methods.
-      
+
     Parameters:
       p_module - Module that was called
       p_action - Method of the module that was called
@@ -42,8 +42,8 @@ as
     dbms_application_info.set_module(substr(p_module, 1, 48), substr(p_action, 1, 32));
     dbms_application_info.set_client_info(substr(p_client_info, 1, 64));
   end maintain_application_info;
-  
-  
+
+
   /**
     Procedure: pop
       Pops an entry from the call stack and maintains timing information
@@ -57,25 +57,25 @@ as
     l_predecessor pit_call_stack_type;
   begin
     l_last_entry := g_call_stack.last;
-    
+
     if l_last_entry > 0 then
       l_actual_entry := g_call_stack(l_last_entry);
-      
+
       if pit_context.trace_me(l_actual_entry.trace_level) then
         -- preparing an entry is only done if tracing is required
         -- persist last call stack entry in out parameter
         l_actual_entry.params := p_params;
         -- replace existing ID with new ID to allow for persistance
         l_actual_entry.id := pit_log_seq.nextval;
-  
+
         -- maintain timing for call stack entries
         l_actual_entry.leave;
-  
+
         if l_last_entry > 1 then
           l_predecessor := g_call_stack(l_last_entry - 1);
           -- Resume time measurement
           l_predecessor.resume();
-          
+
           -- set application info to the predecessor
           maintain_application_info(l_predecessor.app_module, l_predecessor.app_action, l_predecessor.client_info);
         else
@@ -86,26 +86,26 @@ as
         -- actual entry must not be traced, reset
         l_actual_entry := null;
       end if;
-      
+
       -- in any case: pop entry from stack
       g_call_stack.delete(l_last_entry);
     end if;
-    
+
     return l_actual_entry;
   end pop;
- 
+
   /**
     Procedure: initialize
       Initialization method of the package
    */
-  procedure initialize
+  procedure initialize_call_stack
   as
   begin
     g_call_stack.delete;
-  end initialize;
-  
-  
-  /** 
+  end initialize_call_stack;
+
+
+  /**
     Procedure: push_stack
       See <pit_call_stack.push_stack>
    */
@@ -132,10 +132,10 @@ as
       l_call_stack_entry := g_call_stack(l_last_entry);
       l_call_stack_entry.pause();
     end if;
-    
+
     maintain_application_info(p_module, p_action, p_client_info);
 
-    l_call_stack_entry := 
+    l_call_stack_entry :=
       pit_call_stack_type(
         p_session_id => p_session_id,
         p_user_name => p_user_name,
@@ -150,12 +150,12 @@ as
         p_trace_timing => pit_util.to_bool(pit_context.trace_timing),
         p_trace_context => p_trace_context);
     g_call_stack(l_next_entry) := l_call_stack_entry;
-    
-    return l_call_stack_entry;    
+
+    return l_call_stack_entry;
   end push_stack;
 
 
-  /** 
+  /**
     Function: pop_stack
       See <pit_call_stack.pop_stack>
    */
@@ -171,7 +171,7 @@ as
     l_action pit_util.ora_name_type;
     l_entry_found binary_integer;
   begin
-    case p_severity 
+    case p_severity
     when pit_internal.C_LEVEL_FATAL then
       -- if a fatal error occurred, completely empty the call stack
       l_entry_found := 1;
@@ -181,7 +181,7 @@ as
       pit_util.get_module_and_action(
         p_module => l_module,
         p_action => l_action);
-    
+
       l_entry_found := g_call_stack.last + 1; -- Set found to a value higher max to avoid deleting entries if nothing is found
       if g_call_stack.count > 0 then
         for i in reverse 1 .. g_call_stack.last loop
@@ -197,7 +197,7 @@ as
       -- Not advisable to look for named methods, as their name might be wrong based on code inlining
       l_entry_found := g_call_stack.last;
     end case;
-    
+
     -- collect all found entries from the call stack and pass params to first popped entry
     -- List is examined by the calling code to throw the respective log events
     if g_call_stack.count > 0 then
@@ -213,11 +213,11 @@ as
         end if;
       end loop;
     end if;
-    
+
     return l_call_stack;
   end pop_stack;
-  
-  
+
+
   /**
     Procedure: long_op
       See <pit_call_stack.long_op>
@@ -235,17 +235,17 @@ as
     l_actual_entry pit_call_stack_type;
   begin
     l_op_name := p_op_name;
-    
+
     if g_call_stack.count > 0 then
       -- Tracing active, take details from there
       l_actual_entry := g_call_stack(g_call_stack.last);
       l_op_name := substr(
-                     coalesce(p_op_name, 
+                     coalesce(p_op_name,
                               l_actual_entry.app_module || '.' || l_actual_entry.app_action
                      ), 1, 64);
       l_sno := l_actual_entry.long_op_sno;
       l_idx := coalesce(l_actual_entry.long_op_idx, dbms_application_info.set_session_longops_nohint);
-      
+
       dbms_application_info.set_session_longops(
         rindex => l_idx,
         slno => l_sno,
@@ -254,7 +254,7 @@ as
         sofar => p_sofar,
         totalwork => p_total,
         units => substr(coalesce(p_units, 'iterations'), 1, 32));
-        
+
       -- write maintenance values back to the call stack
       l_actual_entry.long_op_sno := l_sno;
       l_actual_entry.long_op_idx := l_idx;
@@ -268,11 +268,9 @@ as
         target_desc => substr(p_target, 1, 32),
         sofar => p_sofar,
         totalwork => p_total,
-        units => substr(coalesce(p_units, 'iterations'), 1, 32)); 
+        units => substr(coalesce(p_units, 'iterations'), 1, 32));
     end if;
   end long_op;
   
-begin
-  initialize;
 end pit_call_stack;
 /
