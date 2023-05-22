@@ -18,8 +18,6 @@ as
   C_PMG constant  pit_util.ora_name_type := 'PITA_UI';
   
   -- Global Variables
-  g_page_values utl_apex.page_value_t;
-  
   type export_rec is record(
     pms_pmg_list char_table,
     pms_pml_name pit_app_api.pit_name_type,
@@ -28,7 +26,6 @@ as
     par_pgr_list char_table,
     uttm_type_list char_table
   );
-  g_export_row export_rec;
 
   
   /**
@@ -196,17 +193,18 @@ as
   end copy_set_realm;
   
   
-  procedure copy_export
+  procedure copy_export(
+    p_export_row in out nocopy export_rec)
   as
   begin
     pit.enter_detailed('copy_export');
     
-    utl_text.string_to_table(utl_apex.get_string('pms_pmg_list'), g_export_row.pms_pmg_list);
-    g_export_row.pms_pml_name := utl_apex.get_string('pms_pml_name');
-    utl_text.string_to_table(utl_apex.get_string('pti_pmg_list'), g_export_row.pti_pmg_list);
-    g_export_row.pti_pml_name := utl_apex.get_string('pti_pml_name');
-    utl_text.string_to_table(utl_apex.get_string('par_pgr_list'), g_export_row.par_pgr_list);
-    utl_text.string_to_table(utl_apex.get_string('uttm_type_list'), g_export_row.uttm_type_list);
+    utl_text.string_to_table(utl_apex.get_string('pms_pmg_list'), p_export_row.pms_pmg_list);
+    p_export_row.pms_pml_name := utl_apex.get_string('pms_pml_name');
+    utl_text.string_to_table(utl_apex.get_string('pti_pmg_list'), p_export_row.pti_pmg_list);
+    p_export_row.pti_pml_name := utl_apex.get_string('pti_pml_name');
+    utl_text.string_to_table(utl_apex.get_string('par_pgr_list'), p_export_row.par_pgr_list);
+    utl_text.string_to_table(utl_apex.get_string('uttm_type_list'), p_export_row.uttm_type_list);
     
     pit.leave_detailed;
   end copy_export;
@@ -1111,54 +1109,55 @@ as
   function export_validate
     return boolean
   as
+    l_export_row export_rec;
   begin
     pit.enter_mandatory;
     
-    copy_export;
+    copy_export(l_export_row);
     
     case utl_apex.get_request
       when 'TRANSLATE_PMS' then
         utl_apex.assert(
-          p_condition => g_export_row.pms_pmg_list.count > 0,
+          p_condition => l_export_row.pms_pmg_list.count > 0,
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PMS_PMG_LIST');
         utl_apex.assert(
-          p_condition => g_export_row.pms_pml_name is not null, 
+          p_condition => l_export_row.pms_pml_name is not null, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PMS_PML_NAME');
       when 'IMPORT_PMS' then
         null;
       when 'EXPORT_PMS' then
         utl_apex.assert(
-          p_condition => g_export_row.pms_pmg_list.count > 0, 
+          p_condition => l_export_row.pms_pmg_list.count > 0, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PMS_PMG_LIST');
       when 'TRANSLATE_PTI' then
         utl_apex.assert(
-          p_condition => g_export_row.pti_pmg_list.count > 0, 
+          p_condition => l_export_row.pti_pmg_list.count > 0, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PTI_PGR_LIST');
         utl_apex.assert(
-          p_condition => g_export_row.pti_pml_name is not null, 
+          p_condition => l_export_row.pti_pml_name is not null, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PTI_PML_NAME');
       when 'IMPORT_PTI' then
         null;
       when 'EXPORT_PTI' then
         utl_apex.assert(
-          p_condition => g_export_row.pti_pmg_list.count > 0, 
+          p_condition => l_export_row.pti_pmg_list.count > 0, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PTI_PGR_LIST');
       when 'EXPORT_PAR' then
         utl_apex.assert(
-          p_condition => g_export_row.par_pgr_list.count > 0, 
+          p_condition => l_export_row.par_pgr_list.count > 0, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PAR_PGR_LIST');
       when 'EXPORT_LOCAL_PAR' then
         null;
       when 'EXPORT_UTTM' then
         utl_apex.assert(
-          p_condition => g_export_row.uttm_type_list.count > 0, 
+          p_condition => l_export_row.uttm_type_list.count > 0, 
           p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
           p_page_item => 'PTI_UTTM_LIST');
       else
@@ -1179,47 +1178,48 @@ as
    */
   procedure export_process
   as
+    l_export_row export_rec;
   begin
     pit.enter_mandatory;
     
-    copy_export;
+    copy_export(l_export_row);
     
     case utl_apex.get_request
       when 'TRANSLATE_PMS' then
         translate_groups(
           p_target => pit_app_api.C_TARGET_PMS,
-          p_target_language => g_export_row.pms_pml_name,
-          p_pmg_list => g_export_row.pms_pmg_list);
+          p_target_language => l_export_row.pms_pml_name,
+          p_pmg_list => l_export_row.pms_pmg_list);
       when 'IMPORT_PMS' then
         import_translation(
           p_target => pit_app_api.C_TARGET_PMS);
       when 'EXPORT_PMS' then
         export_groups(
           p_target => pit_app_api.C_TARGET_PMS,
-          p_target_language => g_export_row.pms_pml_name,
-          p_pmg_list => g_export_row.pms_pmg_list);
+          p_target_language => l_export_row.pms_pml_name,
+          p_pmg_list => l_export_row.pms_pmg_list);
       when 'TRANSLATE_PTI' then
         translate_groups(
           p_target => pit_app_api.C_TARGET_PTI,
-          p_target_language => g_export_row.pti_pml_name,
-          p_pmg_list => g_export_row.pti_pmg_list);
+          p_target_language => l_export_row.pti_pml_name,
+          p_pmg_list => l_export_row.pti_pmg_list);
       when 'IMPORT_PTI' then
         import_translation(
           p_target => pit_app_api.C_TARGET_PTI);
       when 'EXPORT_PTI' then
         export_groups(
           p_target => pit_app_api.C_TARGET_PTI,
-          p_target_language => g_export_row.pti_pml_name,
-          p_pmg_list => g_export_row.pti_pmg_list);
+          p_target_language => l_export_row.pti_pml_name,
+          p_pmg_list => l_export_row.pti_pmg_list);
       when 'EXPORT_PAR' then
         export_groups(
           p_target => pit_app_api.C_TARGET_PAR,
           p_target_language => null,
-          p_pmg_list => g_export_row.par_pgr_list);
+          p_pmg_list => l_export_row.par_pgr_list);
       when 'EXPORT_LOCAL_PAR' then
         export_local_parameters;
       when 'EXPORT_UTTM' then
-        export_utl_text_templates(g_export_row.uttm_type_list);
+        export_utl_text_templates(l_export_row.uttm_type_list);
       else
         utl_apex.set_error(
           p_page_item => null,

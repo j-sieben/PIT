@@ -47,18 +47,10 @@ as
   
   /**
     Variables: Parameter variables
-      g_user - Variable to store result of SQL function USER;
-      g_call_stack_template - Container for parameter PIT_CALL_STACK_TEMPLATE
-      g_error_stack_template - Container for parameter PIT_ERROR_STACK_TEMPLATE
       g_omit_pit_in_stack - Container for parameter OMIT_PIT_IN_STACK
-      g_name_spelling varchar2(10 byte);
    */
-  g_user ora_name_type;
-  g_call_stack_template varchar2(1000 byte);
-  g_error_stack_template varchar2(1000 byte);
   g_omit_pit_in_stack boolean;
   g_omit_pkg_list varchar2(1000 byte);
-  g_name_spelling varchar2(10 byte);
   
   g_predefined_errors predefined_error_t;
   g_pmg_allowed_length pmg_allowed_length_t;
@@ -162,7 +154,7 @@ as
     return varchar2
   as
   begin
-    case g_name_spelling
+    case param.get_string(C_NAME_SPELLING, C_PARAMETER_GROUP)
       when 'LOWER' then
         return lower(p_name);
       when 'UPPER' then
@@ -207,14 +199,8 @@ as
     l_prefix_length binary_integer;
   begin
     -- set package vars
-    g_user := user;
-    g_call_stack_template := param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP);
-    g_error_stack_template := param.get_string('PIT_ERROR_STACK_TEMPLATE', C_PARAMETER_GROUP);
     g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
     g_omit_pkg_list := ':' ||param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
-    g_name_spelling := param.get_string(C_NAME_SPELLING, C_PARAMETER_GROUP);
-    initialize_error_list;
-    initialize_pmg_max_length;
   end initialize;
   
   
@@ -249,7 +235,7 @@ as
   begin
     l_depth := utl_call_stack.dynamic_depth;
     
-    append(l_stack, g_call_stack_template);
+    append(l_stack, param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP));
     
     for i in 1 .. l_depth loop
       if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
@@ -276,7 +262,7 @@ as
   begin
     l_depth := utl_call_stack.error_depth;
     
-    append(l_stack, g_error_stack_template);
+    append(l_stack, param.get_string('PIT_ERROR_STACK_TEMPLATE', C_PARAMETER_GROUP));
 
     for i in 1 .. l_depth loop
       begin
@@ -327,18 +313,6 @@ as
   
   
   /**
-    Function: get_user
-      See <PIT_UTIL.get_user>
-   */
-  function get_user
-    return ora_name_type
-  as
-  begin
-    return g_user;
-  end get_user;
-  
-  
-  /**
     Function: get_max_message_length
       See <PIT_UTIL.get_max_message_length>
    */
@@ -376,6 +350,7 @@ as
     l_error predefined_error_rec;
     l_error_marker pit_util.ora_name_type;
   begin
+    initialize_error_list;
     
     case
       when p_pms_custom_error is null then

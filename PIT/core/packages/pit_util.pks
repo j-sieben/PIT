@@ -149,14 +149,6 @@ as
     p_module in out nocopy varchar2,
     p_action in out nocopy varchar2);
     
-   
-  /**
-    Function: get_user
-      Getter for SYS.STANDARD-USER to avoid SQL environment changes
-   */
-  function get_user
-    return ora_name_type;
-    
     
   /**
     Function: check_error_number_exists
