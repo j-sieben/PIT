@@ -359,16 +359,21 @@ as
         -- predefined error found
         l_error := g_predefined_errors(p_pms_custom_error);
         -- Check that we didn't find the exception we want to create itself
-        select pmg_error_prefix || pmg_error_postfix
-          into l_error_marker
-          from pit_message_group
-          join pit_message
-            on pmg_name = pms_pmg_name
-         where pms_name = p_pms_name;
-        if p_pms_name = l_error.error_name 
-           or replace(replace(l_error.error_name, p_pms_name), '_') = l_error_marker then
-          l_error := null;
-        end if;
+        begin
+          select pmg_error_prefix || pmg_error_postfix
+            into l_error_marker
+            from pit_message_group
+            join pit_message
+              on pmg_name = pms_pmg_name
+           where pms_name = p_pms_name;
+          if p_pms_name = l_error.error_name 
+             or replace(replace(l_error.error_name, p_pms_name), '_') = l_error_marker then
+            l_error := null;
+          end if;
+        exception
+          when NO_DATA_FOUND then
+            null;
+        end;
       else
         null;
     end case;
