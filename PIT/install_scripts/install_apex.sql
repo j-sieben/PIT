@@ -14,11 +14,10 @@
   -- 1: Owner of PIT
   -- 2. APEX schema
   -- 3: APEX workspace name, into which the APEX application will be installed. Needs access to Owner of PIT
-  -- 4: ALIAS of the APEX-application. 
-  -- 5: APP_ID of the APEX-application.
+  -- 4: APP_ID of the APEX-application.
 */
 
-@init/init_apex.sql &1. &2. &3. &4. &5.
+@init/init_apex.sql &1. &2. &3. &4.
 @init/settings.sql
 
 prompt &h1.Checking installation prerequisites

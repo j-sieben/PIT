@@ -17,8 +17,8 @@ col install_user new_val INSTALL_USER format a30
 col remote_user new_val REMOTE_USER format a30
 col default_language new_val DEFAULT_LANGUAGE format a30
 
-define APEX_ALIAS = &4.
-define APP_ID = &5.
+define APEX_ALIAS = PITA
+define APP_ID = &4.
 
 
 select case when instr('&1.', '[') > 0 

@@ -18,10 +18,9 @@ $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($inputPass); 
 for /f "tokens=*" %%a in ('%AppPWD%') do set AppPWD=%%a
 
 set /p APEXWorkspace=Enter APEX workspace where this application should be installed at:
-set /p AppAlias=Enter application alias for the PIT application:
 set /p AppId=Enter application id for the PIT application:
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
 sqlplus %InstallUser%/"%InstallPWD%@"%SID%  @install_scripts/grant_apex_access %InstallUser% %RemoteUser% 
 
-sqlplus %RemoteUser%/"%AppPWD%"@%SID% @install_scripts/install_apex.sql %InstallUser% %RemoteUser% %APEXWorkspace% %AppAlias% %AppId%
+sqlplus %RemoteUser%/"%AppPWD%"@%SID% @install_scripts/install_apex.sql %InstallUser% %RemoteUser% %APEXWorkspace% %AppId%
