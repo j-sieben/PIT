@@ -11,6 +11,6 @@
 prompt
 prompt &section.
 prompt create APEX synonyms
-@core/register_client.sql
+@core/register_apex.sql
 
 prompt &h1.Finished PIT apex registration
