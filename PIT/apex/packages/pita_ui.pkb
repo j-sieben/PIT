@@ -1069,8 +1069,8 @@ as
         'DATAYPE_MISMATCH_FLOAT', 'PAR_FLOAT_VALUE',
         'DATAYPE_MISMATCH_DATE', 'PAR_DATE_VALUE',
         'DATAYPE_MISMATCH_TIMESTAMP', 'PAR_TIMESTAMP_VALUE',
-        msg.PIT_PARAM_IS_NULL, 'PAR_ID',
-        msg.PIT_PARAM_NOT_MODIFIABLE, 'PAR_ID'));
+        msg.PARAM_IS_NULL, 'PAR_ID',
+        msg.PARAM_NOT_MODIFIABLE, 'PAR_ID'));
       
       pit.leave_mandatory;
       return true;
