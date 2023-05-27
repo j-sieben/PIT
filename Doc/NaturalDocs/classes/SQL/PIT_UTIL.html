@@ -68,12 +68,6 @@
  <div class="CBody"><p>Reads module and action from UTL_CALL_STACK</p><p>Should p_module and/or p_action be null, &lt;UTL_CALL_STACK&gt; is called to get the respective information.</p><div class="CHeading">Parameters</div><table class="CDefinitionList"><tr><td class="CDLEntry">p_module<div class="CDLParameterType"><span class="SHKeyword">in out nocopy</span> <span class="SHKeyword">varchar2</span></div></td><td class="CDLDefinition"><p>Module that was called</p></td></tr><tr><td class="CDLEntry">p_action<div class="CDLParameterType"><span class="SHKeyword">in out nocopy</span> <span class="SHKeyword">varchar2</span></div></td><td class="CDLDefinition"><p>Method with module that was called</p></td></tr></table></div>
 </div>
 
-<a name="get_user"></a><a name="Topic211"></a><div class="CTopic TFunction LSQL">
- <div class="CTitle">get_user</div>
- <div id="NDPrototype211" class="NDPrototype"><div class="PSection PPlainSection"><span class="SHKeyword">function</span> get_user</div><div class="PSection PPlainSection"><span class="SHKeyword">return</span> <a href="../../index.html#SQLClass:PIT_UTIL:ora_name_type" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,190);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >ora_name_type</a></div></div>
- <div class="CBody"><p>Getter for SYS.STANDARD-USER to avoid SQL environment changes</p></div>
-</div>
-
 <a name="check_error_number_exists"></a><a name="Topic212"></a><div class="CTopic TFunction LSQL">
  <div class="CTitle">check_error_number_exists</div>
  <div id="NDPrototype212" class="NDPrototype WideForm"><div class="PSection PParameterSection PascalStyle"><table><tr><td class="PBeforeParameters"><span class="SHKeyword">function</span> check_error_number_exists(</td><td class="PParametersParentCell"><table class="PParameters"><tr><td class="PName first">p_pms_name&nbsp;</td><td class="PType last"><span class="SHKeyword">in</span> pit_message.pms_name<span class="SHKeyword">%type</span>,</td></tr><tr><td class="PName first">p_pms_custom_error&nbsp;</td><td class="PType last"><span class="SHKeyword">in</span> pit_message.pms_custom_error<span class="SHKeyword">%type</span></td></tr></table></td><td class="PAfterParameters">)</td></tr></table></div><div class="PSection PPlainSection"><span class="SHKeyword">return</span> <a href="../../index.html#SQLClass:PIT_UTIL:predefined_error_rec" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,198);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >predefined_error_rec</a></div></div>
