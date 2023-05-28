@@ -140,7 +140,8 @@ as
     Function: get_pit_message_language_table
       Method to return the content of PIT_MESSAGE_LANGUAGE_V
    */
-  function get_pit_message_language_table
+  function get_pit_message_language_table(
+    p_active_only in pit_util.flag_type default pit_util.C_TRUE)
     return pit_message_language_table
     pipelined;
     

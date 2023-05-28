@@ -185,15 +185,18 @@ as
     Function: get_pit_message_language_table
       See <pit_app_api.get_pit_message_language_table>
    */
-  function get_pit_message_language_table
+  function get_pit_message_language_table(
+    p_active_only in pit_util.flag_type default pit_util.C_TRUE)
     return pit_message_language_table
     pipelined
   as
-    cursor pit_message_language_cur is
+    cursor pit_message_language_cur(
+      p_active_only in pit_util.flag_type default pit_util.C_TRUE) is
       select *
-        from pit_message_language_v;
+        from pit_message_language_v
+       where pml_default_order >= case when p_active_only = pit_util.C_TRUE then 1 else 0 end;
   begin
-    for r in pit_message_language_cur loop
+    for r in pit_message_language_cur(p_active_only) loop
       pipe row (r);
     end loop;
     return;
