@@ -3,8 +3,8 @@ as
 
   /** Package to read and write parameter values */
 
-  C_TRUE constant parameter_group.pgr_is_modifiable%type := 'Y';--&C_TRUE.;
-  C_FALSE constant parameter_group.pgr_is_modifiable%type := 'N';--&C_FALSE.;
+  C_TRUE constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
+  C_FALSE constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
   c_max_char_length constant number := 32767;
   C_DEFAULT_REALM constant parameter_local.pal_pre_id%type := 'DEFAULT';
   
