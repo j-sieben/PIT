@@ -169,13 +169,13 @@ as
                     replace(to_char(substr(par_string_value, 1,
                             instr(par_string_value, C_DELIMITER) - 1)), C_LIST_DELIMITER, C_LIST_DELIMITER || C_TOGGLE_PREFIX) tgl_name,
                     C_CONTEXT_PREFIX || to_char(substr(par_string_value, instr(par_string_value, C_DELIMITER) + 1)) ctx_name
-               from parameter_tab
+               from parameter_v
               where par_id like C_TOGGLE_PREFIX || '%'
                 and par_pgr_id = C_PARAM_GROUP),
            contexts as (
              select par_id ctx_name,
                     to_char(par_string_value) string_value
-               from parameter_tab
+               from parameter_v
               where par_id like C_CONTEXT_PREFIX || '%'
                 and par_pgr_id = C_PARAM_GROUP
              )
