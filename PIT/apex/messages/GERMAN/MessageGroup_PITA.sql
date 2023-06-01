@@ -1,17 +1,17 @@
 begin
   pit_admin.delete_message_group(
-    p_pmg_name => 'PITA_UI',
+    p_pmg_name => 'PITA',
     p_force => true);
     
   pit_admin.merge_message_group(
-    p_pmg_name => 'PITA_UI',
-    p_pmg_description => 'Messages for the PITA_UI',
+    p_pmg_name => 'PITA',
+    p_pmg_description => 'Messages for the PITA',
     p_pmg_error_prefix => '',
     p_pmg_error_postfix => 'ERR');
   
   pit_admin.merge_message(
-    p_pms_name => 'PITA_UI_INVALID_INTEGER',
-    p_pms_pmg_name => 'PITA_UI',
+    p_pms_name => 'PITA_INVALID_INTEGER',
+    p_pms_pmg_name => 'PITA',
     p_pms_text => 'Eine Ganzzahl wurde erwartet, eingegeben wurde jedoch #1#.',
     p_pms_description => q'^Offensichtlich.^',
     p_pms_pse_id => 40,
@@ -19,8 +19,8 @@ begin
     
     
   pit_admin.merge_message(
-    p_pms_name => 'PITA_UI_PAR_PGR_EXPORTED',
-    p_pms_pmg_name => 'PITA_UI',
+    p_pms_name => 'PITA_PAR_PGR_EXPORTED',
+    p_pms_pmg_name => 'PITA',
     p_pms_text => 'Parametergruppe #1# wurde exportiert.',
     p_pms_description => q'^^',
     p_pms_pse_id => 60,
@@ -28,16 +28,16 @@ begin
     
     
   pit_admin.merge_message(
-    p_pms_name => 'PITA_UI_XLIFF_IMPORTED',
-    p_pms_pmg_name => 'PITA_UI',
+    p_pms_name => 'PITA_XLIFF_IMPORTED',
+    p_pms_pmg_name => 'PITA',
     p_pms_text => 'Übersetzung erfolgreich importiert.',
     p_pms_description => q'^^',
     p_pms_pse_id => 60,
     p_pms_pml_name => 'GERMAN');
 
   pit_admin.merge_message(
-    p_pms_name => 'PITA_UI_INVALID_REQUEST',
-    p_pms_pmg_name => 'PITA_UI',
+    p_pms_name => 'PITA_INVALID_REQUEST',
+    p_pms_pmg_name => 'PITA',
     p_pms_text => q'^Für den Request »#1#« ist kein Handler hinterlegt.^',
     p_pms_description => q'^In einer Auswahlliste ist für den aktuellen Requestwert kein Entschiedungsbaum hinterlegt. Daher wird dieser Request nicht behandelt.^',
     p_pms_pse_id => 30,
@@ -45,8 +45,8 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
-    p_pms_name => 'PITA_UI_PARAMETER_REQUIRED',
-    p_pms_pmg_name => 'PITA_UI',
+    p_pms_name => 'PITA_PARAMETER_REQUIRED',
+    p_pms_pmg_name => 'PITA',
     p_pms_text => q'^Parameter »#1#« darf nicht NULL sein.^',
     p_pms_description => q'^Offensichtlich.^',
     p_pms_pse_id => 30,

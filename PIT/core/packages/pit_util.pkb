@@ -238,7 +238,7 @@ as
     append(l_stack, param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP));
     
     for i in 1 .. l_depth loop
-      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
+      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) or i = 1 then
         append(l_stack,
           lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' ' ||
           rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||

@@ -353,7 +353,7 @@ as
       when pit_app_api.C_TARGET_PTI then
         l_page_item := 'PTI_XLIFF';
       else
-        pit.error(msg.PITA_UI_INVALID_REQUEST);
+        pit.error(msg.PITA_INVALID_REQUEST);
     end case;
     
     select xmltype(blob_content, nls_charset_id('AL32UTF8'))
@@ -366,16 +366,16 @@ as
       p_xliff => l_xliff,
       p_target => p_target);
         
-    utl_apex.set_success_message(msg.PITA_UI_XLIFF_IMPORTED);
+    utl_apex.set_success_message(msg.PITA_XLIFF_IMPORTED);
     
     pit.leave_mandatory;
   exception
     when NO_DATA_FOUND then
       utl_apex.set_error(l_page_item, msg.PIT_PASS_MESSAGE, msg_args(SQLERRM));
-    when msg.PITA_UI_INVALID_REQUEST_ERR then
+    when msg.PITA_INVALID_REQUEST_ERR then
       utl_apex.set_error(
         p_page_item => null,
-        p_message => msg.PITA_UI_INVALID_REQUEST,
+        p_message => msg.PITA_INVALID_REQUEST,
         p_msg_args => msg_args(utl_apex.get_request));
   end import_translation;
   
@@ -1119,51 +1119,51 @@ as
       when 'TRANSLATE_PMS' then
         utl_apex.assert(
           p_condition => l_export_row.pms_pmg_list.count > 0,
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PMS_PMG_LIST');
         utl_apex.assert(
           p_condition => l_export_row.pms_pml_name is not null, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PMS_PML_NAME');
       when 'IMPORT_PMS' then
         null;
       when 'EXPORT_PMS' then
         utl_apex.assert(
           p_condition => l_export_row.pms_pmg_list.count > 0, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PMS_PMG_LIST');
       when 'TRANSLATE_PTI' then
         utl_apex.assert(
           p_condition => l_export_row.pti_pmg_list.count > 0, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PTI_PGR_LIST');
         utl_apex.assert(
           p_condition => l_export_row.pti_pml_name is not null, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PTI_PML_NAME');
       when 'IMPORT_PTI' then
         null;
       when 'EXPORT_PTI' then
         utl_apex.assert(
           p_condition => l_export_row.pti_pmg_list.count > 0, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PTI_PGR_LIST');
       when 'EXPORT_PAR' then
         utl_apex.assert(
           p_condition => l_export_row.par_pgr_list.count > 0, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PAR_PGR_LIST');
       when 'EXPORT_LOCAL_PAR' then
         null;
       when 'EXPORT_UTTM' then
         utl_apex.assert(
           p_condition => l_export_row.uttm_type_list.count > 0, 
-          p_message_name => msg.PITA_UI_PARAMETER_REQUIRED,
+          p_message_name => msg.PITA_PARAMETER_REQUIRED,
           p_page_item => 'PTI_UTTM_LIST');
       else
         utl_apex.set_error(
           p_page_item => null,
-          p_message => msg.PITA_UI_INVALID_REQUEST,
+          p_message => msg.PITA_INVALID_REQUEST,
           p_msg_args => msg_args(utl_apex.get_request));
     end case;
     
@@ -1223,7 +1223,7 @@ as
       else
         utl_apex.set_error(
           p_page_item => null,
-          p_message => msg.PITA_UI_INVALID_REQUEST,
+          p_message => msg.PITA_INVALID_REQUEST,
           p_msg_args => msg_args(utl_apex.get_request));
     end case;
     
@@ -1286,7 +1286,7 @@ as
       else
         utl_apex.set_error(
           p_page_item => null,
-          p_message => msg.PITA_UI_INVALID_REQUEST,
+          p_message => msg.PITA_INVALID_REQUEST,
           p_msg_args => msg_args(utl_apex.get_request));
     end case;
     
