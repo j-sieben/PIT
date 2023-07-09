@@ -45,13 +45,6 @@ as
   
   type pmg_allowed_length_t is table of binary_integer index by pit_util.ora_name_type;
   
-  /**
-    Variables: Parameter variables
-      g_omit_pit_in_stack - Container for parameter OMIT_PIT_IN_STACK
-   */
-  g_omit_pit_in_stack boolean;
-  g_omit_pkg_list varchar2(1000 byte);
-  
   g_predefined_errors predefined_error_t;
   g_pmg_allowed_length pmg_allowed_length_t;
   
@@ -180,28 +173,15 @@ as
     return boolean
   as
     l_ignore boolean := false;
+    l_omit_pkg_list max_char := ':' || param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
   begin
-    if g_omit_pit_in_stack then
+    if param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP) then
       l_ignore := (upper(p_subprogram) like 'PIT%' and p_subprogram != 'PIT_UI') 
-               or (instr(g_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
+               or (instr(l_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
                or (upper(p_subprogram) like 'MESSAGE_TYPE%');
     end if;
     return l_ignore;
   end ignore_subprogram;
-  
-  
-  /**
-    Procedure: initialize
-      Package Initialization 
-   */
-  procedure initialize
-  as
-    l_prefix_length binary_integer;
-  begin
-    -- set package vars
-    g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
-    g_omit_pkg_list := ':' ||param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
-  end initialize;
   
   
   function c_true
@@ -781,7 +761,5 @@ as
     end loop;
   end recompile_invalid_objects;
   
-begin
-  initialize;
 end pit_util;
 /

@@ -36,61 +36,11 @@ as
   C_YES constant varchar2(3 byte) := 'YES';
   C_CHUNK_SIZE constant integer := 8192;
 
-  g_apex_triggered_context pit_context_type;
   g_fire_threshold number;
-  g_websocket_server varchar2(1000 byte);
 
   /**
     Group: Helper methods
    */
-  /** 
-    Procedure: initialize
-      Helper method to read parameter values into global package variables. Is called from <INITIALIZE_MODULE> method.
-   */
-  procedure initialize
-  as
-  begin
-    g_apex_triggered_context := pit_context_type();
-    g_fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
-    g_apex_triggered_context.log_level := param.get_integer(C_TRG_FIRE_THRESHOLD, C_PARAM_GROUP);
-    g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
-    g_apex_triggered_context.trace_timing := pit_util.to_bool(param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP));
-    g_apex_triggered_context.log_modules := pit_util.string_to_table(param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP));
-    g_websocket_server := param.get_string(C_WEB_SOCKET_SERVER, C_PARAM_GROUP);
-  end initialize;
-
-
-  /** 
-    Procedure: set_http_header
-      Method sets http header when addressing the web socket connection. For future release, not yet functional.
-      
-    Parameters:
-      p_title - Title of the notification
-      p_message - Message of the notification
-   */
-  procedure set_http_header(
-    p_title in varchar2,
-    p_message in clob)
-  as
-    l_user_agent pit_util.ora_name_type;
-    l_server pit_util.ora_name_type;
-  begin
-    -- Clients Envs
-    l_user_agent := 'Mozilla/5.0';
-    l_server     := g_websocket_server;
-    -- Host
-    apex_web_service.g_request_headers(1).name := 'Host';
-    apex_web_service.g_request_headers(1).value := l_server;
-    -- User-Agent
-    apex_web_service.g_request_headers(2).name := 'User-Agent';
-    apex_web_service.g_request_headers(2).value := l_user_agent;
-    -- Title
-    apex_web_service.g_request_headers(3).name := 'notify-title';
-    apex_web_service.g_request_headers(3).value := p_title;
-    -- Message
-    apex_web_service.g_request_headers(4).name := 'notify-message';
-    apex_web_service.g_request_headers(4).value := p_message;
-  end set_http_header;
 
 
   /**
@@ -365,26 +315,9 @@ as
   procedure notify(
     p_message in message_type)
   as
-    l_response clob;
-    l_message json_object_t := json_object_t('{}');
   begin
-    l_message.put('id', p_message.id);
-    l_message.put('message_name', p_message.message_name);
-    l_message.put('affected_id', p_message.affected_id);
-    l_message.put('session_id', p_message.session_id);
-    l_message.put('user_name', p_message.user_name);
-    l_message.put('message_text', to_char(p_message.message_text));
-    l_message.put('message_description', to_char(p_message.message_description));
-    l_message.put('severity', to_char(p_message.severity));
-    l_message.put('stack', p_message.stack);
-    l_message.put('backtrace', p_message.backtrace);
-    l_message.put('error_number', to_char(p_message.error_number));
-
- --   pit.log(msg.PIT_WEBSOCKET_MESSAGE, msg_args(g_websocket_server, l_message.stringify));
-    l_response := apex_web_service.make_rest_request(
-                    p_url => g_websocket_server,
-                    p_http_method => 'GET',
-                    p_body => l_message.stringify());
+    null;
+    -- Not yet implemented
   end notify;
 
 
@@ -485,8 +418,6 @@ as
       self.status := msg.pit_fail_module_init;
       self.stack := substr(sqlerrm, 12);
   end initialize_module;
-
-begin
-   initialize;
+  
 end pit_apex_pkg;
 /

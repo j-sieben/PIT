@@ -79,10 +79,9 @@ as
   procedure load_modules
   as
     cursor installed_modules_cur is
-      select type_name
-        from all_types
-       where supertype_name = C_BASE_MODULE
-         and owner = C_PACKAGE_OWNER;
+      select /*+ result_chache*/ type_name
+        from user_types
+       where supertype_name = C_BASE_MODULE;
     C_STMT_TEMPLATE constant pit_util.small_char := 'begin :i := new #MODULE#(); end;';
     l_stmt pit_util.small_char;
     l_module_instance pit_module;

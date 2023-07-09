@@ -7,8 +7,8 @@ as
   -- Global Constants
   C_PACKAGE_NAME constant ora_name_type := $$PLSQL_UNIT;
   C_OWNER constant ora_name_type := $$PLSQL_UNIT_OWNER;
-  C_TRUE constant flag_type := &C_TRUE.;
-  C_FALSE constant flag_type := &C_FALSE.;
+  C_TRUE constant flag_type := 'Y';--&C_TRUE.;
+  C_FALSE constant flag_type := 'N';--&C_FALSE.;
 
   -- Parameter Maintenance
   C_PARAMETER_GROUP_ID constant ora_name_type := 'CONTEXT';
@@ -139,6 +139,7 @@ as
 
 
   /* Initialization procedure */
+  $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
   procedure initialize
   as
     cursor ctx_cur is
@@ -200,7 +201,7 @@ as
       g_context_settings(ctx.namespace) := g_context_setting;
     end loop;
   end initialize;
-
+  $END
 
   procedure set_value(
     p_context in varchar2,
@@ -281,11 +282,14 @@ as
   as
   begin
     dbms_session.clear_all_context(p_context);
+    $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
     initialize;
+    $END
   end reset_context;
 
-
+$IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
 begin
   initialize;
+$END
 end utl_context;
 /

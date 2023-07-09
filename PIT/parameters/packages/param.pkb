@@ -3,12 +3,10 @@ as
 
   /** Package to read and write parameter values */
 
-  C_TRUE constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
-  C_FALSE constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
+  C_TRUE constant parameter_group.pgr_is_modifiable%type := 'Y';--&C_TRUE.;
+  C_FALSE constant parameter_group.pgr_is_modifiable%type := 'N';--&C_FALSE.;
   c_max_char_length constant number := 32767;
   C_DEFAULT_REALM constant parameter_local.pal_pre_id%type := 'DEFAULT';
-  
-  g_parameter_rec parameter_v%rowtype;
 
   /* Helper */  
 
@@ -35,26 +33,50 @@ as
     return l_boolean;
     
   end get_bool;
+  
+
+  /* Helper procedure to convert a boolean value into a flag type
+   * %param  p_boolean_value - Boolean flag to convert
+   * %return char value representign a boolean value: Y|N
+   * %usage  Is called internally to convert a boolean value to a parameter a boolean value.
+   */
+  function bool_to_flag(
+    p_flag in boolean)
+    return parameter_v.par_boolean_value%type
+  as
+    l_result parameter_v.par_boolean_value%type;
+  begin
+    if p_flag then
+      l_result := C_TRUE;
+    else
+      l_result := C_FALSE;
+    end if;
+    return l_result;
+  end bool_to_flag;
 
 
   /* Helper method to read a row of parameter into a record
    * %param  p_par_id Name of the parameter
    * %param  p_par_pgr_id Name of the parameter group
-   * %usage  Is called internally by the Getter Methods to copy a row of parameter into the global variable g_parameter_rec.
+   * %usage  Is called internally by the Getter Methods to copy a row of parameter into the global variable l_row.
    */
-  procedure get_parameter(
+  function get_parameter(
     p_par_id in varchar2,
     p_par_pgr_id in varchar2)
+    return parameter_v%rowtype
   as
+    l_row parameter_v%rowtype;
   begin
     select *
-      into g_parameter_rec
+      into l_row
       from parameter_v
      where par_id = p_par_id
        and par_pgr_id = p_par_pgr_id;
+    return l_row;
   exception
     when no_data_found then
       dbms_output.put_line('Parameter ' || p_par_id || ' not found in ' || p_par_pgr_id);
+      return null;
   end get_parameter;
   
 
@@ -72,26 +94,27 @@ as
   as
     l_boolean_value parameter_v.par_boolean_value%type;
     l_is_modifiable boolean;
+    l_row parameter_v%rowtype;
   begin
   
-    g_parameter_rec := param_admin.get_parameter_settings(
+    l_row := param_admin.get_parameter_settings(
                          p_par_id => p_par_id,
                          p_pgr_id => p_par_pgr_id);
     
-    l_is_modifiable := g_parameter_rec.par_id is not null and g_parameter_rec.par_is_modifiable = C_TRUE;
+    l_is_modifiable := l_row.par_id is not null and l_row.par_is_modifiable = C_TRUE;
     
     if l_is_modifiable then
-      g_parameter_rec.par_string_value := p_par_string_value;
-      g_parameter_rec.par_xml_value := p_par_xml_value;
-      g_parameter_rec.par_integer_value := p_par_integer_value;
-      g_parameter_rec.par_float_value := p_par_float_value;
-      g_parameter_rec.par_date_value := p_par_date_value;
-      g_parameter_rec.par_timestamp_value := p_par_timestamp_value;
-      g_parameter_rec.par_boolean_value := get_bool(p_par_boolean_value);
+      l_row.par_string_value := p_par_string_value;
+      l_row.par_xml_value := p_par_xml_value;
+      l_row.par_integer_value := p_par_integer_value;
+      l_row.par_float_value := p_par_float_value;
+      l_row.par_date_value := p_par_date_value;
+      l_row.par_timestamp_value := p_par_timestamp_value;
+      l_row.par_boolean_value := get_bool(p_par_boolean_value);
       
-      param_admin.validate_parameter(g_parameter_rec);
+      param_admin.validate_parameter(l_row);
     else
-      if g_parameter_rec.par_id is not null then
+      if l_row.par_id is not null then
         raise_application_error(-20000, 'Parameter not existing');
       else
         raise_application_error(-20000, 'Parameter not modifiable');
@@ -114,6 +137,7 @@ as
     p_par_timestamp_value in parameter_v.par_timestamp_value%type default null,
     p_par_boolean_value in boolean default null)
   as
+    l_boolean_flag parameter_v.par_boolean_value%type;
   begin    
     validate_parameter(
       p_par_id => p_par_id,
@@ -127,16 +151,17 @@ as
       p_par_boolean_value => p_par_boolean_value);
     
     if p_par_pre_id is null then
+      l_boolean_flag := bool_to_flag(p_par_boolean_value);
       merge into parameter_local t
-      using (select g_parameter_rec.par_id pal_id,
-                    g_parameter_rec.par_pgr_id pal_pgr_id,
-                    g_parameter_rec.par_string_value pal_string_value,
-                    g_parameter_rec.par_xml_value pal_xml_value,
-                    g_parameter_rec.par_integer_value pal_integer_value,
-                    g_parameter_rec.par_float_value pal_float_value,
-                    g_parameter_rec.par_date_value pal_date_value,
-                    g_parameter_rec.par_timestamp_value pal_timestamp_value,
-                    g_parameter_rec.par_boolean_value pal_boolean_value
+      using (select p_par_id pal_id,
+                    p_par_pgr_id pal_pgr_id,
+                    p_par_string_value pal_string_value,
+                    p_par_xml_value pal_xml_value,
+                    p_par_integer_value pal_integer_value,
+                    p_par_float_value pal_float_value,
+                    p_par_date_value pal_date_value,
+                    p_par_timestamp_value pal_timestamp_value,
+                    l_boolean_flag pal_boolean_value
                from dual) s
          on (t.pal_id = s.pal_id
          and t.pal_pgr_id = s.pal_pgr_id)
@@ -289,9 +314,10 @@ as
    p_par_pgr_id in parameter_group.pgr_id%type)
    return varchar2 result_cache
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return dbms_lob.substr(g_parameter_rec.par_string_value, c_max_char_length, 1);
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return dbms_lob.substr(l_row.par_string_value, c_max_char_length, 1);
   end get_string;
   
   function get_clob(
@@ -299,9 +325,10 @@ as
    p_par_pgr_id in parameter_group.pgr_id%type)
    return parameter_v.par_string_value%type
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_string_value;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_string_value;
   end get_clob;
 
   function get_xml(
@@ -309,9 +336,10 @@ as
     p_par_pgr_id in parameter_group.pgr_id%type)
     return parameter_v.par_xml_value%type
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_xml_value;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_xml_value;
   end get_xml;
 
   function get_float(
@@ -319,9 +347,10 @@ as
     p_par_pgr_id in parameter_group.pgr_id%type)
     return parameter_v.par_float_value%type result_cache
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_float_value;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_float_value;
   end get_float;
 
   function get_integer(
@@ -329,9 +358,10 @@ as
     p_par_pgr_id in parameter_group.pgr_id%type)
     return parameter_v.par_integer_value%type result_cache
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_integer_value;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_integer_value;
   end get_integer;
 
   function get_date(
@@ -339,9 +369,10 @@ as
     p_par_pgr_id in parameter_group.pgr_id%type)
     return parameter_v.par_date_value%type result_cache
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_date_value;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_date_value;
   end get_date;
 
   function get_timestamp(
@@ -349,9 +380,10 @@ as
     p_par_pgr_id in parameter_group.pgr_id%type)
     return parameter_v.par_timestamp_value%type result_cache
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_timestamp_value;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_timestamp_value;
   end get_timestamp;
 
   function get_boolean(
@@ -359,9 +391,10 @@ as
     p_par_pgr_id in parameter_group.pgr_id%type)
     return boolean result_cache
   as
+    l_row parameter_v%rowtype;
   begin
-    get_parameter(p_par_id, p_par_pgr_id);
-    return g_parameter_rec.par_boolean_value = C_TRUE;
+    l_row := get_parameter(p_par_id, p_par_pgr_id);
+    return l_row.par_boolean_value = C_TRUE;
   end get_boolean;
   
   
