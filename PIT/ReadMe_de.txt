@@ -34,6 +34,12 @@ Alle Skripte erfragen interaktiv die erforderlichen Parameter. Folgen Sie den An
 
 create or replace directory PIT_FILE_DIR as 'C:\tmp\trace';
 
+Vor der Installation kann definiert werden, auf welche Weise boolesche Werte in der Datenbank abgelegt werden.
+In der Datei init/settings.sql können hierfür Umgebungsvariablen angelegt werden. Ab Version 23c wird diese
+Festlegung durch den Datentyp BOOLEAN ersetzt. Bitte stellen Sie sicher, dass bei einer eventuellen Neukompilierung
+der Initialisierungsparameter PLSQL_IMPLICIT_CONVERSION_BOOL auf TRUE gesetzt wurde, damit die Konvertierung dieser
+Typen mittels TO_CHAR in PL/SQL gelingt.
+
 
 Anmerkungen für Linux:
 ORACLE_SID, PATH und ORACLE_HOME auf Unix setzen:

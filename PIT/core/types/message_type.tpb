@@ -89,6 +89,7 @@ as
     self.schema_name := p_schema_name;
     self.user_name := p_user_name;
     self.message_args := p_msg_args;
+    self.creation_time := systimestamp;
     
     pit_util.get_module_and_action(self.module, self.action);
     

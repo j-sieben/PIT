@@ -16,7 +16,7 @@ begin
     p_par_id => 'CONTEXT_APEX',
     p_par_pgr_id => 'PIT',
     p_par_description => 'Log context for PIT_APEX if wstiched on by APEX debug settings [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]',
-    p_par_string_value => '70|50|' || replace(&C_TRUE., '''') || '|PIT_APEX:PIT_CONSOLE'
+    p_par_string_value => '70|50|' || replace(to_char(&C_TRUE.), '''') || '|PIT_APEX:PIT_CONSOLE'
   );
 
   param_admin.edit_parameter(

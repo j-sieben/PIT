@@ -1,6 +1,6 @@
 declare
-  is_true varchar2(10) := replace(&C_TRUE., '''');
-  is_false varchar2(10) := replace(&C_FALSE., '''');
+  is_true varchar2(10) := replace(to_char(&C_TRUE.), '''');
+  is_false varchar2(10) := replace(to_char(&C_FALSE.), '''');
 begin
 
   param_admin.edit_parameter_group(

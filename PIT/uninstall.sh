@@ -1,18 +1,17 @@
-#!/bin/bash
-echo -n "Enter Connect-String without 'as sysdba' for SYS account [ENTER] "
-read SYSPWD
-echo ${SYSPWD}
 
+#!/bin/bash
 echo -n "Enter owner schema for PIT [ENTER] "
 read OWNER
 echo ${OWNER}
 
-echo -n "Enter user schema for PIT [ENTER] "
-read USER
-echo ${USER}
+echo -n "Enter password for ${OWNER} [ENTER] "
+read -s PWD
+
+echo -n "Enter service name for the database or PDB [ENTER] "
+read SERVICE
+echo ${SERVICE}
 
 NLS_LANG=GERMAN_GERMANY.AL32UTF8
 export NLS_LANG
-sqlplus /nolog<<EOF
-connect ${SYSPWD} as sysdba 
-@pit_uninstall ${OWNER} ${USER}
+
+sqlplus ${OWNER}/"${PWD}"@${SERVICE} @./install_scripts/uninstall  ${OWNER} ${USER}

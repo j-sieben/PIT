@@ -32,6 +32,11 @@ All scripts interactively request the required parameters. Follow the instructio
 
 create or replace directory PIT_FILE_DIR as 'C:\tmp\trace';
 
+Before installation, it is possible to define how Boolean values are stored in the database.
+Environment variables can be created for this in the init/settings.sql file. Starting from version 23c this
+definition is replaced by the data type BOOLEAN. Please make sure that at a possible recompilation
+the initialization parameter PLSQL_IMPLICIT_CONVERSION_BOOL has been set to TRUE, so that the conversion of these
+types into PL/SQL using TO_CHAR works.
 
 Linux remarks:
 set ORACLE_SID, PATH and ORACLE_HOME:

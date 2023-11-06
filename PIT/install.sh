@@ -4,7 +4,7 @@ read OWNER
 echo ${OWNER}
 
 echo -n "Enter password for ${OWNER} [ENTER] "
-read PWD
+read -s PWD
 
 echo -n "Enter service name for the database or PDB [ENTER] "
 read SERVICE

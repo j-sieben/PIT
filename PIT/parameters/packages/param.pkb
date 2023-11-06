@@ -3,8 +3,8 @@ as
 
   /** Package to read and write parameter values */
 
-  C_TRUE constant parameter_group.pgr_is_modifiable%type := 'Y';--&C_TRUE.;
-  C_FALSE constant parameter_group.pgr_is_modifiable%type := 'N';--&C_FALSE.;
+  C_TRUE constant parameter_group.pgr_is_modifiable%type := &C_TRUE.;
+  C_FALSE constant parameter_group.pgr_is_modifiable%type := &C_FALSE.;
   c_max_char_length constant number := 32767;
   C_DEFAULT_REALM constant parameter_local.pal_pre_id%type := 'DEFAULT';
 
@@ -17,7 +17,7 @@ as
    */
   function get_bool(
     p_boolean_value in boolean)
-    return varchar2
+    return parameter_v.par_boolean_value%type
   as
     l_boolean parameter_v.par_boolean_value%type;
   begin
@@ -37,7 +37,7 @@ as
 
   /* Helper procedure to convert a boolean value into a flag type
    * %param  p_boolean_value - Boolean flag to convert
-   * %return char value representign a boolean value: Y|N
+   * %return char value representing a boolean value: Y|N
    * %usage  Is called internally to convert a boolean value to a parameter a boolean value.
    */
   function bool_to_flag(

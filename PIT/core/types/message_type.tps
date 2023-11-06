@@ -37,6 +37,7 @@ create or replace type message_type force is object(
   stack varchar2(2000 byte),
   backtrace varchar2(2000 byte),
   error_number number (5,0),
+  creation_time timestamp(6),
   message_args msg_args,
   /**
     Function: format_icu

@@ -28,7 +28,7 @@ prompt &h2.Create type declarations
 @&tools.install_type_spec char_table
 @&tools.install_type_spec msg_args
 @&tools.install_type_spec msg_args_char
-@&tools.install_type_spec msg_param
+@&tools.check_has_sql_boolean &scriptdir.msg_param_23.tps &scriptdir.msg_param.tps
 @&tools.install_type_spec msg_params
 @&tools.install_type_spec message_type
 @&tools.install_type_spec pit_args
@@ -75,7 +75,7 @@ prompt &s1.Create global context
 
 prompt &h2.Create type bodies
 @&tools.install_type_body message_type
-@&tools.install_type_body msg_param
+@&tools.check_has_sql_boolean &scriptdir.msg_param_23.tpb &scriptdir.msg_param.tpb
 @&tools.install_type_body pit_call_stack_type
 @&tools.install_type_body pit_context_type
 @&tools.install_type_body pit_default_adapter

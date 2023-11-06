@@ -56,7 +56,7 @@ as
        log_message_text, log_message_name, log_message_args, 
        log_message_stack, log_message_backtrace, log_severity)
     values
-      (p_message.id, localtimestamp, substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
+      (p_message.id, p_message.creation_time, substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
        p_message.message_text, p_message.message_name, pit_util.cast_to_msg_args_char(p_message.message_args), 
        p_message.stack, p_message.backtrace, p_message.severity);
   end log;

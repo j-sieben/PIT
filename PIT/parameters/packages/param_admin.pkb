@@ -32,7 +32,7 @@ as
    */
   function convert_boolean(
     p_value in boolean)
-    return varchar2
+    return parameter_v.par_boolean_value%type
   as
     l_boolean parameter_tab.par_boolean_value%type;
   begin
@@ -588,7 +588,15 @@ as
         l_stmt := replace(l_stmt, '#DATE#', case when p_row.par_date_value is not null then 'timestamp ''' || to_char(p_row.par_date_value, 'yyyy-mm-dd hh24:mi:ss') || '''' else 'NULL' end);
         l_stmt := replace(l_stmt, '#FLOAT#', p_row.par_float_value);
         l_stmt := replace(l_stmt, '#INTEGER#', p_row.par_integer_value);
+        $IF dbms_db_version.ver_le_19 $THEN
         l_stmt := replace(l_stmt, '#BOOLEAN#', case when coalesce(p_row.par_boolean_value, C_TRUE) = C_TRUE then dbms_assert.enquote_literal(C_TRUE) else dbms_assert.enquote_literal(C_FALSE) end);
+        $ELSE
+        $IF dbms_db_version.ver_le_21 $THEN
+        l_stmt := replace(l_stmt, '#BOOLEAN#', case when coalesce(p_row.par_boolean_value, C_TRUE) = C_TRUE then dbms_assert.enquote_literal(C_TRUE) else dbms_assert.enquote_literal(C_FALSE) end);
+        $ELSE
+        l_stmt := replace(l_stmt, '#BOOLEAN#', case p_row.par_boolean_value when true then 'true' else 'false' end);
+        $END
+        $END
         l_stmt := 'begin if ' || l_stmt || ' then :x := 1; else :x := 0; end if; end;';
         -- Validiere den Ausdruck
         begin

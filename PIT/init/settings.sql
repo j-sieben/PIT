@@ -1,4 +1,4 @@
-set termout off
+set termout on
 -- Choose your FLAG_TYPE datatype to adhere to your local conventions
 define FLAG_TYPE="char(1 byte)";
 define C_TRUE="'Y'";
@@ -23,4 +23,14 @@ col err_post new_val ERR_POST format a30
 select ltrim('&EXCEPTION_PREFIX.' || '_', '_') err_pre,
        rtrim('_' || '&EXCEPTION_POSTFIX.', '_') err_post
   from dual;
+
+
+col flag_type new_val FLAG_TYPE format a30
+col c_true new_val C_TRUE format a30
+col c_false new_val C_FALSE format a30
+select 'boolean' FLAG_TYPE, 'true' C_TRUE, 'false' C_FALSE
+  from v$version
+ where to_number(substr(banner, instr(banner, 'Release') + 8, 2)) >= 23;
+ 
 set termout on
+prompt Boolean type: &FLAG_TYPE., &C_TRUE.|&C_FALSE.

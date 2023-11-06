@@ -76,12 +76,12 @@ create or replace type msg_param force as object(
     return self as result,
   /**
     Function: msg_param
-      Constructor function for values of type XMLTYPE
+      Constructor function for values of type BOOLEAN
    */
   constructor function msg_param(
     self in out nocopy msg_param,
     p_param in varchar2,
-    p_value in msg_args)
-    return self as result
+    p_value in boolean)
+    return self as result    
 );
 /

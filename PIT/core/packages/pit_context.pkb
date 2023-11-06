@@ -724,7 +724,7 @@ as
     if p_settings is null then
       raise_application_error(-20004, 'Settings missing');
     end if;
-    if p_settings not like '__|__|_|%' then      
+    if p_settings not like '__|__|%|%' then      
       raise_application_error(-20004, p_settings || ': Settings format invalid.');
     end if;
     
@@ -738,7 +738,7 @@ as
     if to_number(l_args(2)) not in (10, 20, 30, 40, 50) then
       raise invalid_trace_level;
     end if;
-    if l_args(3) not in (pit_util.C_TRUE, pit_util.C_FALSE) then
+    if l_args(3) not in (to_char(pit_util.C_TRUE), to_char(pit_util.C_FALSE)) then
       raise invalid_trace_flag;
     end if;
     if l_args(4) is not null then
@@ -775,7 +775,13 @@ as
     p_self.context_name := pit_util.harmonize_name(C_CONTEXT_PREFIX, coalesce(p_context_name, C_CONTEXT_ACTIVE));
     p_self.log_level := to_number(l_args(1));
     p_self.trace_level := to_number(l_args(2));
+    $IF dbms_db_version.ver_le_19 $THEN
     p_self.trace_timing := l_args(3);
+    $ELSE $IF dbms_db_version.ver_le_21 $THEN
+    p_self.trace_timing := l_args(3);
+    $ELSE
+    p_self.trace_timing := to_boolean(l_args(3));
+    $END $END
     p_self.log_modules := pit_util.string_to_table(l_args(4));
     p_self.trace_settings := p_settings;
   exception

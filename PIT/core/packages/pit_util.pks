@@ -383,7 +383,7 @@ as
     p_delimiter in varchar2 := ':')
   return varchar2;
     
-    
+  $IF dbms_db_version.ver_le_19 $THEN
   /** 
     Function: to_bool
       Method to convert a boolean to a bool flag of type FLAG_TYPE.
@@ -396,6 +396,21 @@ as
   function to_bool(
     p_boolean in boolean)
     return flag_type;
+  $ELSE
+  $IF dbms_db_version.ver_le_21 $THEN
+  /** 
+    Function: to_bool
+      Method to convert a boolean to a bool flag of type FLAG_TYPE.
+      
+    Parameter:
+      p_boolean - Boolean type value
+      
+    Returns: Boolean value as <flag_type>
+   */
+  function to_bool(
+    p_boolean in boolean)
+    return flag_type;
+  $END $END
     
     
   /** 

@@ -497,7 +497,7 @@ as
     p_context_name in ora_name_type,
     p_settings in varchar2)
   as
-    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || C_TRUE || '|' || C_FALSE || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || C_FALSE || '\|))$';
+    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || to_char(C_TRUE) || '|' || to_char(C_FALSE) || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || to_char(C_FALSE) || '\|))$';
   begin
     -- context name must not be longer than 10 byte under C_MAX_LENGTH
     if length(p_context_name) > C_MAX_LENGTH - 10 then 
@@ -650,6 +650,8 @@ as
     return p_boolean = C_TRUE;
   end to_bool;
 
+    
+  $IF dbms_db_version.ver_le_19 $THEN
   /**
     Function: to_bool
       See <PIT_UTIL.to_bool>
@@ -669,6 +671,28 @@ as
     end if;
     return l_result;
   end to_bool;
+  $ELSE
+  $IF dbms_db_version.ver_le_21 $THEN
+  /**
+    Function: to_bool
+      See <PIT_UTIL.to_bool>
+   */
+  function to_bool(
+    p_boolean in boolean)
+    return flag_type
+  as
+    l_result flag_type;
+  begin
+    if p_boolean is not null then
+      if p_boolean then
+        l_result := C_TRUE;
+      else
+        l_result := C_FALSE;
+      end if;
+    end if;
+    return l_result;
+  end to_bool;
+  $END $END
   
   
   /**
