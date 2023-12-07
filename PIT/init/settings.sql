@@ -1,5 +1,6 @@
 set termout on
 -- Choose your FLAG_TYPE datatype to adhere to your local conventions
+-- When using database version 23c and later, this will be ignored and BOOLEAN will be used instead
 define FLAG_TYPE="char(1 byte)";
 define C_TRUE="'Y'";
 define C_FALSE="'N'";
