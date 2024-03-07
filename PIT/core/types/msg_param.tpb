@@ -143,5 +143,21 @@ as
     return;
    end;
 
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in boolean)
+    return self as result
+  as
+  begin
+    self.p_param := substrb(p_param, 1, 128);
+    if p_value then
+      self.p_value := 'true';
+    else
+      self.p_value := 'false';
+    end if;
+    return;
+  end;  
+
 end;
 /
