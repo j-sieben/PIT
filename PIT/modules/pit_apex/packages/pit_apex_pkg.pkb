@@ -336,7 +336,7 @@ as
     p_log_state in pit_log_state_type)
   as
   begin
-    if p_log_state.params.count > 0 then
+    if valid_environment and p_log_state.params.count > 0 then
       apex_debug.info('-> State');
       for i in 1 .. p_log_state.params.count loop
         apex_debug.info('...' || p_log_state.params(i).p_param || ': ' || p_log_state.params(i).p_value);
