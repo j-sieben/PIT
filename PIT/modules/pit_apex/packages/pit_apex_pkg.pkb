@@ -36,11 +36,29 @@ as
   C_YES constant varchar2(3 byte) := 'YES';
   C_CHUNK_SIZE constant integer := 8192;
 
+  g_apex_triggered_context pit_context_type;
   g_fire_threshold number;
+  g_websocket_server varchar2(1000 byte);
 
   /**
     Group: Helper methods
    */
+  /** 
+    Procedure: initialize
+      Helper method to read parameter values into global package variables. Is called from <INITIALIZE_MODULE> method.
+   */
+  procedure initialize
+  as
+  begin
+    if g_fire_threshold is null then
+      g_apex_triggered_context := pit_context_type();
+      g_fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
+      g_apex_triggered_context.log_level := param.get_integer(C_TRG_FIRE_THRESHOLD, C_PARAM_GROUP);
+      g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
+      g_apex_triggered_context.trace_timing := pit_util.to_bool(param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP));
+      g_apex_triggered_context.log_modules := pit_util.string_to_table(param.get_string(C_TRG_LOG_MODULES, C_PARAM_GROUP));
+    end if;
+  end initialize;
 
 
   /**
@@ -55,7 +73,7 @@ as
     return boolean
   as
   begin
-    return apex_application.get_session_id is not null;
+    return apex_application.g_instance is not null;
   end valid_environment;
 
 
@@ -143,7 +161,7 @@ as
   procedure log_error(
     p_message in message_type)
   as
-    C_ITEM_LABEL varchar2(128 byte) := '#ITEMLABEL#';
+    C_ITEM_LABEL pit_util.ora_name_type := '#ITEMLABEL#';
     l_label varchar2(100);
     l_message varchar2(1000);
   begin
@@ -151,11 +169,12 @@ as
       -- Get item label to include it into the message
       begin
            with params as(
-                select to_number(v('APP_ID')) application_id,
-                       to_number(v('APP_PAGE_ID')) page_id,
+                select /*+ no_merge */ 
+                       apex_application.g_flow_id application_id,
+                       apex_application.g_flow_step_id page_id,
                        p_message.affected_id item_name
                   from dual)
-         select /*+ no_merge (p) */ label
+         select label
            into l_label
            from apex_application_page_items
         natural join params p;
@@ -232,24 +251,35 @@ as
 
 
   /**
-    Function: tweet
-      see <PIT_APEX_PKG.tweet>
+    Function: log_validation
+      see <PIT_APEX_PKG.log_validation
    */
-  procedure tweet(
+  procedure log_validation(
     p_message in message_type)
   as
   begin
     if valid_environment then
-      apex_debug.info(p_message.message_text);
+      -- Decision tree for the output of the individual severity levels
+      case p_message.severity
+      when pit.level_info then
+        apex_debug.info(p_message.message_text);
+      when pit.level_warn then
+        apex_debug.warn(p_message.message_text);
+      when pit.level_error then
+        log_error(p_message);
+      else
+        -- Level off
+        null;
+      end case;
     end if;
-  end tweet;
+  end log_validation;
 
 
   /**
-    Function: log
-      see <PIT_APEX_PKG.log>
+    Function: log_exception
+      see <PIT_APEX_PKG.log_exception
    */
-  procedure log(
+  procedure log_exception(
     p_message in message_type)
   as
   begin
@@ -269,20 +299,35 @@ as
       when pit.level_fatal then
         apex_debug.warn(p_message.message_text);
         log_error(p_message);
-        apex_application.stop_apex_engine;
       else
         -- Level off
         null;
       end case;
     end if;
-  end log;
+  end log_exception;
 
 
   /**
-    Function: log
-      see <PIT_APEX_PKG.log>
+    Function: panic
+      see <PIT_APEX_PKG.panic
    */
-  procedure log(
+  procedure panic(
+    p_message in message_type)
+  as
+  begin
+    if valid_environment then
+      apex_debug.error(p_message.message_text);
+      log_error(p_message);
+      apex_application.stop_apex_engine;
+    end if;
+  end panic;
+
+
+  /**
+    Function: log_state
+      see <PIT_APEX_PKG.log_state>
+   */
+  procedure log_state(
     p_log_state in pit_log_state_type)
   as
   begin
@@ -293,7 +338,7 @@ as
       end loop;
       apex_debug.info('<- State');
     end if;
-  end log;
+  end log_state;
 
 
   /**
@@ -306,6 +351,18 @@ as
   begin
     print_clob(p_message.message_text);
   end print;
+  
+  
+  /**
+     Procedure: tweet
+       See <pit_apex_pkg.tweet>
+   */
+  PROCEDURE tweet (
+    p_message IN message_type)
+  AS
+  BEGIN
+    apex_debug.info('Tweet => ' || p_message.message_text);
+  END tweet;
 
 
   /**
@@ -317,7 +374,6 @@ as
   as
   begin
     null;
-    -- Not yet implemented
   end notify;
 
 
@@ -418,6 +474,8 @@ as
       self.status := msg.pit_fail_module_init;
       self.stack := substr(sqlerrm, 12);
   end initialize_module;
-  
+
+begin
+   initialize;
 end pit_apex_pkg;
 /

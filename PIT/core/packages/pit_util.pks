@@ -27,7 +27,7 @@ as
    */
   c_max_length constant binary_integer := 128;
   subtype ora_name_type is varchar2(128 byte);
-  subtype flag_type is &FLAG_TYPE.;
+  subtype flag_type is number(1, 0);
   subtype max_char is varchar2(32767 byte);
   subtype max_sql_char is varchar2(4000 byte);
   subtype small_char is varchar2(255 byte);
@@ -101,7 +101,7 @@ as
   function c_false
     return flag_type;
     
-  C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
+  C_DEFAULT_LANGUAGE constant ora_name_type := 'GERMAN';
   C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
   C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';
   C_DEFAULT_CONTEXT constant ora_name_type := C_CONTEXT_PREFIX || 'DEFAULT';
@@ -383,7 +383,7 @@ as
     p_delimiter in varchar2 := ':')
   return varchar2;
     
-  $IF dbms_db_version.ver_le_19 $THEN
+    
   /** 
     Function: to_bool
       Method to convert a boolean to a bool flag of type FLAG_TYPE.
@@ -396,21 +396,6 @@ as
   function to_bool(
     p_boolean in boolean)
     return flag_type;
-  $ELSE
-  $IF dbms_db_version.ver_le_21 $THEN
-  /** 
-    Function: to_bool
-      Method to convert a boolean to a bool flag of type FLAG_TYPE.
-      
-    Parameter:
-      p_boolean - Boolean type value
-      
-    Returns: Boolean value as <flag_type>
-   */
-  function to_bool(
-    p_boolean in boolean)
-    return flag_type;
-  $END $END
     
     
   /** 

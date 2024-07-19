@@ -26,39 +26,51 @@ as
   
   
   /**
-    Procedure: tweet
-      Method to write a temporary tweet to the APEX debug stack.
-      Method implements the <PIT_APEX.tweet> member procedure and writes a tweet to the APEX debug stack.
+    Procedure: log_validation
+      Method to write log information to the APEX error stack.
+      Method implements the <PIT_APEX.log_validation> member procedure and writes the message attributes to the APEX GUI to report validation errors.
       
     Parameter:
       p_message - Instance of <MESSAGE_TYPE>
    */
-  procedure tweet(
+  procedure log_validation(
     p_message in message_type);
   
   
   /**
-    Procedure: log
+    Procedure: log_exception
       Method to write log information to the APEX debug stack.
-      Method implements the <PIT_APEX.log> member procedure and writes the message attributes to the APEX debug stack.
+      Method implements the <PIT_APEX.log_exception> member procedure and writes the message attributes to the APEX debug stack.
       
     Parameter:
       p_message - Instance of <MESSAGE_TYPE>
    */
-  procedure log(
+  procedure log_exception(
+    p_message in message_type);
+  
+  
+  /**
+    Procedure: panic
+      Method to write log information to the APEX debug stack and terminates any APEX render processes.
+      Method implements the <PIT_APEX.log_exception> member procedure and writes the message attributes to the APEX debug stack.
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure panic(
     p_message in message_type);
 
 
   /** 
-    Procedure: log
+    Procedure: log_state
       Method to write state information to the APEX debug stack.
-      Method implements the <PIT_APEX.log> member procedure overload for <PIT_LOG_STATE_TYPE> and writes 
+      Method implements the <PIT_APEX.log_state> member procedure overload for <PIT_LOG_STATE_TYPE> and writes 
       the key value pairs of <MSG_PARAM> to the console.
       
     Parameter:
       p_log_state - Instance of <PIT_LOG_STATE_TYPE>
    */
-  procedure log (
+  procedure log_state (
     p_log_state in pit_log_state_type);
   
   
@@ -72,6 +84,19 @@ as
       p_message - Instance of <MESSAGE_TYPE>
    */
   procedure print(
+    p_message in message_type);
+  
+  
+  /** 
+    Procedure: tweet
+      Method to pass ightweight messaghes to the APEX application.
+      Method implements the <PIT_APEX.tweet> member procedure of type <PIT_APEX>
+      and writes the message attributes to the APEX http stream.
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure tweet(
     p_message in message_type);
   
   

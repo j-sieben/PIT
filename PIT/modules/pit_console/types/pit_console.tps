@@ -13,18 +13,34 @@ create or replace type pit_console force under pit_module(
     p_message in message_type),
   
   /** 
-    Procedure: log
-      See <PIT_MODULE.log>
+    Procedure: log_validation
+      See <PIT_MODULE.log_validation>
    */
-  overriding member procedure log(
+  overriding member procedure log_validation(
+    self in out nocopy pit_console,
+    p_message in message_type),
+  
+  /** 
+    Procedure: log_exception
+      See <PIT_MODULE.log_exception>
+   */
+  overriding member procedure log_exception(
+    self in out nocopy pit_console,
+    p_message in message_type),
+  
+  /** 
+    Procedure: panic
+      See <PIT_MODULE.panic>
+   */
+  overriding member procedure panic(
     self in out nocopy pit_console,
     p_message in message_type),
     
   /**
-    Procedure: log
-      See <PIT_MODULE.log>
+    Procedure: log_state
+      See <PIT_MODULE.log_state>
    */
-  overriding member procedure log(
+  overriding member procedure log_state(
     self in out nocopy pit_console,
     p_log_state pit_log_state_type),
     

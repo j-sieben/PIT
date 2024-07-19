@@ -5,6 +5,9 @@ as
    
    
   /*************************** PACKAGE VARIABLES ********************************/
+  g_module pit_util.ora_name_type;
+  g_owner pit_util.ora_name_type := user;
+  g_lineno binary_integer;
   
   
   /******************************* INTERFACE ************************************/
@@ -346,6 +349,13 @@ as
   end sql_exception;
   
 
+  procedure handle_validation
+  as
+  begin
+    pit_internal.handle_validation;
+  end handle_validation;
+  
+
   procedure handle_exception(
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,
@@ -370,6 +380,13 @@ as
   begin
     pit_internal.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
   end stop;
+  
+
+  procedure handle_panic
+  as
+  begin
+    pit_internal.handle_panic;
+  end handle_panic;
 
 
   procedure reraise_exception(
@@ -560,20 +577,6 @@ as
   begin
     return pit_internal.get_message_text(p_message_name, p_msg_args);
   end get_message_text;
-    
-    
-  function get_message_text(
-    p_message_name in varchar2,
-    p_msg_args in msg_args_char)
-    return clob
-  as
-    l_msg_args msg_args;
-  begin
-    l_msg_args := pit_util.cast_to_msg_args(p_msg_args);
-    return get_message_text(
-      p_message_name => p_message_name,
-      p_msg_args => l_msg_args);
-  end get_message_text;
   
   
   function get_message(
@@ -596,177 +599,134 @@ as
     return pit_internal.get_active_message;
   end get_active_message;
   
-  
   function get_active_message_text
     return clob
   as
     l_message message_type;
   begin
-    l_message := pit_internal.get_active_message;
+    l_message := pit.get_active_message;
     return l_message.message_text;
   end get_active_message_text;
-  
-  
-  /****************************** ASSERTIONS *********************************/
-/**
-    Procedure: raise_assertion_finding
-      Method raises a message, respecting the severity settings
-      
-    Parameters:
-      p_condition - String expression to check.
-      p_message_name - Name of the message. Reference to package MSG
-      p_msg_args - Optional list of replacement information
-      p_affected_id - Optional id of an item a message relates to
-      p_affected_ids - Optional list of parameters a message relates to
-      p_error_code - Optional error code, usable by external applications
-      p_severity - Optional severity, overrides the message severity
-   */    
-  procedure raise_assertion_finding(
-    p_message_name in varchar2,
-    p_msg_args msg_args,
-    p_affected_id in varchar2,
-    p_affected_ids in msg_params,
-    p_error_code in varchar2,
-    p_severity in binary_integer)
-  as
-    l_severity binary_integer;
-  begin
-    -- Calculate resulting severity
-    l_severity := coalesce(
-                    p_severity, 
-                    least(
-                      pit.level_error, 
-                      pit_internal.get_message_severity(p_message_name)));
-    
-    -- Raise
-    if l_severity >= pit.level_warn then
-      pit_internal.log_event(l_severity, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
-    else
-      pit_internal.raise_error(l_severity, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
-    end if;
-  end raise_assertion_finding;
-  
-  
+ 
+  /****************************** ASSERTIONS *********************************/  
   procedure assert(
     p_condition in boolean,
-    p_message_name in varchar2 default msg.PIT_ASSERT_TRUE,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    if not p_condition or p_condition is null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and not p_condition or p_condition is null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_TRUE, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert;
   
   
   procedure assert_is_null(
     p_condition in varchar2,
-    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NULL,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    if p_condition is not null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is not null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_TRUE, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_is_null;
   
   
   procedure assert_is_null(
     p_condition in number,
-    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NULL,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    if p_condition is not null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is not null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_is_null;
   
   
   procedure assert_is_null(
     p_condition in date,
-    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NULL,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
     if p_condition is not null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_is_null;
   
   
   procedure assert_not_null(
     p_condition in varchar2,
-    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NOT_NULL,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    if p_condition is null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NOT_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_not_null;
   
   
   procedure assert_not_null(
     p_condition in number,
-    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NOT_NULL,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    if p_condition is null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NOT_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_not_null;
   
   
   procedure assert_not_null(
     p_condition in date,
-    p_message_name in varchar2 default msg.PIT_ASSERT_IS_NOT_NULL,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    if p_condition is null then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NOT_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_not_null;
   
  
   procedure assert_exists(
     p_stmt in varchar2,
-    p_message_name in varchar2 default msg.PIT_ASSERT_EXISTS,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
     l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum = 1';
     l_count number;
@@ -775,29 +735,30 @@ as
     l_stmt := replace(l_stmt, '#STMT#', p_stmt);
     execute immediate l_stmt into l_count;
     if l_count = 0 then
-       raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+       pit_internal.raise_assertion_finding(msg.PIT_ASSERT_EXISTS, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_exists;
   
   
   procedure assert_exists(
     p_cursor in out nocopy sys_refcursor,
-    p_message_name in varchar2 default msg.PIT_ASSERT_EXISTS,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
     l_id number;
     l_count number;
   begin
-    l_id := dbms_sql.to_cursor_number(p_cursor);
-    l_count := dbms_sql.fetch_rows(l_id);
-    dbms_sql.close_cursor(l_id);
- 
-    if l_count = 0 then
-       raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code) then
+      l_id := dbms_sql.to_cursor_number(p_cursor);
+      l_count := dbms_sql.fetch_rows(l_id);
+      dbms_sql.close_cursor(l_id);
+   
+      if l_count = 0 then
+         pit_internal.raise_assertion_finding(msg.PIT_ASSERT_EXISTS, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+      end if;
     end if;
   exception
     when others then
@@ -810,43 +771,45 @@ as
   
   procedure assert_not_exists(
     p_stmt  in varchar2,
-    p_message_name in varchar2 default msg.PIT_ASSERT_NOT_EXISTS,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
     l_stmt pit_util.max_char := 'select count(*) from (#STMT#) where rownum = 1';
     l_count number;
   begin
-    pit.assert_not_null(l_stmt);
-    l_stmt := replace(l_stmt, '#STMT#', p_stmt);
-    execute immediate l_stmt into l_count;
-    if l_count = 1 then
-       raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code) then
+      pit.assert_not_null(l_stmt);
+      l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+      execute immediate l_stmt into l_count;
+      if l_count = 1 then
+         pit_internal.raise_assertion_finding(msg.PIT_ASSERT_NOT_EXISTS, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+      end if;
     end if;
   end assert_not_exists;
   
   
   procedure assert_not_exists(
     p_cursor in out nocopy sys_refcursor,
-    p_message_name in varchar2 default msg.PIT_ASSERT_NOT_EXISTS,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_severity in binary_integer default null)
+    p_error_code in varchar2 default null)
   as
     l_id number;
     l_count number;
   begin
-    l_id := dbms_sql.to_cursor_number(p_cursor);
-    l_count := dbms_sql.fetch_rows(l_id);
-    dbms_sql.close_cursor(l_id);
-    
-    if l_count > 0 then
-      raise_assertion_finding(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_severity);
+    if pit_internal.check_needs_assert(p_message_name, p_error_code) then
+      l_id := dbms_sql.to_cursor_number(p_cursor);
+      l_count := dbms_sql.fetch_rows(l_id);
+      dbms_sql.close_cursor(l_id);
+      
+      if l_count > 0 then
+        pit_internal.raise_assertion_finding(msg.PIT_ASSERT_NOT_EXISTS, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+      end if;
     end if;
   exception
     when others then
@@ -861,30 +824,30 @@ as
     p_value in varchar2,
     p_type  in varchar2,
     p_format_mask in varchar2 default null,
-    p_message_name in varchar2 default msg.PIT_ASSERT_DATATYPE,
+    p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
-    p_accept_null in boolean default true,
-    p_severity in binary_integer default null)
+    p_accept_null in boolean default true)
   as
     l_msg_args msg_args;
   begin
-    if p_message_name = msg.PIT_ASSERT_DATATYPE then 
-      l_msg_args := msg_args(p_value, p_type);
-    else 
-      l_msg_args := p_msg_args;
+    if pit_internal.check_needs_assert(p_message_name, p_error_code) then
+      if p_message_name = msg.PIT_ASSERT_DATATYPE then 
+        l_msg_args := msg_args(p_value, p_type);
+      else 
+        l_msg_args := p_msg_args;
+      end if;
+      
+      assert(
+        p_condition => pit_internal.check_datatype(p_value, p_type, p_format_mask, p_accept_null),
+        p_message_name => p_message_name,
+        p_msg_args => l_msg_args,
+        p_affected_id => p_affected_id,
+        p_affected_ids => p_affected_ids,
+        p_error_code => p_error_code);
     end if;
-    
-    assert(
-      p_condition => pit_internal.check_datatype(p_value, p_type, p_format_mask, p_accept_null),
-      p_message_name => p_message_name,
-      p_msg_args => l_msg_args,
-      p_affected_id => p_affected_id,
-      p_affected_ids => p_affected_ids,
-      p_error_code => p_error_code,
-      p_severity => p_severity);
   end assert_datatype;
   
   
@@ -1050,7 +1013,7 @@ as
     return boolean
   as
   begin
-    return pit_internal.get_collect_least_severity > pit_internal.C_LEVEL_ERROR;
+    return pit_internal.get_collect_least_severity(char_table()) > LEVEL_ERROR;
   end has_no_bulk_error;
   
   
@@ -1058,8 +1021,32 @@ as
     return boolean
   as
   begin
-    return pit_internal.get_collect_least_severity > pit_internal.C_LEVEL_FATAL;
+    return pit_internal.get_collect_least_severity(char_table()) > LEVEL_FATAL;
   end has_no_bulk_fatal;
+  
+  
+  function assert_is_ok(
+    p_error_code in varchar2 default null,
+    p_error_code_list in char_table default null,
+    p_threshold in varchar2 default LEVEL_ERROR)
+    return boolean
+  as
+    l_error_code_list char_table;
+  begin
+    l_error_code_list := coalesce(p_error_code_list, char_table(p_error_code));
+    return pit_internal.get_collect_least_severity(l_error_code_list) > p_threshold;
+  end assert_is_ok;
+  
+  
+  function assert_is_not_ok(
+    p_error_code in varchar2 default null,
+    p_error_code_list in char_table default null,
+    p_threshold in varchar2 default LEVEL_ERROR)
+    return boolean
+  as
+  begin
+    return not assert_is_ok(p_error_code, p_error_code_list, p_threshold);
+  end assert_is_not_ok;
   
   
   function get_message_collection
@@ -1120,7 +1107,5 @@ as
       null;
   end get_active_modules;
     
-begin
-  initialize;
 end pit;
 /

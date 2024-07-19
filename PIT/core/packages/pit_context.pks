@@ -324,14 +324,6 @@ as
   function get_active_modules
   return pit_module_tab;
   
-  
-  /**
-    Function: get_active_module_list
-      Getter Function returning the list of active modules as a comma separated list
-   */
-  function get_active_module_list
-  return varchar2;
-  
    
   /** 
     Function: report_module_status

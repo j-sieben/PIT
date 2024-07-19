@@ -30,8 +30,8 @@ as
       C_FALSY - Boolean FALSE as <flag_type
    */
   C_CTX_DEL constant char(1 byte) := '|';  
-  C_TRUTHY constant flag_type := &C_TRUE.;
-  C_FALSY constant flag_type := &C_FALSE.;
+  C_TRUTHY constant flag_type := 1;
+  C_FALSY constant flag_type := 0;
     
   /**
     Group: Private package variables
@@ -44,6 +44,13 @@ as
   type predefined_error_t is table of pit_util.predefined_error_rec index by binary_integer;
   
   type pmg_allowed_length_t is table of binary_integer index by pit_util.ora_name_type;
+  
+  /**
+    Variables: Parameter variables
+      g_omit_pit_in_stack - Container for parameter OMIT_PIT_IN_STACK
+   */
+  g_omit_pit_in_stack boolean;
+  g_omit_pkg_list varchar2(1000 byte);
   
   g_predefined_errors predefined_error_t;
   g_pmg_allowed_length pmg_allowed_length_t;
@@ -173,15 +180,28 @@ as
     return boolean
   as
     l_ignore boolean := false;
-    l_omit_pkg_list max_char := ':' || param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
   begin
-    if param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP) then
+    if g_omit_pit_in_stack then
       l_ignore := (upper(p_subprogram) like 'PIT%' and p_subprogram != 'PIT_UI') 
-               or (instr(l_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
+               or (instr(g_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
                or (upper(p_subprogram) like 'MESSAGE_TYPE%');
     end if;
     return l_ignore;
   end ignore_subprogram;
+  
+  
+  /**
+    Procedure: initialize
+      Package Initialization 
+   */
+  procedure initialize
+  as
+    l_prefix_length binary_integer;
+  begin
+    -- set package vars
+    g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
+    g_omit_pkg_list := ':' ||param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
+  end initialize;
   
   
   function c_true
@@ -218,7 +238,7 @@ as
     append(l_stack, param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP));
     
     for i in 1 .. l_depth loop
-      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) or i = 1 then
+      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
         append(l_stack,
           lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' ' ||
           rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
@@ -497,7 +517,7 @@ as
     p_context_name in ora_name_type,
     p_settings in varchar2)
   as
-    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || to_char(C_TRUE) || '|' || to_char(C_FALSE) || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || to_char(C_FALSE) || '\|))$';
+    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || C_TRUE || '|' || C_FALSE || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || C_FALSE || '\|))$';
   begin
     -- context name must not be longer than 10 byte under C_MAX_LENGTH
     if length(p_context_name) > C_MAX_LENGTH - 10 then 
@@ -650,8 +670,6 @@ as
     return p_boolean = C_TRUE;
   end to_bool;
 
-    
-  $IF dbms_db_version.ver_le_19 $THEN
   /**
     Function: to_bool
       See <PIT_UTIL.to_bool>
@@ -671,28 +689,6 @@ as
     end if;
     return l_result;
   end to_bool;
-  $ELSE
-  $IF dbms_db_version.ver_le_21 $THEN
-  /**
-    Function: to_bool
-      See <PIT_UTIL.to_bool>
-   */
-  function to_bool(
-    p_boolean in boolean)
-    return flag_type
-  as
-    l_result flag_type;
-  begin
-    if p_boolean is not null then
-      if p_boolean then
-        l_result := C_TRUE;
-      else
-        l_result := C_FALSE;
-      end if;
-    end if;
-    return l_result;
-  end to_bool;
-  $END $END
   
   
   /**
@@ -785,5 +781,7 @@ as
     end loop;
   end recompile_invalid_objects;
   
+begin
+  initialize;
 end pit_util;
 /

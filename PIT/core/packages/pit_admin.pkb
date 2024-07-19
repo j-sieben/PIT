@@ -626,13 +626,15 @@ end;
   procedure initialize
   as
   begin
-    -- Read default language
-    select pml_name default_language
-      into g_default_language
-      from pit_message_language
-     where pml_default_order > 0
-     order by pml_default_order
-     fetch first 1 rows only;
+    if g_default_language is null then
+      -- Read default language
+      select pml_name default_language
+        into g_default_language
+        from pit_message_language
+       where pml_default_order > 0
+       order by pml_default_order
+       fetch first 1 rows only;
+    end if;
   end initialize;
 
 

@@ -19,6 +19,7 @@ as
       Subtype of VARCHAR2, limited to 64 byte.
    */
   subtype client_info_t is varchar2(64 byte);
+  subtype severity_t is number(2,0);
 
   /**
     Group: Private constants
@@ -32,6 +33,7 @@ as
    */
   C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
   C_LOG_STATE_THRESHOLD constant pit_util.ora_name_type := 'LOG_STATE_THRESHOLD';
+  C_PIT_PANIC constant pit_util.ora_name_type := 'PIT_PANIC';
   
   
   /**
@@ -44,10 +46,8 @@ as
   C_BULK_ERROR constant pit_util.ora_name_type := 'PIT_BULK_ERROR';
   C_BULK_FATAL constant pit_util.ora_name_type := 'PIT_BULK_FATAL';
   C_STOP_BULK_ON_FATAL constant pit_util.ora_name_type := 'PIT_STOP_BULK_ON_FATAL';
-  C_SQL_ERROR constant pit_util.ora_name_type := 'PIT_SQL_ERROR';
   
   C_BROADCAST_CONTEXT_SWITCH constant pit_util.ora_name_type := 'BROADCAST_CONTEXT_SWITCH';
-  C_REALM constant pit_util.ora_name_type := 'REALM';
   C_TWEET_REALMS constant pit_util.ora_name_type := 'PIT_TWEET_REALMS';
 
   /**
@@ -57,30 +57,29 @@ as
    */
   C_ADAPTER_PREFERENCE constant pit_util.ora_name_type := 'ADAPTER_PREFERENCE';
   C_ADAPTER_OK constant pit_util.flag_type := pit_util.C_TRUE;
-  C_HASH constant pit_util.sign_type := '#';
 
   /**
     Constants: "Event" constants
       C_CONTEXT_EVENT - Context changed event
-      C_LOG_EVENT - Log event
+      C_LOG_EXCEPTION_EVENT - Log event
       C_PURGE_EVENT - Purge event
       C_PRINT_EVENT - Print event
       C_ENTER_EVENT - Enter event
       C_LEAVE_EVENT - Leave event
       C_NOTIFY_EVENT - Notify event
       C_LOG_STATE_EVENT - Log state event
-      C_TWEET_EVENT - Tweet event
    */
   C_CONTEXT_EVENT constant integer := 1;
-  C_LOG_EVENT constant integer := 2;
-  C_PURGE_EVENT constant integer := 3;
-  C_PRINT_EVENT constant integer := 4;
-  C_ENTER_EVENT constant integer := 5;
-  C_LEAVE_EVENT constant integer := 6;
-  C_NOTIFY_EVENT constant integer := 7;
-  C_LOG_STATE_EVENT constant integer := 8;
-  C_TWEET_EVENT constant integer := 9;
-
+  C_LOG_VALIDATION_EVENT constant integer := 2;
+  C_LOG_EXCEPTION_EVENT constant integer := 3;
+  C_LOG_STATE_EVENT constant integer := 4;
+  C_PURGE_EVENT constant integer := 5;
+  C_PRINT_EVENT constant integer := 6;
+  C_ENTER_EVENT constant integer := 7;
+  C_LEAVE_EVENT constant integer := 8;
+  C_NOTIFY_EVENT constant integer := 9;
+  C_TWEET_EVENT constant integer := 10;
+  C_PANIC_EVENT constant integer := 11;
   
   /**
     Group: Private global variable declarations
@@ -107,7 +106,8 @@ as
   
   g_collect_mode boolean;
   g_message_stack pit_message_table;
-  g_collect_least_severity binary_integer;
+  type least_severity_list is table of severity_t index by pit_util.ora_name_type;
+  g_collect_least_severity least_severity_list;
   g_stop_bulk_on_fatal boolean;
   
   g_log_state_threshold pls_integer;
@@ -157,7 +157,6 @@ as
       end;
       if l_adapter is not null and l_adapter.status = C_ADAPTER_OK then
         g_active_adapter := l_adapter;
-        dbms_output.put_line('Adapter "' || l_adapter_list(l_idx) || '" instantiated.');
         exit;
       end if;
       l_idx := l_adapter_list.next(l_idx);
@@ -203,9 +202,15 @@ as
   procedure push_message(
     p_message in out nocopy message_type)
   as
+    l_error_code pit_util.ora_name_type;
   begin
-    g_collect_least_severity := least(g_collect_least_severity, p_message.severity);
-    if g_stop_bulk_on_fatal and g_collect_least_severity = C_LEVEL_FATAL then
+    l_error_code := coalesce(p_message.error_code, p_message.message_name);
+    if g_collect_least_severity.exists(l_error_code) then
+      g_collect_least_severity(l_error_code) := least(g_collect_least_severity(l_error_code), p_message.severity);
+    else
+      g_collect_least_severity(l_error_code) := p_message.severity;
+    end if;
+    if g_stop_bulk_on_fatal and g_collect_least_severity(l_error_code) = C_LEVEL_FATAL then
       raise_error(C_LEVEL_FATAL, C_BULK_FATAL, null, null, null);
     else
       p_message.error_code := coalesce(p_message.error_code, p_message.message_name);
@@ -221,7 +226,7 @@ as
       Called internally as a generic helper to throw messages to output modules
       
     Parameters:
-      p_event - Integer indicating the type of "event" (i.e. <C_LOG_EVENT>|<C_PRINT_EVENT>|<C_ENTER_EVENT> etc.) thrown by PIT
+      p_event - Integer indicating the type of "event" (i.e. <C_LOG_EXCEPTION_EVENT>|<C_PRINT_EVENT>|<C_ENTER_EVENT> etc.) thrown by PIT
       p_message - Instance of <MESSAGE_TYPE>, the message to pass to the output modules
       p_call_stack - Optional instance of the actual call stack in the event of <C_ENTER_EVENT>|<C_LEAVE_EVENT>
       p_log_state - Optional instance of <PIT_LOG_STATE_TYPE> with the key-value-pairs to pass to the output modules
@@ -253,15 +258,19 @@ as
     end if;
     
     -- propagate event to output modules
-    l_idx := l_modules.first;
+    l_idx := l_modules.last;
     while l_idx is not null loop
       case p_event
         when C_CONTEXT_EVENT then
           l_modules(l_idx).context_changed(p_context);
-        when C_LOG_EVENT then
-          l_modules(l_idx).log(p_message);
+        when C_LOG_VALIDATION_EVENT then
+          l_modules(l_idx).log_validation(p_message);
+        when C_LOG_EXCEPTION_EVENT then
+          l_modules(l_idx).log_exception(p_message);
+        when C_LOG_STATE_EVENT then
+          l_modules(l_idx).log_state(p_log_state);
         when C_PURGE_EVENT then
-          l_modules(l_idx).purge(p_date_before, p_severity_lower_equal);
+          l_modules(l_idx).purge_log(p_date_before, p_severity_lower_equal);
         when C_PRINT_EVENT then
           l_modules(l_idx).print(p_message);
         when C_NOTIFY_EVENT then
@@ -270,14 +279,14 @@ as
           l_modules(l_idx).enter(p_call_stack);
         when C_LEAVE_EVENT then
           l_modules(l_idx).leave(p_call_stack);
-        when C_LOG_STATE_EVENT then
-          l_modules(l_idx).log(p_log_state);
         when C_TWEET_EVENT then
           l_modules(l_idx).tweet(p_message);
+        when C_PANIC_EVENT then
+          l_modules(l_idx).panic(p_message);
         else
           null;
       end case;
-      l_idx := l_modules.next(l_idx);
+      l_idx := l_modules.prior(l_idx);
     end loop;
     
     commit;
@@ -306,7 +315,63 @@ as
           p_context => p_context);
       end if;
     end if;
-  end set_context;  
+  end set_context;
+  
+
+  /**
+    Function: get_error_for_message_name
+      Method accepts a message name and a default error message name. It checks
+      whether the message name passed in represents a message with an exception
+      object. If so, it passes its name back and p_default_error otherwise.
+      
+    Parameters:
+      p_message_name - Name of the message that is checked for an exception
+      p_default_error - Name of the message that represents an error
+      
+    Returns:
+      Name of the message that is thrown as an error
+   */
+  function get_error_for_message_name(
+    p_message_name in pit_util.ora_name_type,
+    p_default_error in pit_util.ora_name_type)
+    return pit_util.ora_name_type
+  as
+    l_pms_name pit_message.pms_name%type;
+  begin
+    select pms_name
+      into l_pms_name
+      from pit_message
+     where pms_id = p_message_name
+       and pms_custom_error is not null;
+       
+    return l_pms_name;
+  exception
+    when NO_DATA_FOUND then
+      return p_default_error;
+  end get_error_for_message_name;
+  
+  
+  /**
+    Procedure: log_panic
+      See <PIT_INTERNAL.log_panic>
+   */
+  procedure log_panic
+  as
+  begin
+    g_active_message := get_message(C_PIT_PANIC, null, null, null, C_PIT_PANIC);
+    raise_event(
+      p_event => C_PANIC_EVENT,
+      p_message => g_active_message);
+  end log_panic;
+  
+  
+  procedure initialize
+  as
+  begin
+    if g_log_state_threshold is null then
+      initialize_pit;
+    end if;
+  end initialize;
   
   
   /**
@@ -314,7 +379,7 @@ as
    */
   /**
     Procedure: initialize_pit
-      See <PIT_INTERNAL.initialize>
+      See <PIT_INTERNAL.initialize_pit>
    */
   procedure initialize_pit
   as
@@ -334,14 +399,14 @@ as
                                     p_par_pgr_id => C_PARAM_GROUP);
                                     
     g_collect_mode := false;
-    g_collect_least_severity := C_LEVEL_ALL;
+    g_collect_least_severity.delete;
     g_raise_tweet := instr(
                        param.get_string(C_TWEET_REALMS, C_PARAM_GROUP), 
-                       param.get_string(C_REALM, C_PARAM_GROUP)) > 0;
+                       param.get_string('REALM', 'INTERNAL')) > 0;
     
     -- initialize helper packages
     pit_context.initialize;
-    pit_call_stack.initialize_call_stack;
+    pit_call_stack.initialize;
     g_message_stack := pit_message_table();
     
     load_adapter;
@@ -352,6 +417,7 @@ as
     for i in 1 .. l_unavailable_modules.count loop
       log_event(C_LEVEL_WARN, C_FAIL_MODULE_INIT, msg_args(l_unavailable_modules(i).module_name, l_unavailable_modules(i).module_stack));    
     end loop;
+    
   end initialize_pit;
   
   
@@ -405,9 +471,9 @@ as
         g_active_message.backtrace := pit_util.get_error_stack;
       when p_severity <= C_LEVEL_ERROR then
         -- fallback, is used if a SQL exception was raised outside of PIT
-        g_active_message := get_message(C_SQL_ERROR, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+        g_active_message := get_message('PIT_SQL_ERROR', p_msg_args, p_affected_id, p_affected_ids, p_error_code);
       else 
-        -- if used with HANDLE_EXCEPTION, code may re raise the exception explicitly
+        -- if used with SQL_EXCEPTION, code may re raise the exception explicitly
         null;
       end case;
 
@@ -415,7 +481,7 @@ as
         push_message(g_active_message);
       else
         raise_event(
-          p_event => C_LOG_EVENT,
+          p_event => C_LOG_EXCEPTION_EVENT,
           p_message => g_active_message);
       end if;
     end if;
@@ -457,7 +523,7 @@ as
     l_log_level binary_integer;
   begin
     -- initialize
-    g_active_message := GET_MESSAGE(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     l_log_level := coalesce(p_log_threshold, C_LEVEL_ALL);
     
     if g_active_message.severity <= l_log_level then
@@ -471,7 +537,7 @@ as
         p_context_has_changed => l_context_has_changed);
       
       raise_event(
-        p_event => C_LOG_EVENT,
+        p_event => C_LOG_EXCEPTION_EVENT,
         p_message => g_active_message);
         
       pit_context.set_context(
@@ -499,7 +565,6 @@ as
     l_call_stack pit_call_stack_type;
     l_required_context pit_util.ora_name_type;
   begin
-    
     -- Initialize
     -- start by reading the actual session details 
     g_active_adapter.get_session_details(
@@ -514,9 +579,6 @@ as
     l_trace_me := pit_context.trace_me(p_trace_level);
     l_allows_toggle := pit_context.allows_toggle;
     l_action := p_action;
-    
-    -- reset active message to null, as this is a "normal" PL/SQL call that requires resetting any exception
-    g_active_message := null;
     
     -- Do minimal tracing if context toggle is active
     if l_allows_toggle or l_trace_me then
@@ -543,7 +605,6 @@ as
         p_event => C_ENTER_EVENT,
         p_call_stack => l_call_stack);
     end if;
-    
   exception
     when others then
       handle_error(C_LEVEL_ERROR, C_FAIL_MESSAGE_CREATION, msg_args(sqlerrm));
@@ -653,6 +714,33 @@ as
 
 
   /**
+    Procedure: raise_validation_error
+      See <PIT_INTERNAL.raise_validation_error>
+   */
+  procedure raise_validation_error(
+    p_error_name pit_util.ora_name_type,
+    p_message_name pit_util.ora_name_type,
+    p_msg_args in msg_args,
+    p_affected_id in pit_util.max_sql_char,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2)
+  as
+    l_error_message message_type;
+  begin
+    g_active_message := get_message(coalesce(p_message_name, p_error_name), p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    l_error_message := get_message(p_error_name, null, null, null, null);
+    
+    if g_collect_mode then
+      push_message(g_active_message);      
+    else
+      raise_application_error(
+        l_error_message.error_number,
+        dbms_lob.substr(g_active_message.message_text, 2048, 1));    
+    end if;
+  end raise_validation_error;
+
+
+  /**
     Procedure: raise_error
       See <PIT_INTERNAL.raise_error>
    */
@@ -683,6 +771,27 @@ as
 
 
   /**
+    Procedure: handle_validation
+      See <PIT_INTERNAL.handle_validation>
+   */
+  procedure handle_validation
+  as
+  begin
+    if g_collect_mode then
+      push_message(g_active_message);
+      g_collect_mode := false;
+      g_message_stack := pit_message_table();
+    else
+      raise_event(
+        p_event => C_LOG_VALIDATION_EVENT,
+        p_message => g_active_message);
+    end if;
+    
+    leave(C_TRACE_MANDATORY, null, g_active_message.severity);
+  end handle_validation;    
+
+
+  /**
     Procedure: handle_error
       See <PIT_INTERNAL.handle_error>
    */
@@ -697,20 +806,34 @@ as
   as
   begin
     if g_collect_mode then
-      g_message_stack := pit_message_table();
       g_collect_mode := false;
+      g_message_stack := pit_message_table();
+      g_active_message := null;
     end if;
-
+    
     log_event(p_severity, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     
     if p_severity = C_LEVEL_FATAL then
-      pit_call_stack.initialize_call_stack;
+      pit_call_stack.initialize;
       raise_error(C_LEVEL_FATAL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     else
       g_active_message := null;
     end if;
     leave(C_TRACE_MANDATORY, p_params, p_severity);
   end handle_error;
+
+
+  /**
+    Procedure: handle_panic
+      See <PIT_INTERNAL.handle_panic>
+   */
+  procedure handle_panic
+  as
+  begin
+    log_panic;
+    pit_call_stack.initialize;
+    raise_error(C_LEVEL_FATAL, C_PIT_PANIC, null, null, null, C_PIT_PANIC);
+  end handle_panic;
 
 
   /**
@@ -931,8 +1054,8 @@ as
     
     if p_msg_args is not null then
       for i in p_msg_args.first .. p_msg_args.last loop
-        l_pti_rec.pti_name := replace(l_pti_rec.pti_name, C_HASH || i || C_HASH, p_msg_args(i));
-        l_pti_rec.pti_display_name := replace(l_pti_rec.pti_display_name, C_HASH || i || C_HASH, p_msg_args(i));
+        l_pti_rec.pti_name := replace(l_pti_rec.pti_name, '#' || i || '#', p_msg_args(i));
+        l_pti_rec.pti_display_name := replace(l_pti_rec.pti_display_name, '#' || i || '#', p_msg_args(i));
       end loop;
     end if;
     
@@ -1035,9 +1158,9 @@ as
     
     if g_collect_mode then
       g_message_stack.delete;
-      g_collect_least_severity := C_LEVEL_ALL;
+      g_collect_least_severity.delete;
     else
-      case g_collect_least_severity
+      case get_collect_least_severity(char_table())
         when C_LEVEL_ERROR then
           raise_error(
             p_severity => C_LEVEL_ERROR,
@@ -1075,11 +1198,27 @@ as
     Function: get_collect_least_severity
       See <PIT_INTERNAL.get_collect_least_severity>
    */
-  function get_collect_least_severity
+  function get_collect_least_severity(
+    p_error_code_list in char_table)
     return binary_integer
   as
+    l_least_severity severity_t := C_LEVEL_ALL;
+    l_error_code pit_util.ora_name_type;
   begin
-    return g_collect_least_severity;
+    if p_error_code_list.count > 0 and p_error_code_list(1) is not null then
+      for i in 1 .. p_error_code_list.count loop
+        if g_collect_least_severity.exists(p_error_code_list(i)) then
+          l_least_severity := least(l_least_severity, g_collect_least_severity(p_error_code_list(i)));
+        end if;
+      end loop;
+    else
+      l_error_code := g_collect_least_severity.first;
+      while l_error_code is not null loop
+        l_least_severity := least(l_least_severity, g_collect_least_severity(l_error_code));
+        l_error_code := g_collect_least_severity.next(l_error_code);
+      end loop;
+    end if;
+    return l_least_severity;
   end get_collect_least_severity; 
   
   
@@ -1098,9 +1237,64 @@ as
     g_collect_mode := false;
     return l_message_stack;
   end get_message_collection;
-
-
+  
+  
+  /**
+    Function: check_needs_assert
+      See <PIT_INTERNAL.check_needs_assert>
+   */
+  function check_needs_assert(
+    p_message_name in varchar2,
+    p_error_code in varchar2)
+    return boolean
+  as
+    l_result boolean := true;
+    l_error_code pit_util.ora_name_type;
+    l_severity binary_integer;
+  begin
+    if g_collect_mode then
+      l_error_code := coalesce(p_error_code, p_message_name);
+      if l_error_code is not null then
+        if p_message_name is not null then
+          select pms_pse_id
+            into l_severity
+            from pit_message
+           where pms_id = p_message_name;
+        end if;
+        if g_collect_least_severity.exists(l_error_code) then
+          l_result := l_severity < g_collect_least_severity(l_error_code);
+        end if;
+      end if;
+    end if;
+    return l_result;
+  exception
+    when NO_DATA_FOUND then
+      return false;
+  end check_needs_assert;
+  
+  
+  /**
+    Procedure: raise_assertion_finding
+      See <PIT_INTERNAL.raise_assertion_finding>
+   */    
+  procedure raise_assertion_finding(
+    p_default_error in varchar2,
+    p_message_name in varchar2,
+    p_msg_args msg_args,
+    p_affected_id in varchar2,
+    p_affected_ids in msg_params,
+    p_error_code in varchar2)
+  as
+    l_severity binary_integer;
+    l_error_name pit_util.ora_name_type;
+  begin
+    l_error_name := get_error_for_message_name(p_message_name, p_default_error);
+    
+    raise_validation_error(l_error_name, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    
+  end raise_assertion_finding;
+  
 begin
-  initialize_pit;
+  initialize;
 end pit_internal;
 /

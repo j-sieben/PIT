@@ -1,39 +1,59 @@
 create or replace type body pit_apex as
 
   /** Implementation of type PIT_APEX */
-  overriding member procedure tweet(
-  self in out nocopy pit_apex,
-  p_message in message_type)
-  as
-  begin
-  pit_apex_pkg.tweet(p_message);
-  end tweet;
-  
-  overriding member procedure log(
+  overriding member procedure log_validation(
   self in out nocopy pit_apex,
     p_message in message_type)
   as
   begin
     if p_message.severity <= fire_threshold then
-      pit_apex_pkg.log(p_message);
+       pit_apex_pkg.log_validation(p_message);
     end if;
-  end log;
+  end log_validation;
   
-  overriding member procedure log(
-  self in out nocopy pit_apex,
-    p_log_state in pit_log_state_type)
-  as
-  begin
-    pit_apex_pkg.log(p_log_state);
-  end log;
-  
-  overriding member procedure print(
+  overriding member procedure log_exception(
   self in out nocopy pit_apex,
     p_message in message_type)
   as
   begin
+    if p_message.severity <= fire_threshold then
+       pit_apex_pkg.log_exception(p_message);
+    end if;
+  end log_exception;
+  
+  overriding member procedure panic(
+  self in out nocopy pit_apex,
+    p_message in message_type)
+  as
+  begin
+    if p_message.severity <= fire_threshold then
+       pit_apex_pkg.panic(p_message);
+    end if;
+  end panic;
+  
+  overriding member procedure log_state(
+  self in out nocopy pit_apex,
+    p_log_state in pit_log_state_type)
+  as
+  begin
+    pit_apex_pkg.log_state(p_log_state);
+  end log_state;
+  
+  overriding member procedure print(
+   self in out nocopy pit_apex,
+   p_message in message_type)
+  as
+  begin
     pit_apex_pkg.print(p_message);
   end print;
+  
+  overriding member procedure tweet(
+   self in out nocopy pit_apex,
+   p_message in message_type)
+  as
+  begin
+    pit_apex_pkg.tweet(p_message);
+  end tweet;
   
   overriding member procedure notify(
   self in out nocopy pit_apex,

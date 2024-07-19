@@ -1,4 +1,6 @@
 create or replace package pit_console_pkg
+  authid definer
+  accessible by (type PIT_CONSOLE)
 as
   
   /**
@@ -11,37 +13,57 @@ as
     
   /** 
     Procedure: tweet
-      Method to tweet information to the console
-      Method implements the <PIT_CONSOLE> log member procedure and  writes the message attributes to the console.
+      Method to write lightweight developers comments to the output modules
       
     Parameter:
-      p_message - Instance of <MESSAGE_TYPE>
+      p_message - Instance of PIT_TWEET message
    */
   procedure tweet (
     p_message in message_type);
     
-    
   /** 
-    Procedure: log
-      Method to write log information to the console
-      Method implements the <PIT_CONSOLE> log member procedure and  writes the message attributes to the console.
+    Procedure: log_validation
+      Method to write validation information to the console
+      Method implements the <PIT_CONSOLE>.log_validation member procedure and  writes the message attributes to the console.
       
     Parameter:
       p_message - Instance of <MESSAGE_TYPE>
    */
-  procedure log (
+  procedure log_validation (
+    p_message in message_type);
+    
+  /** 
+    Procedure: log_exception
+      Method to write validation information to the console
+      Method implements the <PIT_CONSOLE>.log_exception member procedure and  writes the message attributes to the console.
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure log_exception (
+    p_message in message_type);
+    
+  /** 
+    Procedure: panic
+      Method to write validation information to the console
+      Method implements the <PIT_CONSOLE>.panic member procedure and  writes the message attributes to the console.
+      
+    Parameter:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure panic (
     p_message in message_type);
     
     
   /** 
-    Procedure: log
+    Procedure: log_state
       Method to write state information to the console
-      Method implements the <PIT_CONSOLE> log member procedure overload and writes the key value pairs of <MSG_PARAM> to the console.
+      Method implements the <PIT_CONSOLE>.log_state member procedure overload and writes the key value pairs of <MSG_PARAM> to the console.
       
     Parameter:
       p_log_state - Instance of <PIT_LOG_STATE_TYPE>
    */
-  procedure log (
+  procedure log_state (
     p_log_state in pit_log_state_type);
 
 
@@ -87,6 +109,6 @@ as
       Method implements the parameterless constructor method of <PIT_CONSOLE>
    */
   procedure initialize_module(
-    self in out pit_console);
+    self in out nocopy pit_console);
 end pit_console_pkg;
 /

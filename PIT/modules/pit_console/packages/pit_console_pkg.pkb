@@ -23,18 +23,19 @@ as
       C_MESSAGE_TEMPLATE - Parameter name for the MESSAGE-Template
       C_LEVEL_INDICATOR - Parameter name for the indent level indicator
    */
-  C_PARAM_GROUP constant pit_util.ora_name_type := 'PIT';
-  C_PIT_CONSOLE constant pit_util.ora_name_type := 'PIT_CONSOLE';
-  C_FIRE_THRESHOLD constant pit_util.ora_name_type := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
-  C_ENTER_TEMPLATE constant pit_util.ora_name_type := C_PIT_CONSOLE || '_ENTER_TEMPLATE';
-  C_LEAVE_TEMPLATE constant pit_util.ora_name_type := C_PIT_CONSOLE || '_LEAVE_TEMPLATE';
-  C_MESSAGE_TEMPLATE constant pit_util.ora_name_type := C_PIT_CONSOLE || '_MSG_TEMPLATE';
-  C_LEVEL_INDICATOR  constant pit_util.ora_name_type := C_PIT_CONSOLE || '_LEVEL_INDICATOR';
+  C_PARAM_GROUP constant varchar2(20 char) := 'PIT';
+  C_PIT_CONSOLE constant varchar2(20) := 'PIT_CONSOLE';
+  C_FIRE_THRESHOLD constant varchar2(30 char) := C_PIT_CONSOLE || '_FIRE_THRESHOLD';
+  C_ENTER_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_ENTER_TEMPLATE';
+  C_LEAVE_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_LEAVE_TEMPLATE';
+  C_MESSAGE_TEMPLATE constant varchar2(30 char) := C_PIT_CONSOLE || '_MSG_TEMPLATE';
+  C_LEVEL_INDICATOR  constant varchar2(30 char) := C_PIT_CONSOLE || '_LEVEL_INDICATOR';
 
-  g_message_template pit_util.max_sql_char;
-  g_enter_template pit_util.max_sql_char;
-  g_leave_template pit_util.max_sql_char;
-  g_level_indicator pit_util.ora_name_type;
+  g_message_template varchar2(2000);
+  g_enter_template varchar2(2000);
+  g_leave_template varchar2(2000);
+  g_level_indicator varchar2(10);
+  g_is_development boolean;
 
 
   /**
@@ -85,14 +86,14 @@ as
     p_call_stack in pit_call_stack_type,
     p_template in varchar2)
   as
-    l_unit_name pit_util.small_char;
-    l_indent pit_util.max_sql_char;
+    l_unit_name varchar2(257 byte);
+    l_indent varchar2(2000);
     l_indent_length binary_integer;
-    l_timing pit_util.ora_name_type;
+    l_timing varchar2(100);
     l_message pit_util.max_char;
     l_postfix pit_util.max_char;
-    l_param pit_util.max_sql_char;
-    C_ETC constant pit_util.small_char := '...'; 
+    l_param varchar2(1000);
+    C_ETC constant varchar2(10 char) := '...'; 
   begin
     -- Program unit
     l_unit_name := p_call_stack.module_name || '.' || p_call_stack.method_name;
@@ -131,6 +132,7 @@ as
     end if;
     l_message :=
       replace(replace(replace(replace(p_template, '#MESSAGE#', l_unit_name), '#POSTFIX#', l_postfix), '#TIMING#', l_timing), '#LEVEL#', l_indent);
+      
     print(l_message);
   end print_call_stack;
   
@@ -145,16 +147,30 @@ as
   procedure tweet(
     p_message in message_type)
   as
+    l_module pit_util.ora_name_type;
+    l_action pit_util.ora_name_type;
   begin
-    print(replace(g_message_template, '#MESSAGE#', p_message.message_text));
+    dbms_output.put_line(p_message.module || '.' || p_message.action || ': ' || p_message.message_text);
   end tweet;
   
   
   /**
-    Procedure: log
-      see <PIT_CONSOLE_PKG.log>
+    Procedure: log_validation
+      see <PIT_CONSOLE_PKG.log_validation>
    */
-  procedure log(
+  procedure log_validation(
+    p_message in message_type)
+  as
+  begin
+    print(replace(g_message_template, '#MESSAGE#', 'Validation: ' || p_message.message_text));
+  end log_validation;
+  
+  
+  /**
+    Procedure: log_exception
+      see <PIT_CONSOLE_PKG.log_exception>
+   */
+  procedure log_exception(
     p_message in message_type)
   as
   begin
@@ -163,14 +179,28 @@ as
       print(p_message.stack);
       print(p_message.backtrace);
     end if;
-  end log;
+  end log_exception;
   
   
   /**
-    Procedure: log
-      see <PIT_CONSOLE_PKG.log>
+    Procedure: panic
+      see <PIT_CONSOLE_PKG.panic>
    */
-  procedure log(
+  procedure panic(
+    p_message in message_type)
+  as
+  begin
+    print(replace(g_message_template, '#MESSAGE#', 'PANIC: ' || p_message.message_text));
+    print(p_message.stack);
+    print(p_message.backtrace);
+  end panic;
+  
+  
+  /**
+    Procedure: log_state
+      see <PIT_CONSOLE_PKG.log_state>
+   */
+  procedure log_state(
     p_log_state in pit_log_state_type)
   as
   begin
@@ -181,7 +211,7 @@ as
       end loop;
       dbms_output.put_line('<- State');
     end if;
-  end log;
+  end log_state;
   
 
   /**
@@ -232,8 +262,10 @@ as
     self in out nocopy pit_console)
   as
   begin
-    self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
-    self.status := msg.PIT_MODULE_INSTANTIATED;
+    if self.fire_threshold is null then
+      self.fire_threshold := param.get_integer(C_FIRE_THRESHOLD, C_PARAM_GROUP);
+      self.status := msg.PIT_MODULE_INSTANTIATED;
+    end if;
   exception
     when others then
       self.status := msg.PIT_FAIL_MODULE_INIT;
