@@ -53,9 +53,6 @@ create or replace type pit_apex under pit_module
   /**
     Procedure: notify
       See <PIT_MODULE.notify>
-      
-    Attention::
-      Not implemented yet
    */
   overriding member procedure notify(
     self in out nocopy pit_apex,

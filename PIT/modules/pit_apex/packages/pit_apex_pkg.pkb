@@ -36,13 +36,18 @@ as
   C_YES constant varchar2(3 byte) := 'YES';
   C_CHUNK_SIZE constant integer := 8192;
 
+<<<<<<< Updated upstream
   g_apex_triggered_context pit_context_type;
   g_fire_threshold number;
   g_websocket_server varchar2(1000 byte);
+=======
+  g_fire_threshold binary_integer;
+>>>>>>> Stashed changes
 
   /**
     Group: Helper methods
    */
+<<<<<<< Updated upstream
   /** 
     Procedure: initialize
       Helper method to read parameter values into global package variables. Is called from <INITIALIZE_MODULE> method.
@@ -374,6 +379,7 @@ as
   as
   begin
     null;
+    g_ws_url := coalesce(g_ws_url, param.get_string('PIT_WEB_SOCKET_SERVER', 'PIT'));
   end notify;
 
 

@@ -1,0 +1,29 @@
+create table pit_translatable_item(
+   pti_id &ORA_NAME_TYPE., 
+   pti_pml_name &ORA_NAME_TYPE.,
+   pti_pmg_name &ORA_NAME_TYPE.,
+   pti_name varchar2(200 char), 
+   pti_display_name varchar2(200 char),
+   pti_description clob,
+   pti_uid &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_id else null end) virtual,
+   pti_upmg &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_pmg_name else null end) virtual,
+   constraint pit_translatable_item_pk primary key (pti_id, pti_pmg_name, pti_pml_name),
+   constraint pti_uid_u unique (pti_uid, pti_upmg),
+   constraint pti_pml_name_fk foreign key (pti_pml_name)
+      references pit_message_language(pml_name) on delete cascade,
+   constraint pti_pmg_name_fk foreign key (pti_pmg_name)
+      references pit_message_group(pmg_name) on delete cascade,
+   constraint chk_pti_pmg_name check(pti_pmg_name is not null)
+) ;
+
+create index idx_pti_pmg_name_fk on pit_translatable_item(pti_pmg_name);
+
+comment on table pit_translatable_item is 'Central translatable item repository in various languages.';
+comment on column pit_translatable_item.pti_id is 'ID of the translatable item, part of the PK in conjunction with PIT_PML_NAME';
+comment on column pit_translatable_item.pti_pml_name is 'Part of the PK, reference to PIT_MESSAGE_LANGUAGE. Taken from Oracle v$nls_valid_values';
+comment on column pit_translatable_item.pti_pmg_name is 'Part of the PK, reference to PIT_MESSAGE_GROUP, criteria to group messages and translatables items per group';
+comment on column pit_translatable_item.pti_name is 'Name. Optionally contains replacement anchors';
+comment on column pit_translatable_item.pti_display_name is 'Display name. Used for UI display purposes. Optionally contains replacement anchors';
+comment on column pit_translatable_item.pti_description is 'Help text or further description. No replacement anchors allowed';
+comment on column pit_translatable_item.pti_uid is 'Virtual column as a surrogate primary key for references';
+comment on column pit_translatable_item.pti_upmg is 'Virtual column as a surrogate primary key for references';

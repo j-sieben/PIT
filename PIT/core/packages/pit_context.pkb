@@ -526,6 +526,7 @@ as
   begin
     read_active_context;
     return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_ERROR);
+    return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_SEVERE);
   end log_me;
   
   

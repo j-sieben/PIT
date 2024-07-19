@@ -4,6 +4,10 @@ as object(
   /** 
     Package: PIT_MODULE
       Abstract output module for PIT.
+      
+      IMPORTANT: Output modules must not throw exceptions. If an exception is necessary,
+      you need to catch to prevent it from being thrown. This is necessary to guarantee that
+      all modules fire if they have to.
     
     Properties:
       fire_threshold - Log level above which the module does not react anymore. Is used to control the amount of 

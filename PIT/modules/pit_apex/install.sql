@@ -1,10 +1,6 @@
 @init/set_folders modules/pit_apex
 
 prompt
-prompt &section.
-prompt &h1.Module PIT_APEX
-
-prompt
 prompt &h2.Install module PIT_APEX
 
 prompt &s1.Create parameter for PIT_APEX

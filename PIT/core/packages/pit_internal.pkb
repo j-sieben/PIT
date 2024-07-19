@@ -760,6 +760,13 @@ as
       g_active_message.error_number := coalesce(g_active_message.error_number, -20000);
     end if;
     
+    if p_severity <= C_LEVEL_SEVERE then
+      -- Log severe or fatal errors immediately so they are monitored even if no exception handler is present
+      raise_event(
+        p_event => C_LOG_EVENT,
+        p_message => g_active_message);
+    end if;
+    
     if g_collect_mode and not (p_severity = C_LEVEL_FATAL and g_stop_bulk_on_fatal) then
       push_message(g_active_message);      
     else

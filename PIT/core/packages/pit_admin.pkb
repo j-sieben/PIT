@@ -1082,6 +1082,8 @@ end ]' || C_PACKAGE_NAME || ';';
              from dual) s
        on (t.pti_id = s.pti_id
        and t.pti_pml_name = s.pti_pml_name)
+       and t.pti_pml_name = s.pti_pml_name
+       and t.pti_pmg_name = s.pti_pmg_name)
       when matched then update set
            t.pti_pmg_name = s.pti_pmg_name,
            t.pti_name = s.pti_name,

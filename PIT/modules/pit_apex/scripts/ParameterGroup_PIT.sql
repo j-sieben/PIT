@@ -60,6 +60,41 @@ begin
     p_par_boolean_value => true
   );
 
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_APEX_WS_URL',
+    p_par_pgr_id => 'PIT',
+    p_par_description => 'URL of the WebSocket server used by the notify procedure',
+    p_par_string_value => 'http://0.0.0.0:8000/notify'
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_APEX_WS_USER_NAME',
+    p_par_pgr_id => 'PIT',
+    p_par_description => 'Username of the websocket server account, used by the notify procedure. NULL if no authentication required',
+    p_par_string_value => 'PIT_APEX'
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_APEX_WS_USER_PWD',
+    p_par_pgr_id => 'PIT',
+    p_par_description => 'Password of the websocket server account, used by the notify procedure. NULL if no authentication required',
+    p_par_string_value => 'PIT_APEX_PWD'
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_APEX_WS_WALLET_PATH',
+    p_par_pgr_id => 'PIT',
+    p_par_description => 'Path to the wallet, if websocket over https is used. Leave NULL if http is used',
+    p_par_string_value => ''
+  );
+
+  param_admin.edit_parameter(
+    p_par_id => 'PIT_APEX_WS_WALLET_PWD',
+    p_par_pgr_id => 'PIT',
+    p_par_description => 'Password to the wallet, if websocket over https is used. NULL if http is used',
+    p_par_string_value => ''
+  );
+
   commit;
 end;
 /

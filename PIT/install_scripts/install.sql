@@ -29,7 +29,7 @@ alter session set plsql_ccflags = 'pit_installed:FALSE';
 prompt
 prompt &section.
 prompt &h1.Installing parameter framework
-@parameters/install.sql
+@parameters&FOLDER_EXTENSION./install.sql
 
 prompt &section.
 prompt &h1.Installing context framework
@@ -37,7 +37,7 @@ prompt &h1.Installing context framework
 
 prompt &section.
 prompt &h1.Installing core functionality
-@core/install.sql
+@core&FOLDER_EXTENSION./install.sql
 
 prompt &s1.Set Compiler-Flag for APEX installation to TRUE
 alter session set PLSQL_CCFLAGS = 'pit_installed:TRUE';
@@ -47,8 +47,8 @@ prompt &section.
 prompt &h1.Installing PIT output modules
 @modules/pit_console/install.sql
 @modules/pit_table/install.sql
-@modules/pit_apex/install.sql
-@modules/pit_file/install.sql
+@&tools.check_has_apex modules/pit_apex/install.sql
+@modules/pit_file&FOLDER_EXTENSION./install.sql
 -- PIT_MAIL may be installed after installing UTL_TEXT
 -- Please use this script with the given information
 --@pit_install_module pit_mail

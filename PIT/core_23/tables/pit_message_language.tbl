@@ -1,0 +1,15 @@
+create table pit_message_language(
+   pml_name &ORA_NAME_TYPE.,
+   pml_display_name &ORA_NAME_TYPE.,
+   pml_default_order number(3,0),
+   constraint pit_message_language_pk primary key(pml_name)
+) organization index ;
+
+create index idx_pml_default_order on pit_message_language(
+  case when pml_default_order > 0 then pml_default_order end);
+
+comment on column pit_message_language.pml_name is 'Unique name for message language, primary key';
+comment on column pit_message_language.pml_display_name is 'Display name, used for APEX application';
+comment on column pit_message_language.pml_default_order is 'Sorting column to select message in  respective language. Highest number wins. Default-language := 10, 0=language not supported';
+
+comment on table pit_message_language is 'Lookup-table for message languages.';

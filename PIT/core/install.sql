@@ -86,4 +86,3 @@ prompt &h2.Create CORE package implementations
 @&tools.install_package_body pit
 @&tools.install_package_body pit_call_stack
 @&tools.install_package_body pit_context
-@&tools.install_package_body pit_internal

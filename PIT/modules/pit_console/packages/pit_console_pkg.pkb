@@ -106,7 +106,7 @@ as
     -- Parameters
     if p_call_stack.params is not null then
       l_postfix := ' [';
-      for i in p_call_stack.params.first .. p_call_stack.params.last loop
+      for i in 1 .. p_call_stack.params.count loop
         l_param := case i when 1 then null else '; ' end 
                 || p_call_stack.params(i).p_param || '="' 
                 || case when length(p_call_stack.params(i).p_value) > 49 

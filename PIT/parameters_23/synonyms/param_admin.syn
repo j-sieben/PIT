@@ -1,0 +1,1 @@
+create synonym param_admin for &PIT_USER..param_admin;

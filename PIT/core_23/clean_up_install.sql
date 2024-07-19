@@ -1,0 +1,62 @@
+declare
+  object_does_not_exist exception;
+  pragma exception_init(object_does_not_exist, -4043);
+  table_does_not_exist exception;
+  pragma exception_init(table_does_not_exist, -942);
+  sequence_does_not_exist exception;
+  pragma exception_init(sequence_does_not_exist, -2282);
+  synonym_does_not_exist exception;
+  pragma exception_init(synonym_does_not_exist, -1434);
+  cursor delete_object_cur is
+          select object_name name, object_type type
+            from user_objects
+           where object_name in (
+                 'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'MSG_ARGS_CHAR', 'PIT_MODULE', 'PIT_ARGS',
+                 'PIT_DEFAULT_ADAPTER', 'PIT_CALL_STACK_TYPE', 'PIT_LOG_STATE_TYPE', 'PIT_MODULE_LIST', 'PIT_CONTEXT_TYPE', '', 
+                 'PIT_MODULE_META', 'PIT_MODULE_LIST', 'CHAR_TABLE', 'PIT_MESSAGE_TABLE', -- Types
+                 'MSG', 'PIT', 'PIT_INTERNAL', 'PIT_ADMIN', 'PIT_UTIL', 'PIT_CALL_STACK', 'PIT_CONTEXT', 'PIT_APP_API', -- Packages
+                 'PIT_MESSAGE_LANGUAGE_V', 'PIT_MESSAGE_V', 'PIT_TRANSLATABLE_ITEM_V', 'PIT_MESSAGE_SEVERITY_V', 'PIT_TRACE_LEVEL_V', '', -- Views
+                 'PIT_MESSAGE', 'PIT_MESSAGE_LANGUAGE', 'PIT_MESSAGE_SEVERITY', 'PIT_TRACE_LEVEL', 'PIT_MESSAGE_GROUP', 'PIT_TRANSLATABLE_ITEM',  -- Tables
+                 'MSG',  -- Synonyms
+                 'PIT_LOG_SEQ', 'PIT_TRANSLATABLE_ITEM_SEQ' -- Sequences
+                 )
+             and object_type not like '%BODY'
+           order by object_type, object_name;
+           
+  $IF &WITH_CONTEXT. $THEN
+  cursor context_cur is
+    select namespace
+      from dba_context
+     where schema = upper(user)
+       and namespace in ('PIT_CTX', 'PIT_CTX_' || user);
+  $END
+begin
+  for obj in delete_object_cur loop
+    begin
+      execute immediate 'drop ' || obj.type || ' ' || obj.name ||
+                        case obj.type 
+                        when 'TYPE' then ' force' 
+                        when 'TABLE' then ' cascade constraints' 
+                        end;
+     dbms_output.put_line('&s1.' || initcap(obj.type) || ' ' || obj.name || ' deleted.');
+    
+    exception
+      when object_does_not_exist or table_does_not_exist or sequence_does_not_exist or synonym_does_not_exist then
+        dbms_output.put_line('&s1.' || obj.type || ' ' || obj.name || ' does not exist.');
+      when others then
+        raise;
+    end;
+  end loop;
+  $IF &WITH_CONTEXT. $THEN
+  for ctx in context_cur loop
+    begin
+      execute immediate 'drop context ' || ctx.namespace;
+      dbms_output.put_line('&s1.Context ' || ctx.namespace || ' deleted.');
+    exception
+      when others then
+        dbms_output.put_line('&s1.Context ' || ctx.namespace || ' could not be deleted: ' || substr(sqlerrm, 12));
+    end;
+  end loop;
+  $END
+end;
+/

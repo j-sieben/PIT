@@ -1,4 +1,4 @@
-set termout on
+set termout off
 -- Choose your FLAG_TYPE datatype to adhere to your local conventions
 -- When using database version 23c and later, this will be ignored and BOOLEAN will be used instead
 define FLAG_TYPE="char(1 byte)";
@@ -25,11 +25,11 @@ select ltrim('&EXCEPTION_PREFIX.' || '_', '_') err_pre,
        rtrim('_' || '&EXCEPTION_POSTFIX.', '_') err_post
   from dual;
 
-
 col flag_type new_val FLAG_TYPE format a30
 col c_true new_val C_TRUE format a30
 col c_false new_val C_FALSE format a30
-select 'boolean' FLAG_TYPE, 'true' C_TRUE, 'false' C_FALSE
+col folder_extension new_val FOLDER_EXTENSION format a30
+select 'boolean' FLAG_TYPE, 'true' C_TRUE, 'false' C_FALSE, '_23' folder_extension
   from v$version
  where to_number(substr(banner, instr(banner, 'Release') + 8, 2)) >= 23;
  

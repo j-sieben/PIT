@@ -1,0 +1,18 @@
+create table pit_trace_level(
+  ptl_id number,
+  ptl_name &ORA_NAME_TYPE.,
+  ptl_pti_id &ORA_NAME_TYPE.,
+  ptl_pti_pmg_id &ORA_NAME_TYPE. default on null for insert and update 'PIT' constraint ptl_tpi_pmg_id_chk check(ptl_tpi_pmg_id = 'PIT'),
+  constraint pit_trace_level_pk primary key(ptl_name),
+  constraint fk_ptl_pti_id foreign key(ptl_pti_id, ptl_pti_pmg_id)
+    references pit_translatable_item(pti_uid, pti_upmg)
+) organization index ;
+
+
+
+comment on column pit_trace_level.ptl_id is 'Technical Key';
+comment on column pit_trace_level.ptl_name is 'Unique name for message severity';
+comment on column pit_trace_level.ptl_pti_id is 'Referenc to PTI_TRANSLATABLE_ITEM, Display name';
+comment on column pit_trace_level.ptl_pti_pmg_id is 'Reference to PIT_TRANSLATABLE_ITEM, item group';
+
+comment on table pit_trace_level is 'Lookup-table for message severities.';

@@ -1,0 +1,11 @@
+create table parameter_realm(
+  pre_id &ORA_NAME_TYPE., 
+	pre_description varchar2(255 byte), 
+	pre_is_active boolean default on null for insert and update true, 
+  constraint parameter_realm_pk primary key (pre_id) enable
+) organization index;
+
+comment on table parameter_realm  is 'Lookup for parameter realms';
+comment on column parameter_realm.pre_id is 'Primary key, alphanumeric';
+comment on column parameter_realm.pre_description is 'Longtext for the parameter realm';
+comment on column parameter_realm.pre_is_active is 'Flag to indicate whether this realm is actually used';

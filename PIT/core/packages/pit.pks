@@ -21,6 +21,7 @@ as
       
       LEVEL_OFF - Log severity to switch logging off
       LEVEL_FATAL - Log severity of fatal errors
+      LEVEL_SEVERE - Log severity of severe errors
       LEVEL_ERROR - Log severity of "normal" errors
       LEVEL_WARN - Log severity for warn messages
       LEVEL_INFO - Log severity for informational messages
@@ -33,6 +34,7 @@ as
    */
   function level_off return binary_integer deterministic;
   function level_fatal return binary_integer deterministic;
+  function level_severe return binary_integer deterministic;
   function level_error return binary_integer deterministic;
   function level_warn return binary_integer deterministic;
   function level_info return binary_integer deterministic;

@@ -1,0 +1,38 @@
+create table parameter_tab(
+   par_id &ORA_NAME_TYPE.,
+   par_pgr_id &ORA_NAME_TYPE.,
+   par_description varchar2(200 char),
+   par_string_value clob,
+   par_raw_value blob,
+   par_xml_value xmltype,
+   par_integer_value number(38,0),
+   par_float_value number,
+   par_date_value date,
+   par_timestamp_value timestamp with time zone,
+   par_boolean_value boolean,
+   par_is_modifiable boolean,
+   par_pat_id &ORA_NAME_TYPE.,
+   par_validation_string varchar2(4000 char),
+   par_validation_message varchar2(4000 char),
+   constraint parameter_tab_pk primary key (par_id, par_pgr_id),
+   constraint par_pgr_id_fk foreign key (par_pgr_id) references parameter_group(pgr_id) on delete cascade,
+   constraint par_pat_id_fk foreign key(par_pat_id) references parameter_type(pat_id),
+   constraint par_is_modifiable_chk check (par_is_modifiable in (null, false))
+);
+
+comment on table parameter_tab is 'Central parameter table';
+comment on column parameter_tab.par_id is 'Primary key, alphnumeric';
+comment on column parameter_tab.par_pgr_id is 'Primary key, alphanumeric, references PARAMETER_GROUP';
+comment on column parameter_tab.par_description is 'Longtext of the parameter';
+comment on column parameter_tab.par_string_value is 'CLOB parameter';
+comment on column parameter_tab.par_raw_value is 'BLOB parameter';
+comment on column parameter_tab.par_xml_value is 'XML parameter';
+comment on column parameter_tab.par_integer_value is 'Integer parameter';
+comment on column parameter_tab.par_float_value is 'Float parameter';
+comment on column parameter_tab.par_date_value is 'Date parameter';
+comment on column parameter_tab.par_timestamp_value is 'Timestamp parameter';
+comment on column parameter_tab.par_boolean_value is 'Boolean parameter';
+comment on column parameter_tab.par_is_modifiable is 'Flag to indicate whether this parameter may be changed by the end user. Only applicable if parameter group is set to par_is_modifiable. If null, parameter_group setting applies';
+comment on column parameter_tab.par_pat_id is 'References PARAMETER_TYPE. Typ of editor used to edit parameter value';
+comment on column parameter_tab.par_validation_string is 'Validation chunk, PL/SQL fragment. Must provide a boolean value, without semikolon. References parameter values via #STRING#|#DATE#|#FLOAT#|#INTEGER#';
+comment on column parameter_tab.par_validation_message is 'Message to log if parameter validation was unsuccesful';

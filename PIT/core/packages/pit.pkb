@@ -20,21 +20,24 @@ as
   
   
   function level_off
+  function level_fatal
   return binary_integer
    deterministic
   as
   begin
     return pit_internal.C_LEVEL_OFF;
   end level_off;
+    return pit_internal.C_LEVEL_FATAL;
+  end level_fatal;
   
   
-  function level_fatal
+  function level_severe
   return binary_integer
     deterministic
   as
   begin
-    return pit_internal.C_LEVEL_FATAL;
-  end level_fatal;
+    return pit_internal.C_LEVEL_SEVERE;
+  end level_severe;
   
   
   function level_error
