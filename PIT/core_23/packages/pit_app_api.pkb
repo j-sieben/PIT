@@ -185,18 +185,15 @@ as
     Function: get_pit_message_language_table
       See <pit_app_api.get_pit_message_language_table>
    */
-  function get_pit_message_language_table(
-    p_active_only in pit_util.boolean default true)
+  function get_pit_message_language_table
     return pit_message_language_table
     pipelined
   as
-    cursor pit_message_language_cur(
-      p_active_only in pit_util.boolean default true) is
+    cursor pit_message_language_cur is
       select *
-        from pit_message_language_v
-       where pml_default_order >= case when p_active_only = true then 1 else 0 end;
+        from pit_message_language_v;
   begin
-    for r in pit_message_language_cur(p_active_only) loop
+    for r in pit_message_language_cur loop
       pipe row (r);
     end loop;
     return;
@@ -237,7 +234,7 @@ as
   function allows_toggles
   return boolean
   as
-    l_flag pit_util.boolean;
+    l_flag boolean;
   begin
     select par_boolean_value
       into l_flag
@@ -957,11 +954,11 @@ as
     else
       pit.assert_not_null(
         p_condition => p_row.par_id,
-        p_message_name => msg.PARAM_IS_NULL,
+        p_message_name => msg.PIT_PARAM_IS_NULL,
         p_msg_args => msg_args(l_par_id));
       pit.assert(
         p_condition => l_is_modifiable,
-        p_message_name => msg.PARAM_NOT_MODIFIABLE,
+        p_message_name => msg.PIT_PARAM_NOT_MODIFIABLE,
         p_msg_args => msg_args(p_row.par_id));
     end if;
   end validate_realm_parameter;

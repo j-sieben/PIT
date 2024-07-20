@@ -1,5 +1,6 @@
 create or replace package pit_file_pkg
   authid definer
+  accessible by (type PIT_FILE)
 as
 
   /**
@@ -11,64 +12,57 @@ as
    */
     
   /**
-    Procedure: log
-      Method to write log information to a trace file.
-      
-      Method implements the LOG member procedure and writes the message attributes to the trace file.
-      
-    Parameter:
-      p_message - Instance of <MESSAGE_TYPE>
+    Procedure: log_exception
+      See <PIT_MODULE.log_exception>
    */
-  procedure log (
+  procedure log_exception (
+    self in out nocopy pit_file,
     p_message in message_type);
     
     
   /**
-    Procedure: log
-      Method to write state information to a trace file.
-      
-      Method implements the <pit_file.log> member procedure and writes the key value pairs of MSG_PARAM to a trace file.
-      
-    Parameter:
-      p_params - Instance of <MSG_PARAMS>
+    Procedure: panic
+      See <PIT_MODULE.panic>
    */
-  procedure log (
-    p_params in msg_params);
+  procedure panic (
+    self in out nocopy pit_file,
+    p_message in message_type);
     
     
   /**
-    Procedure: purge
-      Method to purge log information from tables <PIT_TABLE_LOG>, <PIT_TABLE_CALL_STACK> and <PIT_TABLE_PARAMS>.
-      
-      Method implements the <pit_file.purge> member procedure and erases the log file. 
-      It will not filter as by <P_DATE_UNTIL> and <P_SEVERITY_GREATER_EQUAL> defined in the type.
+    Procedure: log_state
+      See <PIT_MODULE.log_state>
    */
-  procedure purge;
+  procedure log_state (
+    self in out nocopy pit_file,
+    p_log_state in pit_log_state_type);
+    
+    
+  /**
+    Procedure: purge_log
+      See <PIT_MODULE.purge_log>
+   */
+  procedure purge_log(
+    self in out nocopy pit_file,
+    p_purge_date in date,
+    p_severity_greater_equal in integer default null);
     
     
   /**
     Procedure: enter
-      Method to write call stack information on enter to a trace file
-      
-      Method implements the <pit_file.enter> member procedure and writes the call stack type attributes to a trace file.
-      
-    Parameter:
-      p_call_stack - Instance of <CALL_STACK_TYPE>
+      See <PIT_MODULE.enter>
    */
   procedure enter(
+    self in out nocopy pit_file,
     p_call_stack in pit_call_stack_type);
     
     
   /**
     Procedure: leave
-      Method to write call stack information on leave to a trace file
-      
-      Method implements the <pit_file.leave> member procedure and writes the call stack type attributes to a trace file.
-      
-    Parameter:
-      p_call_stack - Instance of <CALL_STACK_TYPE>
+      See <PIT_MODULE.leave>
    */
   procedure leave(
+    self in out nocopy pit_file,
     p_call_stack in pit_call_stack_type);
     
     
@@ -79,7 +73,8 @@ as
     Parameter:
       p_call_stack - Instance of <CALL_STACK_TYPE>
    */
-  procedure initialize_module(self in out pit_file);
+  procedure initialize_module(
+    self in out pit_file);
   
 end pit_file_pkg;
 /

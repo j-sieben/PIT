@@ -19,21 +19,29 @@ as
     null;
   end tweet;
   
-  member procedure log (
+  member procedure log_validation (
     self in out nocopy pit_module,
     p_message in message_type)
   as
   begin
     null;
-  end log;
+  end log_validation;
   
-  member procedure log (
+  member procedure log_exception (
+    self in out nocopy pit_module,
+    p_message in message_type)
+  as
+  begin
+    null;
+  end log_exception;
+  
+  member procedure log_state (
     self in out nocopy pit_module,
     p_log_state in pit_log_state_type)
   as
   begin
     null;
-  end log;
+  end log_state;
   
   member procedure print (
     self in out nocopy pit_module,
@@ -67,14 +75,22 @@ as
     null;
   end leave;
   
-  member procedure purge (
+  member procedure purge_log (
     self in out nocopy pit_module,
     p_purge_date in date := null,
     p_severity_greater_equal in integer := null)
   as
   begin
     null;
-  end purge;
+  end purge_log;  
+  
+  member procedure panic(
+    self in out nocopy pit_module,
+    p_message in message_type)
+  as
+  begin
+    null;
+  end panic;
   
 end;
 /

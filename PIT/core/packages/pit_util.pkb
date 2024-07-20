@@ -781,6 +781,92 @@ as
     end loop;
   end recompile_invalid_objects;
   
+  
+  /**
+    Function: check_number_datatype
+      See <PIT_UTIL.check_number_datatype>
+   */
+  function check_number_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    l_format_mask pit_util.ora_name_type;
+    l_number number;
+  begin
+    l_format_mask := coalesce(p_format_mask, '999999999999999999D999999999');
+    l_number := to_number(p_value, l_format_mask);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_number_datatype;
+  
+  
+  /**
+    Function: check_date_datatype
+      See <PIT_UTIL.check_number_datatype>
+   */
+  function check_date_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    l_format_mask pit_util.ora_name_type;
+    l_date date;
+  begin
+    l_format_mask := coalesce(p_format_mask, sys_context('USERENV', 'NLS_DATE_FORMAT'));
+    l_date := to_date(p_value, l_format_mask);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_date_datatype;
+  
+  
+  /**
+    Function: check_timestamp_datatype
+      See <PIT_UTIL.check_timestamp_datatype>
+   */
+  function check_timestamp_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    l_format_mask pit_util.ora_name_type;
+    l_timestamp timestamp with time zone;
+  begin
+    if p_format_mask is null then
+      select value
+        into l_format_mask
+        from v$nls_parameters
+       where parameter = 'NLS_TIMESTAMP_FORMAT';
+    end if;
+    l_timestamp := to_timestamp(p_value, l_format_mask);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_timestamp_datatype;
+  
+  
+  /**
+    Function: check_xml_datatype
+      See <PIT_UTIL.varchar2>
+   */
+  function check_xml_datatype(
+    p_value in varchar2)
+    return boolean
+  as
+    l_xml xmltype;
+  begin
+    l_xml := xmltype(p_value);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_xml_datatype;
+  
 begin
   initialize;
 end pit_util;

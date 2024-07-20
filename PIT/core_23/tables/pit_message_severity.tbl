@@ -1,8 +1,8 @@
 create table pit_message_severity(
   pse_id number,
   pse_name &ORA_NAME_TYPE.,
-  pse_pti_id &ORA_NAME_TYPE.,
-  pse_pti_pmg_id &ORA_NAME_TYPE. default on null for insert and update 'PIT' constraint pse_tpi_pmg_id_chk check(pse_pti_pmg_id = 'PIT'),
+  pse_pti_id varchar2(50 char),
+  pse_pti_pmg_id varchar2(50 char) default on null 'PIT',
   constraint pit_message_severity_pk primary key(pse_id),
   constraint fk_pse_pti_id foreign key(pse_pti_id, pse_pti_pmg_id)
     references pit_translatable_item(pti_uid, pti_upmg)

@@ -626,13 +626,15 @@ end;
   procedure initialize
   as
   begin
-    -- Read default language
-    select pml_name default_language
-      into g_default_language
-      from pit_message_language
-     where pml_default_order > 0
-     order by pml_default_order
-     fetch first 1 rows only;
+    if g_default_language is null then
+      -- Read default language
+      select pml_name default_language
+        into g_default_language
+        from pit_message_language
+       where pml_default_order > 0
+       order by pml_default_order
+       fetch first 1 rows only;
+    end if;
   end initialize;
 
 
@@ -1079,9 +1081,9 @@ end ]' || C_PACKAGE_NAME || ';';
                   p_row.pti_description pti_description
              from dual) s
        on (t.pti_id = s.pti_id
-       and t.pti_pml_name = s.pti_pml_name)
+       and t.pti_pml_name = s.pti_pml_name
+       and t.pti_pmg_name = s.pti_pmg_name)
       when matched then update set
-           t.pti_pmg_name = s.pti_pmg_name,
            t.pti_name = s.pti_name,
            t.pti_display_name = s.pti_display_name,
            t.pti_description = s.pti_description

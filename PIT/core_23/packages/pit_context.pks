@@ -14,7 +14,8 @@ as
       in a session pool environment. This is achieved by implementing the decision logic for the logging settings
       in the session adapter object.
       
-      So for APEX, the APEX session adapter may decide whether the actually connected user should be logged or not.
+      Example: If APEX is used it will ship with its own adapter. The adapter examines whether APEX is in debug mode
+               and will set PIT accordingly.
    
     Author:: 
       Juergen Sieben, ConDeS GmbH
@@ -323,14 +324,6 @@ as
    */
   function get_active_modules
   return pit_module_tab;
-  
-  
-  /**
-    Function: get_active_module_list
-      Getter Function returning the list of active modules as a comma separated list
-   */
-  function get_active_module_list
-  return varchar2;
   
    
   /** 

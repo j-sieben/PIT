@@ -16,7 +16,7 @@ as
   /**
     Group: Helper Methods
    */
-  /** 
+   /**
     Procedure: persist_params
       Helper method to write to table <PIT_TABLE_PARAMS>. 
       Is used to wrap the insert operation on <PIT_TABLE_PARAMS>, used by several methods
@@ -44,10 +44,10 @@ as
     Group: Public method implementations
    */
   /**
-    Procedure: log
-      See <pit_table_pkg.log>
+    Procedure: log_exception
+      See <pit_table_pkg.log_exception>
    */
-  procedure log(
+  procedure log_exception(
     p_message in message_type)
   as
   begin
@@ -59,26 +59,45 @@ as
       (p_message.id, p_message.creation_time, substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
        p_message.message_text, p_message.message_name, pit_util.cast_to_msg_args_char(p_message.message_args), 
        p_message.stack, p_message.backtrace, p_message.severity);
-  end log;
+  end log_exception;
   
   
   /**
-    Procedure: log
-      See <pit_table_pkg.log>
+    Procedure: panic
+      See <pit_table_pkg.panic>
    */
-  procedure log(
+  procedure panic(
+    p_message in message_type)
+  as
+  begin
+    insert into pit_table_log
+      (log_id, log_date, log_session_id, log_user_name, 
+       log_message_text, log_message_name, log_message_args, 
+       log_message_stack, log_message_backtrace, log_severity)
+    values
+      (p_message.id, p_message.creation_time, substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
+       p_message.message_text, p_message.message_name, pit_util.cast_to_msg_args_char(p_message.message_args), 
+       p_message.stack, p_message.backtrace, p_message.severity);
+  end panic;
+  
+  
+  /**
+    Procedure: log_state
+      See <pit_table_pkg.log_state>
+   */
+  procedure log_state(
     p_log_state pit_log_state_type)
   as
   begin
     persist_params(p_log_state.id, p_log_state.severity, p_log_state.params);
-  end log;
+  end log_state;
   
 
   /**
-    Procedure: purge
-      See <pit_table_pkg.purge>
+    Procedure: purge_log
+      See <pit_table_pkg.purge_log>
    */
-  procedure purge(
+  procedure purge_log(
     p_date_until in date,
     p_severity_greater_equal in number default null)
   as
@@ -91,7 +110,7 @@ as
     delete from pit_table_params
      where ptp_log_date <= p_date_until
        and ptp_pse_id > coalesce(p_severity_greater_equal, 0);
-  end;
+  end purge_log;
 
 
   /**

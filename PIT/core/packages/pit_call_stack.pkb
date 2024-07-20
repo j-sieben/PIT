@@ -66,7 +66,7 @@ as
         -- persist last call stack entry in out parameter
         l_actual_entry.params := p_params;
         -- replace existing ID with new ID to allow for persistance
-        l_actual_entry.id := pit_drv_log_seq.nextval;
+        l_actual_entry.id := pit_log_seq.nextval;
   
         -- maintain timing for call stack entries
         l_actual_entry.leave;

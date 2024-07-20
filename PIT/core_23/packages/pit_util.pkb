@@ -41,6 +41,13 @@ as
   
   type pmg_allowed_length_t is table of binary_integer index by pit_util.ora_name_type;
   
+  /**
+    Variables: Parameter variables
+      g_omit_pit_in_stack - Container for parameter OMIT_PIT_IN_STACK
+   */
+  g_omit_pit_in_stack boolean;
+  g_omit_pkg_list varchar2(1000 byte);
+  
   g_predefined_errors predefined_error_t;
   g_pmg_allowed_length pmg_allowed_length_t;
   
@@ -169,15 +176,28 @@ as
     return boolean
   as
     l_ignore boolean := false;
-    l_omit_pkg_list max_char := ':' || param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
   begin
-    if param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP) then
+    if g_omit_pit_in_stack then
       l_ignore := (upper(p_subprogram) like 'PIT%' and p_subprogram != 'PIT_UI') 
-               or (instr(l_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
+               or (instr(g_omit_pkg_list, ':' || upper(p_subprogram) || ':') > 0)
                or (upper(p_subprogram) like 'MESSAGE_TYPE%');
     end if;
     return l_ignore;
   end ignore_subprogram;
+  
+  
+  /**
+    Procedure: initialize
+      Package Initialization 
+   */
+  procedure initialize
+  as
+    l_prefix_length binary_integer;
+  begin
+    -- set package vars
+    g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
+    g_omit_pkg_list := ':' ||param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
+  end initialize;
   
   
   /**
@@ -198,7 +218,7 @@ as
     append(l_stack, param.get_string('PIT_CALL_STACK_TEMPLATE', C_PARAMETER_GROUP));
     
     for i in 1 .. l_depth loop
-      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) or i = 1 then
+      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
         append(l_stack,
           lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' ' ||
           rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
@@ -477,7 +497,7 @@ as
     p_context_name in ora_name_type,
     p_settings in varchar2)
   as
-    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || to_char(true) || '|' || to_char(false) || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || to_char(false) || '\|))$';
+    C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || true || '|' || false || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || false || '\|))$';
   begin
     -- context name must not be longer than 10 byte under C_MAX_LENGTH
     if length(p_context_name) > C_MAX_LENGTH - 10 then 
@@ -708,5 +728,93 @@ as
     end loop;
   end recompile_invalid_objects;
   
+  
+  /**
+    Function: check_number_datatype
+      See <PIT_UTIL.check_number_datatype>
+   */
+  function check_number_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    l_format_mask pit_util.ora_name_type;
+    l_number number;
+  begin
+    l_format_mask := coalesce(p_format_mask, '999999999999999999D999999999');
+    l_number := to_number(p_value, l_format_mask);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_number_datatype;
+  
+  
+  /**
+    Function: check_date_datatype
+      See <PIT_UTIL.check_number_datatype>
+   */
+  function check_date_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    l_format_mask pit_util.ora_name_type;
+    l_date date;
+  begin
+    l_format_mask := coalesce(p_format_mask, sys_context('USERENV', 'NLS_DATE_FORMAT'));
+    l_date := to_date(p_value, l_format_mask);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_date_datatype;
+  
+  
+  /**
+    Function: check_timestamp_datatype
+      See <PIT_UTIL.check_timestamp_datatype>
+   */
+  function check_timestamp_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean
+  as
+    l_format_mask pit_util.ora_name_type;
+    l_timestamp timestamp with time zone;
+  begin
+    if p_format_mask is null then
+      select value
+        into l_format_mask
+        from v$nls_parameters
+       where parameter = 'NLS_TIMESTAMP_FORMAT';
+    end if;
+    l_timestamp := to_timestamp(p_value, l_format_mask);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_timestamp_datatype;
+  
+  
+  /**
+    Function: check_xml_datatype
+      See <PIT_UTIL.varchar2>
+   */
+  function check_xml_datatype(
+    p_value in varchar2)
+    return boolean
+  as
+    l_xml xmltype;
+  begin
+    l_xml := xmltype(p_value);
+    return true;
+  exception
+    when others then
+      return false;
+  end check_xml_datatype;
+  
+begin
+  initialize;
 end pit_util;
 /

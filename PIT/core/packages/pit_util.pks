@@ -423,5 +423,72 @@ as
    */
   procedure recompile_invalid_objects;
   
+  
+  /**
+    Function: check_number_datatype
+      Method to check whether P_VALUE is of type NUMBER
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to NUMBER, FALSE otherwise
+   */
+  function check_number_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+  
+  
+  /**
+    Function: check_date_datatype
+      Method to check whether P_VALUE is of type DATE
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to DATE, FALSE otherwise
+   */
+  function check_date_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+  
+  
+  /**
+    Function: check_timestamp_datatype
+      Method to check whether P_VALUE is of type TIMESTAMP
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to TIMESTAMP, FALSE otherwise
+   */
+  function check_timestamp_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+  
+  
+  /**
+    Function: check_xml_datatype
+      Method to check whether P_VALUE is of type XML
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to XML, FALSE otherwise
+   */
+  function check_xml_datatype(
+    p_value in varchar2)
+    return boolean;
+  
 end pit_util;
 /

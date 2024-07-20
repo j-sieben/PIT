@@ -16,7 +16,7 @@ as object(
       stack - If this module is unusable, this property contains information about the reason.
    */
   fire_threshold integer,
-  status &ORA_NAME_TYPE.,
+  status varchar2(128 byte),
   stack varchar2(2000 byte),
   
   /**
@@ -42,24 +42,39 @@ as object(
     p_message in message_type),
     
   /** 
-    Procedure: log
-      Method is called for debugging, error handling and the like
+    Procedure: log_validation
+      Method is called as a reaction on validation outcomes. enables PIT
+      to react differently on validation messages in comparison to error messages.
+      Is called from pit.handle_validation.
       
     Parameter: 
       p_message - Instance of <message_type>, the message to log
    */
-  member procedure log(
+  member procedure log_validation(
     self in out nocopy pit_module,
     p_message in message_type),
     
   /** 
-    Procedure: context_changed
-      Overloaded logging method to log the state of variables passed in 
+    Procedure: log_exception
+      Method is called for debugging, error handling and the like.
+      Is called from pit.handle_exception
+      
+    Parameter: 
+      p_message - Instance of <message_type>, the message to log
+   */
+  member procedure log_exception(
+    self in out nocopy pit_module,
+    p_message in message_type),
+    
+  /** 
+    Procedure: log_state
+      Overloaded logging method to log the state of variables passed in.
+      Is called from pit.log_state
       
     Parameter: 
       p_log_state - Instance of <pit_log_state_type> with the key and values to log
    */
-  member procedure log(
+  member procedure log_state(
     self in out nocopy pit_module,
     p_log_state in pit_log_state_type),
     
@@ -108,16 +123,27 @@ as object(
     p_call_stack pit_call_stack_type),
     
   /** 
-    Procedure: purge
+    Procedure: purge_log
       Method is called to purge a message stack. Useful for output modules persisting messages 
       
     Parameter: 
       p_purge_date - Date, before which all entries have to be purged
       p_severity_greater_equal - Optional level to further filter the log entries to purge
    */
-  member procedure purge(
+  member procedure purge_log(
     self in out nocopy pit_module,
     p_purge_date in date default null,
-    p_severity_greater_equal in integer default null)
+    p_severity_greater_equal in integer default null),
+    
+  /** 
+    Procedure: panic
+      Method is called if an unexpected, unrecoverable error has occured.
+      
+    Parameter: 
+      p_message - Instance of <message_type>, the message to log
+   */
+  member procedure panic(
+    self in out nocopy pit_module,
+    p_message in message_type)
 ) not final not instantiable;
 /

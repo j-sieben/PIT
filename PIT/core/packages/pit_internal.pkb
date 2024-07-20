@@ -146,6 +146,7 @@ as
     
     l_idx := l_adapter_list.first;
     
+    -- find an set first available session adapter
     while l_idx is not null loop
       begin
         l_stmt := replace(C_STMT_TEMPLATE, '#ADAPTER#', l_adapter_list(l_idx));
@@ -205,11 +206,13 @@ as
     l_error_code pit_util.ora_name_type;
   begin
     l_error_code := coalesce(p_message.error_code, p_message.message_name);
+    -- remember most severe severity per error code of that collection run
     if g_collect_least_severity.exists(l_error_code) then
       g_collect_least_severity(l_error_code) := least(g_collect_least_severity(l_error_code), p_message.severity);
     else
       g_collect_least_severity(l_error_code) := p_message.severity;
     end if;
+    
     if g_stop_bulk_on_fatal and g_collect_least_severity(l_error_code) = C_LEVEL_FATAL then
       raise_error(C_LEVEL_FATAL, C_BULK_FATAL, null, null, null);
     else
@@ -397,14 +400,12 @@ as
     g_broadcast_context_switch := param.get_boolean(
                                     p_par_id => C_BROADCAST_CONTEXT_SWITCH, 
                                     p_par_pgr_id => C_PARAM_GROUP);
-                                    
-    g_collect_mode := false;
-    g_collect_least_severity.delete;
     g_raise_tweet := instr(
                        param.get_string(C_TWEET_REALMS, C_PARAM_GROUP), 
                        param.get_string('REALM', 'INTERNAL')) > 0;
-    
-    -- initialize helper packages
+                                    
+    g_collect_mode := false;
+    g_collect_least_severity.delete;
     pit_context.initialize;
     pit_call_stack.initialize;
     g_message_stack := pit_message_table();
@@ -473,7 +474,7 @@ as
         -- fallback, is used if a SQL exception was raised outside of PIT
         g_active_message := get_message('PIT_SQL_ERROR', p_msg_args, p_affected_id, p_affected_ids, p_error_code);
       else 
-        -- if used with SQL_EXCEPTION, code may re raise the exception explicitly
+        -- if used with HANDLE_EXCEPTION, code may re raise the exception explicitly
         null;
       end case;
 
@@ -763,7 +764,7 @@ as
     if p_severity <= C_LEVEL_SEVERE then
       -- Log severe or fatal errors immediately so they are monitored even if no exception handler is present
       raise_event(
-        p_event => C_LOG_EVENT,
+        p_event => C_LOG_EXCEPTION_EVENT,
         p_message => g_active_message);
     end if;
     
@@ -872,7 +873,7 @@ as
     p_affected_id in pit_util.max_sql_char,
     p_affected_ids in msg_params default null,
     p_error_code in varchar2)
-   return message_type
+    return message_type
   as
     -- use a local message here to prevent to overwrite g_active_message with messages that are never raised
     l_message message_type;
@@ -931,15 +932,8 @@ as
   as
     C_INTEGER_REGEXP constant pit_util.ora_name_type := '^[0-9]+$';
     l_result boolean := true;
-    l_format_mask pit_util.ora_name_type;
-    l_number number;
-    l_date date;
-    l_timestamp timestamp with time zone;
-    l_xml xmltype;
     l_perform_check boolean;
   begin
-    l_format_mask := p_format_mask;
-    
     l_perform_check := p_value is not null or not p_accept_null;
     
     if l_perform_check then
@@ -947,41 +941,13 @@ as
       when C_TYPE_INTEGER then
         l_result := regexp_like(p_value, C_INTEGER_REGEXP);
       when C_TYPE_NUMBER then
-        begin
-          l_format_mask := coalesce(l_format_mask, '999999999999999999D999999999');
-          l_number := to_number(p_value, l_format_mask);
-        exception
-          when others then
-            l_result := false;
-        end;
+        l_result := pit_util.check_number_datatype(p_value, p_format_mask);
       when C_TYPE_DATE then
-        begin
-          l_format_mask := coalesce(l_format_mask, sys_context('USERENV', 'NLS_DATE_FORMAT'));
-          l_date := to_date(p_value, p_format_mask);
-        exception
-          when others then
-            l_result := false;
-        end;
+        l_result := pit_util.check_date_datatype(p_value, p_format_mask);
       when C_TYPE_TIMESTAMP then
-        begin
-          if l_format_mask is null then
-            select value
-              into l_format_mask
-              from v$nls_parameters
-             where parameter = 'NLS_TIMESTAMP_FORMAT';
-          end if;
-          l_timestamp := to_timestamp(p_value, l_format_mask);
-        exception
-          when others then
-            l_result := false;
-        end;
+        l_result := pit_util.check_timestamp_datatype(p_value, p_format_mask);
       when C_TYPE_XML then
-        begin
-          l_xml := xmltype(p_value);
-        exception
-          when others then
-            l_result := false;
-        end;
+        l_result := pit_util.check_xml_datatype(p_value);
       else
         null;
       end case;
@@ -1081,7 +1047,6 @@ as
     p_trace_timing in boolean default null,
     p_log_modules in varchar2 default null)
   as
-    l_settings pit_util.max_sql_char;
     l_required_context pit_util.ora_name_type;
     l_context_has_changed boolean;
   begin    

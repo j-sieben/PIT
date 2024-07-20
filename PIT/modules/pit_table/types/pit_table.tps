@@ -10,18 +10,25 @@ create or replace type pit_table under pit_module(
    */
   
   /** 
-    Procedure: log
-      See <PIT_MODULE.log>
+    Procedure: log_exception
+      See <PIT_MODULE.log_exception>
    */
-  overriding member procedure log(
+  overriding member procedure log_exception(
+    p_message in message_type),
+  
+  /** 
+    Procedure: panic
+      See <PIT_MODULE.panic>
+   */
+  overriding member procedure panic(
     p_message in message_type),
   
   
   /** 
-    Procedure: log
+    Procedure: log_state
       See <PIT_MODULE.log>
    */
-  overriding member procedure log(
+  overriding member procedure log_state(
     p_log_state in pit_log_state_type),
   
   /** 
@@ -41,10 +48,10 @@ create or replace type pit_table under pit_module(
   
   
   /** 
-    Procedure: purge
-      See <PIT_MODULE.purge>
+    Procedure: purge_log
+      See <PIT_MODULE.purge_log>
    */
-  overriding member procedure purge(
+  overriding member procedure purge_log(
     p_purge_date in date,
     p_severity_greater_equal in integer default null),
     

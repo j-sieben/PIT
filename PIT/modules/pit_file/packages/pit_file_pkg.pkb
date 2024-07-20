@@ -147,7 +147,13 @@ as
     l_indent := lpad(g_level_indicator, l_indent_length, g_level_indicator);
     
     -- Timing
+    $IF dbms_db_version.ver_le_19 $THEN
     if p_call_stack.trace_timing = pit_util.C_TRUE then
+    $ELSIF dbms_db_version.ver_le_19 $THEN
+    if p_call_stack.trace_timing = pit_util.C_TRUE then
+    $ELSE
+    if p_call_stack.trace_timing then
+    $END
       l_timing := ' [wc=' || to_char(p_call_stack.wall_clock) ||
                   '; e=' || to_char(p_call_stack.elapsed) ||
                   '; e_cpu=' || to_char(p_call_stack.elapsed_cpu) ||
@@ -164,10 +170,11 @@ as
     Group: Interface
    */
   /**
-    Procedure: log
-      see <pit_file_pkg.log>
+    Procedure: log_exception
+      see <pit_file_pkg.log_exception>
    */
-  procedure log(
+  procedure log_exception(
+    self in out nocopy pit_file,
     p_message in message_type)
   as
   begin
@@ -176,15 +183,33 @@ as
       write_to_file(p_message.stack);
       write_to_file(p_message.backtrace);
     end if;
-  end log;
+  end log_exception;
   
   
   /**
-    Procedure: log
-      see <pit_file_pkg.log>
+    Procedure: panic
+      see <pit_file_pkg.panic>
    */
-  procedure log(
-    p_params in msg_params)
+  procedure panic(
+    self in out nocopy pit_file,
+    p_message in message_type)
+  as
+  begin
+    write_to_file(replace(g_message_template, '#MESSAGE#', p_message.message_text));
+    if p_message.backtrace is not null then
+      write_to_file(p_message.stack);
+      write_to_file(p_message.backtrace);
+    end if;
+  end panic;
+  
+  
+  /**
+    Procedure: log_state
+      see <pit_file_pkg.log_state>
+   */
+  procedure log_state(
+    self in out nocopy pit_file,
+    p_log_state in pit_log_state_type)
   as
     l_position pls_integer;
     l_state_start pit_util.max_sql_char;
@@ -193,25 +218,28 @@ as
     C_ANCHOR constant pit_util.small_char := '#STATE#';
     C_PREFIX constant pit_util.small_char := '-  ';
   begin
-    if p_params.count > 0 then
+    if p_log_state.params.count > 0 then
       l_position := instr(g_state_template, C_ANCHOR);
       l_state_start := substr(g_state_template, 1, l_position - 1);
       l_state_end := substr(g_state_template, l_position + length(C_ANCHOR));
           
       write_to_file(l_state_start);
-      for i in 1 .. p_params.count loop
-        write_to_file(C_PREFIX || p_params(i).p_param || ': ' || p_params(i).p_value || C_CR);
+      for i in 1 .. p_log_state.params.count loop
+        write_to_file(C_PREFIX || p_log_state.params(i).p_param || ': ' || p_log_state.params(i).p_value || C_CR);
       end loop;
       write_to_file(l_state_end);
     end if;
-  end log;
+  end log_state;
   
   
   /**
-    Procedure: purge
-      see <pit_file_pkg.purge>
+    Procedure: purge_log
+      see <pit_file_pkg.purge_log>
    */
-  procedure purge
+  procedure purge_log(
+    self in out nocopy pit_file,
+    p_purge_date in date,
+    p_severity_greater_equal in integer default null)
   as
   begin
     close_file;
@@ -219,7 +247,7 @@ as
     write_to_file('');
     close_file;
     open_file(C_WRITE_APPEND);
-  end purge;
+  end purge_log;
   
   
   /**
@@ -227,6 +255,7 @@ as
       see <pit_file_pkg.enter>
    */
   procedure enter(
+    self in out nocopy pit_file,
     p_call_stack in pit_call_stack_type)
   as
   begin
@@ -239,6 +268,7 @@ as
       see <pit_file_pkg.leave>
    */
   procedure leave(
+    self in out nocopy pit_file,
     p_call_stack in pit_call_stack_type)
   as
   begin
@@ -263,7 +293,6 @@ as
   exception
     when others then
       -- DO NOT throw an error, because in initialization phase!
-      self.fire_threshold := pit.level_off;
       self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack := substr(sqlerrm, 12);
   end initialize_module;

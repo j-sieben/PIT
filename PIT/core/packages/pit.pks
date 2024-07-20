@@ -19,7 +19,6 @@ as
     Constants: Trace and log level constants
       Constants are implemented as functions to allow for accesss from SQL.
       
-      LEVEL_OFF - Log severity to switch logging off
       LEVEL_FATAL - Log severity of fatal errors
       LEVEL_SEVERE - Log severity of severe errors
       LEVEL_ERROR - Log severity of "normal" errors
@@ -32,7 +31,6 @@ as
       TRACE_OPTIONAL - Trace level for package internal procedure calls
       
    */
-  function level_off return binary_integer deterministic;
   function level_fatal return binary_integer deterministic;
   function level_severe return binary_integer deterministic;
   function level_error return binary_integer deterministic;
@@ -155,7 +153,7 @@ as
     
     
   /** 
-    Procedure: verbose
+    Procedure: raise_verbose
       Captures debug information, level <level_verbose>
       
       Call this procedure to emit debug messages. Normal usage
@@ -168,7 +166,7 @@ as
       p_affected_id - Optional id of an item a message relates to
       p_affected_ids - Optional list of parameters a message relates to
    */  
-  procedure verbose(
+  procedure raise_verbose(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -176,7 +174,7 @@ as
     
     
   /** 
-    Procedure: debug
+    Procedure: raise_debug
       Captures debug information, level <level_debug>
       
       Call this procedure to emit debug messages. Normal usage
@@ -189,7 +187,7 @@ as
       p_affected_id - Optional id of an item a message relates to
       p_affected_ids - Optional list of parameters a message relates to
    */  
-  procedure debug(
+  procedure raise_debug(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -197,7 +195,7 @@ as
     
     
   /** 
-    Procedure: info
+    Procedure: raise_info
       Captures debug information, level <level_info>
       
       Call this procedure to emit info messages. Normal usage
@@ -211,16 +209,18 @@ as
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
       p_affected_ids - Optional list of parameters a message relates to
+      p_error_code -  Optional error code, usable by external applications
    */  
-  procedure info(
+  procedure raise_info(
     p_message_name in varchar2,
     p_msg_args msg_args default null,
     p_affected_id in varchar2 default null,
-    p_affected_ids in msg_params default null);
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null);
     
     
   /** 
-    Procedure: warn
+    Procedure: raise_warn
       Captures debug information, level <level_warn>
       
       Call this procedure to emit warning messages. Normal usage
@@ -232,16 +232,18 @@ as
       p_msg_args - Optional list of replacement information
       p_affected_id - Optional id of an item a message relates to
       p_affected_ids - Optional list of parameters a message relates to
+      p_error_code -  Optional error code, usable by external applications
    */  
-  procedure warn(
+  procedure raise_warn(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
-    p_affected_ids in msg_params default null);
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null);
     
     
   /** 
-    Procedure: error
+    Procedure: raise_error
       Captures debug information, level <level_error>
       
       Call this procedure to emit error messages. Normal usage
@@ -255,7 +257,7 @@ as
       p_affected_ids - Optional list of parameters a message relates to
       p_error_code -  Optional error code, usable by external applications
    */
-  procedure error(
+  procedure raise_error(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -264,7 +266,29 @@ as
     
     
   /** 
-    Procedure: fatal
+    Procedure: raise_severe
+      Captures debug information, level <level_severe>
+      
+      Call this procedure to emit fatal error messages. Normal usage
+      is to report errors which cause the application to abort operation.
+      
+    Parametes:
+      p_message_name - Name of the message. Reference to package <MSG>
+      p_msg_args - Optional list of replacement information
+      p_affected_id - Optional id of an item a message relates to
+      p_affected_ids - Optional list of parameters a message relates to
+      p_error_code -  Optional error code, usable by external applications
+   */
+  procedure raise_severe(
+    p_message_name in varchar2,
+    p_msg_args in msg_args default null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null);
+    
+    
+  /** 
+    Procedure: raise_fatal
       Captures debug information, level <level_fatal>
       
       Call this procedure to emit fatal error messages. Normal usage
@@ -277,7 +301,7 @@ as
       p_affected_ids - Optional list of parameters a message relates to
       p_error_code -  Optional error code, usable by external applications
    */
-  procedure fatal(
+  procedure raise_fatal(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -338,36 +362,6 @@ as
   procedure log_state(
     p_params msg_params,
     p_severity in binary_integer default null);
-    
-    
-  /** 
-    Procedure: sql_exception
-      Exception handler that handles an error and calls leave
-      
-      Call this procedure in EXCEPTION handlers of your code.
-      <csql_exception> not only reports the error but handles it as well.
-      This means that if you pass any error that occurred to this
-      procedure, the error gets logged and handled.
-      
-      <sql_exception> includes a call to <leave>, so there is no need to call <leave> explicitly.
-    Parameters:
-      p_message_name - Name of the message. Reference to package <MSG>
-      p_msg_args - Optional list of replacement information
-      p_affected_id - Optional id of an item a message relates to
-      p_affected_ids - Optional list of parameters a message relates to
-      p_error_code - Optional error code, usable by external applications
-      p_params - Instance of <msg_params> with a list of key-value pairs representing parameter name and -value.
-   
-    Deprecated:: Use pit.handle_exception instead
-   */
-  procedure sql_exception(
-    p_message_name in varchar2 default null,
-    p_msg_args in msg_args default null,
-    p_affected_id in varchar2 default null,
-    p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_params in msg_params default null);
-  pragma deprecate (sql_exception, 'Method sql_exception is deprecated, use handle_exception instead.');
     
     
   /** 
@@ -476,8 +470,7 @@ as
   
   /**
     Group: Tracing methods 
-   */
-  
+   */  
   /** 
     Procedure: enter_mandatory
       Traces entering a method, level <trace_mandatory>
@@ -1220,149 +1213,8 @@ as
   
   
   /**
-    Group: Control methods
+    Group: Collect mode control
    */
-  
-  /** 
-    Procedure: purge_log
-      Purges the message log. Overload to define <P_DATE_BEFORE> as date.
-      
-      Call this procedure to clean up logging information. Only useful if your output modules support
-      purging of log information, such as <PIT_TABLE> output module.
-      
-    Parameters:
-      p_date_until - Date to indicate up to when the log should be purged.
-      p_severity_lower_equal - Optional severity level that controls which severity of messages shall be purged.
-                               Includes a message with a severity passed in and greater.
-   */
-  procedure purge_log(
-    p_date_before in date,
-    p_severity_lower_equal in number default null);
-    
-    
-  /** 
-    Procedure: purge_log
-      Purges the message log. Overload to define <P_DAYS_BEFORE> as number of days in the past.
-   */
-  procedure purge_log(
-    p_days_before in number,
-    p_severity_lower_equal in number default null);
-  
-  
-  /** 
-    Procedure: purge_session_log
-      Purges session related message log.
-      
-      Call this procedure to clean up logging information. Only useful if your output modules support
-      purging of log information, such as <PIT_TABLE> output module.
-      
-    Parameter:
-      p_session_id - Optional session_id. If null, the active session is purged.
-   */
-  procedure purge_session_log(
-    p_session_id in varchar2 default null);
-  
-  
-  /** 
-    Procedure: set_context
-      Sets the trace context for the active session. Overloaded to directly set the context components.
-      
-      Call this procedure to dynamically change the debug settings to allow for dynamic debugging from within an application.
-      
-      Normal usage is to specify that the active session only should be logged and/or traced. Set the options you wish and immediately
-      these settings apply. To reset logging to the default call <reset_context>
-      
-    Parameters:
-      p_log_level - Requested log level
-      p_trace_level - Requested stack level
-      p_timing_on - Flag to indicate whehter timing information should be captured.
-      p_log_modules - Colon-separated list of output modules to be used.
-   */
-  procedure set_context(
-    p_log_level in integer,
-    p_trace_level in integer,
-    p_trace_timing in boolean,
-    p_log_modules in varchar2);
-  
-  
-  /** 
-    Procedure: set_context
-      Sets the trace context for the active session. Overloaded to directly set the context by means of a named context.
-      
-      Call this procedure to set the active context to a predefined context. Contexts are defined as parameters 
-      with the name pattern
-      
-      --- SQL
-      CONTEXT_<Name> 
-      ---
-      
-      and a string value according to this pattern:
-      
-      --- SQL
-      [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
-      ---
-      
-      Example:
-      
-      --- SQL
-      CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
-      ---
-      
-    Parameter:
-      p_context_name - Name of the context to swithc to.
-   */
-  procedure set_context(
-    p_context_name in varchar2);
-    
-    
-  /* 
-    Procedure: set_context_value
-      Method to set a context value eplicitly.
-      
-      Is used to persist arbitrary values at the context. This allows for maintaining information such as
-      a test flag in a cross session aware manner. Setting an attribute to NULL eliminates this attribute from the context.
-      
-    Parameters:
-      p_name - Name of the attribute to set
-      p_value - Value to set, VARCHAR2 up to 4000 bytes.
-   */
- procedure set_context_value(
-   p_name in varchar2,
-   p_value in varchar2);
-  
-  
-  /* 
-    Function: get_context_value
-      Method to get a context value eplicitly.
-      
-      Is used to retrieves sert values from the context. This allows for maintaining
-      information such as a test flag in a cross session aware manner.
-      
-    Parameters:
-      p_name - Name of the attribute to get
-      
-    Returns:
-      Value of the attribute <P_NAME>
-   */
-  function get_context_value(
-    p_name in varchar2)
-    return varchar2;
-    
-  
-  /** 
-    Procedure: reset_context
-      Resets the trace context for the active session to the default values.
-      
-      If <p_active_session_only> is true, other settings remain unchanged. If false, any active context 
-      cross session is set back to default. This option is useful to clean up any unwanted debugging.
-      
-    Parameter:
-      p_active_session_only Flag to indicate whether the active session should be reset only. Defaults to TRUE.
-   */
-  procedure reset_context(
-    p_active_session_only in boolean default true);
-    
-  
   /** 
     Procedure: start_message_collection
       Switches PIT collection mode on
@@ -1490,6 +1342,151 @@ as
   function get_message_collection
     return pit_message_table;
   
+  
+  /**
+    Group: Context control
+   */
+  /** 
+    Procedure: set_context
+      Sets the trace context for the active session. Overloaded to directly set the context components.
+      
+      Call this procedure to dynamically change the debug settings to allow for dynamic debugging from within an application.
+      
+      Normal usage is to specify that the active session only should be logged and/or traced. Set the options you wish and immediately
+      these settings apply. To reset logging to the default call <reset_context>
+      
+    Parameters:
+      p_log_level - Requested log level
+      p_trace_level - Requested stack level
+      p_timing_on - Flag to indicate whehter timing information should be captured.
+      p_log_modules - Colon-separated list of output modules to be used.
+   */
+  procedure set_context(
+    p_log_level in integer,
+    p_trace_level in integer,
+    p_trace_timing in boolean,
+    p_log_modules in varchar2);
+  
+  
+  /** 
+    Procedure: set_context
+      Sets the trace context for the active session. Overloaded to directly set the context by means of a named context.
+      
+      Call this procedure to set the active context to a predefined context. Contexts are defined as parameters 
+      with the name pattern
+      
+      --- SQL
+      CONTEXT_<Name> 
+      ---
+      
+      and a string value according to this pattern:
+      
+      --- SQL
+      [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST],
+      ---
+      
+      Example:
+      
+      --- SQL
+      CONTEXT_FULL = '70|70|Y|PIT_CONSOLE:PIT_FILE'
+      ---
+      
+    Parameter:
+      p_context_name - Name of the context to swithc to.
+   */
+  procedure set_context(
+    p_context_name in varchar2);
+    
+    
+  /* 
+    Procedure: set_context_value
+      Method to set a context value eplicitly.
+      
+      Is used to persist arbitrary values at the context. This allows for maintaining information such as
+      a test flag in a cross session aware manner. Setting an attribute to NULL eliminates this attribute from the context.
+      
+    Parameters:
+      p_name - Name of the attribute to set
+      p_value - Value to set, VARCHAR2 up to 4000 bytes.
+   */
+ procedure set_context_value(
+   p_name in varchar2,
+   p_value in varchar2);
+  
+  
+  /* 
+    Function: get_context_value
+      Method to get a context value eplicitly.
+      
+      Is used to retrieves sert values from the context. This allows for maintaining
+      information such as a test flag in a cross session aware manner.
+      
+    Parameters:
+      p_name - Name of the attribute to get
+      
+    Returns:
+      Value of the attribute <P_NAME>
+   */
+  function get_context_value(
+    p_name in varchar2)
+    return varchar2;
+    
+  
+  /** 
+    Procedure: reset_context
+      Resets the trace context for the active session to the default values.
+      
+      If <p_active_session_only> is true, other settings remain unchanged. If false, any active context 
+      cross session is set back to default. This option is useful to clean up any unwanted debugging.
+      
+    Parameter:
+      p_active_session_only Flag to indicate whether the active session should be reset only. Defaults to TRUE.
+   */
+  procedure reset_context(
+    p_active_session_only in boolean default true);
+    
+  
+  /**
+    Group: Control methods
+   */  
+  /** 
+    Procedure: purge_log
+      Purges the message log. Overload to define <P_DATE_BEFORE> as date.
+      
+      Call this procedure to clean up logging information. Only useful if your output modules support
+      purging of log information, such as <PIT_TABLE> output module.
+      
+    Parameters:
+      p_date_until - Date to indicate up to when the log should be purged.
+      p_severity_lower_equal - Optional severity level that controls which severity of messages shall be purged.
+                               Includes a message with a severity passed in and greater.
+   */
+  procedure purge_log(
+    p_date_before in date,
+    p_severity_lower_equal in number default null);
+    
+    
+  /** 
+    Procedure: purge_log
+      Purges the message log. Overload to define <P_DAYS_BEFORE> as number of days in the past.
+   */
+  procedure purge_log(
+    p_days_before in number,
+    p_severity_lower_equal in number default null);
+  
+  
+  /** 
+    Procedure: purge_session_log
+      Purges session related message log.
+      
+      Call this procedure to clean up logging information. Only useful if your output modules support
+      purging of log information, such as <PIT_TABLE> output module.
+      
+    Parameter:
+      p_session_id - Optional session_id. If null, the active session is purged.
+   */
+  procedure purge_session_log(
+    p_session_id in varchar2 default null);
   
   /** 
     Function: get_modules

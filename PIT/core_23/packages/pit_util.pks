@@ -18,6 +18,7 @@ as
     Types: PL/SQL subtypes
       c_max_length - Maximum length of strings
       ora_name_type - Name of an Oracle object. 30 byte up to version 11, 128 byte afterwards
+      boolean - Boolean flag. Type is defined upon installation of PIT. Must be "SQL savvy"
       max_char - 32 KByte Varchar2
       max_sql_char - Maximium SQL VARCHAR2 legnth. As extended char length is stored as a length delimited CLOB,
                      MAX_SQL_CHAR is still set to 4000 byte. Use CLOB otherwise
@@ -86,13 +87,14 @@ as
     Constants: Common constants
       Some constants are implemented as functions to allow access from SQL
       
+      true - Boolean flag TRUE, <boolean>
+      false - Boolean flag FALSE, <boolean>
       C_DEFAULT_LANGUAGE - Oracle name of the default language. Is defined during installation of PIT
       C_DEFAULT_CONTEXT - Name of the default context
       C_ACTIVE_CONTEXT - Name of the active context
       C_PARAMETER_GROUP - Name of the PIT parameter group
    */
-    
-  C_DEFAULT_LANGUAGE constant ora_name_type := '&DEFAULT_LANGUAGE.';
+  C_DEFAULT_LANGUAGE constant ora_name_type := 'GERMAN';
   C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
   C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';
   C_DEFAULT_CONTEXT constant ora_name_type := C_CONTEXT_PREFIX || 'DEFAULT';
@@ -385,6 +387,73 @@ as
       Called internally when recreating <MSG> package to recompile packages with dependencies on <MSG>
    */
   procedure recompile_invalid_objects;
+  
+  
+  /**
+    Function: check_number_datatype
+      Method to check whether P_VALUE is of type NUMBER
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to NUMBER, FALSE otherwise
+   */
+  function check_number_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+  
+  
+  /**
+    Function: check_date_datatype
+      Method to check whether P_VALUE is of type DATE
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to DATE, FALSE otherwise
+   */
+  function check_date_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+  
+  
+  /**
+    Function: check_timestamp_datatype
+      Method to check whether P_VALUE is of type TIMESTAMP
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to TIMESTAMP, FALSE otherwise
+   */
+  function check_timestamp_datatype(
+    p_value in varchar2,
+    p_format_mask in varchar2)
+    return boolean;
+  
+  
+  /**
+    Function: check_xml_datatype
+      Method to check whether P_VALUE is of type XML
+      
+    Parameters:
+      p_value - Value to check
+      p_format_mask - Optional format mask. If NULL, a default format mask is used.
+      
+    Returns:
+      TRUE, if P_VALUE can be casted to XML, FALSE otherwise
+   */
+  function check_xml_datatype(
+    p_value in varchar2)
+    return boolean;
   
 end pit_util;
 /

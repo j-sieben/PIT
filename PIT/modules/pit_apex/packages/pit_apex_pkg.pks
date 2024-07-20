@@ -1,5 +1,6 @@
 create or replace package pit_apex_pkg
   authid definer
+  accessible by (type PIT_APEX, type PIT_APEX_ADAPTER)
 as
 
   /**

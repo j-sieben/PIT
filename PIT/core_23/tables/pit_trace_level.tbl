@@ -1,8 +1,8 @@
 create table pit_trace_level(
   ptl_id number,
   ptl_name &ORA_NAME_TYPE.,
-  ptl_pti_id &ORA_NAME_TYPE.,
-  ptl_pti_pmg_id &ORA_NAME_TYPE. default on null for insert and update 'PIT' constraint ptl_tpi_pmg_id_chk check(ptl_tpi_pmg_id = 'PIT'),
+  ptl_pti_id varchar2(50 char),
+  ptl_pti_pmg_id varchar2(50 char) default on null 'PIT',
   constraint pit_trace_level_pk primary key(ptl_name),
   constraint fk_ptl_pti_id foreign key(ptl_pti_id, ptl_pti_pmg_id)
     references pit_translatable_item(pti_uid, pti_upmg)

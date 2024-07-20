@@ -69,6 +69,7 @@ prompt &h2.Create CORE package declarations
 @&tools.install_package_spec pit_context
 @&tools.install_package_spec pit_call_stack
 @&tools.install_package_spec pit_internal
+@&tools.install_package_spec pit_notification_util
 
 prompt &s1.Create global context
 @&tools.run_script create_global_context
@@ -86,3 +87,5 @@ prompt &h2.Create CORE package implementations
 @&tools.install_package_body pit
 @&tools.install_package_body pit_call_stack
 @&tools.install_package_body pit_context
+@&tools.install_package_body pit_internal
+@&tools.install_package_body pit_notification_util

@@ -5,11 +5,20 @@ set feedback off
 set lines 120
 set pages 9999
 
-whenever sqlerror continue
-alter session set plsql_implicit_conversion_bool = true;
-
 whenever sqlerror exit
 set termout off
+
+begin
+  $IF dbms_db_version.ver_le_19 $THEN
+  null;
+  $ELSIF dbms_db_version.ver_le_21 $THEN
+  null;
+  $ELSE
+  execute immediate 'alter session set plsql_implicit_conversion_bool = true';
+  $END
+end;
+/
+
 
 -- Check default language
 col default_language new_val DEFAULT_LANGUAGE format a128

@@ -11,22 +11,17 @@ as
   
   
   /******************************* INTERFACE ************************************/
-  
   procedure initialize
   as
   begin
     pit_internal.initialize_pit;
   end initialize;
   
-  
-  function level_off
   function level_fatal
   return binary_integer
    deterministic
   as
   begin
-    return pit_internal.C_LEVEL_OFF;
-  end level_off;
     return pit_internal.C_LEVEL_FATAL;
   end level_fatal;
   
@@ -251,7 +246,7 @@ as
   end tweet;
   
     
-  procedure verbose(
+  procedure raise_verbose(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -259,15 +254,15 @@ as
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_internal.log_event(level_all, p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
+    pit_internal.log_event(pit_internal.C_LEVEL_ALL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
     $END
-  end verbose;
+  end raise_verbose;
 
 
-  procedure debug(
+  procedure raise_debug(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -275,47 +270,49 @@ as
   as
   begin
     $IF pit_admin.c_level_le_debug $THEN
-    pit_internal.log_event(level_debug, p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
+    pit_internal.log_event(pit_internal.C_LEVEL_DEBUG, p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
     $END
-  end debug;
+  end raise_debug;
 
 
-  procedure info(
+  procedure raise_info(
     p_message_name in varchar2,
     p_msg_args msg_args default null,
     p_affected_id in varchar2 default null,
-    p_affected_ids in msg_params default null)
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null)
   as
   begin
     $IF pit_admin.c_level_le_info $THEN
-    pit_internal.log_event(level_info, p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
+    pit_internal.log_event(pit_internal.C_LEVEL_INFO, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
     $END
-  end info;
+  end raise_info;
 
 
-  procedure warn(
+  procedure raise_warn(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
-    p_affected_ids in msg_params default null)
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null)
   as
   begin
     $IF pit_admin.c_level_le_warn $THEN
-    pit_internal.log_event(level_warn, p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
+    pit_internal.log_event(pit_internal.C_LEVEL_WARN, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     $ELSE
     -- Logging disallowed by conditional compilation
     null;
     $END
-  end warn;
+  end raise_warn;
 
 
-  procedure error(
+  procedure raise_error(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -323,11 +320,11 @@ as
     p_error_code in varchar2 default null)
   as
   begin
-    pit_internal.raise_error(level_error, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
-  end error;
+    pit_internal.raise_error(pit_internal.C_LEVEL_ERROR, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+  end raise_error;
 
 
-  procedure fatal(
+  procedure raise_severe(
     p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
@@ -335,21 +332,20 @@ as
     p_error_code in varchar2 default null)
   as
   begin
-    pit_internal.raise_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
-  end fatal;
-  
+    pit_internal.raise_error(pit_internal.C_LEVEL_SEVERE, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+  end raise_severe;
 
-  procedure sql_exception(
-    p_message_name in varchar2 default null,
+
+  procedure raise_fatal(
+    p_message_name in varchar2,
     p_msg_args in msg_args default null,
     p_affected_id in varchar2 default null,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2 default null,
-    p_params in msg_params default null)
+    p_error_code in varchar2 default null)
   as
   begin
-    pit_internal.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
-  end sql_exception;
+    pit_internal.raise_error(pit_internal.C_LEVEL_FATAL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+  end raise_fatal;
   
 
   procedure handle_validation
@@ -368,7 +364,7 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_internal.handle_error(level_error, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
+    pit_internal.handle_error(pit_internal.c_level_error, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
   end handle_exception;
 
 
@@ -381,15 +377,8 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_internal.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
+    pit_internal.handle_error(pit_internal.c_level_fatal, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
   end stop;
-  
-
-  procedure handle_panic
-  as
-  begin
-    pit_internal.handle_panic;
-  end handle_panic;
 
 
   procedure reraise_exception(
@@ -401,8 +390,15 @@ as
     p_params in msg_params default null)
   as
   begin
-    pit_internal.handle_error(level_fatal, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
+    pit_internal.handle_error(pit_internal.c_level_fatal, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, p_params);
   end reraise_exception;
+  
+
+  procedure handle_panic
+  as
+  begin
+    pit_internal.handle_panic;
+  end handle_panic;
   
   
   /****************************** TRACING *********************************/

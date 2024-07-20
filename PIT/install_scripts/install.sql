@@ -47,8 +47,8 @@ prompt &section.
 prompt &h1.Installing PIT output modules
 @modules/pit_console/install.sql
 @modules/pit_table/install.sql
-@&tools.check_has_apex modules/pit_apex/install.sql
-@modules/pit_file&FOLDER_EXTENSION./install.sql
+@&tools.check_has_apex modules/pit_apex/install
+@modules/pit_file/install.sql
 -- PIT_MAIL may be installed after installing UTL_TEXT
 -- Please use this script with the given information
 --@pit_install_module pit_mail

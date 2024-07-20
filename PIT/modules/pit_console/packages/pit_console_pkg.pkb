@@ -123,7 +123,13 @@ as
     end if;
 
     -- Timing
+    $IF dbms_db_version.ver_le_19 $THEN
     if p_call_stack.trace_timing = pit_util.C_TRUE then
+    $ELSIF dbms_db_version.ver_le_19 $THEN
+    if p_call_stack.trace_timing = pit_util.C_TRUE then
+    $ELSE
+    if p_call_stack.trace_timing then
+    $END
       l_timing := ' [wc=' || to_char(p_call_stack.wall_clock) ||
                   '; e=' || to_char(p_call_stack.elapsed) ||
                   '; e_cpu=' || to_char(p_call_stack.elapsed_cpu) ||

@@ -12,8 +12,8 @@ as
       Published under MIT licence
    */
    
-  C_LEVEL_OFF constant pls_integer := 10;
-  C_LEVEL_FATAL constant pls_integer := 20;
+  C_LEVEL_FATAL constant pls_integer := 10;
+  C_LEVEL_SEVERE constant pls_integer := 20;
   C_LEVEL_ERROR constant pls_integer := 30;
   C_LEVEL_WARN constant pls_integer := 40;
   C_LEVEL_INFO constant pls_integer := 50;

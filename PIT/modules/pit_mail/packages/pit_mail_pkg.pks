@@ -1,5 +1,6 @@
 create or replace package pit_mail_pkg
   authid definer
+  accessible by (type PIT_MAIL)
 as
 
   /**
@@ -22,9 +23,10 @@ as
       different schedules easily by copying this method.
    */
   procedure send_daily;
+  
     
   /** 
-    Procedure: log
+    Procedure: log_exception
       Method to send log information per mail.
   
       The implementation ignores anything including than or milder than <EVEL_WARNING>.
@@ -34,12 +36,27 @@ as
     Parameters:
       p_message - Instance of <MESSAGE_TYPE>
    */
-  procedure log (
+  procedure log_exception(
+    p_message in message_type);
+    
+    
+  /** 
+    Procedure: panic
+      Method to send panic error information per mail.
+  
+      The implementation ignores anything including than or milder than <EVEL_WARNING>.
+      Fatal messages get sent by mail directly, whereas errors will be persisted 
+      in a table to be sent to the administrator based on a database job.
+      
+    Parameters:
+      p_message - Instance of <MESSAGE_TYPE>
+   */
+  procedure panic(
     p_message in message_type);
   
   
   /**
-    Procedure: purge
+    Procedure: purge_log
       Method to purge log information from table <PIT_MAIL_QUEUE> 
       according to the filter set by <P_DATE_UNTIL> and <P_SEVERITY_GREATER_EQUAL>.
       
@@ -47,7 +64,7 @@ as
       p_date_until - Date up to which the log entries are to be deleted
       p_severity_greater_equal - Optional severity up to which the log entries are to be deleted
    */
-  procedure purge(
+  procedure purge_log(
     p_date_until in date,
     p_severity_greater_equal in number default null);
 

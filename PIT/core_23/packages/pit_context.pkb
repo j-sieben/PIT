@@ -47,14 +47,15 @@ as
    */
   /**
     Variables: Context related variables
-      g_client_id - ID of the actually connected client, is necessary for the context to work
+      g_client_id - ID of the actually connected client, if necessary for the context to work
       g_context_list - List of avaialable contexts. Is initialized with all existing context upon first usage
       g_local_context - Locale memory structure used as a replacement for a globally accessed context if this does not exist
       g_toggle_list - List of avaialable toggles. Is initialized with the requested context upon first usage
-      g_context - Context instance actually in use
+      g_context - Context instance catually in use
       g_all_modules - List of all output modules that are installed
       g_available_modules - List of all modules which are available for logging (meaning: status = msg.MODULE_INSTANTIATED)
       g_active_modules - List of all modules which are available and actually registered for logging
+      g_warn_if_unusable_modules - Flag to indicate whether output modules which couldn't be instantiated should be reported
    */
   g_client_id pit_util.ora_name_type;
   g_context_list context_list_tab;
@@ -63,6 +64,7 @@ as
   g_all_modules pit_module_tab;
   g_available_modules pit_module_tab;
   g_active_modules pit_module_tab;
+  g_warn_if_unusable_modules boolean;
   
 
   /**
@@ -79,9 +81,10 @@ as
   procedure load_modules
   as
     cursor installed_modules_cur is
-      select /*+ result_chache*/ type_name
-        from user_types
-       where supertype_name = C_BASE_MODULE;
+      select type_name
+        from all_types
+       where supertype_name = C_BASE_MODULE
+         and owner = C_PACKAGE_OWNER;
     C_STMT_TEMPLATE constant pit_util.small_char := 'begin :i := new #MODULE#(); end;';
     l_stmt pit_util.small_char;
     l_module_instance pit_module;
@@ -258,41 +261,48 @@ as
   as
     l_context_has_changed boolean;
   begin
-    -- instantiate required collections
-    g_context := pit_context_type();
-    g_context.log_modules := pit_args();
-    g_local_context.delete;
-    g_all_modules.delete;
-    g_available_modules.delete;
-    g_active_modules.delete;
-    g_context_list.delete;
-    
-    -- First, load all available output modules, contexts and toggles
-    load_modules;
-    read_context_list;
-    
-    -- Set default context or take it from global context
-    set_context(
-      p_context => null, -- if NULL, set context settings are taken from global context or from default
-      p_context_has_changed => l_context_has_changed);
-    
-    -- Add default context settings
-    g_context.allow_toggle := param.get_boolean(
-                                p_par_id => C_ALLOW_TOGGLE, 
-                                p_par_pgr_id => C_PARAM_GROUP);                          
-    
-    $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
-    -- Examine whether context settings mandates for client id information
-    if param.get_string(
-         p_par_id => C_CONTEXT_TYPE, 
-         p_par_pgr_id => C_CONTEXT_GROUP) not in (
-           utl_context.c_session,
-           utl_context.c_force_client_id,
-           utl_context.c_force_user_client_id)
-    then 
-      g_client_id := utl_context.c_no_value;
+    if g_available_modules.count = 0 then
+      -- instantiate required collections
+      g_context := pit_context_type();
+      g_context.log_modules := pit_args();
+      g_local_context.delete;
+      g_all_modules.delete;
+      g_available_modules.delete;
+      g_active_modules.delete;
+      g_context_list.delete;
+      
+      -- First, load all available output modules, contexts and toggles
+      load_modules;
+      read_context_list;
+      
+      -- Set default context or take it from global context
+      set_context(
+        p_context => null, -- if NULL, set context settings are taken from global context or from default
+        p_context_has_changed => l_context_has_changed);
+      
+      -- Add default context settings
+      g_context.allow_toggle := 
+        param.get_boolean(
+          p_par_id => C_ALLOW_TOGGLE, 
+          p_par_pgr_id => C_PARAM_GROUP);
+      g_warn_if_unusable_modules := 
+        param.get_boolean(
+          p_par_id => C_WARN_IF_UNUSABLE_MODULES, 
+          p_par_pgr_id => C_PARAM_GROUP);                                    
+      
+      $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
+      -- Examine whether context settings mandates for client id information
+      if param.get_string(
+           p_par_id => C_CONTEXT_TYPE, 
+           p_par_pgr_id => C_CONTEXT_GROUP) not in (
+             utl_context.c_session,
+             utl_context.c_force_client_id,
+             utl_context.c_force_user_client_id)
+      then 
+        g_client_id := utl_context.c_no_value;
+      end if;
+      $END
     end if;
-    $END
   end initialize;
   
   
@@ -379,7 +389,7 @@ as
    l_settings pit_util.max_sql_char;
    l_context pit_context_type;
   begin
-    l_settings := p_log_level || C_DELIMITER || p_trace_level || C_DELIMITER || p_trace_timing || C_DELIMITER || p_log_modules;
+    l_settings := p_log_level || C_DELIMITER || p_trace_level || C_DELIMITER || case when p_trace_timing then 'true' else 'false' end || C_DELIMITER || p_log_modules;
     l_context := pit_context_type(
                    p_context_name => C_CONTEXT_ACTIVE,
                    p_settings => l_settings);
@@ -514,7 +524,7 @@ as
   as
   begin
     read_active_context;
-    return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_SEVERE);
+    return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_ERROR);
   end log_me;
   
   
@@ -553,7 +563,7 @@ as
   return boolean
   as
   begin
-    return g_context.allow_toggle;
+    return g_context.trace_timing;
   end allows_toggle;
   
   
@@ -660,27 +670,6 @@ as
     return g_active_modules;
   end get_active_modules;
   
-  
-  /**
-    Function: get_active_module_list
-      See <PIT_INTERNAL.get_active_module_list>
-   */
-  function get_active_module_list
-  return varchar2
-  as
-    l_module pit_util.ora_name_type;
-    l_module_list pit_util.max_char;
-  begin
-    l_module := g_active_modules.FIRST;
-    l_module_list := l_module;
-    l_module := g_active_modules.NEXT(l_module);
-    while l_module is not null loop
-      l_module_list := l_module_list || ',' || l_module;
-      l_module := g_active_modules.NEXT(l_module);
-    end loop;
-    return l_module_list;
-  end get_active_module_list;
-  
   /**
     Function: report_module_status
       See <PIT_INTERNAL.report_module_status>
@@ -722,7 +711,7 @@ as
     if p_settings is null then
       raise_application_error(-20004, 'Settings missing');
     end if;
-    if p_settings not like '__|__|%|%' then      
+    if p_settings not like '__|__|_|%' then      
       raise_application_error(-20004, p_settings || ': Settings format invalid.');
     end if;
     
@@ -736,15 +725,8 @@ as
     if to_number(l_args(2)) not in (10, 20, 30, 40, 50) then
       raise invalid_trace_level;
     end if;
-    if l_args(3) not in (to_char(true), to_char(false)) then
-      raise invalid_trace_flag;
-    end if;
     if l_args(4) is not null then
-      if instr(l_args(4), ',') > 0 then
-        l_log_modules := pit_util.string_to_table(l_args(4), ',');
-      else
-        l_log_modules := pit_util.string_to_table(l_args(4));
-      end if;
+      l_log_modules := pit_util.string_to_table(l_args(4));
       for i in 1 .. l_log_modules.count loop
         if not g_all_modules.exists(l_log_modules(i)) then
           raise_application_error(-20003, 'Unknown log module ' || l_log_modules(i));

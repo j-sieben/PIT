@@ -43,7 +43,7 @@ as object(
     
   /** 
     Procedure: log_validation
-      Method is called as a areaction on validation outcomes. enables PIT
+      Method is called as a reaction on validation outcomes. enables PIT
       to react differently on validation messages in comparison to error messages.
       Is called from pit.handle_validation.
       

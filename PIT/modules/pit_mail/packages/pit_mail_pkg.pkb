@@ -237,10 +237,10 @@ as
   
   
   /**
-    Procedure: log
-      see <PIT_MAIL_PKG.log>
+    Procedure: log_exception
+      see <PIT_MAIL_PKG.log_exception>
    */
-  procedure log(
+  procedure log_exception(
     p_message in message_type)
   as
     l_message pit_util.max_char;
@@ -255,14 +255,30 @@ as
       insert into pit_mail_queue(pmq_id, pmq_pms_id, pmq_pse_id, pmq_message_text, pmq_log_date)
       values (p_message.id, p_message.message_name, p_message.severity, l_message, sysdate);
     end if;
-  end log;
+  end log_exception;
+  
+  
+  /**
+    Procedure: panic
+      see <PIT_MAIL_PKG.panic>
+   */
+  procedure panic(
+    p_message in message_type)
+  as
+    l_message pit_util.max_char;
+    l_attachment blob;
+  begin
+    l_message := prepare_message(p_message, 1, sysdate, sysdate);
+    prepare_mail(l_message, l_attachment);
+    send_mail(l_message, l_attachment);
+  end panic;
 
 
   /**
-    Procedure: purge
-      see <PIT_MAIL_PKG.purge>
+    Procedure: purge_log
+      see <PIT_MAIL_PKG.purge_log>
    */
-  procedure purge(
+  procedure purge_log(
     p_date_until in date,
     p_severity_greater_equal in number default null)
   as
@@ -271,7 +287,7 @@ as
      where pmq_log_date < p_date_until
        and pmq_pse_id >= coalesce(p_severity_greater_equal, 0)
        and pmq_is_processed = pit_util.C_TRUE;
-  end purge;
+  end purge_log;
   
   
   /**

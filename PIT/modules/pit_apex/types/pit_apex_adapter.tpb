@@ -23,9 +23,21 @@ as
   begin
     if apex_application.get_session_id is not null then
       self.environment := 'APEX';
+      $IF dbms_db_version.ver_le_19 $THEN
       self.status := pit_util.C_TRUE;
+      $ELSIF dbms_db_version.ver_le_19 $THEN
+      self.status := pit_util.C_TRUE;
+      $ELSE
+      self.status := true;
+      $END
     else
+      $IF dbms_db_version.ver_le_19 $THEN
       self.status := pit_util.C_FALSE;
+      $ELSIF dbms_db_version.ver_le_19 $THEN
+      self.status := pit_util.C_FALSE;
+      $ELSE
+      self.status := false;
+      $END
     end if;
     return;
   end pit_apex_adapter;
