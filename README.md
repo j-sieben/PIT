@@ -44,7 +44,7 @@ exception
   -- catch predefined Oracle errors as usual
   when NO_DATA_FOUND then
     -- but provide your own exception messages
-    pit.sql_exception(msg.NO_ITEMS_IN_STOCK);
+    pit.handle_exception(msg.NO_ITEMS_IN_STOCK);
   -- catch your own exceptions just the same way
   when msg.STEP_TWO_FAILED_ERR then
     -- log, re-raise your custom exception
@@ -94,6 +94,15 @@ From the list of use cases you can see that there is a requirement to be very fl
 When you think about these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, `PIT` allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a table and send them once a day and ignore all other messages.
 
 I strongly encourage you to create your own output module tailored to your logging needs. Perhaps you need a module that immediately creates a ticket in your ticket system in case of fatal errors or something similar. An own output module is the way to achieve this goal. If you want to familarize yourself with creating your own output module, you may want to continue reading [here](Doc/output_modules.md).
+
+Output modules implement a number of methods defined in an abstract super class `PIT_MODULE` from which all other output modules a derived. These are:
+
+-  `ENTER/LEAVE`: These methods are used to trace your code. They allow for parameters to be passed in and provide timing functionality and others
+-  `LOG_VALIDATION`: An output channel specifically for validation messages. These aren't written to the log tables normally, so this channel allows to implement a more lightweight information system.
+-  `LOG_EXCEPTION/PANIC`: Errors and exceptions are normally thrown using the `LOG_EXCEPTION` method. If an unexpected and unhandled error occurs, `PANIC` may be your last ressort. It is normally implemented to create tickets, terminate the application or similar.
+-  `NOTIFY`: This method is meant as a very lightweight information mechanism, e.g. for Websocket/ServerSentEvents methods.
+-  `TWEET`: Even easier to use is this method, as it accepts plain text and tweets it to all output modules. This is ideal for ad hoc-testing and should not remain in your code.
+-  `PURGE`: This method allows to purge log entries from an output module. As every output module may decide to use persistent storage for the messages or not, they may implement this method or not.
 
 ### Context
 
