@@ -26,11 +26,17 @@ If you utilize a `PIT` message more than once in a validation method, you may di
 
 As a consequence of this, the possible error codes the validation logic may throw should be documented, fi by using a method comment.
 
+Error codes serve a specific purpose even when looking into the opposite direction. As stated, you can use them to reuse the same `PIT` message for various validations, but you can use error codes to group together validations as well. As an example, you may
+want to check an IBAN number for a bank account. Chances are that you need several validations, leading to different errors. You check the length, the pattern, the checksum and even the content. If the length is incorrect, it does not make sense to run all
+the other validations, as they can run successfully anyway. What `PIT does now is that it collects all the error codes along with their worst severity so far. So if a warning has been raised and there is a validation that is to throw an error, it will be executed. If, on the other hand, a validation raised an error, no other validation for that same error code will be evaluated within this collect run. Sorting your validation from generic to specialized will assure a meaningful validation even in complex use cases.
+
+Note: There used to be a method calle `pit.has_no_bulk_errors` that could be used to decide whether additional validations have to be performed. This method no longer exists but is replaced by two new methods with an enhanced functionality: `pit.assert_is_ok` asserts that no error has been detected during this collect run. If you pass in a single error_code or a list of error codes (wrapped in a `char_table` object), this method will check whether there were errors only against the mentioned error codes. The second method, `pit.assert_is_not_ok` is just a logical conversion. Why would you need these methods? Imagine two date fields which form a date range. First, you want to check whether both dates are valid (they may have to be in the future or whatever else you require). If both date fields are valid, you need to check the date range they form. This validation does only make sense if both date fields are valid. So you could bind the validation to `pit.assert_is_ok(char_table('date_from', 'date_until')`. If you are not in collect mode, you would never get the point of checking the date range if one of the date fields were invalid.
+
 ## Mapping of UI elements to messages
 
 But there is another problem we need to solve. As the validation logic is part of the data schema, it should not have any knowledge about the details of the UI which is on a higher level. This means that the validation logic does not know any name or id of an input field where the information it validated came from. On the opposite, the UI logic should not have any knowledge about the implementation of the validation logic. So this boils down to the problem of how to match the messages which come back as a result of the validation to the input fields to show the right message at the right input field.
 
-The easiest way that came to mind is to provide a mapping table between the error codes returned from the validation logic and the UI field names on the UI level. On the UI side, this should be encapsulated into a helper method. This method expects an instance of type `CHAR_TABLE` containing a pair-wise mapping of the error code and the name of the input field the error code belongs to. The helper method can retrieves the message collection from `PIT` and matches the error codes from the validation logic with the UI field names and show the validation errors next to those fields. 
+The easiest way that came to mind is to provide a mapping table between the error codes returned from the validation logic and the UI field names on the UI level. On the UI side, this should be encapsulated into a helper method. This method expects an instance of type `char_table` containing a pair-wise mapping of the error code and the name of the input field the error code belongs to. The helper method can retrieves the message collection from `PIT` and matches the error codes from the validation logic with the UI field names and show the validation errors next to those fields. 
 
 Neither the validation logic nor the UI logic crosses any permitted boundaries, the knowledge stays where it belongs. The possible error codes are part of the validation methods interface and it is therefore acceptable to expect that the calling logic knows about this list of possible exceptions.
 
@@ -54,8 +60,8 @@ end;
 ```
 
 The helper method `my_ui_helper.handle_bulk_error` serves two purposes:
-- it grabs the message collection by calling `pit.get_message_collection;`. This is a table of `MESSAGE_TYPE`instances. 
-- it loops over this collection, reads and maps the error codes of any message within the collection to the `CHAR_TABLE` instance passed in as a parameter. 
+- it grabs the message collection by calling `pit.get_message_collection;`. This is a table of `message_type`instances. 
+- it loops over this collection, reads and maps the error codes of any message within the collection to the `char_table` instance passed in as a parameter. 
 
 If found, it shows the message text next to the page item. If not found, the helper method should show the message without reference to a page item.
 
@@ -63,9 +69,9 @@ If found, it shows the message text next to the page item. If not found, the hel
 
 To wrap things up, I'd like to describe the proper use of the `PIT` collect mode:
 
-1.  Implement your validation logic in a separate method within the XAPI (A transaction API). Implement your validation logic using `PIT.assert...` methods or by raising exceptions using the `PIT.error/fatal` methods.
+1.  Implement your validation logic in a separate method within the XAPI (A transaction API). Implement your validation logic using `pit.assert...` methods or by raising exceptions using the `pit.raise_error/raise_severe/raise_fatal` methods.
 2.  In your XAPI, prior to saving the data to database tables, call your validation logic in normal mode.
-3.  In your UI package dealing with the user data entries, enrich missing data, harmonize spelling issues, provide missing default values and the like and then call the validation logic in collect mode by wrapping the call of the validation logic with calls to `PIT.start_message_collection` and `PIT.stop_message_collection`. If validation errors occur, this will throw an exception you can catch.
+3.  In your UI package dealing with the user data entries, enrich missing data, harmonize spelling issues, provide missing default values and the like and then call the validation logic in collect mode by wrapping the call of the validation logic with calls to `pit.start_message_collection` and `pit.stop_message_collection`. If validation errors occur, this will throw an exception you can catch.
 4.  Handle exception `msg.PIT_BULK_FATAL_ERR` and `msg.PIT_BULK_ERROR_ERR` (exception pre- or postfix is based on your parameterization) and call your internal helper method to encapsulate the call to `PIT.get_message_collection` and map it to a list of matching »error codes to UI field«.
 
 An example of such a helper method can be found at my `UTL_APEX` helper package in method `handle_bulk_error` [here](https://github.com/j-sieben/UTL_APEX/blob/master/UTL_APEX/core/packages/utl_apex.pkb).
