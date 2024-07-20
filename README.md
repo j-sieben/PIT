@@ -22,6 +22,9 @@ Yet, `PIT` gives you
 The code is free to use and I hope that you'll enjoy doing so. Should any errors occur, 
 feel free to describe them here, I'll do my best to remove them.
 
+## Caveat
+This version of `PIT` has changed the interface in some respects to make it easier and more concise to use. Please read [Interface changes](Doc/interface_changes.md) for a full description of the changes. 
+
 ## Usage
 The use of `PIT` is straightforward. I took care to create a dense and short interface for working with `PIT`, as I know that nobody likes to write long package and method names, especially in code areas that you need repeatidly. On the other side, I provide enough explicit methods not to bother you with repeated parameters like severity of a message or similar. Here's a code snippet of a minimal usage of `PIT`:
 ```plsql
