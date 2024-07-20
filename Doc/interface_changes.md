@@ -13,9 +13,9 @@ One important change is related to error severities. We had a discussion at a pr
 to distinguish between expected errors and more severe, but also expected errors. I had an understanding that an error is an expected exception, whereas a fatal is an unexpected, techical error. I learnt that 
 there are very good arguments for the position of my colleagues. As I don't use the level `OFF` (errors are always logged and cannot be switched off), I decided to reorder the severities on the most severe end:
 
--  FATAL: This is the most severe error. It replaces OFF
--  SEVERE: A severe error where you can react to differently
--  ERROR: A "normal" error. From here on all severeties remain unchanged.
+-  `FATAL`: This is the most severe error. It replaces `OFF`
+-  `SEVERE`: A severe error where you can react to differently
+-  `ERROR`: A "normal" error. From here on all severeties remain unchanged.
 
 I also added new communication channels for output modules named `HANDLE_VALIDATION` and `PANIC`. This offers another great advantage, as a message with severeity `ERROR` can now be treated as a validation
 and thus being shown on the GUI only but not persisted as a normal exception would. `HANDLE_EXCEPTION` remains the normal channel for writing error to the output modules and `PANIC` is reserved for unexpected,
