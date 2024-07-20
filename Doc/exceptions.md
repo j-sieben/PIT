@@ -30,23 +30,27 @@ The advantage of this way of throwing errors is that it's very common for many p
 
 The disadvantage is that you don't have control over the message that will be logged. Imagine a situation where the same error may occur at several positions within your code. Based on where it is thrown, the parameteres to add to the message may vary. In these situations it may be helpful to be able to create the message right where the error occurs, including the parameters you have right then. This is why a second way to throw errors exists.
 
-### Throwing errors using `pit.error` or `pit.fatal`
+### Throwing errors using `pit.raise_error`, `pit.reaise_severe` or `pit.raise_fatal`
 
-The idea is to create a message of severity error and have it throw the exception for you. Because we create a message rather than throwing an exception we now have the option to pass in any arguments we need. To achieve this, we pass in the message name and parameters as with any other message logging. As you recall, every message has got a matching exception, should it's severity demand for it. This is now used to throw the error based on the message you just created. Review the following code snippet:
+The idea is to create a message of severity `ERROR`, `SEVERE` or `FATAL` and let it throw the exception for you. Because we create a message rather than throwing an exception we now have the option to pass in any arguments we need. To achieve this, we pass in the message name and parameters as with any other message logging. As you recall, every message has got a matching exception, should it's severity demand for it. This is now used to throw the error based on the message you just created. Review the following code snippet:
 
 ```
 begin
   ... some work
-  pit.error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
+  pit.raise_error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 exception
  when msg.MY_MESSAGE_ERR then
    ... do something
 end;
 ```
 
-The code to catch the exception is the same, although the way to process the error with `PIT` is different. Before we come to that, I'd like to stress that after throwing an exception with `pit.error` or `pit.fatal`, `SQLCODE` and `SQLERRM` are populated with the message you created when throwing the error. `SQLCODE` contains the Oracle error number or the custom error number assigned to the message. Therefore, to use this feature, make sure that the message has a severity of `level_error` or `level_fatal` to have `PIT` assign a custom error number to it. In general, `pit.error` and `pit.fatal` overwrite the message's severity with the respective method level to assure that a message of severity `level_error` will stop further execution of the code if it has been thrown by `pit.fatal`.
+The code to catch the exception is the same, although the way to process the error with `PIT` is different. Before we come to that, I'd like to stress that after throwing an exception with `pit.raise_error`, `pit.raise_severe` or `pit.fatal`, `SQLCODE` and `SQLERRM` are populated with the message you created when throwing the error. `SQLCODE` contains the Oracle error number or the custom error number assigned to the message. Therefore, to use this feature, make sure that the message has a severity of `level_error` or `level_fatal` to have `PIT` assign a custom error number to it. In general, `pit.error` and `pit.fatal` overwrite the message's severity with the respective method level to assure that a message of severity `level_error` will stop further execution of the code if it has been thrown by `pit.fatal`.
 
 Note: If you use `pit.error`or `pit.fatal` and a message with a severity milder than `pit.LEVEL_ERROR`, it will be still thrown as an exception with the error code `-20.000`. It is not possible though to catch this error, as no exception was defined for it in package `MSG`.
+
+Second note: We found that the amount of error numbers for custom errors, ranging from `-21,000` to `-20,000`, is quite limited for bigger projects. On the other hand, many of the error message we created in our projects were mainly used for validation
+purposes and never catched explicitly. Therefore, it is now possible to declare a message with severity `ERROR` or `SEVERE` and decide whether you want a PL/SQL excpetion constant for it. If you decide to not do it, the exception can be thrown but no
+handled. This is not a big problem in many cases, as you want to deal with them in a bulk or for validation purposes only. I will showcase some of these uses later. Messages with severity `FATAL` always require a PL/SQL exception constant.
 
 ## Catching exceptions with `PIT`
 
@@ -54,7 +58,8 @@ Let's see how to catch exceptions with `PIT` and the options we have here.
 
 There are two specialized methods to handle exceptions within `PIT`: `pit.handle_exception` and `pit.stop` respectively `pit.reraise_exception`. `pit.reraise_exception` is a synonym for `pit.stop` and can be used interchangeably.
 
-Note: In earlier releases there was a function called `pit.handle_exception`. This is now deprecated, but still available. Use `pit.handle_exception` instead. It was felt that this name is more consise and explains better what it does.
+Note: Two other methods wwere added since: `pit.handle_validation` and `pit.panic`. They extend the "logical severity range" to the top and bottom: `pit.handle_validation` treats all messages as purely informational to the end user, fi in the vicinity
+of user input validation. You don't want to receive a ticket for any misspelled surname, will you? On the other hand there is `pit.panic` that can be used in the `when others` tree of the exception handler. It should be reserved for unexpected and unrecoverable error situations where you need a last ressort to get informed about the situation.
 
 Method `pit.handle_exception` is intended to be used as the default exception handler. By catching the exception with this method, it gets passed to all output modules and after that the code will continue. If you want to stop the code you may add the command `raise` after catching the exception.
 
@@ -74,14 +79,14 @@ Method `pit.stop`, on the other hand, stops the execution of the code. The diffe
 
 ### Passing predefined messages to `PIT`
 
-If you threw the exception with `pit.error` or `pit.fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.handle_exception` or `pit.stop` respectively. To achieve this, simply call the exception handlers without parameters.
+If you threw the exception with `pit.raise_error`, `pit.raise_severe` or `pit.raise_fatal`, the messages have been created already. Therefore you don't want the message to be overwritten by a new message in `pit.handle_exception` or `pit.stop/pit.reraise_exception` respectively. To achieve this, simply call the exception handlers without parameters.
 
 If you review the next code sample, you will get the idea of how this works immediately:
 
 ```
 begin
   ... some work
-  pit.error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
+  pit.raise_error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 exception
  when msg.MY_MESSAGE_ERR then
    pit.handle_exception;
@@ -94,7 +99,7 @@ The same works with `pit.stop`:
 ```
 begin
   ... some work
-  pit.error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
+  pit.raise_error(msg.MY_MESSAGE, mgs_args('row', to_char(id)));
 exception
  when msg.MY_MESSAGE_ERR then
    pit.stop;
@@ -139,15 +144,15 @@ ORA-06512: at line 9
 
 ## Passing parameters to exception handlers
 
-It's also possible to pass output parameter values even in the case of exceptions. To achieve that, `pit.HANDLE_EXCEPTION` and `pit.STOP` provide an optional parameter called `P_PARAMS` that accepts an instance of `MSG_PARAMS` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
+It's also possible to pass output parameter values even in the case of exceptions. To achieve that, `pit.handle_exception` and `pit.stop` provide an optional parameter called `p_params` that accepts an instance of `msg_params` holding the name and value of any number of parameters. Those parameters are passed as attributes of the call stack methods (These methods include a call to `pit.leave`). This way, it's easy to get access to out parameters even in the case of an error.
 
 ## Passing Error Codes
 
-Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality comes in handy if you need to maintain return codes that other application parts expose, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `P_ERROR_CODE`. This can be any information you like up to 30 char in width. Another use of this functionality is when running `PIT` in collection mode, as described [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages.md).
+Sometimes, it's useful to have the ability to maintain custom error codes with error messages. This functionality comes in handy if you need to maintain return codes that other application parts expose, such as a return code for a Web Service. You can achieve this by simply passing in another parameter called `p_error_code`. This can be any information you like up to 128 byte in width. Another use of this functionality is when running `PIT` in collection mode, as described [here](https://github.com/j-sieben/PIT/blob/master/Doc/collect_messages.md).
 
 If you use this feature, this error code is passed as part of the message instance, so that any output module can access  this information and do  with it whatever it has to.
 
-## Throwing errors with `pit.log` (formerly called `log_specific`)
+## Throwing errors with `pit.log`
 
 Throwing errors with this method is possible, but not it's intended use. This method is used to overwrite log settings for a specific message. It's useful to make sure that certain messages always get logged. Do not use it for normal logging. 
 
@@ -194,7 +199,7 @@ end;
 ```
 begin
   <do something>
-  pit.error(msg.PARAM_OUT_OF_RANGE, msg_args(...));
+  pit.raise_error(msg.PARAM_OUT_OF_RANGE, msg_args(...));
 exception
   when msg.PARAM_OUT_OF_RANGE_ERR then
     pit.handle_exception;
