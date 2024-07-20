@@ -105,7 +105,7 @@ Output modules implement a number of methods defined in an abstract super class 
 -  `LOG_EXCEPTION/PANIC`: Errors and exceptions are normally thrown using the `LOG_EXCEPTION` method. If an unexpected and unhandled error occurs, `PANIC` may be your last ressort. It is normally implemented to create tickets, terminate the application or similar.
 -  `NOTIFY`: This method is meant as a very lightweight information mechanism, e.g. for Websocket/ServerSentEvents methods.
 -  `TWEET`: Even easier to use is this method, as it accepts plain text and tweets it to all output modules. This is ideal for ad hoc-testing and should not remain in your code.
--  `PURGE`: This method allows to purge log entries from an output module. As every output module may decide to use persistent storage for the messages or not, they may implement this method or not.
+-  `PURGE_LOG`: This method allows to purge log entries from an output module. As every output module may decide to use persistent storage for the messages or not, they may implement this method or not.
 
 ### Context
 
