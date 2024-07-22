@@ -65,7 +65,7 @@ Severities range from 10 (`LEVEL_FATAL`) to 70 (`LEVEL_VERBOSE`)or from `20` (`T
 
 Messages support being translated to any target language Oracle supports. To make this convenient, `PIT` supports translating all messages by exporting them as XLIFF files ready to be translated using any XLIFF editor. After translation, the resulting XLIFF file is simply re-imported into `PIT` and you're done. Translating a single message is possible by calling method `pit_admin.translate_message`.
 
-The messages are accessible through a package called `MSG` that contains constants for each message plus Oracle exceptions for all messages with severity `LEVEL_ERROR` or `LEVEL_FATAL`. So if you create a message called `CHILD_RECORD_FOUND`, severity `LEVEL_ERROR` with Oracle error number `-2292`, package `MSG` will contain entries like this:
+The messages are accessible through a package called `MSG` that contains constants for each message plus Oracle exceptions for all messages with severity `LEVEL_ERROR`, `LEVEL_SEVERE` or `LEVEL_FATAL` (for the first two, you can choose to habe an exception for it or not). So if you create a message called `CHILD_RECORD_FOUND`, severity `LEVEL_ERROR` with Oracle error number `-2292`, package `MSG` will contain entries like this:
 ```plsql
 package MSG
 as
