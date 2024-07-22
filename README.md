@@ -41,7 +41,7 @@ begin
   pit.print(msg.STEP_ONE_VIEW_MESSAGE, msg_args(p_param1));
   <do_something_else>
   -- raise an exception
-  pit.error(msg.STEP_TWO_FAILED);
+  pit.raise_error(msg.STEP_TWO_FAILED);
   pit.leave;
 exception
   -- catch predefined Oracle errors as usual
@@ -51,7 +51,7 @@ exception
   -- catch your own exceptions just the same way
   when msg.STEP_TWO_FAILED_ERR then
     -- log, re-raise your custom exception
-    pit.stop;
+    pit.stop; -- or pit.reraise_exception;
 end my_proc;
 ```
 
