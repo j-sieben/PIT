@@ -7,7 +7,7 @@ begin
     p_pmg_error_postfix => 'ERR');
 
   pit_admin.merge_translatable_item(
-    p_pti_id => 'BOOLEAN_' || replace(to_char(false), ''''),
+    p_pti_id => 'BOOLEAN_FALSE',
     p_pti_pml_name => q'^GERMAN^',
     p_pti_pmg_name => q'^PIT^',
     p_pti_name => q'^false^',
@@ -16,7 +16,7 @@ begin
   );
 
   pit_admin.merge_translatable_item(
-    p_pti_id => 'BOOLEAN_' || replace(to_char(false), ''''),
+    p_pti_id => 'BOOLEAN_TRUE',
     p_pti_pml_name => q'^GERMAN^',
     p_pti_pmg_name => q'^PIT^',
     p_pti_name => q'^true^',

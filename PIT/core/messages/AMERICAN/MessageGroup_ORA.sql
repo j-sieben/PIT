@@ -8,45 +8,45 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'ORA_CHILD_RECORD_FOUND',
     p_pms_pmg_name => 'ORA',
-    p_pms_text => q'^Der Datensatz konnte nicht gelöscht werden, es existieren abhängige Datensätze.^',
+    p_pms_text => q'^The data record could not be deleted, dependent data records exist.^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -2292);
 
   pit_admin.merge_message(
     p_pms_name => 'ORA_CONVERSION_IMPOSSIBLE',
     p_pms_pmg_name => 'ORA',
-    p_pms_text => q'^Eine Umwandlung konnte nicht ausgeführt werden^',
+    p_pms_text => q'^A conversion could not be carried out^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 20,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
 
   pit_admin.merge_message(
     p_pms_name => 'ORA_INVALID_DATE',
     p_pms_pmg_name => 'ORA',
-    p_pms_text => q'^Ungültiges Datum: #1#^',
+    p_pms_text => q'^Invalid date: #1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1858);
 
   pit_admin.merge_message(
     p_pms_name => 'ORA_INVALID_DATE_FORMAT',
     p_pms_pmg_name => 'ORA',
-    p_pms_text => q'^Ungültiges Datumsformat: #1#^',
+    p_pms_text => q'^Invalid date format: #1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1821);
 
   pit_admin.merge_message(
     p_pms_name => 'ORA_INVALID_DATE_LENGTH',
     p_pms_pmg_name => 'ORA',
-    p_pms_text => q'^Ungültige Länge des Datums: #1#^',
+    p_pms_text => q'^Invalid length of the date: #1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1840);
 
@@ -55,7 +55,7 @@ begin
     p_pms_pmg_name => 'ORA',
     p_pms_text => q'^#1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1847);
 
@@ -64,7 +64,7 @@ begin
     p_pms_pmg_name => 'ORA',
     p_pms_text => q'^#1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1839);
 
@@ -73,7 +73,7 @@ begin
     p_pms_pmg_name => 'ORA',
     p_pms_text => q'^#1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1843);
 
@@ -82,7 +82,7 @@ begin
     p_pms_pmg_name => 'ORA',
     p_pms_text => q'^Ungültiges Zahlformat: #1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1481);
 
@@ -91,7 +91,7 @@ begin
     p_pms_pmg_name => 'ORA',
     p_pms_text => q'^#1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -1841);
 
@@ -100,7 +100,7 @@ begin
     p_pms_pmg_name => 'ORA',
     p_pms_text => q'^#1#^',
     p_pms_description => q'^^',
-    p_pms_pse_id => 30,
+    p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -29471);
 

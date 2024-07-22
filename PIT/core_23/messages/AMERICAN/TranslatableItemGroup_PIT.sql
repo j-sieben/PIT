@@ -114,18 +114,18 @@ begin
   );   
 
   pit_admin.merge_translatable_item(
-    p_pti_id => 'BOOLEAN_' || replace(&true., ''''),
+    p_pti_id => 'BOOLEAN_TRUE',
     p_pti_pml_name => 'AMERICAN',
     p_pti_pmg_name => 'PIT',
-    p_pti_name => &true.,
+    p_pti_name => true,
     p_pti_display_name => 'Yes',
     p_pti_description => 'Boolean value for TRUE');
 
   pit_admin.merge_translatable_item(
-    p_pti_id => 'BOOLEAN_' || replace(&false., ''''),
+    p_pti_id => 'BOOLEAN_FALSE',
     p_pti_pml_name => 'AMERICAN',
     p_pti_pmg_name => 'PIT',
-    p_pti_name => &false.,
+    p_pti_name => false,
     p_pti_display_name => 'No',
     p_pti_description => 'Boolean value for FALSE');
     

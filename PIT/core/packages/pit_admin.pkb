@@ -183,7 +183,18 @@ as
   as
     cursor message_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
-      select m.*, rank() over (partition by pms_name order by pml_default_order) rang
+      select pms_name, pms_pmg_name, pms_text, pms_description,
+             case pms_pse_id
+               when 10 then 'pit.LEVEL_FATAL'
+               when 20 then 'pit.LEVEL_SEVERE'
+               when 30 then 'pit.LEVEL_ERROR'
+               when 40 then 'pit.LEVEL_WARN'
+               when 50 then 'pit.LEVEL_INFO'
+               when 60 then 'pit.LEVEL_DEBUG'
+               when 70 then 'pit.LEVEL_ALL'
+               else null end pms_pse_id,
+             pms_pml_name, pms_custom_error,
+             rank() over (partition by pms_name order by pml_default_order) rang
         from pit_message m
         join pit_message_language ml
           on m.pms_pml_name = ml.pml_name
@@ -233,7 +244,7 @@ end;
                      '#GROUP#', msg.pms_pmg_name,
                      '#TEXT#', msg.pms_text,
                      '#DESCRIPTION#', msg.pms_description,
-                     '#PMS_PSE_ID#', to_char(msg.pms_pse_id),
+                     '#PMS_PSE_ID#', msg.pms_pse_id,
                      '#LANGUAGE#', msg.pms_pml_name,
                      '#ERRNO#', coalesce(to_char(msg.pms_custom_error), 'null')));
       else
