@@ -26,8 +26,8 @@ as
       sign_type - One character, used for signs apart from boolean flags
    */
   c_max_length constant binary_integer := 128;
-  subtype ora_name_type is varchar2(128 byte);
-  subtype flag_type is number(1, 0);
+  subtype ora_name_type is &ORA_NAME_TYPE.;
+  subtype flag_type is &FLAG_TYPE.;
   subtype max_char is varchar2(32767 byte);
   subtype max_sql_char is varchar2(4000 byte);
   subtype small_char is varchar2(255 byte);
