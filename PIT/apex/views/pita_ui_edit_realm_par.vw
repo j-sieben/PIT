@@ -1,5 +1,5 @@
-CREATE OR REPLACE VIEW pita_ui_edit_realm_par
-AS
+create or replace force view pita_ui_edit_realm_par
+as
   select prp_par_id, prp_pre_id, prp_pgr_id, 
          prp_string_value, prp_integer_value, prp_float_value, 
          prp_date_value, prp_timestamp_value, prp_boolean_value

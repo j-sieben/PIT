@@ -33,6 +33,24 @@ begin
     p_pms_pml_name => 'AMERICAN',
     p_error_number => null);
 
+  pit_admin.merge_message(
+    p_pms_name => 'PITA_INVALID_REQUEST',
+    p_pms_pmg_name => 'PITA',
+    p_pms_text => q'^No handler is stored for the request "#1#".^',
+    p_pms_description => q'^No decision tree is stored for the current request value in a selection list. This request is therefore not processed.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PITA_PARAMETER_REQUIRED',
+    p_pms_pmg_name => 'PITA',
+    p_pms_text => q'^Parameter "#1#" must not be NULL.^',
+    p_pms_description => q'^Obvious.^',
+    p_pms_pse_id => 30,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
   commit;
   pit_admin.create_message_package;
 end;

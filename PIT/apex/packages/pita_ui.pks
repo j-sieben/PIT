@@ -243,6 +243,13 @@ as
   procedure edit_pmg_process;
   
   
+  /**
+    Procedure: edit_pms_get_requires_esception
+      Method retrieves the requires_exception setting for a selected message severity
+   */
+  procedure edit_pms_get_requires_exception;
+  
+  
   /** 
     Function: edit_pms_validate
       Method to validate page EDIT_PMS

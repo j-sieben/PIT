@@ -1,18 +1,19 @@
 
 prompt &s1.Merge message severities
 merge into pit_message_severity t
-using (values (10, 'LEVEL_FATAL'),
-              (20, 'LEVEL_SEVERE'),
-              (30, 'LEVEL_ERROR'),
-              (40, 'LEVEL_WARN'),
-              (50, 'LEVEL_INFO'),
-              (60, 'LEVEL_DEBUG'),
-              (70, 'LEVEL_ALL')) s (pse_id, pse_name)
+using (values (10, 'LEVEL_FATAL', 'MANDATORY'),
+              (20, 'LEVEL_SEVERE', 'OPTIONAL'),
+              (30, 'LEVEL_ERROR', 'OPTIONAL'),
+              (40, 'LEVEL_WARN', 'NONE'),
+              (50, 'LEVEL_INFO', 'NONE'),
+              (60, 'LEVEL_DEBUG', 'NONE'),
+              (70, 'LEVEL_ALL', 'NONE')) s (pse_id, pse_name, pse_requires_exception)
    on (t.pse_id = s.pse_id)
  when matched then update set
-      t.pse_name = s.pse_name
- when not matched then insert(pse_id, pse_name, pse_pti_id)
-      values(s.pse_id, s.pse_name, s.pse_name);
+      t.pse_name = s.pse_name,
+      t.pse_requires_exception = s.pse_requires_exception
+ when not matched then insert(pse_id, pse_name, pse_pti_id, pse_requires_exception)
+      values(s.pse_id, s.pse_name, s.pse_name, s.pse_requires_exception);
 
 commit;
 

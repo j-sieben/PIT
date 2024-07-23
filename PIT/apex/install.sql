@@ -49,7 +49,8 @@ prompt &h3.Create UI-VIEWS
 @&tools.install_view pita_ui_lov_uttm_type
 
 prompt &h3.Create UI-MESSAGES
-@@&apex_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PITA_UI.sql
+@@&apex_dir.messages/&DEFAULT_LANGUAGE./MessageGroup_PITA.sql
+@@&apex_dir.messages/&DEFAULT_LANGUAGE./TranslatableItemGroup_PITA.sql
 
 
 prompt &h3.Create UI-PACKAGES

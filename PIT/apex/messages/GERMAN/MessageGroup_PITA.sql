@@ -5,7 +5,7 @@ begin
     
   pit_admin.merge_message_group(
     p_pmg_name => 'PITA',
-    p_pmg_description => 'Messages for the PITA',
+    p_pmg_description => 'Messages for the PITA application',
     p_pmg_error_prefix => '',
     p_pmg_error_postfix => 'ERR');
   
@@ -15,8 +15,7 @@ begin
     p_pms_text => 'Eine Ganzzahl wurde erwartet, eingegeben wurde jedoch #1#.',
     p_pms_description => q'^Offensichtlich.^',
     p_pms_pse_id => 40,
-    p_pms_pml_name => 'GERMAN');
-    
+    p_pms_pml_name => 'GERMAN');    
     
   pit_admin.merge_message(
     p_pms_name => 'PITA_PAR_PGR_EXPORTED',
@@ -24,8 +23,7 @@ begin
     p_pms_text => 'Parametergruppe #1# wurde exportiert.',
     p_pms_description => q'^^',
     p_pms_pse_id => 60,
-    p_pms_pml_name => 'GERMAN');
-    
+    p_pms_pml_name => 'GERMAN');    
     
   pit_admin.merge_message(
     p_pms_name => 'PITA_XLIFF_IMPORTED',

@@ -726,6 +726,30 @@ as
 
     pit.leave_mandatory;
   end edit_pmg_process;
+  
+  
+  /**
+    Procedure: 
+   */
+  
+  procedure edit_pms_get_requires_exception
+  as
+    l_pms_pse_id binary_integer;
+    l_pse_requires_exception pit_util.ora_name_type;
+  begin
+    pit.enter_mandatory;
+    
+    l_pms_pse_id := utl_apex.get_number('P3_PMS_PSE_ID');
+    
+    select pse_requires_exception
+      into l_pse_requires_exception
+      from table(pit_app_api.get_pit_message_severity_table)
+     where pse_id = l_pms_pse_id;
+    
+    utl_apex.set_value('P3_H_REQUIRES_EXCEPTION', l_pse_requires_exception);
+    
+    pit.leave_mandatory;
+  end edit_pms_get_requires_exception;
 
 
   /**
