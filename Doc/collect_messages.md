@@ -10,13 +10,13 @@ The existing validation logic on the other hand immediately stops if the first i
 
 ## Collect Mode
 
-The solution is to switch `PIT` to collect mode. This hinders it to immediately throw an exception once an assertion has gone wild or an exception has been thrown using `PIT.error` or `PIT.fatal`. Instead, `PIT` will silently push all messages on a stack until you tell it to stop collecting messages.
+The solution is to switch `PIT` to collect mode. This hinders it to immediately throw an exception once an assertion has gone wild or an exception has been thrown using `PIT.raise_error`, `PIT.raise_severe` or `PIT.raise_fatal`. Instead, `PIT` will silently push all messages on a stack until you tell it to stop collecting messages.
 
 Switching collect mode on is done by calling `PIT.start_message_collection`. This call should be used just before you call the validation code if you require the »find all issues« strategy. If you omit this call, `PIT` will work in its default »find first issue« strategy just as PL/SQL does.
 
 After you have called all validation logic of interest, you stop the collect mode by calling `PIT.stop_message_collection`.
 
-Now, `PIT` will examine the collected messages and detect the most severe message during that period. Should at least one message of severity `ERROR` or `FATAL` be found, `PIT` will now throw exception `PIT_BULK_ERROR` or `PIT_BULK_FATAL` respectively. You can catch those just like any other `PIT` exception and get access to all collected messages by using `PIT.get_message_collection`. This method returns an instance of type `PIT_MESSAGE_TABLE` which is simply a table of `MESSAGE_TYPE` instances, so you will have all attributes of a normal message, such as message text, message attributes, severity, call stack etc. But there's even more.
+Now, `PIT` will examine the collected messages and detect the most severe message during that period. Should at least one message of severity `ERROR`, `SEVERE` or `FATAL` be found, `PIT` will now throw exception `PIT_BULK_ERROR`, `PIT_BULK_SEVERE` or `PIT_BULK_FATAL` respectively. You can catch those just like any other `PIT` exception and get access to all collected messages by using `PIT.get_message_collection`. This method returns an instance of type `PIT_MESSAGE_TABLE` which is simply a table of `MESSAGE_TYPE` instances, so you will have all attributes of a normal message, such as message text, message attributes, severity, call stack etc. But there's even more.
 
 ## Special usage of attribute `ERROR_CODE`
 
