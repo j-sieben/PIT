@@ -197,6 +197,8 @@ To get familiar with `PIT`, read [Using `PIT`](Doc/using_pit.md)
 
 Details to throwing and catching Exceptions can be found [here](Doc/exceptions.md)
 
+If you want to validate user input, read [Validating User Input](Doc/validations.md)
+
 Some advice on how to keep execution speed high with `PIT` can be found [here](Doc/performance.md)
 
 Should you experience problems when using `PIT`, some advices can be found [here](Doc/troubleshooting.md)
