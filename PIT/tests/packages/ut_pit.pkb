@@ -143,7 +143,7 @@ as
     pit.reset_context;
     l_stack_depth := pit_pkg.get_actual_call_stack_depth;
     if l_stack_depth > 0 then
-      pit.error(msg.PIT_PASS_MESSAGE, msg_args('Call Stack nicht korrekt bereinigt: ' || l_stack_depth));
+      pit.raise_error(msg.PIT_PASS_MESSAGE, msg_args('Call Stack nicht korrekt bereinigt: ' || l_stack_depth));
     end if;
   end after_each;
   
@@ -352,7 +352,7 @@ as
   procedure handle_exception_passes_message 
   as
   begin
-    pit.error(msg.SQL_ERROR, msg_args('Some error'));
+    pit.raise_error(msg.SQL_ERROR, msg_args('Some error'));
   exception
     when msg.SQL_ERROR_ERR then
       pit.handle_exception;
@@ -429,7 +429,7 @@ as
   as
   begin
     begin
-      pit.error(msg.SQL_ERROR, msg_args(C_DUMMY_TEXT));
+      pit.raise_error(msg.SQL_ERROR, msg_args(C_DUMMY_TEXT));
     exception
       when msg.SQL_ERROR_ERR then
         pit.stop;

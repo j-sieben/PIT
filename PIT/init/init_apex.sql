@@ -5,11 +5,19 @@ set feedback off
 set lines 120
 set pages 9999
 
-whenever sqlerror continue
-alter session set plsql_implicit_conversion_bool = true;
-
 whenever sqlerror exit
-set termout off
+set termout on
+
+begin
+  $IF dbms_db_version.ver_le_19 $THEN
+  null;
+  $ELSIF dbms_db_version.ver_le_21 $THEN
+  null;
+  $ELSE
+  execute immediate 'alter session set plsql_implicit_conversion_bool = true';
+  $END
+end;
+/
 
 define section="********************************************************************************"
 define h1="*** "
@@ -35,7 +43,6 @@ select case when instr('&1.', '[') > 0
   
 define PIT_USER = &INSTALL_USER.
    
-set termout off
 declare
   l_ws_exists binary_integer;
 begin
@@ -62,7 +69,8 @@ col apex_ws new_val APEX_WS format a30
 
 select case 
          when utl_apex.get_apex_version between 19 and 22.1 then '20_2'
-         else '22_2' end apex_version, upper('&3.') apex_ws
+         when utl_apex.get_apex_version between 22.2 and 23.1 then '22_2'
+         else '23_2' end apex_version, upper('&3.') apex_ws
   from dual;
  
 -- Define length of ORA_NAME_TYPE according to oracle version

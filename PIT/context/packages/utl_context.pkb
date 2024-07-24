@@ -65,13 +65,13 @@ as
   begin
     if p_context is null then
       $IF $$PIT_INSTALLED $THEN
-      pit.error(msg.CTX_NO_CONTEXT);
+      pit.raise_error(msg.CTX_NO_CONTEXT);
       $ELSE
       raise_application_error(-20999, C_NO_CONTEXT_MSG);
       $END
     elsif not g_context_settings.exists(p_context) then
       $IF $$PIT_INSTALLED $THEN
-      pit.error(msg.CTX_INVALID_CONTEXT, msg_args(p_context, C_PACKAGE_NAME));
+      pit.raise_error(msg.CTX_INVALID_CONTEXT, msg_args(p_context, C_PACKAGE_NAME));
       $ELSE
       raise_application_error(-20998,
         replace(

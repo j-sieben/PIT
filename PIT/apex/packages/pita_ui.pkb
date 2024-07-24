@@ -353,7 +353,7 @@ as
       when pit_app_api.C_TARGET_PTI then
         l_page_item := 'PTI_XLIFF';
       else
-        pit.error(msg.PITA_INVALID_REQUEST);
+        pit.raise_error(msg.PITA_INVALID_REQUEST);
     end case;
 
     select xmltype(blob_content, nls_charset_id('AL32UTF8'))
@@ -1432,3 +1432,4 @@ as
   end edit_toggle_process;
 
 end pita_ui;
+/

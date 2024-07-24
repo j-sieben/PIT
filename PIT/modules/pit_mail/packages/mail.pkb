@@ -696,7 +696,7 @@ as
   exception
     when utl_smtp.TRANSIENT_ERROR or utl_smtp.PERMANENT_ERROR or utl_smtp.INVALID_OPERATION then
       utl_smtp.quit(p_conn);
-      pit.warn(msg.MAIL_ERROR);
+      pit.raise_warn(msg.MAIL_ERROR);
   end disconnect_mail_server;
 
 
@@ -849,7 +849,7 @@ as
       disconnect_mail_server(l_mail_conn);
       pit.verbose(msg.MAIL_SENT);
     else
-      pit.warn(msg.MAIL_PKG_NOT_WORKING);
+      pit.raise_warn(msg.MAIL_PKG_NOT_WORKING);
     end if;
     pit.leave_mandatory;
   exception
@@ -902,7 +902,7 @@ as
       disconnect_mail_server(l_mail_conn);
       pit.verbose(msg.MAIL_SENT);
     else
-      pit.warn(msg.MAIL_PKG_NOT_WORKING);
+      pit.raise_warn(msg.MAIL_PKG_NOT_WORKING);
     end if;
     
     pit.leave_mandatory;

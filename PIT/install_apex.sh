@@ -22,10 +22,6 @@ echo -n "Enter APEX workspace where this application should be installed at [ENT
 read APPWS
 echo ${APPWS}
 
-echo -n "Enter application alias for the PIT application [ENTER] "
-read APPALIAS
-echo ${APPALIAS}
-
 echo -n "Enter application id for the PIT application [ENTER] "
 read APPID
 echo ${APPID}
@@ -35,4 +31,4 @@ export NLS_LANG
 
 sqlplus ${OWNER}/"${OWNERPWD}"@${SERVICE} @./install_scripts/grant_apex_access.sql ${OWNER} ${REMOTEOWNER}
 
-sqlplus ${REMOTEOWNER}/"${REMOTEPWD}"@${SERVICE} @./install_scripts/install_apex.sql ${OWNER} ${REMOTEOWNER} ${APPWD} ${APPALIAS} ${APPID}
+sqlplus ${REMOTEOWNER}/"${REMOTEPWD}"@${SERVICE} @./install_scripts/install_apex.sql ${OWNER} ${REMOTEOWNER} ${APPWS} ${APPID}

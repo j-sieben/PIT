@@ -32,6 +32,6 @@ using (select 10 ptl_id, 'TRACE_OFF' ptl_name
  when matched then update set
       t.ptl_name = s.ptl_name
  when not matched then insert(ptl_id, ptl_name, ptl_pti_id)
-      values(s.ptl_id, s.ptl_name, vs.ptl_name);
+      values(s.ptl_id, s.ptl_name, s.ptl_name);
 
 commit;

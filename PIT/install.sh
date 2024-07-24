@@ -1,7 +1,6 @@
 #!/bin/bash
 echo -n "Enter owner schema for PIT [ENTER] "
 read OWNER
-echo ${OWNER}
 
 echo -n "Enter password for ${OWNER} [ENTER] "
 read -s PWD

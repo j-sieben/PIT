@@ -44,6 +44,7 @@ prompt &h2.Create type declarations
 prompt &h2.Create ADMIN package declarations
 @&tools.install_package_spec pit_util
 @&tools.install_package_spec pit_admin
+@&tools.install_package_spec pit_pre
 
 @&tools.install_package_body pit_util
 @&tools.install_package_body pit_admin

@@ -290,14 +290,14 @@ as
     return l_harmonized_name;
   exception
     when dbms_assert.INVALID_SQL_NAME then
-      pit.error(
+      pit.raise_error(
         p_message_name => msg.PIT_INVALID_SQL_NAME,
         p_msg_args => msg_args(p_name));
       return p_name;
     when others then
       if SQLCODE = -20000 then
         -- pit_util.harmonize_sql_name may throw this if the name is too long
-        pit.error(
+        pit.raise_error(
           p_message_name => msg.PIT_NAME_TOO_LONG,
           p_msg_args => msg_args(to_char(l_max_length)),
           p_error_code => p_prefix || 'NAME_TOO_LONG');
@@ -751,7 +751,7 @@ as
         
   exception
     when pit_util.context_missing then
-      pit.error(
+      pit.raise_error(
         p_message_name => msg.PIT_CONTEXT_MISSING,
         p_msg_args => msg_args(p_context_name));
   end validate_context_toggle;
