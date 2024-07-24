@@ -4,7 +4,7 @@ One of the most important parts of `PIT` is its support for user input validatio
 
 There are many possibilities for implementing validation logic. In recent years, the introduction of numeric return codes were quite common. `PIT` on the other hand relies on named exceptions and the exception raising mechanism in PÜL/SQL to communicate any validation errors. There are good reasons to separate validation findings from »real« exceptions and errors because validation findings normally are just shown to the user but not persisted in error logging tables. To cater for this, `PIT` not only offers a rich set of assertion methods to make validating data easy but also a separate communication channel to each output module names especially for validation findings.
 
-Plus, `PIT` gives youu the chance to run validations in a »collect mode« which, when entered, collects all messages on an internal stack and examines it if the collection mode is left. If an exception is found, it raises an error, allowing you to deal with the list of messages collected. Read more about the collection mode [here]().
+Plus, `PIT` gives youu the chance to run validations in a »collect mode« which, when entered, collects all messages on an internal stack and examines it if the collection mode is left. If an exception is found, it raises an error, allowing you to deal with the list of messages collected. Read more about the collection mode [here](Doc/collect_messages.md).
 
 ## Assertions
 
@@ -69,4 +69,4 @@ exception
 end;
 ```
 
-Depending on the possibilities of your UI frontend, you may show the message differently based on the severity of the message: A message of level `ERROR` may be displayed as an error, whereas a message of level `WARN` may be shown as a warning hint. Bacause you passed the messages to a different communication channel, those will not, depending on the implementation of your output modules, be persisted at all but simply forwared to the GUI. Examine the possibilities of the collect mode as well to learn about even mor powerful methods of dealing with user input.
+Depending on the possibilities of your UI frontend, you may show the message differently based on the severity of the message: A message of level `ERROR` may be displayed as an error, whereas a message of level `WARN` may be shown as a warning hint. Bacause you passed the messages to a different communication channel, those will not, depending on the implementation of your output modules, be persisted at all but simply forwared to the GUI. Examine the possibilities of the [collect mode](Doc/collect_messages.md) as well to learn about even mor powerful methods of dealing with user input.
