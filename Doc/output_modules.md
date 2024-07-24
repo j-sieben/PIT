@@ -8,13 +8,16 @@ Output modules form the interface between the messages and any output channel. T
 
 `PIT_MODULE` implements the following methods:
 
-- `LOG` with `MESSAGE_TYPE` parameter, used to handle error, warn or debug messages
-- `LOG` with `MSG_PARAMS` parameter, used to log state
-- `NOTIFY`, used to signal changes. Normal use would be to report progress of long running actions etc. Experimental
-- `PRINT`, used to pass messages to a UI level
+- `LOG_VALIDATION` with `MESSAGE_TYPE` parameter, used to handle user input validation without which normally are not persisted but only shown on the respective GUI.
+- `LOG_EXCEPTION` with `MESSAGE_TYPE` parameter, used to handle fatal, severe, error, warn, info or debug messages if an exception occurred.
+- `PANIC` with `MESSAGE_TYPE` parameter, used as a final resort. Intended use is to catch unforeseen, unrecoverable errors such as in the `when others` branch of an exception handler.
+- `LOG_STATE` with `MSG_PARAMS` parameter, used to log state of arbitrary key-value-pairs. Can be used to trace the actual status of any number of variables within a method.
+- `NOTIFY`, used to signal changes. Normal use would be to report progress of long running actions etc. The implementation may require a websocket server to send the messages to.
+- `TWEET` with a message type parameter. It uses a generic message with only plain text and is meant to output code debug information quick and dirty. Not meant to be part of the final code.
+- `PRINT`, used to pass messages without any severity etc. Useful to print output to a GUI or similar.
 - `ENTER`, used to log entering a method, including parameters etc.
 - `LEAVE`, used to log leaving a method, including parameters, timing information etc.
-- `PURGE`, used to clean the log based on severity and/or date settings
+- `PURGE_LOG`, used to clean the log based on severity and/or date settings
 - `CONTEXT_CHANGED`, used to signal that the log settings were changed
 
 As all of them are implemented as stubs doing nothing, you're free to overload only those methods you require in your inherited object. Each output module may have any number of parameters and supporting objects like tables, but at the bare minimum it should define a parameter setting the fire threshold of the output module. By defining this threshold, message of a severity less than this threshold will be ignored.
@@ -30,6 +33,8 @@ All output modules require a parameterless constructor method. This method shoul
 The most basic output module probably is `PIT_CONSOLE`. It implements almost any method of the abstract supertype with the exception of the purge method which does not seem to make too much sense when writing to a console window.
 
 Only task of this module is to format the messages, call stack objects and message parameter objects to strings and print them to the console.
+
+In a project, I created an alternative solutioin that writes to a package to overcome the length limitations of `dbms_output`. This is according to [Tom Kyte's blog, Option 3](https://asktom.oracle.com/ords/asktom.search?tag=how-to-get-around-dbms-output-limitations). This is just an example on how flexible the idea of `PIT` is.
 
 ### `PIT_TABLE`
 
@@ -83,10 +88,10 @@ To create your own output module, you only overwrite the methods you need. Exami
 
 ```
 create or replace type pit_file under pit_module(
-  overriding member procedure log(
+  overriding member procedure log_exception(
     self in out nocopy pit_file,
     p_message in message_type),
-  overriding member procedure purge(
+  overriding member procedure purge_log(
     self in out nocopy pit_file,
     p_purge_date in date,
     p_severity_greater_equal in integer default null),
@@ -113,7 +118,7 @@ So this is the implementation of the `PIT_FILE` output module:
 ```
 create or replace type body pit_file
 as
-  overriding member procedure log(
+  overriding member procedure log_exception(
     self in out nocopy pit_file,
     p_message in message_type)
   as
@@ -121,16 +126,16 @@ as
     if p_message.severity <= fire_threshold then
       pit_file_pkg.log(self, p_message);
     end if;
-  end log;
+  end log_exception;
 
-  overriding member procedure purge(
+  overriding member procedure purge_log(
     self in out nocopy pit_file,
     p_purge_date in date,
     p_severity_greater_equal in integer default null)
   as
   begin
     pit_file_pkg.purge;
-  end purge;
+  end purge_log;
 
   overriding member procedure enter(
     self in out nocopy pit_file,
@@ -178,16 +183,15 @@ I delegated the constructor functionality to `PIT_FILE_PKG` as well. It may be i
   exception
     when others then
       -- Do NOT throw any exceptions during initalization phase!
-      self.fire_threshold := pit.level_off;
       self.status := msg.PIT_FAIL_MODULE_INIT;
       self.stack := pit_util.get_error_stack;
   end initialize_module;
 ```
 
-As the bare minimum, I define a fire threshold and set my status to `msg.PIT_MODULE_INSTANTIATED`. Here, I also try to open a file at the directory defined at a parameter for that output module. If this fails, I catch this error and mark the instance as `UNUSABLE`, using message `msg.PIT_FAIL_MODULE_INIT`. Setting my fire threshold to `pit.LEVEL_OFF` is unnecessary strictly seen as the module wont get contacted anyway if it is not usable. Please keep in mind that it is not possible to pass any arguments to the constructor method. It is required that there is a constructor without parameters in order to user it from `PIT`.
+As the bare minimum, I define a fire threshold and set my status to `msg.PIT_MODULE_INSTANTIATED`. Here, I also try to open a file at the directory defined at a parameter for that output module. If this fails, I catch this error and mark the instance as `UNUSABLE`, using message `msg.PIT_FAIL_MODULE_INIT`. Please keep in mind that it is not possible to pass any arguments to the constructor method. It is required that there is a constructor without parameters in order to use it from `PIT`.
 
 ## Parameters
 
-Any output module should have at least one parameter that controls a fire threshold for that module. Create this parameter by calling `admin_param.merge_parameter` method. But you're free to add any number of parameters to your output module. There is no restriction of what you do with the message. Write an incident at JIRA, send mails, do whatever you like. The only thing to keep in mind is performance. But if a severe error occurs, performance is probable your least problem.
+Any output module should have at least one parameter that controls a fire threshold for that module. Create this parameter by calling `admin_param.merge_parameter` method. But you're free to add any number of parameters to your output module. There is no restriction of what you do with the message. Write an incident in your ticket system, send mails, do whatever you like. The only thing to keep in mind is performance. But if a severe error occurs, performance is probable your least problem.
 
 If you want to learn about how output modules are created, simply review the ones delivered with `PIT`. You will quickly get the idea and understand that there's nothing special about it.
