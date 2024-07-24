@@ -90,22 +90,27 @@ Messages are required in many places of a program. They may be used to
 Being creative will lead to further use cases for `PIT`. I use messages containing a JSON template like `{"status":"#1#","message":"#2#"}`. Those messages obviously need no translation. But as they are able to replace anchors within the message with CLOB parameters, they can be used to write the outcome of even complex calculations to the view layer (by calling `pit.print(msg.JSON_MSG, msg_args(clob_param));`), replacing helper packages for the same purpose. Output modules which implement the print method take care of properly delivering content to the application regardeless of their size.
 Let's look at the requirements that derive from these use cases a bit closer.
 
-### Output channels
+### Output modules
 
-From the list of use cases you can see that there is a requirement to be very flexible in regard to output channels. Storing messages in a table or printing them to the console simply is not enough. `PIT` is designed from ground up to support any number of output channels such as `PIT_CONSOLE`, `PIT_TABLE`, `PIT_MAIL`, `PIT_APEX`, `PIT_FILE` and others without the need to change the basic `PIT` code at all. Plus, all of these output module may be present but which one will be actually used for debugging is controlled using a context concept. This allows for the least possible logging activities and thus preserving performance.
+From the list of use cases you can see that there is a requirement to be very flexible in regard to output modules. Storing messages in a table or printing them to the console simply is not enough. `PIT` is designed from ground up to support any number of output modules such as `PIT_CONSOLE`, `PIT_TABLE`, `PIT_MAIL`, `PIT_APEX`, `PIT_FILE` and others without the need to change the basic `PIT` code at all. Plus, all of these output modules may be present but which one will be actually used for debugging is controlled using a context concept. This allows for the least possible logging activities and thus preserving performance.
 
-When you think about these output channels, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output channel. To cater for this, `PIT` allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output channel to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a table and send them once a day and ignore all other messages.
+When you think about these output modules, other requirements pop up. While it is ok to write any debug message to the console, this is certainly not true for a mail output module. To cater for this, `PIT` allows any channel to decide whether and how they process an incoming message. So it's possible to parameterize the `PIT_CONSOLE` output module to write every single message to the screen whereas the `PIT_MAIL` output channel decides to send message of severity `LEVEL_FATAL` immediately, collecting messages of severity `LEVEL_ERROR` in a table and send them once a day and ignore all other messages.
 
 I strongly encourage you to create your own output module tailored to your logging needs. Perhaps you need a module that immediately creates a ticket in your ticket system in case of fatal errors or something similar. An own output module is the way to achieve this goal. If you want to familarize yourself with creating your own output module, you may want to continue reading [here](Doc/output_modules.md).
 
-Output modules implement a number of methods defined in an abstract super class `PIT_MODULE` from which all other output modules a derived. These are:
 
--  `ENTER/LEAVE`: These methods are used to trace your code. They allow for parameters to be passed in and provide timing functionality and others
--  `LOG_VALIDATION`: An output channel specifically for validation messages. These aren't written to the log tables normally, so this channel allows to implement a more lightweight information system.
--  `LOG_EXCEPTION/PANIC`: Errors and exceptions are normally thrown using the `LOG_EXCEPTION` method. If an unexpected and unhandled error occurs, `PANIC` may be your last ressort. It is normally implemented to create tickets, terminate the application or similar.
--  `NOTIFY`: This method is meant as a very lightweight information mechanism, e.g. for Websocket/ServerSentEvents methods.
--  `TWEET`: Even easier to use is this method, as it accepts plain text and tweets it to all output modules. This is ideal for ad hoc-testing and should not remain in your code.
--  `PURGE_LOG`: This method allows to purge log entries from an output module. As every output module may decide to use persistent storage for the messages or not, they may implement this method or not.
+## Communication Channels
+
+Output modules implement a number of communication channels, implemented as methods defined in an abstract super class `PIT_MODULE` from which all other output modules a derived. These are:
+
+-  `ENTER/LEAVE`: These channels are used to trace your code. They allow for parameters to be passed in and provide timing functionality and others
+-  `LOG_VALIDATION`: A channel specifically for validation messages. These aren't written to the log tables normally, so this channel allows to implement a more lightweight information system.
+-  `LOG_EXCEPTION/PANIC`: Errors and exceptions are normally thrown using the `LOG_EXCEPTION` channel. If an unexpected and unhandled error occurs, `PANIC` may be your last ressort. It is normally implemented to create tickets, terminate the application or similar.
+-  `NOTIFY`: This channel is meant as a very lightweight information mechanism, e.g. for Websocket/ServerSentEvents methods.
+-  `TWEET`: Even easier to use is this channel, as it accepts plain text and tweets it to all output modules. This is ideal for ad hoc-testing and should not remain in your code.
+-  `PURGE_LOG/CONTEXT_CHANGE`: These are admoinistrative channels which allow to purge log entries from an output module or take some action if the settings for debug and trace change.
+
+All communication channels are available for each output module. It is up to the output module to implement the channels it wants to deal with, leaving all other channels untouched. As the abstract base module implements all channels, it is allways save to rely on the standard implementation (which is a simple stub, doing nothing). This methods allows for easy extension lateron: The base module offers new channels and the concrete output modules implement what they need later.
 
 ### Context
 
