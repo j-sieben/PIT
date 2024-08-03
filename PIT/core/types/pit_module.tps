@@ -18,17 +18,6 @@ as object(
   fire_threshold integer,
   status varchar2(128 byte),
   stack varchar2(2000 byte),
-  
-  /**
-    Procedure: context_changed
-      Method is raised if the context settings have changed 
-      
-    Parameter: 
-      p_ctx - Instance of <pit_context> with the information about the new context.
-   */
-  member procedure context_changed(
-    self in out nocopy pit_module,
-    p_ctx in pit_context_type),
     
   /** 
     Procedure: tweet
@@ -40,6 +29,29 @@ as object(
   member procedure tweet(
     self in out nocopy pit_module,
     p_message in message_type),
+  
+  /**
+    Procedure: notify
+      Method to notify outout modules. Leightweight message.
+      
+    Parameter:
+      p_message - Instance of <message_type>, the message to pass as a notification
+   */
+  member procedure notify (
+    self in out nocopy pit_module,
+    p_message in message_type),
+    
+  /** 
+    Procedure: log_state
+      Overloaded logging method to log the state of variables passed in.
+      Is called from pit.log_state
+      
+    Parameter: 
+      p_log_state - Instance of <pit_log_state_type> with the key and values to log
+   */
+  member procedure log_state(
+    self in out nocopy pit_module,
+    p_log_state in pit_log_state_type),
     
   /** 
     Procedure: log_validation
@@ -67,16 +79,15 @@ as object(
     p_message in message_type),
     
   /** 
-    Procedure: log_state
-      Overloaded logging method to log the state of variables passed in.
-      Is called from pit.log_state
+    Procedure: panic
+      Method is called if an unexpected, unrecoverable error has occured.
       
     Parameter: 
-      p_log_state - Instance of <pit_log_state_type> with the key and values to log
+      p_message - Instance of <message_type>, the message to log
    */
-  member procedure log_state(
+  member procedure panic(
     self in out nocopy pit_module,
-    p_log_state in pit_log_state_type),
+    p_message in message_type),
     
   /** 
     Procedure: print
@@ -86,17 +97,6 @@ as object(
       p_message - Instance of <message_type>, the message to print.
    */
   member procedure print(
-    self in out nocopy pit_module,
-    p_message in message_type),
-  
-  /**
-    Procedure: notify
-      Method to notify outout modules. Leightweight message.
-      
-    Parameter:
-      p_message - Instance of <message_type>, the message to pass as a notification
-   */
-  member procedure notify (
     self in out nocopy pit_module,
     p_message in message_type),
     
@@ -134,16 +134,16 @@ as object(
     self in out nocopy pit_module,
     p_purge_date in date default null,
     p_severity_greater_equal in integer default null),
-    
-  /** 
-    Procedure: panic
-      Method is called if an unexpected, unrecoverable error has occured.
+  
+  /**
+    Procedure: context_changed
+      Method is raised if the context settings have changed 
       
     Parameter: 
-      p_message - Instance of <message_type>, the message to log
+      p_ctx - Instance of <pit_context> with the information about the new context.
    */
-  member procedure panic(
+  member procedure context_changed(
     self in out nocopy pit_module,
-    p_message in message_type)
+    p_ctx in pit_context_type)
 ) not final not instantiable;
 /

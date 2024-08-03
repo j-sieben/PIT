@@ -57,6 +57,7 @@ as
       TYPE_TIMESTAMP - Constant for type checks
       TYPE_XML - Constant for type checks
   */
+  version constant number(3,1) := 1.2;
   format_icu constant pit_util.ora_name_type := 'FORMAT_ICU';
     
   function type_integer return varchar2 deterministic;  
