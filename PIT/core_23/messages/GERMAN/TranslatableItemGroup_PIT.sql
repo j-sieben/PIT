@@ -61,21 +61,21 @@ begin
   );
 
   pit_admin.merge_translatable_item(
+    p_pti_id => 'LEVEL_SEVERE',
+    p_pti_pml_name => q'^GERMAN^',
+    p_pti_pmg_name => q'^PIT^',
+    p_pti_name => q'^Schwerwiegender Fehler^',
+    p_pti_display_name => q'^Schwerwiegender Fehler^',
+    p_pti_description => q'^Ein schwerwiegender Fehler ist aufgetreten, wird durch PIT abschließend behandelt^'
+  );
+
+  pit_admin.merge_translatable_item(
     p_pti_id => 'LEVEL_INFO',
     p_pti_pml_name => q'^GERMAN^',
     p_pti_pmg_name => q'^PIT^',
     p_pti_name => q'^Information^',
     p_pti_display_name => q'^Information^',
     p_pti_description => q'^Information, z.B. über erflogreiche Anmeldungen etc.^'
-  );
-
-  pit_admin.merge_translatable_item(
-    p_pti_id => 'LEVEL_OFF',
-    p_pti_pml_name => q'^GERMAN^',
-    p_pti_pmg_name => q'^PIT^',
-    p_pti_name => q'^Logging aus^',
-    p_pti_display_name => q'^Logging aus^',
-    p_pti_description => q'^Schaltet das Logging aus, Fehler und fatale Fehler werden dennoch geloggt^'
   );
 
   pit_admin.merge_translatable_item(
