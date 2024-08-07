@@ -38,7 +38,8 @@ as
   C_DEL char(1 byte) := '|';
   C_MIN_ERROR constant number := -20999;
   C_MAX_ERROR constant number := -20000;
-  C_FATAL constant binary_integer := 20;
+  C_FATAL constant binary_integer := 10;
+  C_SEVERE constant binary_integer := 20;
   C_ERROR constant binary_integer := 30;
   C_DEFAULT_LANGUAGE constant number := 10;
   C_EXCEPTION_PREFIX constant varchar2(4) := '';
