@@ -361,7 +361,12 @@ as
   procedure log_panic
   as
   begin
-    g_active_message := get_message(C_PIT_PANIC, null, null, null, C_PIT_PANIC);
+    g_active_message := get_message(
+                          p_message_name => C_PIT_PANIC, 
+                          p_msg_args => null, 
+                          p_affected_id => null, 
+                          p_error_code => null, 
+                          p_read_only => false);
     raise_event(
       p_event => C_PANIC_EVENT,
       p_message => g_active_message);
@@ -462,7 +467,12 @@ as
     if pit_context.log_me(p_severity) then
       case when p_message_name is not null then
         -- instantiate message
-        g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+        g_active_message := get_message(
+                              p_message_name => p_message_name, 
+                              p_msg_args => p_msg_args, 
+                              p_affected_id => p_affected_id, 
+                              p_error_code => p_error_code, 
+                              p_read_only => false);
         -- Persist severity of calling environment with message
         g_active_message.severity := least(p_severity, g_active_message.severity);
       when g_active_message is not null then
@@ -472,7 +482,12 @@ as
         g_active_message.backtrace := pit_util.get_error_stack;
       when p_severity <= C_LEVEL_ERROR then
         -- fallback, is used if a SQL exception was raised outside of PIT
-        g_active_message := get_message('PIT_SQL_ERROR', p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+        g_active_message := get_message(
+                              p_message_name => 'PIT_SQL_ERROR', 
+                              p_msg_args => p_msg_args, 
+                              p_affected_id => p_affected_id, 
+                              p_error_code => p_error_code, 
+                              p_read_only => false);
       else 
         -- if used with HANDLE_EXCEPTION, code may re raise the exception explicitly
         null;
@@ -524,7 +539,12 @@ as
     l_log_level binary_integer;
   begin
     -- initialize
-    g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    g_active_message := get_message(
+                          p_message_name => 'PIT_SQL_ERROR', 
+                          p_msg_args => p_msg_args, 
+                          p_affected_id => p_affected_id, 
+                          p_error_code => p_error_code, 
+                          p_read_only => false);
     l_log_level := coalesce(p_log_threshold, C_LEVEL_ALL);
     
     if g_active_message.severity <= l_log_level then
@@ -662,7 +682,11 @@ as
   as
   begin
     if p_message_name is not null then
-      g_active_message := get_message(p_message_name, p_msg_args, null, null, null);
+      g_active_message := get_message(
+                              p_message_name => 'PIT_SQL_ERROR', 
+                              p_msg_args => p_msg_args, 
+                              p_affected_id => null, 
+                              p_error_code => null);
       raise_event(
         p_event => C_PRINT_EVENT,
         p_message => g_active_message);
@@ -691,7 +715,13 @@ as
     l_context_has_changed boolean;
   begin
     -- initialize
-    g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, null);
+    g_active_message := get_message(
+                              p_message_name => 'PIT_SQL_ERROR', 
+                              p_msg_args => p_msg_args, 
+                              p_affected_id => p_affected_id, 
+                              p_affected_ids => p_affected_ids, 
+                              p_error_code => null, 
+                              p_read_only => false);
     
     if g_active_message.severity <= coalesce(p_log_threshold, C_LEVEL_ALL) then
       -- temporarily set the new context without raising the context change event
@@ -756,7 +786,7 @@ as
   begin
     -- P_MESSAGE_NAME could be NULL, we use G_ACTIVE_MESSAGE then
     if p_message_name is not null then
-      g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+      g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, false);
       g_active_message.severity := p_severity;
       g_active_message.error_number := coalesce(g_active_message.error_number, -20000);
     end if;
@@ -872,14 +902,20 @@ as
     p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2)
+    p_error_code in varchar2,
+    p_read_only in boolean default true)
     return message_type
   as
     -- use a local message here to prevent to overwrite g_active_message with messages that are never raised
     l_message message_type;
+    l_message_id number;
   begin
+    if p_read_only then
+      l_message_id := 0;
+    end if;
     if p_affected_ids is not null then
       l_message := message_type(
+                     p_message_id => l_message_id,
                      p_message_name => p_message_name,
                      p_message_language => get_language,
                      p_affected_ids => p_affected_ids,
@@ -890,6 +926,7 @@ as
                      p_msg_args => p_msg_args);
     else
       l_message := message_type(
+                     p_message_id => l_message_id,
                      p_message_name => p_message_name,
                      p_message_language => get_language,
                      p_affected_id => p_affected_id,

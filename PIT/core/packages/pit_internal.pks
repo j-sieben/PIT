@@ -110,6 +110,7 @@ as
       p_affected_id - ID of an object that is affected by this message
       p_affected_ids - Optional list of parameters a message relates to
       p_error_code - Additional error code, used in external applications
+      p_read_only - Flag to indicate whether the message is read only (i.e. for reporting)
       
     Returns:
       Instance of the requested message.
@@ -119,7 +120,8 @@ as
     p_msg_args in msg_args,
     p_affected_id in pit_util.max_sql_char,
     p_affected_ids in msg_params default null,
-    p_error_code in varchar2)
+    p_error_code in varchar2,
+    p_read_only in boolean default true)
     return message_type;    
        
     

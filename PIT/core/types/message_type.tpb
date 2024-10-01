@@ -4,6 +4,7 @@ as
   
   constructor function message_type(
     self in out nocopy message_type,
+    p_message_id in number,
     p_message_name in varchar2,
     p_message_language in varchar2,
     p_affected_id in varchar2,
@@ -16,6 +17,7 @@ as
   as
   begin
     self := message_type(
+              p_message_id => p_message_id,
               p_message_name => p_message_name,
               p_message_language => p_message_language,
               p_affected_ids => msg_params(msg_param('ID', p_affected_id)),
@@ -31,6 +33,7 @@ as
   /** Contructor method. Auto detects the required language */
   constructor function message_type(
     self in out nocopy message_type,
+    p_message_id in number,
     p_message_name in varchar2,
     p_message_language in varchar2,
     p_affected_ids in msg_params,
@@ -81,7 +84,7 @@ as
       from pit_message_v
      where pms_name = p_message_name;
      
-    self.id := pit_log_seq.nextval;
+    self.id := coalesce(p_message_id, pit_log_seq.nextval);
     self.message_name := p_message_name;    
     self.affected_ids := p_affected_ids;
     self.error_code := p_error_code;

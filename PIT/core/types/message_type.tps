@@ -1,4 +1,6 @@
-create or replace type message_type force is object(
+create or replace type message_type force 
+  authid definer
+as object(
   /** 
     Type: message_type
       Core message type. Is used to collect the message, severity and other useful information around messages 
@@ -57,8 +59,8 @@ create or replace type message_type force is object(
     p_msg in varchar2,
     p_params in varchar2,
     p_locale in varchar2,
-    l_status out number,
-    l_error_message out varchar2)
+    l_status out nocopy number,
+    l_error_message out nocopy varchar2)
     return varchar2
   as language java name
     'icu.ICU.format(java.lang.String, java.lang.String, java.lang.String, int[], java.lang.String[]) return java.lang.String',
@@ -67,6 +69,7 @@ create or replace type message_type force is object(
       Constructor function
       
     Parameters:
+      p_message_id - Technical ID of the message. If passed in, the sequence does not count up
       p_message_name - Name of the message
       p_message_language - Language of the message
       p_affected_id - Error code of the entry. May be used to divide several occurences of the same message name.
@@ -77,6 +80,7 @@ create or replace type message_type force is object(
    */
   constructor function message_type(
     self in out nocopy message_type,
+    p_message_id in number,
     p_message_name in varchar2,
     p_message_language in varchar2,
     p_affected_id in varchar2,
@@ -88,6 +92,7 @@ create or replace type message_type force is object(
     return self as result,
   constructor function message_type(       
     self in out nocopy message_type,
+    p_message_id in number,
     p_message_name in varchar2,
     p_message_language in varchar2,
     p_affected_ids in msg_params,
