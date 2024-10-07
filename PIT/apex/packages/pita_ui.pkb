@@ -729,7 +729,8 @@ as
   
   
   /**
-    Procedure: 
+    Procedure: edit_pms_get_requires_exception
+      See <pita_ui.edit_pms_get_requires_exception>
    */
   
   procedure edit_pms_get_requires_exception

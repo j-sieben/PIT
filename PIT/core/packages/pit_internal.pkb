@@ -118,6 +118,33 @@ as
     Group: Private adapter maintenance methods
    */
   /**
+    Procedure: log_internal
+      Method to log PIT-internal errors or warnings. Those messages are not passed
+      to output modules but saved in PIT_INTERNAL_LOG, as an output module may not
+      be available due to an internal error.
+      
+    Parameters:
+      p_pil_msg_text - Message to log. Is not based on a PIT message but harcoded text
+      p_pil_affected_id - Optional ID of an internal entity, May be the name of an output module
+   */
+  procedure log_internal(
+    p_pil_msg_text in pit_internal_log.pil_msg_text%type,
+    p_pil_affected_id in pit_internal_log.pil_affected_id%type)
+  as
+    pragma autonomous_transaction;
+  begin
+    insert into pit_internal_log(pil_msg_text, pil_affected_id, pil_msg_stack, pil_msg_backtrace)
+    values (p_pil_msg_text, p_pil_affected_id, pit_util.get_call_stack, pit_util.get_error_stack);
+    
+    commit;
+  exception
+    when others then
+      rollback;
+      raise;
+  end log_internal;
+  
+  
+  /**
     Procedure: load_adapter
       Loads and instantiates an adapter to read client information.
       
@@ -153,8 +180,7 @@ as
         execute immediate l_stmt using out l_adapter;
       exception
         when others then
-          -- ignore instantiation error
-          dbms_output.put_line('Error instantiating adapter "' || l_adapter_list(l_idx) || '": ' || sqlerrm);
+           log_internal('Error instantiating adapter."', l_adapter_list(l_idx));
       end;
       if l_adapter is not null and l_adapter.status = C_ADAPTER_OK then
         g_active_adapter := l_adapter;
@@ -262,33 +288,38 @@ as
     
     -- propagate event to output modules
     l_idx := l_modules.last;
-    while l_idx is not null loop
-      case p_event
-        when C_CONTEXT_EVENT then
-          l_modules(l_idx).context_changed(p_context);
-        when C_LOG_VALIDATION_EVENT then
-          l_modules(l_idx).log_validation(p_message);
-        when C_LOG_EXCEPTION_EVENT then
-          l_modules(l_idx).log_exception(p_message);
-        when C_LOG_STATE_EVENT then
-          l_modules(l_idx).log_state(p_log_state);
-        when C_PURGE_EVENT then
-          l_modules(l_idx).purge_log(p_date_before, p_severity_lower_equal);
-        when C_PRINT_EVENT then
-          l_modules(l_idx).print(p_message);
-        when C_NOTIFY_EVENT then
-          l_modules(l_idx).notify(p_message);
-        when C_ENTER_EVENT then
-          l_modules(l_idx).enter(p_call_stack);
-        when C_LEAVE_EVENT then
-          l_modules(l_idx).leave(p_call_stack);
-        when C_TWEET_EVENT then
-          l_modules(l_idx).tweet(p_message);
-        when C_PANIC_EVENT then
-          l_modules(l_idx).panic(p_message);
-        else
-          null;
-      end case;
+    begin
+      while l_idx is not null loop
+        case p_event
+          when C_CONTEXT_EVENT then
+            l_modules(l_idx).context_changed(p_context);
+          when C_LOG_VALIDATION_EVENT then
+            l_modules(l_idx).log_validation(p_message);
+          when C_LOG_EXCEPTION_EVENT then
+            l_modules(l_idx).log_exception(p_message);
+          when C_LOG_STATE_EVENT then
+            l_modules(l_idx).log_state(p_log_state);
+          when C_PURGE_EVENT then
+            l_modules(l_idx).purge_log(p_date_before, p_severity_lower_equal);
+          when C_PRINT_EVENT then
+            l_modules(l_idx).print(p_message);
+          when C_NOTIFY_EVENT then
+            l_modules(l_idx).notify(p_message);
+          when C_ENTER_EVENT then
+            l_modules(l_idx).enter(p_call_stack);
+          when C_LEAVE_EVENT then
+            l_modules(l_idx).leave(p_call_stack);
+          when C_TWEET_EVENT then
+            l_modules(l_idx).tweet(p_message);
+          when C_PANIC_EVENT then
+            l_modules(l_idx).panic(p_message);
+          else
+            null;
+        end case;
+      exception
+        when others then
+          log_internal('Error when raising an event to output module', l_idx);
+      end;
       l_idx := l_modules.prior(l_idx);
     end loop;
     
@@ -762,6 +793,9 @@ as
     l_error_message := get_message(p_error_name, null, null, null, null);
     
     if g_collect_mode then
+      g_active_message.severity := least(
+                                     l_error_message.severity, 
+                                     coalesce(g_active_message.severity, l_error_message.severity)); 
       push_message(g_active_message);      
     else
       raise_application_error(
