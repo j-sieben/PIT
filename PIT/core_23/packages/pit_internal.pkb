@@ -263,33 +263,38 @@ as
     -- propagate event to output modules
     l_idx := l_modules.last;
     while l_idx is not null loop
-      case p_event
-        when C_CONTEXT_EVENT then
-          l_modules(l_idx).context_changed(p_context);
-        when C_LOG_VALIDATION_EVENT then
-          l_modules(l_idx).log_validation(p_message);
-        when C_LOG_EXCEPTION_EVENT then
-          l_modules(l_idx).log_exception(p_message);
-        when C_LOG_STATE_EVENT then
-          l_modules(l_idx).log_state(p_log_state);
-        when C_PURGE_EVENT then
-          l_modules(l_idx).purge_log(p_date_before, p_severity_lower_equal);
-        when C_PRINT_EVENT then
-          l_modules(l_idx).print(p_message);
-        when C_NOTIFY_EVENT then
-          l_modules(l_idx).notify(p_message);
-        when C_ENTER_EVENT then
-          l_modules(l_idx).enter(p_call_stack);
-        when C_LEAVE_EVENT then
-          l_modules(l_idx).leave(p_call_stack);
-        when C_TWEET_EVENT then
-          l_modules(l_idx).tweet(p_message);
-        when C_PANIC_EVENT then
-          l_modules(l_idx).panic(p_message);
-        else
-          null;
-      end case;
-      l_idx := l_modules.prior(l_idx);
+      begin
+        case p_event
+          when C_CONTEXT_EVENT then
+            l_modules(l_idx).context_changed(p_context);
+          when C_LOG_VALIDATION_EVENT then
+            l_modules(l_idx).log_validation(p_message);
+          when C_LOG_EXCEPTION_EVENT then
+            l_modules(l_idx).log_exception(p_message);
+          when C_LOG_STATE_EVENT then
+            l_modules(l_idx).log_state(p_log_state);
+          when C_PURGE_EVENT then
+            l_modules(l_idx).purge_log(p_date_before, p_severity_lower_equal);
+          when C_PRINT_EVENT then
+            l_modules(l_idx).print(p_message);
+          when C_NOTIFY_EVENT then
+            l_modules(l_idx).notify(p_message);
+          when C_ENTER_EVENT then
+            l_modules(l_idx).enter(p_call_stack);
+          when C_LEAVE_EVENT then
+            l_modules(l_idx).leave(p_call_stack);
+          when C_TWEET_EVENT then
+            l_modules(l_idx).tweet(p_message);
+          when C_PANIC_EVENT then
+            l_modules(l_idx).panic(p_message);
+          else
+            null;
+        end case;
+        l_idx := l_modules.prior(l_idx);
+      exception
+        when others then
+          log_internal('Error when raising an event to output module', l_idx);
+      end;
     end loop;
     
     commit;

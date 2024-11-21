@@ -1,0 +1,18 @@
+create table pit_internal_log(
+  pil_log_id integer default on null pit_log_seq.nextval,
+  pil_log_date timestamp(6) default on null systimestamp,
+  pil_msg_text clob,
+  pil_msg_stack varchar2(2000 byte),
+  pil_msg_backtrace varchar2(2000 byte),
+  pil_affected_id varchar2(128 byte),
+  constraint p_pil_log_id primary key(pil_log_id)
+);
+
+comment on table pit_internal_log is 'Stores internal PIT message in case of non reportable, internal errors';
+comment on column pit_internal_log.pil_log_id is 'ID of the message, auto generated';
+comment on column pit_internal_log.pil_log_date is 'Log date the message, auto generated';
+comment on column pit_internal_log.pil_msg_text is 'Text of the message';
+comment on column pit_internal_log.pil_msg_stack is 'Callstack';
+comment on column pit_internal_log.pil_msg_backtrace is 'Backtrace';
+comment on column pit_internal_log.pil_affected_id is 'Internal referenc, fi name of an output module';
+  

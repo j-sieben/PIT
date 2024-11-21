@@ -1,4 +1,4 @@
-create table pit_trace_level(
+create table if not exists pit_trace_level(
   ptl_id number,
   ptl_name &ORA_NAME_TYPE.,
   ptl_pti_id varchar2(50 char),

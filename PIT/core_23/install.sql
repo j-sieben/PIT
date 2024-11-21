@@ -12,6 +12,10 @@ prompt &h2.Create tables
 @&tools.check_has_table pit_message_severity
 @&tools.check_has_table pit_trace_level
 @&tools.check_has_table pit_message
+@&tools.check_has_table pit_internal_log
+
+prompt &h2.Change tables
+@&tools.check_has_column pit_message_severity pse_requires_exception
 
 prompt &h2.Merge initial data
 @&tools.run_script merge_languages

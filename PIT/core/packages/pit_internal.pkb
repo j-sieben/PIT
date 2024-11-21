@@ -288,8 +288,8 @@ as
     
     -- propagate event to output modules
     l_idx := l_modules.last;
-    begin
-      while l_idx is not null loop
+    while l_idx is not null loop
+      begin
         case p_event
           when C_CONTEXT_EVENT then
             l_modules(l_idx).context_changed(p_context);

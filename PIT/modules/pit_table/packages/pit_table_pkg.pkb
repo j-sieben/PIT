@@ -35,7 +35,8 @@ as
     if p_params is not null then
       insert into pit_table_params(ptp_id, ptp_pse_id, ptp_log_date, ptp_param_name, ptp_param_value)
       select p_id, p_pse_id, localtimestamp, p_param, p_value
-        from table(p_params);
+        from table(p_params)
+       where p_param is not null;
     end if;
   end persist_params;
   

@@ -1,4 +1,4 @@
-create table pit_message_severity(
+create table if not exists pit_message_severity(
   pse_id number,
   pse_name &ORA_NAME_TYPE.,
   pse_pti_id varchar2(50 char),

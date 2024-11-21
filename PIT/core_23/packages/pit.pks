@@ -786,10 +786,10 @@ as
     Returns:
       Translated and parameterized message text as CLOB
    */
-  /*function get_message_text(
+  function get_message_text(
     p_message_name in varchar2,
-    p_msg_args in msg_args_char)
-    return clob;*/
+    p_msg_args in msg_args_char default null)
+    return clob;
     
   
   /** 

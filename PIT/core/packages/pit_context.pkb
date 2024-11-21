@@ -149,12 +149,14 @@ as
     l_module pit_util.ora_name_type;
   begin
     g_active_modules.delete;
-    for i in 1 .. g_context.log_modules.count loop
-      l_module := g_context.log_modules(i);
-      if g_available_modules.exists(l_module) then
-        g_active_modules(l_module) := g_available_modules(l_module);
-      end if;
-    end loop;
+    if g_context.log_modules is not null then
+      for i in 1 .. g_context.log_modules.count loop
+        l_module := g_context.log_modules(i);
+        if g_available_modules.exists(l_module) then
+          g_active_modules(l_module) := g_available_modules(l_module);
+        end if;
+      end loop;
+    end if;
   end set_active_modules;
 
 
@@ -525,8 +527,7 @@ as
   as
   begin
     read_active_context;
-    return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_ERROR);
-    return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_SEVERE);
+    return p_severity <= greatest(g_context.log_level, pit_internal.C_LEVEL_ERROR, pit_internal.C_LEVEL_SEVERE);
   end log_me;
   
   
@@ -671,6 +672,28 @@ as
   begin
     return g_active_modules;
   end get_active_modules;
+
+
+  /**
+    Function: get_active_module_list
+      See <PIT_INTERNAL.get_active_module_list>
+   */
+  function get_active_module_list
+  return varchar2
+  as
+    l_module pit_util.ora_name_type;
+    l_module_list pit_util.max_char;
+  begin
+    l_module := g_active_modules.FIRST;
+    l_module_list := l_module;
+    l_module := g_active_modules.NEXT(l_module);
+    while l_module is not null loop
+      l_module_list := l_module_list || ',' || l_module;
+      l_module := g_active_modules.NEXT(l_module);
+    end loop;
+    return l_module_list;
+  end get_active_module_list;
+  
   
   /**
     Function: report_module_status
@@ -731,7 +754,7 @@ as
       raise invalid_trace_flag;
     end if;
     if l_args(4) is not null then
-      l_log_modules := pit_util.string_to_table(l_args(4));
+      l_log_modules := pit_util.string_to_table(replace(l_args(4), ',', ':'));
       for i in 1 .. l_log_modules.count loop
         if not g_all_modules.exists(l_log_modules(i)) then
           raise_application_error(-20003, 'Unknown log module ' || l_log_modules(i));
@@ -761,7 +784,7 @@ as
     p_self.log_level := to_number(l_args(1));
     p_self.trace_level := to_number(l_args(2));
     p_self.trace_timing := l_args(3);
-    p_self.log_modules := pit_util.string_to_table(l_args(4));
+    p_self.log_modules := pit_util.string_to_table(replace(l_args(4), ',', ':'));
     p_self.trace_settings := p_settings;
   exception
     when others then

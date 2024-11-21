@@ -308,6 +308,14 @@ as
   function get_modules(
     p_focus in binary_integer)
   return pit_module_list;
+
+
+  /**
+    Function: get_active_module_list
+      Getter Function returning the list of active modules as a comma separated list
+   */
+  function get_active_module_list
+  return varchar2;
   
   
   /** 

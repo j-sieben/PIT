@@ -1,4 +1,4 @@
-create table pit_message_group(
+create table if not exists pit_message_group(
   pmg_name &ORA_NAME_TYPE.,
   pmg_description varchar2(200 char),
   pmg_error_prefix varchar2(6 byte) default '&EXCEPTION_PREFIX.',

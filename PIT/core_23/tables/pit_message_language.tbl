@@ -1,4 +1,4 @@
-create table pit_message_language(
+create table if not exists pit_message_language(
    pml_name &ORA_NAME_TYPE.,
    pml_display_name varchar2(50 char),
    pml_default_order number(3,0),

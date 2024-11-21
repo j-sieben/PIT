@@ -1,4 +1,4 @@
-create table pit_message(
+create table if not exists pit_message(
    pms_name &ORA_NAME_TYPE., 
    pms_pmg_name &ORA_NAME_TYPE.,
    pms_pml_name &ORA_NAME_TYPE.,

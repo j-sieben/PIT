@@ -7,7 +7,6 @@
   - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
 */
 
-clear screen
 @init/init.sql &1.
 
 define install_script_dir=install_scripts/

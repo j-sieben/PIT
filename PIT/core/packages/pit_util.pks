@@ -24,6 +24,7 @@ as
                      MAX_SQL_CHAR is still set to 4000 byte. Use CLOB otherwise
       small_char - VARCHAR2 with 255 byte length
       sign_type - One character, used for signs apart from boolean flags
+      uuid - 16 Byte RAW to store UUIDs
    */
   c_max_length constant binary_integer := 128;
   subtype ora_name_type is &ORA_NAME_TYPE.;
@@ -32,6 +33,7 @@ as
   subtype max_sql_char is varchar2(4000 byte);
   subtype small_char is varchar2(255 byte);
   subtype sign_type is char(1 byte);
+  subtype uuid is raw(16);
   
   /**
     Group: Data types

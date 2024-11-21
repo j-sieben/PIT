@@ -1,4 +1,4 @@
-create table pit_translatable_item(
+create table if not exists pit_translatable_item(
    pti_id &ORA_NAME_TYPE., 
    pti_pml_name &ORA_NAME_TYPE.,
    pti_pmg_name &ORA_NAME_TYPE.,

@@ -57,13 +57,45 @@ as
 
 
   -- ERROR messages
-  C_ERROR_ALREADY_ASSIGNED constant varchar2(200) := 'This Oracle error number is already assigned to message #ERRNO#';
-  C_MESSAGE_DOES_NOT_EXIST constant varchar2(200) := 'Message #MESSAGE# does not exist.';
+  C_ERROR_ALREADY_ASSIGNED constant pit_util.small_char := 'This Oracle error number is already assigned to message #ERRNO#';
+  C_MESSAGE_DOES_NOT_EXIST constant pit_util.small_char := 'Message #MESSAGE# does not exist.';
 
 
   /**
     Group: Generic helper methods
    */
+  /**
+    Function: replace_anchors
+      Helper to replace a list of anchors with their actual values, maintaining spelling.
+
+      Is used to replace anchors in file names in a spelling-aware manner: If the anchor
+      is in lowercase, the replacement will be in lowercase as well and vice versa.
+
+    Parameters:
+      p_text - Text to replace the values at
+      p_chunks - char_table instance with the anchors and replacements.
+
+    Returns:
+      Replaced text
+   */
+  function replace_anchors(
+    p_text in varchar2,
+    p_chunks in char_table)
+  return varchar2
+  as
+    l_text pit_util.small_char;
+  begin
+    l_text := p_text;
+    for i in 1 .. p_chunks.count loop
+      if mod(i, 2) = 1 then
+        l_text := replace(replace(replace(l_text,
+                    '#' || lower(p_chunks(i)) || '#', lower(p_chunks(i+1))),
+                    '#' || upper(p_chunks(i)) || '#', upper(p_chunks(i+1))),
+                    '#' || initcap(p_chunks(i)) || '#', initcap(p_chunks(i+1)));
+      end if;
+    end loop;
+    return l_text;
+  end replace_anchors;
 
 
   /**
@@ -85,21 +117,24 @@ as
     p_row pit_message%rowtype)
   as
     l_predefined_error pit_util.predefined_error_rec;
-    l_message varchar2(2000);
+    l_message pit_util.max_sql_char;
     l_message_length binary_integer;
-    C_MSG_TOO_LONG constant varchar2(200) :=
-      q'~Message "#MESSAGE#" must not exceed 26 chars but is #LENGTH#.~';
-    C_ERROR_MUST_BE_NEGATIVE constant varchar2(200) :=
+    l_max_length binary_integer;
+    C_MSG_TOO_LONG constant pit_util.max_sql_char :=
+      q'~Message "#MESSAGE#" must not exceed #MAX_LENGTH# chars but is #LENGTH#.~';
+    C_ERROR_MUST_BE_NEGATIVE constant pit_util.small_char :=
       q'~Predefined error numbers must be negative.~';
-    C_PREDEFINED_ERROR constant varchar2(200) :=
+    C_PREDEFINED_ERROR constant pit_util.small_char :=
       q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
   begin
 
     l_message_length := length(p_row.pms_name);
+    l_max_length := pit_util.get_max_message_length(p_row.pms_pmg_name);
 
-    if l_message_length > pit_util.get_max_message_length(p_row.pms_pmg_name) then
+    if l_message_length > l_max_length then
       l_message := pit_util.bulk_replace(C_MSG_TOO_LONG, char_table(
                      '#MESSAGE#', p_row.pms_name,
+                     '#MAX_LENGTH#', l_max_length,
                      '#LENGTH#', l_message_length));
        raise_application_error(-20000, l_message);
     end if;
@@ -118,6 +153,7 @@ as
                      '#NAME#', l_predefined_error.error_name,
                      '#OWNER#', l_predefined_error.owner,
                      '#PKG#', l_predefined_error.package_name));
+       raise_application_error(-20000, l_message);
     end if;
   end check_error;
 
@@ -176,11 +212,15 @@ as
 
     Parameters:
       p_pmg_name - Message group to filter output
+      p_file_name - Out parameter that provides the file name for the Script file
       p_script - Out parameter that contains the SQL script created
+      p_pml_name - Optional target language. Retrieves all messages in a translated language, if present.
    */
   procedure script_messages(
     p_pmg_name in pit_message_group.pmg_name%type,
-    p_script out nocopy clob)
+    p_file_name out nocopy pit_util.ora_name_type,
+    p_script out nocopy clob,
+    p_pml_name in pit_message_language.pml_name%type default null)
   as
     cursor message_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
@@ -196,17 +236,17 @@ as
                else null end pms_pse_id,
              pms_pml_name, pms_custom_error,
              rank() over (partition by pms_name order by pml_default_order) rang
-        from pit_message m
-        join pit_message_language ml
-          on m.pms_pml_name = ml.pml_name
-       where ml.pml_default_order > 0
-         and (m.pms_pmg_name = p_pmg_name
+        from pit_message
+        join pit_message_language
+          on pms_pml_name = pml_name
+       where pml_default_order > 0
+         and (pms_pmg_name = p_pmg_name
           or p_pmg_name is null)
-       order by m.pms_name, ml.pml_default_order;
+       order by pms_name, pml_default_order;
     l_chunk pit_util.max_char;
-    C_START constant varchar2(200) := q'~begin
+    C_START constant pit_util.small_char := q'~begin
 ~';
-    C_END constant varchar2(200) := q'~
+    C_END constant pit_util.small_char := q'~
   commit;
   pit_admin.create_message_package;
 end;
@@ -221,15 +261,22 @@ end;
     p_pms_pml_name => '#LANGUAGE#',
     p_error_number => #ERRNO#);
 ~';
-    C_TRANSLATE_TEMPLATE constant varchar2(200) := q'~
+    C_TRANSLATE_TEMPLATE constant pit_util.small_char := q'~
   pit_admin.translate_message(
     p_pms_name => '#NAME#',
     p_pms_text => q'^#TEXT#^',
     p_pms_description => q'^#DESCRIPTION#^',
     p_pms_pml_name => '#LANGUAGE#');
 ~';
+    l_actual_language varchar2(128 byte);
   begin
     -- Initialize
+    if p_pml_name is not null then
+      l_actual_language := substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1);
+      dbms_session.set_nls('NLS_LANGUAGE', p_pml_name);
+    end if;
+    p_file_name := param.get_string('EXPORT_FILE_NAME_PMS', 'PIT');
+    p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name));
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
@@ -249,14 +296,20 @@ end;
                      '#LANGUAGE#', msg.pms_pml_name,
                      '#ERRNO#', coalesce(to_char(msg.pms_custom_error), 'null')));
       else
-        l_chunk := l_chunk
-                || pit_util.bulk_replace(C_TRANSLATE_TEMPLATE, char_table(
-                     '#NAME#', msg.pms_name,
-                     '#TEXT#', msg.pms_text,
-                     '#DESCRIPTION#', msg.pms_description,
-                     '#LANGUAGE#', msg.pms_pml_name));
+        if p_pml_name is null then
+          l_chunk := l_chunk
+                  || pit_util.bulk_replace(C_TRANSLATE_TEMPLATE, char_table(
+                       '#NAME#', msg.pms_name,
+                       '#TEXT#', msg.pms_text,
+                       '#DESCRIPTION#', msg.pms_description,
+                       '#LANGUAGE#', msg.pms_pml_name));
+        end if;
       end case;
     end loop;
+
+    if p_pml_name is not null then
+      dbms_session.set_nls('NLS_LANGUAGE', l_actual_language);
+    end if;
 
     pit_util.clob_append(p_script, l_chunk);
     pit_util.clob_append(p_script, C_END);
@@ -269,28 +322,34 @@ end;
 
     Parameters:
       p_pmg_name - Message group to filter output
+      p_file_name - Out parameter that provides the file name for the Script file
       p_script - Out parameter that contains the SQL script created
+      p_pml_name - Optional target language. Retrieves all messages in a translated language, if present.
    */
   procedure script_translatable_items(
     p_pmg_name in pit_message_group.pmg_name%type default null,
-    p_script out nocopy clob)
-  as
-    cursor pti_cur(
+    p_file_name out nocopy pit_util.ora_name_type,
+    p_script out nocopy clob,
+    p_pml_name in pit_message_language.pml_name%type default null)
+  as    cursor pti_cur(
       p_pmg_name in pit_message_group.pmg_name%type) is
-      select i.*, rank() over (partition by pti_id order by pml_default_order) rang
-        from pit_translatable_item i
-        join pit_message_language ml
-          on i.pti_pml_name = ml.pml_name
-       where ml.pml_default_order > 0
-         and i.pti_pmg_name = p_pmg_name
-       order by i.pti_id, ml.pml_default_order;
+        with data as (
+               select i.*, rank() over (partition by pti_id order by pml_default_order desc) rang
+                 from pit_translatable_item i
+                 join (select pml_name, max(pml_default_order) pml_default_order
+                         from pit_message_language_v
+                        where pml_default_order > 0
+                        group by pml_name) ml
+                   on pti_pml_name = pml_name
+                where pti_pmg_name = p_pmg_name
+                order by i.pti_id, pml_default_order)
+        select *
+          from data
+         where rang = 1;
     l_chunk pit_util.max_char;
-    C_START constant varchar2(200) := q'~begin
-~';
-    C_END constant varchar2(200) := q'~
-  commit;
-end;
-/~';
+    C_CR constant pit_util.sign_type := chr(10);
+    C_START constant pit_util.max_sql_char := q'~set define off#CR##CR#begin#CR#~';
+    C_END constant pit_util.max_sql_char := q'~#CR#  commit;#CR#end;#CR#/#CR##CR#set define on~';
     C_PTI_TEMPLATE constant varchar2(300) := q'~
   pit_admin.merge_translatable_item(
     p_pti_id => '#PTI_ID#',
@@ -301,10 +360,18 @@ end;
     p_pti_description => q'^#PTI_DESCRIPTION_NAME#^'
   );
 ~';
+    l_actual_language varchar2(128 byte);
   begin
     -- Initialize
+    if p_pml_name is not null then
+      l_actual_language := substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1);
+      dbms_session.set_nls('NLS_LANGUAGE', p_pml_name);
+    end if;
+    p_file_name := param.get_string('EXPORT_FILE_NAME_PTI', 'PIT');
+    p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name));
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
-    pit_util.clob_append(p_script, C_START);
+    pit_util.clob_append(p_script, replace(C_START, '#CR#', C_CR));
+    
     pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
 
     for pti in pti_cur(p_pmg_name) loop
@@ -319,7 +386,11 @@ end;
       pit_util.clob_append(p_script, l_chunk);
     end loop;
 
-    pit_util.clob_append(p_script, C_END);
+    pit_util.clob_append(p_script, replace(C_END, '#CR#', C_CR));
+
+    if p_pml_name is not null then
+      dbms_session.set_nls('NLS_LANGUAGE', l_actual_language);
+    end if;
   end script_translatable_items;
 
 
@@ -458,6 +529,8 @@ end;
          (s.pti_id, s.pti_pml_name, s.pti_pmg_name,
           s.pti_name, s.pti_display_name, s.pti_description);
 
+    register_translation(l_pml_name);
+    
     commit;
   exception
     when others then
@@ -974,7 +1047,12 @@ end ]' || C_PACKAGE_NAME || ';';
      when not matched then insert
             (pms_name, pms_pmg_name, pms_pml_name, pms_text, pms_description, pms_pse_id, pms_custom_error)
           values
-            (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_description, s.pms_pse_id, s.pms_custom_error);
+            (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_description, s.pms_pse_id, s.pms_custom_error);    
+            
+    if p_row.pms_pml_name != g_default_language then
+      register_translation(p_row.pms_pml_name);
+    end if;
+
     commit;
 
   exception
@@ -1223,7 +1301,7 @@ end ]' || C_PACKAGE_NAME || ';';
     p_settings in varchar2,
     p_comment in varchar2 default null)
   as
-    c_standard_comment constant varchar2(200) := ' [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]';
+    c_standard_comment constant pit_util.small_char := ' [LOG_LEVEL|TRACE_LEVEL|TRACE_TIMING_FLAG (Y,N)|MODULE_LIST]';
   begin
 
     pit_util.check_context_settings(
@@ -1263,6 +1341,7 @@ end ]' || C_PACKAGE_NAME || ';';
   procedure create_installation_script(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
+    p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob,
     p_target_language in pit_message_language.pml_name%type default null)
   as
@@ -1270,11 +1349,13 @@ end ]' || C_PACKAGE_NAME || ';';
 
     case p_target
     when C_TARGET_PMS then
-      script_messages(p_pmg_name, p_script);
+      script_messages(p_pmg_name, p_file_name, p_script, p_target_language);
     when C_TARGET_PTI then
-      script_translatable_items(p_pmg_name, p_script);
+      script_translatable_items(p_pmg_name, p_file_name, p_script, p_target_language);
     when C_TARGET_PAR then
       p_script := param_admin.export_parameter_group(p_pmg_name);
+      p_file_name := param.get_string('EXPORT_FILE_NAME_PAR', 'PIT');
+      p_file_name := replace_anchors(p_file_name, char_table('PGR', p_pmg_name));
     else
       null;
     end case;
@@ -1291,9 +1372,11 @@ end ]' || C_PACKAGE_NAME || ';';
     return clob
   as
     l_script clob;
+    l_file_name pit_util.ora_name_type;
   begin
     create_installation_script(
       p_pmg_name => p_pmg_name,
+      p_file_name => l_file_name,
       p_target => p_target,
       p_script => l_script);
     return l_script;
@@ -1308,10 +1391,22 @@ end ]' || C_PACKAGE_NAME || ';';
     p_target_language in pit_message_language.pml_name%type,
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
-    p_file_name in pit_util.ora_name_type,
+    p_file_name out nocopy pit_util.ora_name_type,
     p_xliff out nocopy xmltype)
   as
   begin
+    case p_target
+      when C_TARGET_PMS then
+        p_file_name := param.get_string('TRANSLATION_FILE_NAME_PMS', 'PIT');
+        p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name, 'PML', p_target_language));
+        p_xliff := get_pms_xml(p_target_language, p_pmg_name);
+      when C_TARGET_PTI then
+        p_file_name := param.get_string('TRANSLATION_FILE_NAME_PTI', 'PIT');
+        p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name, 'PML', p_target_language));
+        p_xliff := get_pti_xml(p_target_language, p_pmg_name);
+      else
+        null;
+    end case;
 
     -- Wrap xml in XLIFF envelope
     with params as(
