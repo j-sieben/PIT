@@ -449,7 +449,7 @@ as
     p_target_language in pit_message_language.pml_name%type,
     p_pmg_name in pit_message_group.pmg_name%type default null,
     p_target in varchar2,
-    p_file_name in pit_util.ora_name_type,
+    p_file_name out nocopy pit_util.ora_name_type,
     p_xliff out nocopy xmltype);
     
   
