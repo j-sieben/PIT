@@ -6,6 +6,11 @@ set lines 120
 set pages 9999
 whenever sqlerror exit
 
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".   - "
 col install_user new_val INSTALL_USER format a128
 col remote_user new_val REMOTE_USER format a128
 col module new_val MODULE format a128
@@ -19,9 +24,3 @@ select upper('&1.') install_user,
 set termout on
  
 @init/settings.sql
-
-define section="********************************************************************************"
-define h1="*** "
-define h2="**  "
-define h3="*   "
-define s1=".    - "

@@ -5,6 +5,12 @@ set feedback off
 set lines 120
 set pages 9999
 
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".   - "
+
 whenever sqlerror continue
 alter session set plsql_implicit_conversion_bool = true;
 
@@ -43,11 +49,5 @@ select 'varchar2(' || data_length || ' byte)' ora_name_type, data_length ora_max
    and column_name = 'TABLE_NAME';
 
 define INSTALL_ON_DEV = false
-
-define section="********************************************************************************"
-define h1="*** "
-define h2="**  "
-define h3="*   "
-define s1=".    - "
 
 set termout on

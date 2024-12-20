@@ -6,6 +6,11 @@ set lines 120
 set pages 9999
 whenever sqlerror exit
 
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".   - "
 set termout off
 col sys_user new_val SYS_USER format a30
 col install_user new_val INSTALL_USER format a30
@@ -26,10 +31,5 @@ select application_id app_id
  where workspace_display_name = '&APEX_WS.'
    and alias = '&APEX_ALIAS.';
 
-define section="********************************************************************************"
-define h1="*** "
-define h2="**  "
-define h3="*   "
-define s1=".    - "
 
 set termout on

@@ -1,11 +1,11 @@
 
+
+@init/init_client.sql &1. &2.
+
 prompt
 prompt &section.
 prompt &h1.Registering PIT, found at &PIT_USER. at client &REMOTE_USER.
 prompt &section.
-
-@init/init_client.sql &1. &2.
-
 prompt &h2.Check whether PIT exists at user &PIT_USER.
 set termout off
 col default_tablespace new_val DEFAULT_TABLESPACE format a128

@@ -1,13 +1,3 @@
-/*
-  Script to install PIT
-  Usage:
-  Call this script either directly or by using the bat/sh script files.
-  
-  Parameters:
-  - INSTALL_USER: database user who owns PIT
-  - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
-  - MODULE_NAME: Name of the module to install. Must match one of the folder names in /modules/
-*/
 
 @init/init_module.sql &1. &2. &3.
 

@@ -1,11 +1,3 @@
-/*
-  Script to install PIT
-  Usage:
-  Call this script either directly or by using the bat/sh script files.
-  
-  Parameter:
-  - DEFAULT_LANGUAGE: Oracle language name of the default language for all messages.
-*/
 
 @init/init.sql &1.
 

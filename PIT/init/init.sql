@@ -8,6 +8,12 @@ set pages 9999
 whenever sqlerror exit
 set termout off
 
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".   - "
+
 begin
   $IF dbms_db_version.ver_le_19 $THEN
   null;
@@ -51,9 +57,3 @@ select lower(data_type) || '(' || data_length || case char_used when 'B' then ' 
    
 set termout on
 @init/settings.sql
-
-define section="********************************************************************************"
-define h1="*** "
-define h2="**  "
-define h3="*   "
-define s1=".    - "

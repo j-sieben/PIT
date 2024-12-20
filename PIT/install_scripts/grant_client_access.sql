@@ -1,12 +1,12 @@
 
+@init/init_client.sql &1. &2.
+
 prompt
 prompt &section.
 prompt &h1.Grant access to PIT to client &REMOTE_USER.
 prompt &section.
 prompt
 prompt &h2.Check prerequisites and initialize settings
-@init/init_client.sql &1. &2.
-
 prompt
 prompt &h2.Grant access to PARAM installation
 @parameters/grant_client.sql

@@ -5,6 +5,12 @@ set feedback off
 set lines 120
 set pages 9999
 
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".    - "
+
 set termout off
 begin
   $IF dbms_db_version.ver_le_19 $THEN

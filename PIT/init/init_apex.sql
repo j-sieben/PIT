@@ -8,6 +8,12 @@ set pages 9999
 whenever sqlerror exit
 set termout on
 
+define section="********************************************************************************"
+define h1="*** "
+define h2="**  "
+define h3="*   "
+define s1=".   - "
+
 begin
   $IF dbms_db_version.ver_le_19 $THEN
   null;
