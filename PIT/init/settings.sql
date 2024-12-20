@@ -1,4 +1,5 @@
 set termout off
+
 -- Choose your FLAG_TYPE datatype to adhere to your local conventions
 -- When using database version 23c and later, this will be ignored and BOOLEAN will be used instead
 define FLAG_TYPE="char(1 byte)";
@@ -34,4 +35,4 @@ select 'boolean' FLAG_TYPE, 'true' C_TRUE, 'false' C_FALSE, '_23' folder_extensi
  where to_number(substr(banner, instr(banner, 'Release') + 8, 2)) >= 23;
  
 set termout on
-prompt Boolean type: &FLAG_TYPE., &C_TRUE.|&C_FALSE.
+prompt &s1.Boolean type: &FLAG_TYPE., &C_TRUE.|&C_FALSE.

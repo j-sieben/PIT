@@ -10,11 +10,13 @@ col install_user new_val INSTALL_USER format a128
 col remote_user new_val REMOTE_USER format a128
 col module new_val MODULE format a128
 
-
+set termout off
 select upper('&1.') install_user,
        upper('&2.') remote_user,
        lower('&3.') module
   from dual;
+  
+set termout on
  
 @init/settings.sql
 

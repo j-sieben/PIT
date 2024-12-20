@@ -5,7 +5,7 @@ set feedback off
 set lines 120
 set pages 9999
 
-
+set termout off
 begin
   $IF dbms_db_version.ver_le_19 $THEN
   null;
@@ -24,9 +24,7 @@ define section="****************************************************************
 define h1="*** "
 define h2="**  "
 define h3="*   "
-define s1=".    - "
-
-set termout off
+define s1=".   - "
 
 col pit_user new_val PIT_USER format a128
 col remote_user new_val REMOTE_USER format a128
@@ -50,4 +48,5 @@ select lower(data_type) || '(' || data_length || case char_used when 'B' then ' 
   from all_tab_columns
  where table_name = 'USER_TABLES'
    and column_name = 'TABLE_NAME';
+   
 set termout on

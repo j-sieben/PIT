@@ -1,22 +1,17 @@
-/*
-  Script to install PIT-CLIENT
-  Usage:
-  Call this script either directly or by using the bat/sh script files.
-  
-  Parameter:
-  - REMOTE_USER:  database user who will be enabled to use PIT
-*/
 
-set termout off
+prompt
+prompt &section.
+prompt &h1.Registering PIT, found at &PIT_USER. at client &REMOTE_USER.
+prompt &section.
 
 @init/init_client.sql &1. &2.
-     
+
+prompt &h2.Check whether PIT exists at user &PIT_USER.
+set termout off
 col default_tablespace new_val DEFAULT_TABLESPACE format a128
 select default_tablespace
   from user_users;
 
-prompt &s1.Checking whether PIT exists at user &PIT_USER.
-    
 declare
   l_pit_exists binary_integer;
 begin
@@ -32,19 +27,17 @@ begin
   end if;
 end;
 /
+set termout on
 
 @init/settings.sql
 
-prompt
-prompt &section.
-prompt &h1.Registering PIT, found at &PIT_USER. at client &REMOTE_USER.
-
+prompt &h2.Register Parameter Client
 @parameters/register_client.sql
 
+prompt &h2.Register PIT Client
 @core/register_client.sql
 
 prompt
-prompt &section.
 prompt &h1.Registering PIT output modules
 @modules/pit_console/register_client.sql
 @modules/pit_table/register_client.sql
@@ -53,7 +46,9 @@ prompt &h1.Registering PIT output modules
 @modules/pit_file/register_client.sql
 --@modules/pit_mail/register_client.sql
 
+prompt &section.
 prompt &h1.Finished PIT client registration
+prompt &section.
 
 exit
 

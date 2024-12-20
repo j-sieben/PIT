@@ -1,14 +1,14 @@
 @init/set_folders modules/pit_mail
 prompt
 prompt &section.
-prompt &h1.Module PIT_MAIL
+prompt &h3.Module PIT_MAIL
 
 @&install_dir.check_prerequisites.sql
 
-prompt &h2.Grant user rights to &PIT_USER.
+prompt &s1.Grant user rights to &PIT_USER.
 @&tools.run_script user_grants
 
-prompt &h2.Create queue table for PIT_MAIL
+prompt &s1.Create queue table for PIT_MAIL
 @&tools.check_has_table pit_mail_queue
 
 prompt &s1.Create parameters and messages

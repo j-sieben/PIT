@@ -1,10 +1,7 @@
 @init/set_folders modules/pit_table
 
 prompt
-prompt &section.
-prompt &h1.Module PIT_TABLE
-
-prompt &h2.Install module PIT_TABLE
+prompt &h3.Install module PIT_TABLE
 prompt &s1.Create tables
 @&tools.check_has_table pit_table_log
 @&tools.check_has_table pit_table_call_stack
