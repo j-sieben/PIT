@@ -3,11 +3,11 @@ create table pit_message_severity(
   pse_name &ORA_NAME_TYPE.,
   pse_pti_id varchar2(50 char),
   pse_pti_pmg_id varchar2(50 char) default on null 'PIT',
-  pse_requires_exception varchar2(10 byte) default on null 'NONE' constraint pse_requires_exception_chk check(pse_requires_exception in ('NONE', 'OPTIONAL', 'MANDATORY'))
-  constraint pit_message_severity_pk primary key(pse_id),
+  pse_requires_exception varchar2(10 byte) default on null 'NONE' constraint pse_requires_exception_chk check(pse_requires_exception in ('NONE', 'OPTIONAL', 'MANDATORY')),
+  constraint pit_message_severity_pk primary key (pse_id),
   constraint fk_pse_pti_id foreign key(pse_pti_id, pse_pti_pmg_id)
     references pit_translatable_item(pti_uid, pti_upmg)
-) organization index ;
+) organization index;
 
 comment on column pit_message_severity.pse_id is 'Technical Key';
 comment on column pit_message_severity.pse_name is 'Unique name for message severity';
