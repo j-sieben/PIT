@@ -1341,8 +1341,8 @@ end ]' || C_PACKAGE_NAME || ';';
   procedure create_installation_script(
     p_pmg_name in pit_message_group.pmg_name%type,
     p_target in varchar2,
-    p_file_name out nocopy pit_util.ora_name_type,
     p_script out nocopy clob,
+    p_file_name out nocopy pit_util.ora_name_type,
     p_target_language in pit_message_language.pml_name%type default null)
   as
   begin
