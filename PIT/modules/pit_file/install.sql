@@ -15,7 +15,7 @@ prompt &h3.Create types and packages
 @&tools.install_type_body pit_file
 @&tools.install_package_body pit_file_pkg
 
-prompt &s3.Create PIT_FILE parameters
+prompt &h3.Create PIT_FILE parameters
 @&tools.run_script ParameterGroup_PIT
 
 prompt ### CAVE ###
