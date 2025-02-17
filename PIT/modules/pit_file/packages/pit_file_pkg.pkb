@@ -149,7 +149,7 @@ as
     -- Timing
     $IF dbms_db_version.ver_le_19 $THEN
     if p_call_stack.trace_timing = pit_util.C_TRUE then
-    $ELSIF dbms_db_version.ver_le_19 $THEN
+    $ELSIF dbms_db_version.ver_le_21 $THEN
     if p_call_stack.trace_timing = pit_util.C_TRUE then
     $ELSE
     if p_call_stack.trace_timing then

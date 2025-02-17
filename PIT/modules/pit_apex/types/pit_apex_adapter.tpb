@@ -25,7 +25,7 @@ as
       self.environment := 'APEX';
       $IF dbms_db_version.ver_le_19 $THEN
       self.status := pit_util.C_TRUE;
-      $ELSIF dbms_db_version.ver_le_19 $THEN
+      $ELSIF dbms_db_version.ver_le_21 $THEN
       self.status := pit_util.C_TRUE;
       $ELSE
       self.status := true;
@@ -33,7 +33,7 @@ as
     else
       $IF dbms_db_version.ver_le_19 $THEN
       self.status := pit_util.C_FALSE;
-      $ELSIF dbms_db_version.ver_le_19 $THEN
+      $ELSIF dbms_db_version.ver_le_21 $THEN
       self.status := pit_util.C_FALSE;
       $ELSE
       self.status := false;

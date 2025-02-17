@@ -57,7 +57,7 @@ as
       g_apex_triggered_context.trace_level := param.get_integer(C_TRG_TRACE_THRESHOLD, C_PARAM_GROUP);
       $IF dbms_db_version.ver_le_19 $THEN
       g_apex_triggered_context.trace_timing := pit_util.to_bool(param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP));
-      $ELSIF dbms_db_version.ver_le_19 $THEN
+      $ELSIF dbms_db_version.ver_le_21 $THEN
       g_apex_triggered_context.trace_timing := pit_util.to_bool(param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP));
       $ELSE
       g_apex_triggered_context.trace_timing := param.get_boolean(C_TRG_TRACE_TIMING, C_PARAM_GROUP);
