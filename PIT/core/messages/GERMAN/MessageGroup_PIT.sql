@@ -456,6 +456,15 @@ begin
     p_pms_pml_name => 'GERMAN',
     p_error_number => null);
 
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PANIC',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Ein unvorhergesehener Fehler ist aufgetreten: #SQLERRM#^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => pit.LEVEL_FATAL,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => null);
+
   commit;
   pit_admin.create_message_package;
 end;
