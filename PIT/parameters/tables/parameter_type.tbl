@@ -1,6 +1,6 @@
 create table parameter_type(
    pat_id &ORA_NAME_TYPE.,
-   pat_description varchar2(255),
+   pat_description varchar2(255 byte),
    constraint parameter_type_pk primary key (pat_id)
 ) organization index;
 

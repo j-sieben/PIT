@@ -1,6 +1,6 @@
 create table parameter_group(
    pgr_id &ORA_NAME_TYPE.,
-   pgr_description varchar2(255),
+   pgr_description varchar2(255 byte),
    pgr_is_modifiable &FLAG_TYPE. default &C_TRUE.,
    constraint parameter_group_pk primary key (pgr_id),
    constraint pgr_is_modifiable_chk check (pgr_is_modifiable in (&C_TRUE., &C_FALSE.))
