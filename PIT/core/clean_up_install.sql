@@ -11,7 +11,7 @@ declare
           select object_name name, object_type type
             from user_objects
            where object_name in (
-                 'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'MSG_ARGS_CHAR', 'PIT_MODULE', 'PIT_ARGS',
+                 'MESSAGE_TYPE', 'MSG_PARAM', 'MSG_PARAMS', 'MSG_ARGS', 'PIT_MODULE', 'PIT_ARGS',
                  'PIT_DEFAULT_ADAPTER', 'PIT_CALL_STACK_TYPE', 'PIT_LOG_STATE_TYPE', 'PIT_MODULE_LIST', 'PIT_CONTEXT_TYPE', '', 
                  'PIT_MODULE_META', 'PIT_MODULE_LIST', 'CHAR_TABLE', 'PIT_MESSAGE_TABLE', -- Types
                  'MSG', 'PIT', 'PIT_INTERNAL', 'PIT_ADMIN', 'PIT_UTIL', 'PIT_CALL_STACK', 'PIT_CONTEXT', 'PIT_APP_API', 'PIT_NOTIFICATION_UTIL',-- Packages

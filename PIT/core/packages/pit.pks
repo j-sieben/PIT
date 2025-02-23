@@ -782,14 +782,14 @@ as
       
     Parameters:
       p_message_name  Name of the message. Reference to package <MSG>
-      p_msg_args - Optional list of replacement information
+      p_msg_args_char - Optional list of replacement information
     
     Returns:
       Translated and parameterized message text as CLOB
    */
   function get_message_text(
     p_message_name in varchar2,
-    p_msg_args in msg_args_char default null)
+    p_msg_args_char in msg_args_char default null)
     return clob;
     
   

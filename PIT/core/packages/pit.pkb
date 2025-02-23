@@ -580,11 +580,11 @@ as
   
   function get_message_text(
     p_message_name in varchar2,
-    p_msg_args in msg_args_char default null)
+    p_msg_args_char in msg_args_char default null)
   return clob
   as
   begin
-    return pit_internal.get_message_text(p_message_name, pit_util.cast_to_msg_args(p_msg_args));
+    return pit_internal.get_message_text(p_message_name, pit_util.cast_to_msg_args(p_msg_args_char));
   end get_message_text;
   
   

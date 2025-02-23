@@ -438,7 +438,7 @@ as
                                     p_par_pgr_id => C_PARAM_GROUP);
     g_raise_tweet := instr(
                        param.get_string(C_TWEET_REALMS, C_PARAM_GROUP), 
-                       param.get_string('REALM', 'INTERNAL')) > 0;
+                       param.get_string('REALM', C_PARAM_GROUP)) > 0;
                                     
     g_collect_mode := false;
     g_collect_least_severity.delete;
