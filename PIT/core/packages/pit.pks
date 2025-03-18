@@ -894,6 +894,14 @@ as
                      several occurences of the same message. 
    */
   procedure assert_is_null(
+    p_condition in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null);
+    
+  procedure assert_is_null(
     p_condition in varchar2,
     p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
@@ -1057,6 +1065,14 @@ as
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.
    */
+  procedure assert_not_exists(
+    p_stmt in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null);
+    
   procedure assert_not_exists(
     p_stmt in varchar2,
     p_message_name in varchar2 default null,

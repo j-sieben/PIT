@@ -635,6 +635,22 @@ as
   
   
   procedure assert_is_null(
+    p_condition in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null)
+  as
+  begin
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is not null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_TRUE, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    end if;
+  end assert_is_null;
+  
+  
+  procedure assert_is_null(
     p_condition in varchar2,
     p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
@@ -773,7 +789,7 @@ as
     p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null)
   as
-    l_stmt varchar2(32767) := 'select count(*) from (#STMT#) where rownum = 1';
+    l_stmt pit_util.max_char := 'select count(*) from (#STMT#) where rownum = 1';
     l_count number;
   begin
     pit.assert_not_null(l_stmt);
@@ -815,7 +831,29 @@ as
   
   
   procedure assert_not_exists(
-    p_stmt  in varchar2,
+    p_stmt in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null)
+  as
+    l_stmt clob := 'select count(*) from (#STMT#) where rownum = 1';
+    l_count number;
+  begin
+    if pit_internal.check_needs_assert(p_message_name, p_error_code) then
+      pit.assert_not_null(l_stmt);
+      l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+      execute immediate l_stmt into l_count;
+      if l_count = 1 then
+         pit_internal.raise_assertion_finding(msg.PIT_ASSERT_NOT_EXISTS, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+      end if;
+    end if;
+  end assert_not_exists;
+  
+  
+  procedure assert_not_exists(
+    p_stmt in varchar2,
     p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
     p_affected_id in varchar2 default null,
