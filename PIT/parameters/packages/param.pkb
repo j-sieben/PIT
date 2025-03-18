@@ -70,8 +70,8 @@ as
     select *
       into l_row
       from parameter_v
-     where par_id = p_par_id
-       and par_pgr_id = p_par_pgr_id;
+     where par_id = upper(p_par_id)
+       and par_pgr_id = upper(p_par_pgr_id);
     return l_row;
   exception
     when no_data_found then

@@ -682,6 +682,22 @@ as
   
   
   procedure assert_not_null(
+    p_condition in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null)
+  as
+  begin
+    if pit_internal.check_needs_assert(p_message_name, p_error_code)
+       and p_condition is null then
+      pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NOT_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    end if;
+  end assert_not_null;
+  
+  
+  procedure assert_not_null(
     p_condition in varchar2,
     p_message_name in varchar2 default null,
     p_msg_args msg_args := null,
@@ -727,6 +743,26 @@ as
       pit_internal.raise_assertion_finding(msg.PIT_ASSERT_IS_NOT_NULL, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     end if;
   end assert_not_null;
+  
+ 
+  procedure assert_exists(
+    p_stmt in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,
+    p_error_code in varchar2 default null)
+  as
+    l_stmt clob := 'select count(*) from (#STMT#) where rownum = 1';
+    l_count number;
+  begin
+    pit.assert_not_null(l_stmt);
+    l_stmt := replace(l_stmt, '#STMT#', p_stmt);
+    execute immediate l_stmt into l_count;
+    if l_count = 0 then
+       pit_internal.raise_assertion_finding(msg.PIT_ASSERT_EXISTS, p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code);
+    end if;
+  end assert_exists;
   
  
   procedure assert_exists(
@@ -1016,22 +1052,6 @@ as
       pit_internal.set_collect_mode(false);
     end if;
   end stop_message_collection;
-  
-  
-  function has_no_bulk_error
-    return boolean
-  as
-  begin
-    return pit_internal.get_collect_least_severity(char_table()) > LEVEL_ERROR;
-  end has_no_bulk_error;
-  
-  
-  function has_no_bulk_fatal
-    return boolean
-  as
-  begin
-    return pit_internal.get_collect_least_severity(char_table()) > LEVEL_FATAL;
-  end has_no_bulk_fatal;
   
   
   function assert_is_ok(

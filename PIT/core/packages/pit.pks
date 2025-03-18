@@ -929,7 +929,7 @@ as
   
   
   /**
-    Procedure: assert_is_null
+    Procedure: assert_not_null
       Asserts that <P_CONDITION> is not null. Overload for VARCHAR2 expressions.
       
       Use this procedure to check whether an expression is not NULL.
@@ -947,6 +947,14 @@ as
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.  
    */
+  procedure assert_not_null(
+    p_condition in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null);
+    
   procedure assert_not_null(
     p_condition in varchar2,
     p_message_name in varchar2 default null,
@@ -1001,6 +1009,14 @@ as
       p_error_code - Optional error code, usable by external applications and to distinguish
                      several occurences of the same message.
    */
+  procedure assert_exists(
+    p_stmt in clob,
+    p_message_name in varchar2 default null,
+    p_msg_args msg_args := null,
+    p_affected_id in varchar2 default null,
+    p_affected_ids in msg_params default null,   
+    p_error_code in varchar2 default null);
+    
   procedure assert_exists(
     p_stmt in varchar2,
     p_message_name in varchar2 default null,
@@ -1238,37 +1254,6 @@ as
       To process the errors, use <get_message_collection> to retrieve a list of all collected messages.
    */
   procedure stop_message_collection;
-  
-  
-  /** 
-    Function: has_no_bulk_error
-      Method to check whether no error has occurred yet.
-      
-      Is used to check that no exception has occured during collection mode. 
-      This is useful to control wether further validations do make sense.
-      
-    Returns:
-      TRUE, if no error or fatal error has occured yet, FALSE otherwise
-   */
-  function has_no_bulk_error
-    return boolean;
-  pragma deprecate (has_no_bulk_error, 'has_no_bulk_error is deprecated, use assert_is_ok or assert_is_not_ok instead.');
-  
-    
-  /** 
-    Function: has_no_bulk_fatal
-      Method to check whether no fatal error has occurred yet.
-      
-      Is used to check that no exception has occured during collection mode. 
-      This is useful to control wether further validations do make sense.
-      
-    Returns:
-      TRUE, if no fatal error has occured yet, FALSE otherwise
-   */
-  function has_no_bulk_fatal
-    return boolean;
-  pragma deprecate (has_no_bulk_fatal, 'has_no_bulk_fatal is deprecated, use assert_is_ok or assert_is_not_ok instead and set p_threshold to LEVEL_FATAL.');
-  
   
   /**
     Function: assert_is_ok
