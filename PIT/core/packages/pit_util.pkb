@@ -598,7 +598,7 @@ as
   as
     l_msg_args msg_args;
   begin
-    if p_msg_args is not null then
+    if p_msg_args is not null and p_msg_args.count > 0 then
       l_msg_args := msg_args();
       for i in p_msg_args.first .. p_msg_args.last loop
         l_msg_args.extend;
