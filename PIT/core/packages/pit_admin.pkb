@@ -48,14 +48,7 @@ as
   /**
     Group: Private package variables
    */
-  /**
-    Variables: Package variables
-      g_predefined_errors - List of predefined errors found in existing packages
-      g_default_language - ORacle name of the default language
-   */
-  g_default_language pit_util.ora_name_type;
-
-
+   
   -- ERROR messages
   C_ERROR_ALREADY_ASSIGNED constant pit_util.small_char := 'This Oracle error number is already assigned to message #ERRNO#';
   C_MESSAGE_DOES_NOT_EXIST constant pit_util.small_char := 'Message #MESSAGE# does not exist.';
@@ -64,6 +57,27 @@ as
   /**
     Group: Generic helper methods
    */
+  /**
+    Function: get_default_language
+      Method to return the default language. Also caches the value to avoid
+      unnecessary roundtrips
+   */
+  function get_default_language
+    return pit_message_language.pml_name%type
+  as
+    l_default_language pit_message_language.pml_name%type;
+  begin
+    select pml_name default_language
+      into l_default_language
+      from pit_message_language
+     where pml_default_order > 0
+     order by pml_default_order
+     fetch first 1 rows only;
+       
+    return l_default_language;
+  end get_default_language;
+  
+  
   /**
     Function: replace_anchors
       Helper to replace a list of anchors with their actual values, maintaining spelling.
@@ -433,8 +447,10 @@ end;
   as
     l_pml_name pit_message_language.pml_name%type;
     l_pmg_name pit_message_group.pmg_name%type;
+    l_default_language pit_message_language.pml_name%type;
   begin
     analyze_xliff(p_xliff, l_pml_name, l_pmg_name);
+    l_default_language := get_default_language;
 
     merge into pit_message t
     using (select d.pms_name as pms_name,
@@ -445,7 +461,7 @@ end;
                     (select pms_text
                        from pit_message o
                       where o.pms_name = d.pms_name
-                        and o.pms_pml_name = g_default_language)) as pms_text,
+                        and o.pms_pml_name = l_default_language)) as pms_text,
                   d.description_translation as pms_description,
                   m.pms_pse_id,
                   m.pms_custom_error
@@ -557,14 +573,17 @@ end;
     return xmltype
   as
     l_xml xmltype;
+    l_default_language pit_message_language.pml_name%type;
   begin
+    l_default_language := get_default_language;
+    
     with messages as(
            select pms_name,
                   -- pivot test and description to source and target columns
                   max(
                     decode(
                       pms_pml_name,
-                      g_default_language, to_char(pms_text))) source_text,
+                      l_default_language, to_char(pms_text))) source_text,
                   max(
                     decode(
                       pms_pml_name,
@@ -572,14 +591,14 @@ end;
                   max(
                     decode(
                       pms_pml_name,
-                      g_default_language, to_char(pms_description))) source_description,
+                      l_default_language, to_char(pms_description))) source_description,
                   max(
                     decode(
                       pms_pml_name,
                       p_target_language, to_char(pms_description))) target_description
              from pit_message m
             where pms_pmg_name = p_pmg_name
-              and pms_pml_name in (g_default_language, p_target_language)
+              and pms_pml_name in (l_default_language, p_target_language)
             group by pms_name)
     select xmlagg(
              xmlelement("unit",
@@ -629,14 +648,16 @@ end;
     return xmltype
   as
     l_xml xmltype;
+    l_default_language pit_message_language.pml_name%type;
   begin
+    l_default_language := get_default_language;
     with messages as(
            select pti_id,
                   -- pivot test and description to source and target columns
                   max(
                     decode(
                       pti_pml_name,
-                      g_default_language, to_char(pti_name))) source_name,
+                      l_default_language, to_char(pti_name))) source_name,
                   max(
                     decode(
                       pti_pml_name,
@@ -644,7 +665,7 @@ end;
                   max(
                     decode(
                       pti_pml_name,
-                      g_default_language, to_char(pti_display_name))) source_display_name,
+                      l_default_language, to_char(pti_display_name))) source_display_name,
                   max(
                     decode(
                       pti_pml_name,
@@ -652,14 +673,14 @@ end;
                   max(
                     decode(
                       pti_pml_name,
-                      g_default_language, to_char(pti_description))) source_description,
+                      l_default_language, to_char(pti_description))) source_description,
                   max(
                     decode(
                       pti_pml_name,
                       p_target_language, to_char(pti_description))) target_description
              from pit_translatable_item i
             where pti_pmg_name = p_pmg_name
-              and pti_pml_name in (g_default_language, p_target_language)
+              and pti_pml_name in (l_default_language, p_target_language)
             group by pti_id)
     select xmlagg(
              xmlelement("unit",
@@ -697,31 +718,6 @@ end;
       from messages;
     return l_xml;
   end get_pti_xml;
-
-
-  /**
-    Procedure: initialize
-      Initialization procedure.
-
-      Called internally. It has the following functionality:
-
-      - Read all predefined oracle errors from the oracle packages
-      - Read default language
-   */
-  procedure initialize
-  as
-  begin
-    if g_default_language is null then
-      -- Read default language
-      select pml_name default_language
-        into g_default_language
-        from pit_message_language
-       where pml_default_order > 0
-       order by pml_default_order
-       fetch first 1 rows only;
-    end if;
-  end initialize;
-
 
   /**
     Group: Public administration methods
@@ -794,8 +790,11 @@ end ]' || C_PACKAGE_NAME || ';';
     l_constants clob := C_R || '  -- CONSTANTS:' || C_R;
     l_exceptions clob := C_R || '  -- EXCEPTIONS:' || C_R;
     l_pragmas clob := C_R || '  -- EXCEPTION INIT:' || C_R;
+    l_default_language pit_message_language.pml_name%type;
 
-    cursor message_cur is
+    cursor message_cur(
+      l_default_language in pit_message_language.pml_name%type) 
+      is
         with messages as(
              select pms_name,
                     case pms_custom_error when C_MAX_ERROR then pms_active_error else pms_custom_error end pms_custom_error,
@@ -805,7 +804,7 @@ end ]' || C_PACKAGE_NAME || ';';
                from pit_message m
                join pit_message_group
                  on pms_pmg_name = pmg_name
-              where pms_pml_name = g_default_language)
+              where pms_pml_name = l_default_language)
       select replace(l_constant_template, '#CONSTANT#', pms_name) constant_chunk,
              case when pms_custom_error is not null then
                replace (l_exception_template, '#ERROR_NAME#', pms_error_name)
@@ -817,6 +816,7 @@ end ]' || C_PACKAGE_NAME || ';';
        order by pms_name;
 
   begin
+    l_default_language := get_default_language;
     -- persist active error numbers for all errors in message table
     merge into pit_message m
     using (select pms_name, pms_pml_name, C_MIN_ERROR - 1 + dense_rank() over (order by pms_name) pms_active_error
@@ -835,7 +835,7 @@ end ]' || C_PACKAGE_NAME || ';';
     commit;
 
     -- create package code
-    for msg in message_cur loop
+    for msg in message_cur(l_default_language) loop
       pit_util.clob_append(l_constants, msg.constant_chunk);
       pit_util.clob_append(l_exceptions, msg.exception_chunk);
       pit_util.clob_append(l_pragmas, msg.pragma_chunk);
@@ -849,6 +849,7 @@ end ]' || C_PACKAGE_NAME || ';';
       dbms_xslprocessor.clob2file(l_sql_text, p_directory, C_PACKAGE_NAME || '.pkg');
     else
       execute immediate l_sql_text;
+      dbms_session.reset_package;
     end if;
 
   end create_message_package;
@@ -864,14 +865,16 @@ end ]' || C_PACKAGE_NAME || ';';
     return varchar2
   as
     l_pms_text pit_message.pms_text%type;
+    l_default_language pit_message_language.pml_name%type;
   begin
+    l_default_language := get_default_language;
     select pms_text
       into l_pms_text
       from (select pms_text, pms_pse_id,
                    rank() over (order by pml_default_order desc) ranking
               from pit_message
               join pit_message_language_v on pms_pml_name = pml_name
-             where pms_name = coalesce(p_pms_name, g_default_language))
+             where pms_name = coalesce(p_pms_name, l_default_language))
       where ranking = 1;
     return l_pms_text;
   exception
@@ -1022,15 +1025,17 @@ end ]' || C_PACKAGE_NAME || ';';
   procedure merge_message(
     p_row in out nocopy pit_message%rowtype)
   as
+    l_default_language pit_message_language.pml_name%type;
   begin
     -- Initialization
     p_row.pms_name := pit_util.harmonize_sql_name(p_row.pms_name);
+    l_default_language := get_default_language;
 
     validate_message(p_row);
 
     merge into pit_message t
     using (select p_row.pms_name pms_name,
-                  upper(coalesce(p_row.pms_pml_name, g_default_language)) pms_pml_name,
+                  upper(coalesce(p_row.pms_pml_name, l_default_language)) pms_pml_name,
                   upper(p_row.pms_pmg_name) pms_pmg_name,
                   p_row.pms_text pms_text,
                   p_row.pms_description pms_description,
@@ -1049,7 +1054,7 @@ end ]' || C_PACKAGE_NAME || ';';
           values
             (s.pms_name, s.pms_pmg_name, s.pms_pml_name, s.pms_text, s.pms_description, s.pms_pse_id, s.pms_custom_error);    
             
-    if p_row.pms_pml_name != g_default_language then
+    if p_row.pms_pml_name != l_default_language then
       register_translation(p_row.pms_pml_name);
     end if;
 
@@ -1114,12 +1119,15 @@ end ]' || C_PACKAGE_NAME || ';';
   as
     l_pms_pse_id pit_message.pms_pse_id%type;
     l_error_number pit_message.pms_custom_error%type;
+    l_default_language pit_message_language.pml_name%type;
   begin
+    l_default_language := get_default_language;
+    
     select pms_pse_id, pms_custom_error
       into l_pms_pse_id, l_error_number
       from pit_message
      where pms_name = p_pms_name
-       and pms_pml_name = g_default_language;
+       and pms_pml_name = l_default_language;
 
     merge_message(
       p_pms_name => p_pms_name,
@@ -1156,15 +1164,17 @@ end ]' || C_PACKAGE_NAME || ';';
   procedure merge_translatable_item(
     p_row in out nocopy pit_translatable_item%rowtype)
   as
+    l_default_language pit_message_language.pml_name%type;
   begin
     -- Initialize
     p_row.pti_id := pit_util.harmonize_sql_name(p_row.pti_id);
+    l_default_language := get_default_language;
 
     validate_translatable_item(p_row);
 
     merge into pit_translatable_item t
     using (select p_row.pti_id pti_id,
-                  coalesce(p_row.pti_pml_name, g_default_language) pti_pml_name,
+                  coalesce(p_row.pti_pml_name, l_default_language) pti_pml_name,
                   p_row.pti_pmg_name pti_pmg_name,
                   p_row.pti_name pti_name,
                   p_row.pti_display_name pti_display_name,
@@ -1394,7 +1404,9 @@ end ]' || C_PACKAGE_NAME || ';';
     p_file_name out nocopy pit_util.ora_name_type,
     p_xliff out nocopy xmltype)
   as
+    l_default_language pit_message_language.pml_name%type;
   begin
+    l_default_language := get_default_language;
     case p_target
       when C_TARGET_PMS then
         p_file_name := param.get_string('TRANSLATION_FILE_NAME_PMS', 'PIT');
@@ -1410,9 +1422,9 @@ end ]' || C_PACKAGE_NAME || ';';
 
     -- Wrap xml in XLIFF envelope
     with params as(
-           select replace(utl_i18n.map_locale_to_iso(g_default_language, null), '_', '-') source_iso_language,
+           select replace(utl_i18n.map_locale_to_iso(l_default_language, null), '_', '-') source_iso_language,
                   replace(utl_i18n.map_locale_to_iso(p_target_language, null), '_', '-') target_iso_language,
-                  g_default_language source_language,
+                  l_default_language source_language,
                   p_target_language target_language,
                   C_XLIFF_NS xmlns,
                   p_file_name file_name,
@@ -1523,7 +1535,5 @@ end ]' || C_PACKAGE_NAME || ';';
 
   end register_translation;
 
-begin
-  initialize;
 end pit_admin;
 /
