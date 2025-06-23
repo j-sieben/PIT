@@ -103,7 +103,7 @@ as
     end if;
 
     -- replace anchors with msg params
-    if p_msg_args is not null then
+    if p_msg_args is not null and p_msg_args.count > 0 then
       if upper(p_msg_args(1)) = 'FORMAT_ICU' then
         l_language := sys_context('USERENV', 'LANGUAGE');
         l_territory := substr(l_language, instr(l_language, '_') + 1, instr(l_language, '.') - instr(l_language, '_') - 1);
