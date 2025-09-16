@@ -40,6 +40,32 @@ as
     end if;
   end persist_params;
   
+  
+  /**
+    Procedure: log_enter_leave
+      Method logs enter or leave method calls
+      
+    Parameters:
+      p_call_stack - Instance of the enter or leave record to persist
+      p_direction - One of ENTER|LEAVE to indicate the direction of the logging      
+   */
+  procedure log_enter_leave(
+    p_call_stack in pit_call_stack_type,
+    p_direction in varchar2)
+  as
+  begin
+    insert into pit_table_call_stack
+      (cls_id, cls_log_date, cls_call_level, cls_action, 
+       cls_session_id, cls_user_name, cls_method_name, cls_module_name,
+       cls_elapsed, cls_elapsed_cpu, cls_total_time, cls_total_time_cpu)
+    values
+      (p_call_stack.id, coalesce(p_call_stack.wall_clock, localtimestamp), p_call_stack.call_level, p_direction,
+       substr(p_call_stack.session_id, 1, 64), substr(p_call_stack.user_name, 1, 30), p_call_stack.method_name, p_call_stack.module_name,
+       p_call_stack.elapsed, p_call_stack.elapsed_cpu, p_call_stack.total, p_call_stack.total_cpu);
+    
+    persist_params(p_call_stack.id, pit.LEVEL_DEBUG, p_call_stack.params);
+  end log_enter_leave;
+  
 
   /**
     Group: Public method implementations
@@ -71,15 +97,20 @@ as
     p_message in message_type)
   as
   begin
-    insert into pit_table_log
-      (log_id, log_date, log_session_id, log_user_name, 
-       log_message_text, log_message_name, log_message_args, 
-       log_message_stack, log_message_backtrace, log_severity)
-    values
-      (p_message.id, p_message.creation_time, substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
-       p_message.message_text, p_message.message_name, pit_util.cast_to_msg_args_char(p_message.message_args), 
-       p_message.stack, p_message.backtrace, p_message.severity);
+    log_exception(p_message);
   end panic;
+  
+  
+  /**
+    Procedure: tweet
+      See <pit_table_pkg.tweet>
+   */
+  procedure tweet(
+    p_message in message_type)
+  as
+  begin
+    log_exception(p_message);
+  end tweet;
   
   
   /**
@@ -122,16 +153,7 @@ as
     p_call_stack in pit_call_stack_type)
   as
   begin
-    insert into pit_table_call_stack
-      (cls_id, cls_log_date, cls_call_level, cls_action, 
-       cls_session_id, cls_user_name, cls_method_name, cls_module_name,
-       cls_elapsed, cls_elapsed_cpu, cls_total_time, cls_total_time_cpu)
-    values
-      (p_call_stack.id, coalesce(p_call_stack.wall_clock, localtimestamp), p_call_stack.call_level, 'ENTER',
-       substr(p_call_stack.session_id, 1, 64), substr(p_call_stack.user_name, 1, 30), p_call_stack.method_name, p_call_stack.module_name,
-       p_call_stack.elapsed, p_call_stack.elapsed_cpu, p_call_stack.total, p_call_stack.total_cpu);
-    
-    persist_params(p_call_stack.id, pit.LEVEL_DEBUG, p_call_stack.params);
+    log_enter_leave(p_call_stack, 'ENTER');
   end enter;
 
 
@@ -143,16 +165,7 @@ as
     p_call_stack in pit_call_stack_type)
   as
   begin
-    insert into pit_table_call_stack
-      (cls_id, cls_log_date, cls_call_level, cls_action, 
-       cls_session_id, cls_user_name, cls_module_name, cls_method_name,
-       cls_elapsed, cls_elapsed_cpu, cls_total_time, cls_total_time_cpu)
-    values
-      (p_call_stack.id, coalesce(p_call_stack.wall_clock, localtimestamp), p_call_stack.call_level, 'LEAVE',
-       p_call_stack.session_id, p_call_stack.user_name, p_call_stack.module_name, p_call_stack.method_name, 
-       p_call_stack.elapsed, p_call_stack.elapsed_cpu, p_call_stack.total, p_call_stack.total_cpu);
-    
-    persist_params(p_call_stack.id, pit.LEVEL_DEBUG, p_call_stack.params);
+    log_enter_leave(p_call_stack, 'LEAVE');
   end leave;
 
 

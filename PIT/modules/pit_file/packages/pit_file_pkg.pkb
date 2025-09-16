@@ -204,6 +204,19 @@ as
   
   
   /**
+    Procedure: tweet
+      see <pit_file_pkg.tweet>
+   */
+  procedure tweet(
+    self in out nocopy pit_file,
+    p_message in message_type)
+  as
+  begin
+    write_to_file(replace(g_message_template, '#MESSAGE#', p_message.message_text));
+  end tweet;
+  
+  
+  /**
     Procedure: log_state
       see <pit_file_pkg.log_state>
    */

@@ -30,6 +30,15 @@ as
     
     
   /**
+    Procedure: tweet
+      See <PIT_MODULE.tweet>
+   */
+  procedure tweet (
+    self in out nocopy pit_file,
+    p_message in message_type);
+    
+    
+  /**
     Procedure: log_state
       See <PIT_MODULE.log_state>
    */

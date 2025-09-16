@@ -25,6 +25,14 @@ as
    */
   procedure panic(
     p_message in message_type);
+   
+  
+  /** 
+    Procedure: tweet 
+      See: <PIT_CONSOLE.tweet>
+   */
+  procedure tweet(
+    p_message in message_type);
     
   
   /**

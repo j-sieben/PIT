@@ -21,10 +21,18 @@ create or replace type pit_file under pit_module(
     p_log_state in pit_log_state_type),    
     
   /** 
-    Procedure: log_exception
-      See <PIT_MODULE.log_exception>
+    Procedure: panic
+      See <PIT_MODULE.panic>
    */
   overriding member procedure panic(
+    self in out nocopy pit_file,
+    p_message in message_type),     
+    
+  /** 
+    Procedure: tweet
+      See <PIT_MODULE.tweet>
+   */
+  overriding member procedure tweet(
     self in out nocopy pit_file,
     p_message in message_type),    
     

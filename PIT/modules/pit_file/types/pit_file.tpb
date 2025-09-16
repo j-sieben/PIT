@@ -30,6 +30,16 @@ as
       pit_file_pkg.panic(self, p_message);
     end if;
   end panic;
+  
+  overriding member procedure tweet(
+    self in out nocopy pit_file,
+    p_message in message_type)
+  as
+  begin
+    if p_message.severity <= fire_threshold then
+      pit_file_pkg.tweet(self, p_message);
+    end if;
+  end tweet;
 
   overriding member procedure purge_log(
     self in out nocopy pit_file,

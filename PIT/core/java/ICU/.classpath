@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="/Users/j.sieben/Downloads/json-20201115.jar"/>
+	<classpathentry kind="lib" path="/Users/j.sieben/Downloads/icu4j-68_2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

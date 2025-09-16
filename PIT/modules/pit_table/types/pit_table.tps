@@ -14,6 +14,7 @@ create or replace type pit_table under pit_module(
       See <PIT_MODULE.log_exception>
    */
   overriding member procedure log_exception(
+    self in out nocopy pit_table,
     p_message in message_type),
   
   /** 
@@ -21,6 +22,15 @@ create or replace type pit_table under pit_module(
       See <PIT_MODULE.panic>
    */
   overriding member procedure panic(
+    self in out nocopy pit_table,
+    p_message in message_type),
+  
+  /** 
+    Procedure: tweet
+      See <PIT_MODULE.tweet>
+   */
+  overriding member procedure tweet(
+    self in out nocopy pit_table,
     p_message in message_type),
   
   
@@ -29,6 +39,7 @@ create or replace type pit_table under pit_module(
       See <PIT_MODULE.log>
    */
   overriding member procedure log_state(
+    self in out nocopy pit_table,
     p_log_state in pit_log_state_type),
   
   /** 
@@ -36,6 +47,7 @@ create or replace type pit_table under pit_module(
       See <PIT_MODULE.enter>
    */
   overriding member procedure enter (
+    self in out nocopy pit_table,
     p_call_stack pit_call_stack_type),
     
   
@@ -44,6 +56,7 @@ create or replace type pit_table under pit_module(
       See <PIT_MODULE.leave>
    */
   overriding member procedure leave (
+    self in out nocopy pit_table,
     p_call_stack pit_call_stack_type),
   
   
@@ -52,6 +65,7 @@ create or replace type pit_table under pit_module(
       See <PIT_MODULE.purge_log>
    */
   overriding member procedure purge_log(
+    self in out nocopy pit_table,
     p_purge_date in date,
     p_severity_greater_equal in integer default null),
     

@@ -4,6 +4,7 @@ create or replace type body pit_table as
   
   
   overriding member procedure log_exception(
+    self in out nocopy pit_table,
     p_message in message_type)
   as
   begin
@@ -13,6 +14,7 @@ create or replace type body pit_table as
   end log_exception;
   
   overriding member procedure panic(
+    self in out nocopy pit_table,
     p_message in message_type)
   as
   begin
@@ -20,8 +22,17 @@ create or replace type body pit_table as
        pit_table_pkg.panic(p_message);
     end if;
   end panic;
+  
+  overriding member procedure tweet(
+    self in out nocopy pit_table,
+    p_message in message_type)
+  as
+  begin
+    pit_table_pkg.tweet(p_message);
+  end tweet;
     
   overriding member procedure log_state(
+    self in out nocopy pit_table,
     p_log_state in pit_log_state_type)
   as
   begin
@@ -31,6 +42,7 @@ create or replace type body pit_table as
   end log_state;
   
   overriding member procedure enter(
+    self in out nocopy pit_table,
     p_call_stack pit_call_stack_type)
   as
   begin
@@ -38,6 +50,7 @@ create or replace type body pit_table as
   end enter;
   
   overriding member procedure leave(
+    self in out nocopy pit_table,
     p_call_stack pit_call_stack_type)
   as
   begin
@@ -45,6 +58,7 @@ create or replace type body pit_table as
   end leave;
   
   overriding member procedure purge_log(
+    self in out nocopy pit_table,
     p_purge_date in date,
     p_severity_greater_equal in integer default null)
   as
@@ -60,5 +74,5 @@ create or replace type body pit_table as
     pit_table_pkg.initialize_module(self);
     return;
   end pit_table;
-  end;
-  /
+end;
+/
