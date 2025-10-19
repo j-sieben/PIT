@@ -156,6 +156,21 @@ as
     p_force in boolean default false);
     
     
+  /** 
+    Procedure: delete_message_group_members
+      Procedure to delete message group members. This method deletes any members as defined by
+      by p_target. Is used to remove unneeded group members prior to recreating them in a script.
+      Will not commit nor re-create the <MSG> package.
+   
+    Parameters:
+      p_pmg_name - Name of the message group
+      p_target - One of the C_TARGET... constants, defining what to delete within the given group
+   */
+  procedure delete_message_group_members(
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_target in pit_util.ora_name_type);
+    
+    
   /**
     Procedure: merge_message
       Procedure to maintain messages. Is used to create or change a PIT message. Will not commit nor re-create the MSG package.

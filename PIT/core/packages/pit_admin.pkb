@@ -176,14 +176,16 @@ as
     Function: get_export_group_script
       Method to create a script snippet for ex- or importing a message group
 
-    Parameter:
+    Parameters:
       p_pmg_name - Optional name of the message to create a script for. If NULL, all message groups are exported
+      p_target - Target to control which message group members to remove
 
     Returns:
       Script with a call to <merge_message_group> to import a message group or a list of message groups.
    */
   function get_export_group_script(
-    p_pmg_name in pit_message_group.pmg_name%type)
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_target in varchar2)
     return varchar2
   as
     cursor message_group_cur(
@@ -204,6 +206,10 @@ as
     p_pmg_description => q'^#DESCRIPTION#^',
     p_pmg_error_prefix => '#ERROR_PREFIX#',
     p_pmg_error_postfix => '#ERROR_POSTFIX#');
+    
+  pit_admin.delete_message_group_members(
+    p_pmg_name => '#NAME#',
+    p_target => pit_admin.C_TARGET_#TARGET#);
 ~';
     l_chunk pit_util.max_char;
   begin
@@ -212,6 +218,7 @@ as
       l_chunk := l_chunk
               || pit_util.bulk_replace(c_merge_group_template, char_table(
                    '#NAME#', pmg.pmg_name,
+                   '#TARGET#', p_target,
                    '#DESCRIPTION#', pmg.pmg_description,
                    '#ERROR_PREFIX#', pmg.pmg_error_prefix,
                    '#ERROR_POSTFIX#', pmg.pmg_error_postfix));
@@ -293,7 +300,7 @@ end;
     p_file_name := replace_anchors(p_file_name, char_table('PMG', p_pmg_name));
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, C_START);
-    pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
+    pit_util.clob_append(p_script, get_export_group_script(p_pmg_name, C_TARGET_PMS));
 
     for msg in message_cur(p_pmg_name) loop
       case msg.rang
@@ -386,7 +393,7 @@ end;
     dbms_lob.createtemporary(p_script, false, dbms_lob.call);
     pit_util.clob_append(p_script, replace(C_START, '#CR#', C_CR));
     
-    pit_util.clob_append(p_script, get_export_group_script(p_pmg_name));
+    pit_util.clob_append(p_script, get_export_group_script(p_pmg_name, C_TARGET_PTI));
 
     for pti in pti_cur(p_pmg_name) loop
       l_chunk := pit_util.bulk_replace(C_PTI_TEMPLATE, char_table(
@@ -969,6 +976,24 @@ end ]' || C_PACKAGE_NAME || ';';
      where pmg_name = p_pmg_name;
   end delete_message_group;
 
+
+  /**
+    Procedure: delete_message_group_members
+      See <PIT_ADMIN.delete_message_group_members>
+   */
+  procedure delete_message_group_members(
+    p_pmg_name in pit_message_group.pmg_name%type,
+    p_target in pit_util.ora_name_type)
+  as
+  begin
+    case p_target
+      when C_TARGET_PMS then
+      delete from pit_message
+       where pms_pmg_name = p_pmg_name;
+    else
+      null;
+    end case;
+  end delete_message_group_members;
 
   /**
     Procedure: validate_message
