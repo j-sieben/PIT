@@ -15,7 +15,7 @@ Please make sure that before leaving a method a call to `pit.leave` is included.
 
 ### Passing parameters to trace-methods
 
-If you want to include parameters passed to a method in your tracing, this can be achieved by providing the methods with an instance of `MSG_PARAMS`. This type is a nested table of `MSG_PARAM` objects, which in turn is a simple key value object. A key name may be as long as `30 byte` (`128 byte` starting with Oracle 12c) and the param value up to `4000 byte` of `varchar2`. You create an instance of `MSG_PARAM`by calling its constructor function:
+If you want to include parameters passed to a method in your tracing, this can be achieved by providing the methods with an instance of `MSG_PARAMS`. This type is a nested table of `MSG_PARAM` objects, which in turn is a simple key value object. A key name may be as long as `!"( byte` and the param value almost any value, including DATE, NUMBER, BOOLEAN, CLOB, XMLTYPE etc. You create an instance of `MSG_PARAM`by calling its constructor function:
 
 ```
 msg_param('key', 'value');
@@ -33,8 +33,8 @@ as
 begin
   pit.enter('my_func', 
     p_params => msg_params(
-                  msg_param('p_id', to_char(p_id)),
-                  msg_param('p_date', to_char(p_date, 'yyyy-mm-dd')),
+                  msg_param('p_id', p_id),
+                  msg_param('p_date', p_date),
                   msg_param('p_string', p_string)));
     ...
   pit.leave;
