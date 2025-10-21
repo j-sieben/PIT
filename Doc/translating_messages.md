@@ -9,7 +9,7 @@ Translate all entries to the target language and save the XLIFF file.
 
 You can then upload the translation using the file browse in the APEX UI where you just exported the translation files. Uploading the files and clicking on »Übersetzung laden« (load translation) will import the messages in the target language.
 
-If you now export the message group, you will see that each method is exported in the default language you defined when installing `PIT` and for any translation you created the message will have a call to `pit_admin.tranlsate_message` with your translations. That's all there is to it!
+If you now export the message group, you will see that each method is exported in the default language you defined when installing `PIT` and for any translation you created the message will have a call to `pit_admin.translate_message` with your translations. That's all there is to it!
 
 ## Using PL/SQL
 
