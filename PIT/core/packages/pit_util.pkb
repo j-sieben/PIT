@@ -670,6 +670,7 @@ as
     return p_boolean = C_TRUE;
   end to_bool;
 
+
   /**
     Function: to_bool
       See <PIT_UTIL.to_bool>
@@ -689,6 +690,34 @@ as
     end if;
     return l_result;
   end to_bool;
+  
+
+  /**
+    Function: to_bool_string
+      See <PIT_UTIL.to_bool_string>
+   */
+  function to_bool_string(
+    p_boolean in flag_type)
+    return ora_name_type
+  as
+  begin
+    return to_bool_string(p_boolean = C_TRUE);
+  end to_bool_string;
+  
+    
+  function to_bool_string(
+    p_boolean boolean)
+    return ora_name_type
+  as
+    l_bool_string ora_name_type;
+  begin
+    if p_boolean then
+      l_bool_string := 'pit_util.C_TRUE';
+    else
+      l_bool_string := 'pit_util.C_FALSE';
+    end if;
+    return l_bool_string;
+  end to_bool_string;
   
   
   /**

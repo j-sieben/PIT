@@ -31,6 +31,18 @@ as
    end if;
    return;
  end;
+  
+  constructor function msg_param(
+    self in out nocopy msg_param,
+    p_param in varchar2,
+    p_value in blob)
+    return self as result
+  as
+  begin
+    self.p_param := substrb(p_param, 1, 128);
+    self.p_value := '[BLOB], ' || dbms_lob.getlength(p_value) || ' byte';
+    return;
+  end;    
 
  constructor function msg_param(
    self in out nocopy msg_param,

@@ -412,7 +412,25 @@ as
   function to_bool(
     p_boolean in flag_type)
     return boolean;
+    
+  /**
+    Function: to_bool_string
+      Method to return a string representation such as pit_util.C_TRUE
+      for a boolean value passed in
+    
+    Parameter:
+      p_boolean - <-flag_type> boolean value
 
+    Returns:
+      pit_util.C_TRUE or pit_util.C_FALSE
+   */
+  function to_bool_string(
+    p_boolean in flag_type)
+    return ora_name_type;
+    
+  function to_bool_string(
+    p_boolean boolean)
+    return ora_name_type;
 
   /**
     Group: Other helper methods
