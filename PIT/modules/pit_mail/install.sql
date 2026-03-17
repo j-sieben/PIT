@@ -1,4 +1,4 @@
-@init/set_folders modules/pit_mail
+@init/set_folders.sql modules/pit_mail
 prompt
 prompt &section.
 prompt &h3.Module PIT_MAIL

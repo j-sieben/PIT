@@ -18,6 +18,7 @@ whenever sqlerror exit
 set termout off
 col sys_user new_val SYS_USER format a30
 col install_user new_val INSTALL_USER format a30
+col pit_user new_val PIT_USER format a30
 col default_language new_val DEFAULT_LANGUAGE format a30
 col module new_val MODULE format a30
 
@@ -26,6 +27,7 @@ col module new_val MODULE format a30
 
 select user sys_user,
        upper('&1.') install_user,
+       upper('&1.') pit_user,
        value default_language,
        lower('&3.') module
   from V$NLS_VALID_VALUES

@@ -9,10 +9,11 @@
   - MODULE:  Module to revoke access from
 */
 
-@init/init_module_client.sql &1. &2.
+@init/init_module_client.sql &1. &2. &3.
 define module_dir=modules/&MODULE./
 
-prompt &section.Revoking access of PIT module &MODUEL. from client &REMOTE_USER.
+prompt &section.
+prompt &h1.Revoking access of PIT module &MODULE. from client &REMOTE_USER.
 @&module_dir.revoke_client.sql
 
 prompt

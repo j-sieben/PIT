@@ -1,4 +1,4 @@
-@init/set_folders parameters
+@init/set_folders.sql parameters
 
 
 prompt &h2.Create parameter tables

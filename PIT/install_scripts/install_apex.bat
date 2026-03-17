@@ -1,4 +1,6 @@
 @echo off
+for %%I in ("%~dp0..") do set PIT_DIR=%%~fI
+pushd "%PIT_DIR%"
 set /p InstallUser=Enter owner schema of PIT:
 
 set "InstallPWD=powershell.exe -Command " ^
@@ -21,6 +23,7 @@ set /p APEXWorkspace=Enter APEX workspace where this application should be insta
 set /p AppId=Enter application id for the PIT application:
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-sqlplus %InstallUser%/"%InstallPWD%@"%SID%  @install_scripts/grant_apex_access %InstallUser% %RemoteUser% 
+sqlplus %InstallUser%/"%InstallPWD%"@%SID%  @install_scripts/grant_apex_access.sql %InstallUser% %RemoteUser% 
 
 sqlplus %RemoteUser%/"%AppPWD%"@%SID% @install_scripts/install_apex.sql %InstallUser% %RemoteUser% %APEXWorkspace% %AppId%
+popd

@@ -1,4 +1,6 @@
 @echo off
+for %%I in ("%~dp0..") do set PIT_DIR=%%~fI
+pushd "%PIT_DIR%"
 set /p InstallUser=Enter owner schema for PIT:
 
 set "PWD=powershell.exe -Command " ^
@@ -14,4 +16,5 @@ set nls_lang=GERMAN_GERMANY.AL32UTF8
 
 sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage%
 
+popd
 @echo off

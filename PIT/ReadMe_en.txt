@@ -1,4 +1,31 @@
-The batch files or shell scripts install PIT in three different forms:
+The central entry point for installation and uninstallation is `pit.sh` or `pit.bat`.
+These scripts call the underlying installation and uninstallation scripts by using
+an explicit command.
+
+Available commands are:
+
+- install: Install PIT core functionality
+- install-client: Set up a client schema
+- install-apex: Install the APEX administration application
+- install-module: Install a single output module in the PIT owner schema
+- install-module-client: Grant a single output module to a client schema
+- uninstall: Uninstall PIT core functionality
+- uninstall-client: Remove a client schema
+- uninstall-module: Uninstall a single output module from the PIT owner schema
+- uninstall-module-client: Remove a single output module from a client schema
+
+Examples:
+
+- ./pit.sh install
+- ./pit.sh install-client
+- ./pit.sh install-apex
+- ./pit.sh install-module
+- ./pit.sh install-module-client
+- ./pit.sh uninstall
+- pit.bat install
+
+The underlying batch files or shell scripts are now located in `install_scripts/` and
+still support the following installation variants:
 
 1. INSTALL.BAT/SH: Core functionality.
    This must be installed first. It is recommended to use a dedicated user for this,
@@ -23,6 +50,14 @@ The batch files or shell scripts install PIT in three different forms:
    - UTL_APEX: This tool provides APEX related functions.
    These tools have to be installed before the installation of the administration application
    can be executed successfully.
+
+4. INSTALL_MODULE.BAT/SH and INSTALL_MODULE_CLIENT.BAT/SH: Post-installation of output modules
+   These scripts add a single output module to an existing PIT installation.
+   INSTALL_MODULE.BAT/SH installs the module in the PIT owner schema.
+   INSTALL_MODULE_CLIENT.BAT/SH then grants only the privileges required for this module
+   to a client schema and creates the related synonyms.
+   This installation path is useful if a module was not installed during the initial PIT
+   installation and should be added later on.
    
 All scripts interactively request the required parameters. Follow the instructions of the scripts.
 
@@ -50,5 +85,10 @@ export ORACLE_HOME
 export PATH
 export ORACLE_SID
 
-Should install.sh don’t run:
-chmod +x ./install.sh
+Direct execution of the specialized scripts is still possible, for example:
+
+- ./install_scripts/install_client.sh
+- ./install_scripts/install_module_client.sh
+
+If a shell script is not executable:
+chmod +x ./pit.sh

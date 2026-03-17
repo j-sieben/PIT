@@ -1,4 +1,4 @@
-@init/set_folders modules/pit_file
+@init/set_folders.sql modules/pit_file
 
 prompt
 prompt &section.
@@ -6,7 +6,7 @@ prompt &h2.Module PIT_FILE
 
 prompt
 prompt &h3.Checking prerequites
-@&install_dir.check_prerequisites
+@&install_dir.check_prerequisites.sql
 
 prompt &h3.Create types and packages
 @&tools.install_type_spec pit_file

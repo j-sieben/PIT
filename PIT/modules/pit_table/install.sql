@@ -1,4 +1,4 @@
-@init/set_folders modules/pit_table
+@init/set_folders.sql modules/pit_table
 
 prompt
 prompt &h3.Install module PIT_TABLE

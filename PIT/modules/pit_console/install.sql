@@ -1,4 +1,4 @@
-@init/set_folders modules/pit_console
+@init/set_folders.sql modules/pit_console
 
 prompt
 prompt &section.

@@ -1,4 +1,4 @@
-@init/set_folders modules/pit_apex
+@init/set_folders.sql modules/pit_apex
 
 prompt
 prompt &h2.Install module PIT_APEX

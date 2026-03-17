@@ -1,4 +1,6 @@
 @echo off
+for %%I in ("%~dp0..") do set PIT_DIR=%%~fI
+pushd "%PIT_DIR%"
 set /p InstallUser=Enter owner schema of PIT:
 
 set "InstallPWD=powershell.exe -Command " ^
@@ -18,6 +20,7 @@ for /f "tokens=*" %%a in ('%RemotePWD%') do set RemotePWD=%%a
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-sqlplus %InstallUser%/"%InstallPWD%"@%SID% @install_scripts/revoke_client %RemoteUser%
+echo @install_scripts/grant_client_access.sql %InstallUser% %RemoteUser% | sqlplus %InstallUser%/"%InstallPWD%"@%SID% 
 
-sqlplus %RemoteUser%/"%RemotePWD%"@%SID% @install_scripts/unregister_client
+echo @install_scripts/create_client_synonyms.sql %InstallUser% %RemoteUser% | sqlplus %RemoteUser%/"%RemotePWD%"@%SID%
+popd

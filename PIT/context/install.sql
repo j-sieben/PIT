@@ -1,4 +1,4 @@
-@init/set_folders context
+@init/set_folders.sql context
 
 prompt &h3.Installing context parameters
 @&tools.run_script ParameterGroup_CONTEXT

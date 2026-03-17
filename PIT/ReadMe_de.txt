@@ -1,4 +1,31 @@
-Die Batch-Dateien bzw. Shell-Skripte installieren PIT in drei unterschiedlichen Ausprägungen:
+Der zentrale Einstieg in die Installation und Deinstallation erfolgt über `pit.sh` bzw. `pit.bat`.
+Diese Skripte rufen die eigentlichen Installations- und Deinstallationsskripte mit einem
+eindeutigen Kommando auf.
+
+Verfügbare Kommandos sind:
+
+- install: Installation der PIT-Core-Funktionalität
+- install-client: Einrichtung eines Client-Schemas
+- install-apex: Installation der APEX-Administrationsanwendung
+- install-module: Nachinstallation eines einzelnen Ausgabemoduls im PIT-Schema
+- install-module-client: Freischaltung eines einzelnen Ausgabemoduls für ein Client-Schema
+- uninstall: Deinstallation der PIT-Core-Funktionalität
+- uninstall-client: Entfernen eines Client-Schemas
+- uninstall-module: Deinstallation eines einzelnen Ausgabemoduls im PIT-Schema
+- uninstall-module-client: Entfernen eines einzelnen Ausgabemoduls aus einem Client-Schema
+
+Beispiele:
+
+- ./pit.sh install
+- ./pit.sh install-client
+- ./pit.sh install-apex
+- ./pit.sh install-module
+- ./pit.sh install-module-client
+- ./pit.sh uninstall
+- pit.bat install
+
+Die darunterliegenden Batch-Dateien bzw. Shell-Skripte liegen in `install_scripts/` und
+unterstützen weiterhin die folgenden Installationsausprägungen:
 
 1. INSTALL.BAT/SH: Core-Funktionalität.
    Diese muss als erstes installiert werden. Empfohlen wird, einen dedizierten Benutzer hierfür 
@@ -25,6 +52,14 @@ Die Batch-Dateien bzw. Shell-Skripte installieren PIT in drei unterschiedlichen 
    - UTL_APEX: Dieses Tool stellt APEX-bezogene Funktionen zur Verfügung
    Diese Tools müssen vorab installiert werden, bevor die Installation der Administrationsanwendung
    erfolgreich ausgeführt werden kann.
+
+4. INSTALL_MODULE.BAT/SH und INSTALL_MODULE_CLIENT.BAT/SH: Nachinstallation von Ausgabemodulen
+   Diese Skripte ergänzen eine bestehende PIT-Installation um ein einzelnes Ausgabemodul.
+   INSTALL_MODULE.BAT/SH installiert das Modul im PIT-Owner-Schema.
+   INSTALL_MODULE_CLIENT.BAT/SH erteilt einem Client-Schema anschließend nur die für dieses
+   Modul erforderlichen Rechte und legt die zugehörigen Synonyme an.
+   Dieser Installationspfad ist dann sinnvoll, wenn ein Modul nicht bereits bei der initialen
+   PIT-Installation eingerichtet wurde, sondern später separat ergänzt werden soll.
    
 Alle Skripte erfragen interaktiv die erforderlichen Parameter. Folgen Sie den Anweisungen der Skripte.
 
@@ -53,5 +88,10 @@ export ORACLE_HOME
 export PATH
 export ORACLE_SID
 
-Und natürlich nie vergessen, falls install.sh nicht ausführbar sein sollte:
-chmod +x ./install.sh
+Direkte Ausführung der spezialisierten Skripte ist weiterhin möglich, z.B.:
+
+- ./install_scripts/install_client.sh
+- ./install_scripts/install_module_client.sh
+
+Und natürlich nie vergessen, falls ein Shell-Skript nicht ausführbar sein sollte:
+chmod +x ./pit.sh
