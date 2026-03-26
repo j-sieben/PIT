@@ -17,10 +17,12 @@ Available commands are:
 Examples:
 
 - ./pit.sh install
-- ./pit.sh install-client
-- ./pit.sh install-apex
-- ./pit.sh install-module
-- ./pit.sh install-module-client
+- ./pit.sh install --owner PIT --service XEPDB1 --default-language AMERICAN
+- PIT_OWNER=PIT PIT_OWNER_PW=secret PIT_SERVICE=XEPDB1 ./pit.sh install
+- PIT_OWNER=PIT PIT_OWNER_PW=secret PIT_CLIENT=APP PIT_CLIENT_PW=secret PIT_SERVICE=XEPDB1 ./pit.sh install-client
+- ./pit.sh install-apex --owner PIT --client APEX_USER --service XEPDB1 --apex-workspace PIT_ADMIN --apex-app-id 100
+- ./pit.sh install-module --owner PIT --service XEPDB1 --default-language AMERICAN --module pit_mail
+- ./pit.sh install-module-client --owner PIT --client APP --service XEPDB1 --module pit_mail
 - ./pit.sh uninstall
 - pit.bat install
 
@@ -59,7 +61,27 @@ still support the following installation variants:
    This installation path is useful if a module was not installed during the initial PIT
    installation and should be added later on.
    
-All scripts interactively request the required parameters. Follow the instructions of the scripts.
+All shell scripts support the same input resolution order:
+
+1. CLI options
+2. Environment variables
+3. Interactive prompts
+
+Relevant environment variables are:
+
+- PIT_OWNER
+- PIT_OWNER_PW
+- PIT_CLIENT
+- PIT_CLIENT_PW
+- PIT_SERVICE
+- PIT_DEFAULT_LANGUAGE
+- PIT_MODULE
+- PIT_APEX_WORKSPACE
+- PIT_APEX_APP_ID
+- PIT_LOG_DIR
+
+Passwords are intentionally not supported as CLI options. For non-interactive runs,
+provide them through environment variables.
 
 
 - If you plan to use output module PIT_FILE make sure that you have created a 

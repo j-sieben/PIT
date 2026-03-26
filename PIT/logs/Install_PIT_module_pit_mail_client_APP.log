@@ -1,0 +1,2 @@
+SQLPLUS_STUB -s -L /nolog
+SQLPLUS_STUB -s -L /nolog

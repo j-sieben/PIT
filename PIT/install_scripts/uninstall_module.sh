@@ -1,31 +1,16 @@
 #!/bin/bash
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PIT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+. "${SCRIPT_DIR}/common.sh"
 
-echo -n "Enter owner schema for PIT [ENTER] "
-read OWNER
-echo ${OWNER}
+pit_init
 
-echo -n "Enter password for ${OWNER} [ENTER] "
-read -s OWNERPWD
-echo
+OWNER="$(pit_require_value "${OWNER:-}" "${PIT_OWNER:-}" "Enter owner schema for PIT: ")"
+OWNERPWD="$(pit_require_value "${OWNERPWD:-}" "${PIT_OWNER_PW:-}" "Enter password for ${OWNER}: " true)"
+SERVICE="$(pit_require_value "${SERVICE:-}" "${PIT_SERVICE:-}" "Enter service name for the database or PDB: ")"
+DEFAULT_LANGUAGE="$(pit_require_value "${DEFAULT_LANGUAGE:-}" "${PIT_DEFAULT_LANGUAGE:-}" "Enter default language for messages (GERMAN or AMERICAN): ")"
+MODULE="$(pit_require_value "${MODULE:-}" "${PIT_MODULE:-}" "Enter module name to uninstall: ")"
+LOG_FILE="$(pit_log_path "Uninstall_PIT_module_${MODULE}.log")"
 
-echo -n "Enter service name for the database or PDB [ENTER] "
-read SERVICE
-
-echo -n "Enter default language for messages (GERMAN or AMERICAN) [ENTER] "
-read DEFAULT_LANGUAGE
-
-echo -n "Enter module name to uninstall [ENTER] "
-read MODULE
-echo ${MODULE}
-
-NLS_LANG=GERMAN_GERMANY.AL32UTF8
-export NLS_LANG
-
-cd "${PIT_DIR}" || exit 1
-
-sqlplus -L /nolog <<EOF
-connect ${OWNER}/"${OWNERPWD}"@${SERVICE}
-@./install_scripts/uninstall_module.sql ${OWNER} ${DEFAULT_LANGUAGE} ${MODULE}
-EOF
+pit_prepare_log "${LOG_FILE}"
+pit_run_sqlplus "${OWNER}" "${OWNERPWD}" "${SERVICE}" "./install_scripts/uninstall_module.sql" "${LOG_FILE}" "${OWNER}" "${DEFAULT_LANGUAGE}" "${MODULE}"
