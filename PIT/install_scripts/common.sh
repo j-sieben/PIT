@@ -73,10 +73,9 @@ pit_run_sqlplus() {
 
   (
     cd "${PIT_DIR}"
-    sqlplus -s -L /nolog <<EOF
+    sqlplus -s -L "${connect_user}/${connect_password}@${service}" <<EOF
 whenever oserror exit failure rollback
 whenever sqlerror exit failure rollback
-connect ${connect_user}/"${connect_password}"@${service}
 @${script_path} $*
 exit
 EOF

@@ -1,0 +1,125 @@
+
+********************************************************************************
+*** Grant access to PIT to client DAC
+********************************************************************************
+
+**  Check prerequisites and initialize settings
+
+**  Grant access to PARAM installation
+
+**  Granting access to parameter package to DAC
+*   Grant access rights to DAC
+.   - Granting execute on param to DAC
+.   - Granting execute on param_admin to DAC
+.   - Granting select, references on parameter_group to DAC
+.   - Granting select, references on parameter_realm to DAC
+.   - Granting select, references on parameter_tab to DAC
+.   - Granting select, references on parameter_type to DAC
+.   - Granting read on parameter_core_v to DAC
+.   - Granting read on parameter_realm_v to DAC
+
+**  Grant access to PIT core installation
+
+**  Granting access to PIT to DAC
+*   Types
+.   - Granting execute on char_table to DAC
+.   - Granting execute on clob_table to DAC
+.   - Granting execute on message_type to DAC
+.   - Granting execute on pit_message_table to DAC
+.   - Granting execute on msg to DAC
+.   - Granting execute on msg_args to DAC
+.   - Granting execute on msg_args_char to DAC
+.   - Granting execute on msg_param to DAC
+.   - Granting execute on msg_params to DAC
+*   Packages
+.   - Granting execute on pit to DAC
+.   - Granting execute on pit_admin to DAC
+.   - Granting execute on pit_util to DAC
+.   - Granting execute on pit_app_api to DAC
+.   - Grant on pit_app_api unsuccesful: Prozedur, Funktion, Package oder Package Body ist nicht vorhanden
+*   Tables
+.   - Granting select, references on pit_message to DAC
+.   - Granting select, references on pit_translatable_item to DAC
+*   Views
+.   - Granting read on pit_message_language_v to DAC
+.   - Granting read on pit_message_severity_v to DAC
+.   - Granting read on pit_message_group_v to DAC
+.   - Granting read on pit_message_v to DAC
+.   - Granting read on pit_translatable_item_v to DAC
+
+**  Grant access to PIT output modules
+.   - No grants for PIT_CONSOLE client install necessary
+.   - Granting select on PIT_TABLE_LOG to DAC
+.   - Granting select on PIT_TABLE_CALL_STACK to DAC
+.   - Granting select on PIT_TABLE_PARAMS to DAC
+.   - No grants for PIT_APEX client install necessary
+.   - No grants for PIT_FILE client install necessary
+
+********************************************************************************
+*** Finished PIT client grants
+********************************************************************************
+
+********************************************************************************
+*** Registering PIT, found at B3M_UTILS at client DAC
+********************************************************************************
+**  Check whether PIT exists at user B3M_UTILS
+.   - Boolean type: char(1 byte), 'Y'|'N'
+**  Register Parameter Client
+
+**  Registering parameter package.
+*   Clean up schema DAC
+
+**  Remove registration of parameter package.
+*   Drop synonyms
+*   Drop local objects
+.   - Drop table PARAMETER_LOCAL
+.   - Drop view PARAMETER_VW
+*   Create synonyms
+.   - Create synonym param
+.   - Create synonym param_admin
+.   - Create synonym parameter_group
+.   - Create synonym parameter_realm
+.   - Create synonym parameter_tab
+.   - Create synonym parameter_type
+.   - Create synonym parameter_core_v
+.   - Create synonym parameter_realm_v
+*   Create PIT user tables and views
+.   - Create table PARAMETER_LOCAL
+.   - Create view PARAMETER_V
+**  Register PIT Client
+
+**  Registering PIT objects at DAC
+*   Create synonyms
+.   - Create synonym char_table
+.   - Create synonym clob_table
+.   - Create synonym message_type
+.   - Create synonym pit_message_table
+.   - Create synonym msg
+.   - Create synonym msg_args
+.   - Create synonym msg_args_char
+.   - Create synonym msg_param
+.   - Create synonym msg_params
+.   - Create synonym pit
+.   - Create synonym pit_admin
+.   - Create synonym pit_util
+.   - Create synonym pit_message
+.   - Create synonym pit_message_language
+.   - Create synonym pit_translatable_item
+.   - Create synonym pit_message_v
+.   - Create synonym pit_message_language_v
+.   - Create synonym pit_translatable_item_v
+
+*** Registering PIT output modules
+*   Registering PIT_CONSOLE output module
+.   - No registration necessary
+*   Registering PIT_TABLE output module
+.   - Create synonym PIT_TABLE_LOG
+.   - Create synonym PIT_TABLE_CALL_STACK
+.   - Create synonym PIT_TABLE_PARAMS
+*   Registering PIT_APEX output module
+.   - No registration necessary
+*   Registering PIT_FILE output module
+.   - No registration necessary
+********************************************************************************
+*** Finished PIT client registration
+********************************************************************************
