@@ -292,23 +292,25 @@ as
   as
     l_depth binary_integer;
   begin
-    l_depth := utl_call_stack.dynamic_depth;
-    for i in 1 .. l_depth loop
-      if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
-        l_depth := i;
-        exit;
-      end if;
-    end loop;
-    
-    -- Set action and module to the first non excluded entry
-    begin
-      p_action := coalesce(p_action, harmonize_name(utl_call_stack.subprogram(l_depth)(2)));
-      p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
-    exception
-      when others then
-        -- when called from an anonymous block, not all values may have entries
-        p_action := harmonize_name(null, utl_call_stack.subprogram(l_depth)(1));
-    end;
+    if p_module is null or p_action is null then
+      l_depth := utl_call_stack.dynamic_depth;
+      for i in 1 .. l_depth loop
+        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
+          l_depth := i;
+          exit;
+        end if;
+      end loop;
+      
+      -- Set action and module to the first non excluded entry
+      begin
+        p_action := coalesce(p_action, harmonize_name(utl_call_stack.subprogram(l_depth)(2)));
+        p_module := harmonize_name(utl_call_stack.subprogram(l_depth)(1));
+      exception
+        when others then
+          -- when called from an anonymous block, not all values may have entries
+          p_action := harmonize_name(null, utl_call_stack.subprogram(l_depth)(1));
+      end;
+    end if;
   end get_module_and_action;
   
   

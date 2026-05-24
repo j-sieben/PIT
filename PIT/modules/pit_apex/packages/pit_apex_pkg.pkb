@@ -39,6 +39,7 @@ as
   g_apex_triggered_context pit_context_type;
   g_fire_threshold number;
   g_ws_url varchar2(1000 byte);
+  g_last_apex_debug boolean;
 
   /**
     Group: Helper methods
@@ -305,16 +306,21 @@ as
   function get_apex_triggered_context
     return varchar2
   as
-    l_context pit_util.ora_name_type;
   begin
-    if valid_environment then
-      if apex_application.g_debug then
-        l_context := C_APEX_CONTEXT;
-      else
-        l_context := C_DEFAULT_CONTEXT;
-      end if;
+    if apex_application.g_instance is null then
+      g_last_apex_debug := null;
+      return null;
     end if;
-    return l_context;
+    
+    if apex_application.g_debug then
+      g_last_apex_debug := true;
+      return C_APEX_CONTEXT;
+    elsif g_last_apex_debug then
+      g_last_apex_debug := false;
+      return C_DEFAULT_CONTEXT;
+    end if;
+    
+    return null;
   end get_apex_triggered_context;
 
 

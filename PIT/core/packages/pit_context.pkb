@@ -224,6 +224,8 @@ as
   procedure read_active_context
   as
     l_settings pit_util.max_sql_char;
+    l_default_context pit_context_type;
+    l_context_has_changed boolean := false;
   begin
     $IF pit_admin.C_HAS_GLOBAL_CONTEXT $THEN
     -- Initialize
@@ -234,11 +236,18 @@ as
         p_client_id => g_client_id);
         
     case when l_settings is null then
-      g_context := g_context_list(C_CONTEXT_DEFAULT);
-    when g_context.trace_settings != l_settings then
+      l_default_context := g_context_list(C_CONTEXT_DEFAULT);
+      if g_context.context_name is null
+      or g_context.trace_settings != l_default_context.trace_settings then
+        g_context := l_default_context;
+        l_context_has_changed := true;
+      end if;
+    when g_context.context_name is null
+      or g_context.trace_settings != l_settings then
       g_context := pit_context_type(
                      p_context_name => C_CONTEXT_ACTIVE,
                      p_settings => l_settings);
+      l_context_has_changed := true;
     else
       -- no change, existing g_context is active. Ignore
       null;
@@ -247,9 +256,12 @@ as
     -- on initialization, g_context is null, get default context;
     if g_context.context_name is null then
       g_context := g_context_list(C_CONTEXT_DEFAULT);
+      l_context_has_changed := true;
     end if;
     $END
-    set_active_modules;
+    if l_context_has_changed then
+      set_active_modules;
+    end if;
   end read_active_context;
   
   /**
@@ -566,7 +578,7 @@ as
   return boolean
   as
   begin
-    return pit_util.to_bool(g_context.trace_timing);
+    return pit_util.to_bool(g_context.allow_toggle);
   end allows_toggle;
   
   

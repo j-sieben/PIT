@@ -16,11 +16,12 @@ as
    
   /**
     Function: get_apex_triggered_context
-      Method to retrieve the name of the context that is used for logging if APEX is set to DEBUG mode.
+      Method to retrieve a context required by the current APEX debug state.
       Is called from the APEX session adapter <PIT_APEX_ADAPTER>
       
     Returns: 
-      CONTEXT_APEX, the name of the APEX specific context. Context settings are set using the CONTEXT_APEX parameter
+      CONTEXT_APEX when APEX debug is active, CONTEXT_DEFAULT once after APEX debug was deactivated,
+      NULL if no context switch is required.
    */
   function get_apex_triggered_context
     return varchar2;
