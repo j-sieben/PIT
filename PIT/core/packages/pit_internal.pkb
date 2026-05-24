@@ -113,6 +113,29 @@ as
   g_log_state_threshold pls_integer;
   g_broadcast_context_switch boolean;
   g_raise_tweet boolean;
+  g_trace_context_depth pls_integer := 0;
+  g_cached_trace_level pls_integer;
+  g_cached_allows_toggle boolean;
+  
+  /**
+    Group: Private cache maintenance methods
+   */
+  procedure reset_trace_context_cache
+  as
+  begin
+    g_trace_context_depth := 0;
+    g_cached_trace_level := null;
+    g_cached_allows_toggle := null;
+  end reset_trace_context_cache;
+  
+  
+  procedure invalidate_trace_context_cache
+  as
+  begin
+    g_cached_trace_level := null;
+    g_cached_allows_toggle := null;
+  end invalidate_trace_context_cache;
+  
   
   /**
     Group: Private adapter maintenance methods
@@ -339,6 +362,7 @@ as
   as
     l_context_has_changed boolean;
   begin
+    reset_trace_context_cache;
     if p_context is not null then
       pit_context.set_context(
         p_context => p_context, 
@@ -442,6 +466,7 @@ as
                                     
     g_collect_mode := false;
     g_collect_least_severity.delete;
+    reset_trace_context_cache;
     pit_context.initialize;
     pit_call_stack.initialize;
     g_message_stack := pit_message_table();
@@ -617,19 +642,25 @@ as
     l_call_stack pit_call_stack_type;
     l_required_context pit_util.ora_name_type;
   begin
-    -- Initialize
-    -- start by reading the actual session details 
-    g_active_adapter.get_session_details(
-      p_user_name => g_user_name, 
-      p_session_id => g_client_info, 
-      p_required_context => l_required_context);
-    
-    if l_required_context is not null then
-      set_context(l_required_context);
-    end if;
+    if g_trace_context_depth = 0 or g_cached_trace_level is null then
+      -- Initialize
+      -- start by reading the actual session details 
+      g_active_adapter.get_session_details(
+        p_user_name => g_user_name, 
+        p_session_id => g_client_info, 
+        p_required_context => l_required_context);
       
-    l_trace_me := pit_context.trace_me(p_trace_level);
-    l_allows_toggle := pit_context.allows_toggle;
+      if l_required_context is not null then
+        set_context(l_required_context);
+      end if;
+        
+      g_cached_trace_level := pit_context.get_trace_level;
+      g_cached_allows_toggle := pit_context.allows_toggle;
+    end if;
+    
+    g_trace_context_depth := g_trace_context_depth + 1;
+    l_trace_me := p_trace_level <= g_cached_trace_level;
+    l_allows_toggle := g_cached_allows_toggle;
     l_action := p_action;
     
     -- Do minimal tracing if context toggle is active
@@ -659,6 +690,7 @@ as
     end if;
   exception
     when others then
+      invalidate_trace_context_cache;
       handle_error(C_LEVEL_ERROR, C_FAIL_MESSAGE_CREATION, msg_args(sqlerrm));
   end enter;
 
@@ -678,8 +710,13 @@ as
     l_allows_toggle boolean;
   begin
     -- Initialize
-    l_trace_me := pit_context.trace_me(p_trace_level);
-    l_allows_toggle := pit_context.allows_toggle;
+    if g_trace_context_depth > 0 then
+      l_trace_me := p_trace_level <= g_cached_trace_level;
+      l_allows_toggle := g_cached_allows_toggle;
+    else
+      l_trace_me := pit_context.trace_me(p_trace_level);
+      l_allows_toggle := pit_context.allows_toggle;
+    end if;
     
     -- Do minimal tracing if context toggle is active
     if l_allows_toggle or l_trace_me or p_severity is not null then
@@ -697,8 +734,16 @@ as
       end loop;
     end if;
     
+    if g_trace_context_depth > 0 then
+      g_trace_context_depth := g_trace_context_depth - 1;
+      if g_trace_context_depth = 0 then
+        reset_trace_context_cache;
+      end if;
+    end if;
+    
   exception
     when others then
+      invalidate_trace_context_cache;
       handle_error(C_LEVEL_ERROR, C_FAIL_MESSAGE_CREATION);
   end leave;
 
@@ -789,6 +834,7 @@ as
   as
     l_error_message message_type;
   begin
+    invalidate_trace_context_cache;
     g_active_message := get_message(coalesce(p_message_name, p_error_name), p_msg_args, p_affected_id, p_affected_ids, p_error_code);
     l_error_message := get_message(p_error_name, null, null, null, null);
     
@@ -818,6 +864,7 @@ as
     p_error_code in varchar2)
   as
   begin
+    invalidate_trace_context_cache;
     -- P_MESSAGE_NAME could be NULL, we use G_ACTIVE_MESSAGE then
     if p_message_name is not null then
       g_active_message := get_message(p_message_name, p_msg_args, p_affected_id, p_affected_ids, p_error_code, false);
@@ -849,6 +896,7 @@ as
   procedure handle_validation
   as
   begin
+    invalidate_trace_context_cache;
     if g_collect_mode then
       push_message(g_active_message);
       g_collect_mode := false;
@@ -877,6 +925,7 @@ as
     p_params in msg_params)
   as
   begin
+    invalidate_trace_context_cache;
     if g_collect_mode then
       g_collect_mode := false;
       g_message_stack := pit_message_table();
@@ -902,6 +951,7 @@ as
   procedure handle_panic
   as
   begin
+    invalidate_trace_context_cache;
     log_panic;
     pit_call_stack.initialize;
     raise_error(C_LEVEL_FATAL, C_PIT_PANIC, null, null, null, C_PIT_PANIC);
@@ -1121,6 +1171,7 @@ as
     l_required_context pit_util.ora_name_type;
     l_context_has_changed boolean;
   begin    
+    reset_trace_context_cache;
     -- start by reading the actual session details 
     g_active_adapter.get_session_details(
       p_user_name => g_user_name, 
