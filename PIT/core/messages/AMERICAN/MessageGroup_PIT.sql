@@ -199,7 +199,7 @@ begin
     p_pms_name => 'PIT_CODE_ENTER_W_PARAM',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Entering: #1#, Params: #2#^',
-    p_pms_description => q'^Diese Meldung wird ausgegeben, wenn eine Prozedur oder Funktion aufgerufen wird.^',
+    p_pms_description => q'^This message is output when a procedure or function is called.^',
     p_pms_pse_id => pit.LEVEL_ALL,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => null);
@@ -225,7 +225,7 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'PIT_DUPLICATE_MESSAGE',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^he message #1# you entered already exists.^',
+    p_pms_text => q'^The message #1# you entered already exists.^',
     p_pms_description => q'^Obviously^',
     p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
@@ -360,7 +360,7 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'PIT_READ_MODULE_LIST',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Module list read succesfully.^',
+    p_pms_text => q'^Module list read successfully.^',
     p_pms_description => q'^^',
     p_pms_pse_id => pit.LEVEL_ALL,
     p_pms_pml_name => 'AMERICAN',
@@ -379,7 +379,7 @@ begin
     p_pms_name => 'PIT_NO_CONTEXT_SETTINGS',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^No settings for logging could be found.^',
-    p_pms_description => q'^An attempt was made to read values for logging from the gloable context. But this failed. Check whether PIT is correctly initialized.^',
+    p_pms_description => q'^An attempt was made to read values for logging from the global context. But this failed. Check whether PIT is correctly initialized.^',
     p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => -20000);
@@ -453,6 +453,24 @@ begin
     p_pms_text => q'^Tweet: #1#^',
     p_pms_description => q'^^',
     p_pms_pse_id => pit.LEVEL_WARN,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_WEBSOCKET_MESSAGE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^#1#: #2#^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => pit.LEVEL_ALL,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_PANIC',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^An unexpected error occurred: #SQLERRM#^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => pit.LEVEL_FATAL,
     p_pms_pml_name => 'AMERICAN',
     p_error_number => null);
 

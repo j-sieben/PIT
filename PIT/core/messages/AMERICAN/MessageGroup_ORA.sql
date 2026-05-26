@@ -80,7 +80,7 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'ORA_INVALID_NUMBER_FORMAT',
     p_pms_pmg_name => 'ORA',
-    p_pms_text => q'^Ungültiges Zahlformat: #1#^',
+    p_pms_text => q'^Invalid number format: #1#^',
     p_pms_description => q'^^',
     p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'AMERICAN',

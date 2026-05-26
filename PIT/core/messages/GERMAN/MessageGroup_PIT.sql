@@ -70,6 +70,15 @@ begin
     p_error_number => -20000);
 
   pit_admin.merge_message(
+    p_pms_name => 'PIT_CASE_NOT_FOUND',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^#1# wurde bei der Ausführung einer CASE-Anweisung nicht gefunden^',
+    p_pms_description => q'^Es wurde eine Option übergeben, für die in einer CASE-Anweisung kein Handler vorhanden war und die keinen ELSE-Zweig enthält.^',
+    p_pms_pse_id => pit.LEVEL_ERROR,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -20000);
+
+  pit_admin.merge_message(
     p_pms_name => 'PIT_BULK_ERROR',
     p_pms_pmg_name => 'PIT',
     p_pms_text => q'^Während einer Mengenverarbeitung trat mindestens ein Fehler auf.^',
@@ -243,7 +252,7 @@ begin
   pit_admin.merge_message(
     p_pms_name => 'PIT_IMPOSSIBLE_CONVERSION',
     p_pms_pmg_name => 'PIT',
-    p_pms_text => q'^Ungültige Konvertierung von Elementwert "#1#" und Formatmaske "#2#2" zum Typ #3#.^',
+    p_pms_text => q'^Ungültige Konvertierung von Elementwert "#1#" und Formatmaske "#2#" zum Typ #3#.^',
     p_pms_description => q'^Bei der automatisierten Ermittlung eines Datums- oder Zahlenwertes konnte der Elementwert nicht korrekt konvertiert werden.^',
     p_pms_pse_id => pit.LEVEL_ERROR,
     p_pms_pml_name => 'GERMAN',
