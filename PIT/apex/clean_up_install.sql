@@ -77,7 +77,7 @@ prompt &h3.Checking whether app exists.
 declare
   l_app_id number;
   l_ws number;
-  c_app_alias constant varchar2(30 byte) := '&APEX_ALIAS.';  
+  c_app_alias constant varchar2(50 byte) := '&APEX_ALIAS.';  
 begin
   select application_id, workspace_id
     into l_app_id, l_ws

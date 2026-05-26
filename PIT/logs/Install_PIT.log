@@ -1,1 +1,238 @@
-SQLPLUS_STUB -s -L /nolog
+.   - Boolean type: char(1 byte), 'Y'|'N'
+
+********************************************************************************
+*** PL/SQL INSTRUMENTATION TOOLKIT (PIT) Installation
+********************************************************************************
+*** Checking required system privileges
+**  Checking privileges
+**  Checking required directly granted privileges
+.   - Set Compiler-Flag for APEX installation to FALSE
+.   - Set Compiler-Flags
+
+********************************************************************************
+*** Installing parameter framework
+**  Create parameter tables
+.   - Table PARAMETER_GROUP already exists
+.   - Table PARAMETER_REALM already exists
+.   - Table PARAMETER_TYPE already exists
+.   - Table PARAMETER_TAB already exists
+.   - Table PARAMETER_LOCAL already exists
+**  Create parameter view
+.   - Create view parameter_core_v
+.   - Create view parameter_v.owner
+.   - Create view parameter_realm_v
+**  Create parameter packages
+.   - Create package specification param
+Keine Fehler.
+.   - Create package specification param_admin
+Keine Fehler.
+.   - Create package body param
+Keine Fehler.
+.   - Create package body param_admin
+Keine Fehler.
+**  Load data
+.   - Script merge_parameter_realm
+.   - Script merge_parameter_type
+********************************************************************************
+*** Installing context framework
+.   - Privilege to read DBA_CONTEXT is missing, skipping installation
+********************************************************************************
+*** Installing core functionality
+**  Create sequences
+.   - Sequence PIT_LOG_SEQ already exists
+.   - Sequence PIT_TRANSLATABLE_ITEM_SEQ already exists
+**  Create tables
+.   - Table PIT_MESSAGE_LANGUAGE already exists
+.   - Table PIT_MESSAGE_GROUP already exists
+.   - Table PIT_TRANSLATION_SCOPE already exists
+.   - Table PIT_MESSAGE_STATUS already exists
+.   - Table PIT_TRANSLATABLE_ITEM already exists
+.   - Table PIT_MESSAGE_SEVERITY already exists
+.   - Column PSE_REQUIRES_EXCEPTION already exists
+.   - Table PIT_TRACE_LEVEL already exists
+.   - Table PIT_MESSAGE already exists
+.   - Table PIT_MESSAGE_TEXT already exists
+.   - Table PIT_INTERNAL_LOG already exists
+**  Merge internal lookup data
+.   - Script merge_message_status
+.   - Merge message statuses
+**  Merge initial data
+.   - Script merge_languages
+.   - Merge message languages
+**  Create access views
+.   - Create view pit_message_access_v
+**  Create type declarations
+.   - Create type specification CHAR_TABLE
+.   - Create type specification MSG_ARGS
+.   - Create type specification MSG_ARGS_CHAR
+create or replace type msg_args_char force is
+*
+FEHLER in Zeile 1:
+ORA-22866: Ein Typ mit Tabellenabhängigkeiten kann nicht ersetzt werden
+Hilfe: https://docs.oracle.com/error-help/db/ora-22866/
+
+
+No boolean data type found
+.   - Create type specification MSG_PARAMS
+.   - Create type specification MESSAGE_TYPE
+.   - Create type specification PIT_ARGS
+.   - Create type specification PIT_CONTEXT_TYPE
+.   - Create type specification PIT_CALL_STACK_TYPE
+.   - Create type specification PIT_DEFAULT_ADAPTER
+.   - Create type specification PIT_LOG_STATE_TYPE
+.   - Create type specification PIT_MESSAGE_TABLE
+.   - Create type specification PIT_MODULE
+.   - Create type specification PIT_MODULE_META
+.   - Create type specification PIT_MODULE_LIST
+**  Create ADMIN package declarations
+.   - Create package specification pit_util
+Keine Fehler.
+.   - Create package specification pit_admin
+Keine Fehler.
+.   - Create package specification pit_pre
+Keine Fehler.
+.   - Create package body pit_util
+Keine Fehler.
+.   - Create package body pit_admin
+Keine Fehler.
+**  Create views
+.   - Create view pit_message_group_v
+.   - Create view pit_message_language_v
+.   - Create view pit_pmg_language_v
+.   - Create view pit_translatable_item_v
+.   - Create view pit_message_v
+.   - Create view pit_message_severity_v
+.   - Create view pit_trace_level_v
+.   - Create default parameters
+.   - Script ParameterGroup_PIT
+.   - Script ParameterGroup_CONTEXT
+.   - Create translatable items
+.   - Script TranslatableItemGroup_PIT
+.   - Merge trace levels and message severities
+.   - Script merge_levels_and_severities
+.   - Merge message severities
+.   - Merge trace levels
+.   - Create internal messages
+.   - Script MessageGroup_PIT
+.   - Script MessageGroup_PARAM
+.   - Script MessageGroup_ORA
+**  Create CORE package declarations
+.   - Create package specification msg
+Keine Fehler.
+.   - Create package specification pit
+Keine Fehler.
+.   - Create package specification pit_context
+Keine Fehler.
+.   - Create package specification pit_call_stack
+Keine Fehler.
+.   - Create package specification pit_internal
+Keine Fehler.
+.   - Create package specification pit_notification_util
+Keine Fehler.
+.   - Create global context
+.   - Script create_global_context
+**  Create type bodies
+.   - Create type body message_type
+Keine Fehler.
+No boolean data type found
+.   - Create type body pit_call_stack_type
+Keine Fehler.
+.   - Create type body pit_context_type
+Keine Fehler.
+.   - Create type body pit_default_adapter
+Keine Fehler.
+.   - Create type body pit_log_state_type
+Keine Fehler.
+.   - Create type body pit_module
+Keine Fehler.
+**  Create CORE package implementations
+.   - Create package body pit
+Keine Fehler.
+.   - Create package body pit_call_stack
+Keine Fehler.
+.   - Create package body pit_context
+Keine Fehler.
+.   - Create package body pit_internal
+Keine Fehler.
+.   - Create package body pit_notification_util
+Keine Fehler.
+.   - Set Compiler-Flag for APEX installation to TRUE
+
+********************************************************************************
+*** Installing PIT output modules
+
+********************************************************************************
+*** Module PIT_CONSOLE
+
+**  Install module PIT_CONSOLE
+.   - Create types and packages
+.   - Create type specification PIT_CONSOLE
+.   - Create package specification pit_console_pkg
+Keine Fehler.
+.   - Create type body pit_console
+Keine Fehler.
+.   - Create package body pit_console_pkg
+Keine Fehler.
+.   - Create parameters
+.   - Script ParameterGroup_PIT
+
+*   Install module PIT_TABLE
+.   - Create tables
+.   - Table PIT_TABLE_LOG already exists
+.   - Table PIT_TABLE_CALL_STACK already exists
+.   - Table PIT_TABLE_PARAMS already exists
+.   - Create types and packages
+.   - Create type specification PIT_TABLE
+.   - Create package specification pit_table_pkg
+Keine Fehler.
+.   - Create type body pit_table
+Keine Fehler.
+.   - Create package body pit_table_pkg
+Keine Fehler.
+.   - Create PIT_TABLE parameters
+.   - Script ParameterGroup_PIT
+
+********************************************************************************
+*** Module PIT_APEX
+
+
+**  Install module PIT_APEX
+.   - Create parameter for PIT_APEX
+.   - Script ParameterGroup_PIT
+.   - Merge messages for PIT_APEX
+.   - Script MessageGroup_PIT
+.   - Create types and packages
+.   - Create type specification PIT_APEX
+.   - Create type specification PIT_APEX_ADAPTER
+.   - Create package specification pit_apex_pkg
+Keine Fehler.
+.   - Create type body pit_apex
+Keine Fehler.
+.   - Create package body pit_apex_pkg
+Keine Fehler.
+.   - Create type body pit_apex_adapter
+Keine Fehler.
+
+********************************************************************************
+**  Module PIT_FILE
+
+*   Checking prerequites
+*   Create types and packages
+.   - Create type specification PIT_FILE
+.   - Create package specification pit_file_pkg
+Keine Fehler.
+Keine Fehler.
+.   - Create type body pit_file
+Keine Fehler.
+.   - Create package body pit_file_pkg
+Keine Fehler.
+Keine Fehler.
+*   Create PIT_FILE parameters
+.   - Script ParameterGroup_PIT
+### CAVE ###
+Please remember to create a directory called PIT_FILE_DIR before use.
+This directory is required to enable PIT to store files.
+
+
+********************************************************************************
+*** Finished PIT-Installation

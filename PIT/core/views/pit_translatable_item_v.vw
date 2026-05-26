@@ -1,13 +1,8 @@
 create or replace view pit_translatable_item_v as
 select pti_pmg_name, pti_id, pti_name, pti_display_name, pti_description
-  from (select pti_pmg_name, pti_id, pti_name, pti_display_name, pti_description,
-               rank() over (partition by pti_id, pti_pmg_name order by pml_default_order desc) ranking
-          from pit_translatable_item
-          join pit_message_language
-            on pti_pml_name = pml_name
-         where -- try to find available translation or fallback to default language
-               pml_name = substr(sys_context('USERENV', 'LANGUAGE'), 1, instr(sys_context('USERENV', 'LANGUAGE'), '_') -1)
-            or pml_default_order = 10)
- where ranking = 1;
+  from pit_translatable_item
+  join pit_pmg_language_v
+    on pti_pmg_name = pgl_name
+   and pti_pml_name = pgl_pml_name;
  
 comment on table pit_translatable_item_v is 'Provides access to translatable items in the actual session language if possible and to the default language otherwise';

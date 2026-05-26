@@ -8,25 +8,25 @@ prompt &h2.Create sequences
 prompt &h2.Create tables
 @&tools.check_has_table pit_message_language
 @&tools.check_has_table pit_message_group
+@&tools.check_has_table pit_translation_scope
+@&tools.check_has_table pit_message_status
 @&tools.check_has_table pit_translatable_item
 @&tools.check_has_table pit_message_severity
+@&tools.check_has_column pit_message_severity pse_requires_exception
 @&tools.check_has_table pit_trace_level
 @&tools.check_has_table pit_message
+@&table_dir.change_pit_message.sql
+@&tools.check_has_table pit_message_text
 @&tools.check_has_table pit_internal_log
 
-prompt &h2.Change tables
-@&tools.check_has_column pit_message_severity pse_requires_exception
+prompt &h2.Merge internal lookup data
+@&tools.run_script merge_message_status
 
 prompt &h2.Merge initial data
 @&tools.run_script merge_languages
 
-prompt &h2.Create views
-@&tools.install_view pit_message_group_v
-@&tools.install_view pit_message_language_v
-@&tools.install_view pit_message_v
-@&tools.install_view pit_translatable_item_v
-@&tools.install_view pit_message_severity_v
-@&tools.install_view pit_trace_level_v
+prompt &h2.Create access views
+@&tools.install_view pit_message_access_v
 
 prompt &h2.Create type declarations
 @&tools.install_type_spec char_table
@@ -52,6 +52,15 @@ prompt &h2.Create ADMIN package declarations
 
 @&tools.install_package_body pit_util
 @&tools.install_package_body pit_admin
+
+prompt &h2.Create views
+@&tools.install_view pit_message_group_v
+@&tools.install_view pit_message_language_v
+@&tools.install_view pit_pmg_language_v
+@&tools.install_view pit_translatable_item_v
+@&tools.install_view pit_message_v
+@&tools.install_view pit_message_severity_v
+@&tools.install_view pit_trace_level_v
 
 prompt &s1.Create default parameters
 @&tools.run_script ParameterGroup_PIT

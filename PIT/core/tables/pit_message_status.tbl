@@ -1,0 +1,17 @@
+/**
+  Table: pit_message_status
+    Lookup-table for internal message translation statuses.
+
+  Fields:
+    pmst_name - Unique message status name, primary key.
+    pmst_description - Description of the message status.
+*/
+create table pit_message_status(
+  pmst_name &ORA_NAME_TYPE.,
+  pmst_description varchar2(200 char),
+  constraint pit_message_status_pk primary key(pmst_name)
+) organization index;
+
+comment on table pit_message_status is 'Lookup-table for internal message translation statuses.';
+comment on column pit_message_status.pmst_name is 'Unique message status name, primary key.';
+comment on column pit_message_status.pmst_description is 'Description of the message status.';

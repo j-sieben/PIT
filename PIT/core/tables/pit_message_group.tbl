@@ -1,5 +1,15 @@
+/**
+  Table: pit_message_group
+    Optional message group, used to export groupwise.
+
+  Fields:
+    pmg_name - Unique message group name, primary key.
+    pmg_description - Display name for the respective group.
+    pmg_error_prefix - Optional prefix for exception names derived from the message name.
+    pmg_error_postfix - Optional postfix for exception names derived from the message name.
+*/
 create table pit_message_group(
-  pmg_name &ORA_NAME_TYPE.,
+  pmg_name varchar2(50 byte),
   pmg_description varchar2(200 char),
   pmg_error_prefix varchar2(6 byte) default '&EXCEPTION_PREFIX.',
   pmg_error_postfix varchar2(6 byte) default '&EXCEPTION_POSTFIX.',
@@ -11,4 +21,3 @@ comment on column pit_message_group.pmg_name is 'Unique message group name, prim
 comment on column pit_message_group.pmg_description is 'Display name for the respective group';
 comment on column pit_message_group.pmg_error_prefix is 'Optional prefix for exception names derived from the message name';
 comment on column pit_message_group.pmg_error_postfix is 'Optional postfix for exception names derived from the message name';
-

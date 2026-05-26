@@ -1,0 +1,35 @@
+/**
+  Table: pit_message_text
+    Language specific message text repository.
+
+  Fields:
+    pmt_pms_name - Message name. Reference to PIT_MESSAGE.
+    pmt_pml_name - Language reference of the message text. Taken from Oracle v$nls_valid_values.
+    pmt_text - Message text. Positional replacement with pattern #n#.
+    pmt_description - Optional description to further describe the error or provide help on how to solve the issue.
+    pmt_pmst_name - Internal translation status. Reference to PIT_MESSAGE_STATUS.
+*/
+create table pit_message_text(
+  pmt_pms_name &ORA_NAME_TYPE.,
+  pmt_pml_name &ORA_NAME_TYPE.,
+  pmt_pmst_name &ORA_NAME_TYPE. constraint pmt_pmst_name_nn check(pmt_pmst_name is not null),
+  pmt_text clob constraint pmt_text_nn check(pmt_text is not null),
+  pmt_description clob,
+  constraint pit_message_text_pk primary key(pmt_pms_name, pmt_pml_name),
+  constraint pmt_pms_name_fk foreign key(pmt_pms_name)
+    references pit_message(pms_name) on delete cascade,
+  constraint pmt_pml_name_fk foreign key(pmt_pml_name)
+    references pit_message_language(pml_name),
+  constraint pmt_pmst_name_fk foreign key(pmt_pmst_name)
+    references pit_message_status(pmst_name)
+);
+
+create index idx_pmt_pml_name_fk on pit_message_text(pmt_pml_name);
+create index idx_pmt_pmst_name_fk on pit_message_text(pmt_pmst_name);
+
+comment on table pit_message_text is 'Language specific message text repository.';
+comment on column pit_message_text.pmt_pms_name is 'Message name. Reference to PIT_MESSAGE.';
+comment on column pit_message_text.pmt_pmst_name is 'Internal translation status. Reference to PIT_MESSAGE_STATUS.';
+comment on column pit_message_text.pmt_pml_name is 'Language of the message text. Taken from Oracle v$nls_valid_values.';
+comment on column pit_message_text.pmt_text is 'Message text. Positional replacement with pattern #n#.';
+comment on column pit_message_text.pmt_description is 'Optional description to further describe the error or provide help on how to solve the issue.';

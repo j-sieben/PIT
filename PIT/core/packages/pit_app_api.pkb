@@ -402,7 +402,7 @@ as
   as
     cursor pit_message_cur is
       select *
-        from pit_message;
+        from pit_message_access_v;
   begin
     for r in pit_message_cur loop
       pipe row (r);
@@ -419,13 +419,11 @@ as
       See <pit_app_api.delete_pit_message>
    */
   procedure delete_pit_message(
-    p_pms_name in pit_message.pms_name%type,
-    p_pms_pml_name in pit_message_language.pml_name%type default null)
+    p_pms_name in pit_message_access_v.pms_name%type)
   as
   begin
     pit_admin.delete_message(
-      p_pms_name => p_pms_name,
-      p_pms_pml_name => p_pms_pml_name);
+      p_pms_name => p_pms_name);
   end delete_pit_message;
   
   
@@ -550,12 +548,14 @@ as
     p_target_language in pit_util.ora_name_type,
     p_script out nocopy clob)
   as
+    l_file_name pit_util.ora_name_type;
   begin
     pit_admin.create_installation_script(
       p_pmg_name => p_group_name,
       p_target => p_target,
       p_target_language => p_target_language,
-      p_script => p_script);
+      p_script => p_script,
+      p_file_name => l_file_name);
   end export_group;
   
   
@@ -718,12 +718,13 @@ as
     p_file_name in pit_util.ora_name_type,
     p_xliff out nocopy xmltype)
   as
+    l_file_name pit_util.ora_name_type := p_file_name;
   begin
     pit_admin.create_translation_xml(
       p_target_language => p_target_language,
       p_pmg_name => p_pmg_name,
       p_target => p_target,
-      p_file_name => p_file_name,
+      p_file_name => l_file_name,
       p_xliff => p_xliff);
   end translate_group;
   
@@ -742,7 +743,7 @@ as
     p_toggle_name := check_name(p_toggle_name, pit_util.C_TOGGLE_PREFIX);
     p_context_name := check_name(p_context_name, pit_util.C_CONTEXT_PREFIX);
     
-    if pit.has_no_bulk_error then
+    if pit.assert_is_ok then
       pit_util.check_toggle_settings(
         p_toggle_name => p_toggle_name,
         p_context_name => p_context_name,
@@ -809,7 +810,7 @@ as
       p_condition => p_row.pmg_error_prefix || p_row.pmg_error_postfix,
       p_message_name => msg.PIT_PMG_ERROR_MARKER_MISSING);
     
-    if pit.has_no_bulk_error then
+    if pit.assert_is_ok then
       l_prefix_length := coalesce(length(p_row.pmg_error_prefix || p_row.pmg_error_postfix), 0);
       pit.assert(
         p_condition => l_prefix_length between 1 and 12,

@@ -53,7 +53,7 @@ as
   type parameter_realm_v_table is table of parameter_realm_v_rowtype;
   subtype parameter_v_rowtype is parameter_v%rowtype;
   type parameter_table is table of parameter_v_rowtype;
-  subtype pit_message_rowtype is pit_message%rowtype;
+  subtype pit_message_rowtype is pit_message_access_v%rowtype;
   type pit_message_table is table of pit_message_rowtype;
   subtype pit_message_group_rowtype is pit_message_group%rowtype;
   type pit_message_group_table is table of pit_message_group_rowtype;
@@ -310,11 +310,9 @@ as
 
     Parameters:
       p_pms_name - Name of the message to delete
-      p_pms_pml_name - Optional language of the message to delete. If null, all translations are deleted, otherwise only the translated message
    */
   procedure delete_pit_message(
-    p_pms_name in pit_message.pms_name%type,
-    p_pms_pml_name in pit_message_language.pml_name%type default null);
+    p_pms_name in pit_message_access_v.pms_name%type);
 
 
   /**

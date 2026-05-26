@@ -1,18 +1,32 @@
+/**
+  Table: pit_translatable_item
+    Central translatable item repository in various languages.
+
+  Fields:
+    pti_id - ID of the translatable item, part of the PK in conjunction with PIT_PML_NAME.
+    pti_pml_name - Part of the PK, reference to PIT_MESSAGE_LANGUAGE. Taken from Oracle v$nls_valid_values.
+    pti_pmg_name - Part of the PK, reference to PIT_MESSAGE_GROUP, criteria to group messages and translatables items per group.
+    pti_name - Name. Optionally contains replacement anchors.
+    pti_display_name - Display name. Used for UI display purposes. Optionally contains replacement anchors.
+    pti_description - Help text or further description. No replacement anchors allowed.
+    pti_uid - Virtual column as a surrogate primary key for references.
+    pti_upmg - Virtual column as a surrogate primary key for references.
+*/
 create table pit_translatable_item(
-   pti_id &ORA_NAME_TYPE., 
-   pti_pml_name &ORA_NAME_TYPE.,
-   pti_pmg_name &ORA_NAME_TYPE.,
-   pti_name varchar2(200 char), 
+   pti_id &ORA_NAME_TYPE.,
+   pti_pml_name varchar2(50 byte),
+   pti_pmg_name varchar2(50 byte),
+   pti_name varchar2(200 char),
    pti_display_name varchar2(200 char),
    pti_description clob,
-   pti_uid &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_id else null end) virtual,
-   pti_upmg &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_pmg_name else null end) virtual,
+   pti_uid &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_id end) virtual,
+   pti_upmg &ORA_NAME_TYPE. generated always as (case pti_pml_name when '&DEFAULT_LANGUAGE.' then pti_pmg_name end) virtual,
    constraint pit_translatable_item_pk primary key (pti_id, pti_pmg_name, pti_pml_name),
    constraint pti_uid_u unique (pti_uid, pti_upmg),
    constraint pti_pml_name_fk foreign key (pti_pml_name)
-      references pit_message_language(pml_name) on delete cascade,
+     references pit_message_language(pml_name) on delete cascade,
    constraint pti_pmg_name_fk foreign key (pti_pmg_name)
-      references pit_message_group(pmg_name) on delete cascade,
+     references pit_message_group(pmg_name) on delete cascade,
    constraint chk_pti_pmg_name check(pti_pmg_name is not null)
 ) ;
 

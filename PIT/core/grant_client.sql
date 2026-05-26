@@ -21,10 +21,10 @@ prompt &h3.Packages
 @tools/grant_access.sql execute pit_app_api
 
 prompt &h3.Tables
-@tools/grant_access.sql "select, references" pit_message
 @tools/grant_access.sql "select, references" pit_translatable_item
 
 prompt &h3.Views
+@tools/grant_access_with_grant.sql read pit_message_access_v
 @tools/grant_access_with_grant.sql read pit_message_language_v
 @tools/grant_access_with_grant.sql read pit_message_severity_v
 @tools/grant_access_with_grant.sql read pit_message_group_v

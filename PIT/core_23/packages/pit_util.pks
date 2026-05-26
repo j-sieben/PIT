@@ -87,13 +87,19 @@ as
     Constants: Common constants
       Some constants are implemented as functions to allow access from SQL
       
-      true - Boolean flag TRUE, <boolean>
-      false - Boolean flag FALSE, <boolean>
+      C_TRUE - Boolean flag TRUE, <boolean>
+      C_FALSE - Boolean flag FALSE, <boolean>
       C_DEFAULT_LANGUAGE - Oracle name of the default language. Is defined during installation of PIT
       C_DEFAULT_CONTEXT - Name of the default context
       C_ACTIVE_CONTEXT - Name of the active context
       C_PARAMETER_GROUP - Name of the PIT parameter group
    */
+  function c_true
+    return boolean;
+
+  function c_false
+    return boolean;
+
   C_DEFAULT_LANGUAGE constant ora_name_type := 'GERMAN';
   C_CONTEXT_PREFIX constant ora_name_type := 'CONTEXT_';
   C_TOGGLE_PREFIX constant ora_name_type := 'TOGGLE_';

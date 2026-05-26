@@ -1,5 +1,14 @@
+/**
+  Table: pit_message_language
+    Lookup-table for message languages.
+
+  Fields:
+    pml_name - Unique name for message language, primary key.
+    pml_display_name - Display name, used for APEX application.
+    pml_default_order - Sorting column to select message in respective language. Highest number wins. Default-language := 10, 0=language not supported.
+*/
 create table pit_message_language(
-   pml_name &ORA_NAME_TYPE.,
+   pml_name varchar2(50 byte),
    pml_display_name varchar2(50 char),
    pml_default_order number(3,0),
    constraint pit_message_language_pk primary key(pml_name)

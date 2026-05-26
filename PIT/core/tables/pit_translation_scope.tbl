@@ -1,0 +1,27 @@
+/**
+  Table: pit_translation_scope
+    Defines materialized languages per message group and marks the source language for this group.
+
+  Fields:
+    ptsc_pmg_name - Message group for which this language is materialized.
+    ptsc_pml_name - Materialized language for this message group.
+    ptsc_is_default - Flag to indicate the source language for this message group.
+*/
+create table pit_translation_scope(
+  ptsc_pmg_name varchar2(50 byte),
+  ptsc_pml_name varchar2(50 byte),
+  ptsc_is_default &FLAG_TYPE. constraint ptsc_is_default_chk check(ptsc_is_default in (&C_TRUE., &C_FALSE.)),
+  constraint pit_translation_scope_pk primary key(ptsc_pmg_name, ptsc_pml_name),
+  constraint ptsc_pmg_name_fk foreign key(ptsc_pmg_name)
+    references pit_message_group(pmg_name) on delete cascade,
+  constraint ptsc_pml_name_fk foreign key(ptsc_pml_name)
+    references pit_message_language(pml_name) on delete cascade
+) organization index;
+
+create unique index ptsc_default_u on pit_translation_scope(
+  case when ptsc_is_default = &C_TRUE. then ptsc_pmg_name end);
+
+comment on table pit_translation_scope is 'Defines materialized languages per message group and marks the source language for this group.';
+comment on column pit_translation_scope.ptsc_pmg_name is 'Message group for which this language is materialized.';
+comment on column pit_translation_scope.ptsc_pml_name is 'Materialized language for this message group.';
+comment on column pit_translation_scope.ptsc_is_default is 'Flag to indicate the source language for this message group.';

@@ -198,6 +198,22 @@ as
     g_omit_pit_in_stack := param.get_boolean('OMIT_PIT_IN_STACK', C_PARAMETER_GROUP);
     g_omit_pkg_list := ':' ||param.get_string('OMIT_PKG_IN_STACK', C_PARAMETER_GROUP) || ':';
   end initialize;
+
+
+  function c_true
+    return boolean
+  as
+  begin
+    return true;
+  end c_true;
+
+
+  function c_false
+    return boolean
+  as
+  begin
+    return false;
+  end c_false;
   
   
   /**

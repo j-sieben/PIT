@@ -1,0 +1,36 @@
+/**
+  Table: pit_message_text
+    Language specific message text repository.
+
+  Fields:
+    pmst_pms_name - Message name. Reference to PIT_MESSAGE.
+    pmst_pml_name - Language reference of the message text. Taken from Oracle v$nls_valid_values.
+    pmst_text - Message text. Positional replacement with pattern #n#.
+    pmst_description - Optional description to further describe the error or provide help on how to solve the issue.
+    pmst_pmst_name - Internal translation status. Reference to PIT_MESSAGE_STATUS.
+*/
+create table if not exists pit_message_text(
+  pmst_pms_name &ORA_NAME_TYPE.,
+  pmst_pml_name &ORA_NAME_TYPE.,
+  pmst_text clob,
+  pmst_description clob,
+  pmst_pmst_name &ORA_NAME_TYPE.,
+  constraint pit_message_text_pk primary key(pmst_pms_name, pmst_pml_name),
+  constraint pmst_pms_name_fk foreign key(pmst_pms_name)
+    references pit_message(pms_name) on delete cascade,
+  constraint pmst_pml_name_fk foreign key(pmst_pml_name)
+    references pit_message_language(pml_name),
+  constraint pmst_pmst_name_fk foreign key(pmst_pmst_name)
+    references pit_message_status(pmst_name),
+  constraint pmst_text_nn check(pmst_text is not null),
+  constraint pmst_pmst_name_nn check(pmst_pmst_name is not null)
+);
+
+create index if not exists idx_pmst_pml_name_fk on pit_message_text(pmst_pml_name);
+
+comment on table pit_message_text is 'Language specific message text repository.';
+comment on column pit_message_text.pmst_pms_name is 'Message name. Reference to PIT_MESSAGE.';
+comment on column pit_message_text.pmst_pml_name is 'Language reference of the message text. Taken from Oracle v$nls_valid_values.';
+comment on column pit_message_text.pmst_text is 'Message text. Positional replacement with pattern #n#.';
+comment on column pit_message_text.pmst_description is 'Optional description to further describe the error or provide help on how to solve the issue.';
+comment on column pit_message_text.pmst_pmst_name is 'Internal translation status. Reference to PIT_MESSAGE_STATUS.';
