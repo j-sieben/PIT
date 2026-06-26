@@ -456,6 +456,15 @@ begin
     p_pms_pml_name => 'GERMAN',
     p_error_number => null);
 
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_NO_ACTIVE_MESSAGE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^Es ist keine aktive PIT-Meldung vorhanden.^',
+    p_pms_description => q'^Informationsmeldung, wenn weder eine PIT-Meldung noch ein SQL-Fehler vorhanden ist.^',
+    p_pms_pse_id => 40,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => null);
+
   commit;
   pit_admin.create_message_package;
 end;

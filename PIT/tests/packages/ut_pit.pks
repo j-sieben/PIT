@@ -204,6 +204,12 @@ as
   --%test(... get_active_message returns the lastly created instance of type MESSAGE_TYPE)
   procedure get_active_message;
 
+  --%test(... get_active_message returns SQL error fallback if no PIT message exists)
+  procedure get_active_message_sql_error;
+
+  --%test(... get_active_message returns info fallback if no error exists)
+  procedure get_active_message_no_error;
+
   --%endcontext
 
   --%context(Method ASSERT)

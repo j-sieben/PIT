@@ -456,6 +456,15 @@ begin
     p_pms_pml_name => 'AMERICAN',
     p_error_number => null);
 
+  pit_admin.merge_message(
+    p_pms_name => 'PIT_NO_ACTIVE_MESSAGE',
+    p_pms_pmg_name => 'PIT',
+    p_pms_text => q'^No active PIT message is available.^',
+    p_pms_description => q'^Informational fallback when no PIT message and no SQL error are available.^',
+    p_pms_pse_id => pit.LEVEL_INFO,
+    p_pms_pml_name => 'AMERICAN',
+    p_error_number => null);
+
   commit;
   pit_admin.create_message_package;
 end;

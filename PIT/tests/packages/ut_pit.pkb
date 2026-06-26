@@ -1003,6 +1003,39 @@ as
     ut.expect(to_char(l_message.message_text)).to_equal(C_DUMMY_TEXT);
   end get_active_message;
 
+
+  --
+  -- test get_active_message_sql_error: No active PIT message falls back to the SQL exception
+  --
+  procedure get_active_message_sql_error
+  as
+    l_message message_type;
+    l_result number;
+  begin
+    pit.handle_exception;
+    l_result := a(0);
+  exception
+    when others then
+      l_message := pit.get_active_message;
+      ut.expect(l_message.message_name).to_equal('PIT_SQL_ERROR');
+      ut.expect(instr(to_char(l_message.message_text), '#SQLERRM#')).to_equal(0);
+  end get_active_message_sql_error;
+
+
+  --
+  -- test get_active_message_no_error: No active PIT message and no SQL error returns an info fallback
+  --
+  procedure get_active_message_no_error
+  as
+    l_message message_type;
+  begin
+    pit.handle_exception;
+    l_message := pit.get_active_message;
+    ut.expect(l_message.message_name).to_equal('PIT_NO_ACTIVE_MESSAGE');
+    ut.expect(l_message.severity).to_equal(pit.LEVEL_INFO);
+    ut.expect(to_char(pit.get_active_message_text)).to_equal(to_char(l_message.message_text));
+  end get_active_message_no_error;
+
   --
   -- test assert_no_error: Call assertion method with TRUE does not raise an exception
   --

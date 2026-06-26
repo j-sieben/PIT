@@ -920,7 +920,13 @@ as
     return message_type
   as
   begin
-    return g_active_message;
+    if g_active_message is not null then
+      return g_active_message;
+    elsif sqlcode != 0 then
+      return get_message('PIT_SQL_ERROR', null, null, null, sqlcode);
+    else
+      return get_message('PIT_NO_ACTIVE_MESSAGE', null, null, null, null);
+    end if;
   end get_active_message;
   
   

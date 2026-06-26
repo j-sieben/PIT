@@ -1036,7 +1036,21 @@ as
     return message_type
   as
   begin
-    return g_active_message;
+    if g_active_message is not null then
+      return g_active_message;
+    elsif sqlcode != 0 then
+      return get_message(
+               p_message_name => 'PIT_SQL_ERROR',
+               p_msg_args => null,
+               p_affected_id => null,
+               p_error_code => sqlcode);
+    else
+      return get_message(
+               p_message_name => 'PIT_NO_ACTIVE_MESSAGE',
+               p_msg_args => null,
+               p_affected_id => null,
+               p_error_code => null);
+    end if;
   end get_active_message;
   
   
