@@ -22,7 +22,7 @@ col pit_user new_val PIT_USER format a30
 col default_language new_val DEFAULT_LANGUAGE format a30
 col module new_val MODULE format a30
 
-@init/settings.sql
+@init/settings.sql I18N
 
 
 select user sys_user,

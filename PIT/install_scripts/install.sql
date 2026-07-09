@@ -1,5 +1,5 @@
 
-@init/init.sql &1.
+@init/init.sql &1. &2.
 
 define install_script_dir=install_scripts/
 define tool_dir=tools/

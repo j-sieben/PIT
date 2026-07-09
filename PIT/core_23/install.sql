@@ -57,9 +57,9 @@ prompt &h2.Create ADMIN package declarations
 prompt &h2.Create views
 @&tools.install_view pit_message_group_v
 @&tools.install_view pit_message_language_v
-@&tools.install_view pit_pmg_language_v
-@&tools.install_view pit_translatable_item_v
-@&tools.install_view pit_message_v
+@&tools.install_view &PIT_PMG_LANGUAGE_VIEW.
+@&tools.install_view &PIT_TRANSLATABLE_ITEM_VIEW.
+@&tools.install_view &PIT_MESSAGE_VIEW.
 @&tools.install_view pit_message_severity_v
 @&tools.install_view pit_trace_level_v
 

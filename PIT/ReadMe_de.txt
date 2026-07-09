@@ -17,6 +17,8 @@ Verfügbare Kommandos sind:
 Beispiele:
 
 - ./pit.sh install
+- ./pit.sh install --owner PIT --service XEPDB1 --default-language GERMAN --install-mode MONOLINGUAL
+- PIT_OWNER=PIT PIT_OWNER_PW=secret PIT_SERVICE=XEPDB1 PIT_INSTALL_MODE=MONOLINGUAL ./pit.sh install
 - ./pit.sh install-client
 - ./pit.sh install-apex
 - ./pit.sh install-module
@@ -62,6 +64,10 @@ unterstützen weiterhin die folgenden Installationsausprägungen:
    PIT-Installation eingerichtet wurde, sondern später separat ergänzt werden soll.
    
 Alle Skripte erfragen interaktiv die erforderlichen Parameter. Folgen Sie den Anweisungen der Skripte.
+
+Die Core-Installation kennt zwei Installationsmodi. `I18N` ist der Standard und installiert die
+internationalisierbaren Message-Views. `MONOLINGUAL` installiert Message-Views, die direkt auf
+die gewählte Standardsprache filtern.
 
 - Vor der Verwendung des Ausgabemoduls PIT_FILE muss ein Directory
   mit dem Namen PIT_FILE_DIR angelegt werden und auf einen Pfad zeigen,

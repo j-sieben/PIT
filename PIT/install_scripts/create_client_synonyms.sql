@@ -29,7 +29,7 @@ end;
 /
 set termout on
 
-@init/settings.sql
+@init/settings.sql I18N
 
 prompt &h2.Register Parameter Client
 @parameters/register_client.sql
@@ -51,4 +51,3 @@ prompt &h1.Finished PIT client registration
 prompt &section.
 
 exit
-

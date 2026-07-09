@@ -25,4 +25,4 @@ select upper('&1.') install_user,
   
 set termout on
  
-@init/settings.sql
+@init/settings.sql I18N
