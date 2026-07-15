@@ -9,7 +9,7 @@ OWNER="$(pit_require_value "${OWNER:-}" "${PIT_OWNER:-}" "Enter owner schema for
 OWNERPWD="$(pit_require_value "${OWNERPWD:-}" "${PIT_OWNER_PW:-}" "Enter password for ${OWNER}: " true)"
 SERVICE="$(pit_require_value "${SERVICE:-}" "${PIT_SERVICE:-}" "Enter service name for the database or PDB: ")"
 DEFAULT_LANGUAGE="$(pit_require_value "${DEFAULT_LANGUAGE:-}" "${PIT_DEFAULT_LANGUAGE:-}" "Enter default language for messages (GERMAN or AMERICAN): ")"
-DEFAULT_LANGUAGE="${DEFAULT_LANGUAGE^^}"
+DEFAULT_LANGUAGE="$(printf '%s' "${DEFAULT_LANGUAGE}" | tr '[:lower:]' '[:upper:]')"
 case "${DEFAULT_LANGUAGE}" in
   GERMAN|AMERICAN)
     ;;
@@ -20,7 +20,7 @@ case "${DEFAULT_LANGUAGE}" in
 esac
 PIT_INSTALL_MODE="$(pit_require_value "${PIT_INSTALL_MODE:-}" "" "Enter install mode (I18N or MONOLINGUAL, default I18N): ")"
 PIT_INSTALL_MODE="${PIT_INSTALL_MODE:-I18N}"
-PIT_INSTALL_MODE="${PIT_INSTALL_MODE^^}"
+PIT_INSTALL_MODE="$(printf '%s' "${PIT_INSTALL_MODE}" | tr '[:lower:]' '[:upper:]')"
 case "${PIT_INSTALL_MODE}" in
   I18N|MONOLINGUAL)
     ;;
