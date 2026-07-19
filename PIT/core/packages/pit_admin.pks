@@ -182,8 +182,8 @@ as
       p_pms_pml_name - Optional reference to the Oracle supported language names, if null, the default language is used (as defined in pms_pml_name)
       p_pms_text - Message text with replacement anchors in the format #n#, where n is an integer that references up to 50 replacement items
       p_pms_desription - Optional description of the message. Can be used to give advice in error situations on what to do next.
-      p_error_number - Optional reference to an Oracle system error number. Must not be a number of an Oracle predefined error number. If null
-                       and the severity of the message is in <pit.LEVEL_FATAL>|<pit.LEVEL_ERROR>, then an error number from the range -20999..-20000 is used.
+      p_error_number - Optional reference to an Oracle system error number. Must not be a number of an Oracle predefined error number.
+                       If null, no exception is generated. Pass -20000 to allocate a custom error number from the range -20999..-20000.
    */
   procedure merge_message(
     p_pms_name in pit_message_access_v.pms_name%type,

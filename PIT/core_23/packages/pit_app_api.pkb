@@ -849,7 +849,7 @@ as
     
     case
     -- In case of Oracle error numbers it is mandatory to check for already named errors
-    when p_row.pms_pse_id in (pit.LEVEL_FATAL, pit.LEVEL_ERROR) 
+    when p_row.pms_custom_error is not null
          and p_row.pms_custom_error not between C_MIN_ERROR and C_MAX_ERROR then
       l_predefined_error := pit_util.check_error_number_exists(
                               p_pms_name => p_row.pms_name, 
@@ -862,10 +862,6 @@ as
                         l_predefined_error.error_name, 
                         l_predefined_error.owner, 
                         l_predefined_error.package_name));
-    -- normal errors are set to C_MAX_ERROR upfront. The actual error number
-    -- is calculated when creating the MSG package
-    when p_row.pms_pse_id in (pit.LEVEL_FATAL, pit.LEVEL_ERROR) then
-      p_row.pms_custom_error := C_MAX_ERROR;
     else
       null;
     end case;

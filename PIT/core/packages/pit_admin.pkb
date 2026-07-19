@@ -878,7 +878,7 @@ end ]' || C_PACKAGE_NAME || ';';
       is
         with messages as(
              select pms_name,
-                    case pms_custom_error when C_MAX_ERROR then pms_active_error else pms_custom_error end pms_custom_error,
+                    pms_active_error,
                     case when pmg_error_prefix is not null  then pmg_error_prefix || '_' end ||
                     pms_name ||
                     case when pmg_error_postfix is not null then '_' || pmg_error_postfix end pms_error_name
@@ -887,11 +887,11 @@ end ]' || C_PACKAGE_NAME || ';';
                  on pms_pmg_name = pmg_name
               )
       select replace(l_constant_template, '#CONSTANT#', pms_name) constant_chunk,
-             case when pms_custom_error is not null then
+             case when pms_active_error is not null then
                replace (l_exception_template, '#ERROR_NAME#', pms_error_name)
              else null end exception_chunk,
-             case when pms_custom_error is not null then
-               replace(replace(l_pragma_template, '#ERROR_NAME#', pms_error_name), '#ERROR#', pms_custom_error)
+             case when pms_active_error is not null then
+               replace(replace(l_pragma_template, '#ERROR_NAME#', pms_error_name), '#ERROR#', pms_active_error)
              else null end pragma_chunk
         from messages
        order by pms_name;
@@ -902,13 +902,15 @@ end ]' || C_PACKAGE_NAME || ';';
     merge into pit_message m
     using (select pms_name, C_MIN_ERROR - 1 + dense_rank() over (order by pms_name) pms_active_error
              from pit_message
-            where pms_pse_id <= 30
-              and pms_custom_error = C_MAX_ERROR
+            where pms_custom_error = C_MAX_ERROR
            union all
            select pms_name, pms_custom_error
              from pit_message
-            where pms_pse_id <= 30
-              and pms_custom_error != C_MAX_ERROR) v
+            where pms_custom_error != C_MAX_ERROR
+           union all
+           select pms_name, null
+             from pit_message
+            where pms_custom_error is null) v
        on (m.pms_name = v.pms_name)
      when matched then update set
           pms_active_error = v.pms_active_error;
@@ -1084,10 +1086,9 @@ end ]' || C_PACKAGE_NAME || ';';
   begin
 
     case
-    when p_row.pms_pse_id in (C_FATAL, C_ERROR) and p_row.pms_error not between C_MIN_ERROR and C_MAX_ERROR then
+    when p_row.pms_error is not null
+         and p_row.pms_error not between C_MIN_ERROR and C_MAX_ERROR then
       check_error(p_row);
-    when p_row.pms_pse_id in (C_FATAL, C_ERROR) then
-      p_row.pms_error := C_MAX_ERROR;
     else
       null;
     end case;

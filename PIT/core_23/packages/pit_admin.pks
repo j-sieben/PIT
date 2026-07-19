@@ -166,8 +166,8 @@ as
       p_pms_pse_id - Reference to a severity as defined in PIT.LEVEL_<level> constants. Ranges from <PIT.LEVEL_FATAL> to <PIT.LEVEL_VERBOSE> or 20..70
       p_pms_pmg_name - Optional reference to a message group
       p_pms_pml_name - Optional reference to the Oracle supported language names, if null, the default language is used (as defined in pms_pml_name)
-      p_error_number - Optional reference to an Oracle system error number. Must not be a number of an Oracle predefined error number. If null
-                       and the severity of the message is in <pit.LEVEL_FATAL>|<pit.LEVEL_ERROR>, then an error number from the range -20999..-20000 is used.
+      p_error_number - Optional reference to an Oracle system error number. Must not be a number of an Oracle predefined error number.
+                       If null, no exception is generated. Pass -20000 to allocate a custom error number from the range -20999..-20000.
    */
   procedure merge_message(
     p_pms_name in pit_message_access_v.pms_name%type,

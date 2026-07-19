@@ -224,6 +224,6 @@ comment on table pit_message is 'central log message repository in various langu
 comment on column pit_message.pms_name is 'Unique message name. Used to reference the message as a constant in package MSG.';
 comment on column pit_message.pms_pmg_name is 'Unique message group name. Reference to PIT_MESSAGE_GROUP.';
 comment on column pit_message.pms_pse_id is 'Severity of the message. Reference to PIT_MESSAGE_SEVERITY';
-comment on column pit_message.pms_custom_error is 'Optional pointer to an Oracle error number. If null, an exception will be generated. To define custom errors, use null.';
-comment on column pit_message.pms_active_error is 'If a custom error number of -20000 is used, this field contains the actual error number as processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE.';
+comment on column pit_message.pms_custom_error is 'Optional pointer to an Oracle error number. If null, no exception will be generated. To define custom errors, use -20000.';
+comment on column pit_message.pms_active_error is 'Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.';
 comment on column pit_message.pms_id is 'Virtual column as a surrogate primary key for references';
