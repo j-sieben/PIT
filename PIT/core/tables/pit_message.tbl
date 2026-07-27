@@ -10,16 +10,17 @@
     pms_active_error - Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.
 */
 create table pit_message(
-   pms_name varchar2(50 byte),
-   pms_pmg_name varchar2(50 byte),
-   pms_pse_id number(3,0),
-   pms_custom_error number,
-   pms_active_error number,
-   constraint pit_message_pk primary key (pms_name),
-   constraint pms_pmg_name_fk foreign key (pms_pmg_name)
-      references pit_message_group(pmg_name),
-   constraint pms_pse_id_fk foreign key (pms_pse_id)
-      references pit_message_severity(pse_id)
+  pms_name varchar2(50 byte),
+  pms_pmg_name varchar2(50 byte),
+  pms_pse_id number(3,0),
+  pms_custom_error number,
+  pms_active_error number,
+  constraint pit_message_pk primary key (pms_name),
+  constraint pms_pmg_name_fk foreign key (pms_pmg_name)
+    references pit_message_group(pmg_name),
+  constraint pms_pse_id_fk foreign key (pms_pse_id)
+    references pit_message_severity(pse_id),
+  constraint pms_custom_error_u unique (case when coalesce(pms_custom_error, -20000) != -20000 then pms_custom_error end)
 ) organization index;
 
 comment on table pit_message is 'central log message repository in various languages.';
@@ -29,7 +30,3 @@ comment on column pit_message.pms_pse_id is 'Severity of the message. Reference 
 comment on column pit_message.pms_custom_error is 'Optional pointer to an Oracle error number. If null, no exception will be generated. To define custom errors, use -20000.';
 comment on column pit_message.pms_active_error is 'Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.';
 
-
--- Unique conditional index to prevent server errors to be initialized more than once
-create unique index pms_custom_error_u on pit_message(
-  case when coalesce(pms_custom_error, -20000) != -20000 then pms_custom_error end);
