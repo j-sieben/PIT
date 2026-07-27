@@ -18,9 +18,7 @@ Examples:
 
 - ./pit.sh install
 - ./pit.sh install --owner PIT --service XEPDB1 --default-language AMERICAN
-- ./pit.sh install --owner PIT --service XEPDB1 --default-language GERMAN --install-mode MONOLINGUAL
 - PIT_OWNER=PIT PIT_OWNER_PW=secret PIT_SERVICE=XEPDB1 ./pit.sh install
-- PIT_OWNER=PIT PIT_OWNER_PW=secret PIT_SERVICE=XEPDB1 PIT_INSTALL_MODE=MONOLINGUAL ./pit.sh install
 - PIT_OWNER=PIT PIT_OWNER_PW=secret PIT_CLIENT=APP PIT_CLIENT_PW=secret PIT_SERVICE=XEPDB1 ./pit.sh install-client
 - ./pit.sh install-apex --owner PIT --client APEX_USER --service XEPDB1 --apex-workspace PIT_ADMIN --apex-app-id 100
 - ./pit.sh install-module --owner PIT --service XEPDB1 --default-language AMERICAN --module pit_mail
@@ -77,7 +75,6 @@ Relevant environment variables are:
 - PIT_CLIENT_PW
 - PIT_SERVICE
 - PIT_DEFAULT_LANGUAGE
-- PIT_INSTALL_MODE
 - PIT_MODULE
 - PIT_APEX_WORKSPACE
 - PIT_APEX_APP_ID
@@ -86,9 +83,8 @@ Relevant environment variables are:
 Passwords are intentionally not supported as CLI options. For non-interactive runs,
 provide them through environment variables.
 
-The core installation supports two install modes. `I18N` is the default and installs
-the internationalized message views. `MONOLINGUAL` installs message views that filter
-directly on the selected default language.
+The core installation uses a unified internationalized runtime model. Languages
+without translations map directly to the selected default language.
 
 
 - If you plan to use output module PIT_FILE make sure that you have created a

@@ -26,7 +26,6 @@ Options:
   --client <schema>             Client schema or APEX-accessible schema
   --service <service>           Database service or PDB
   --default-language <lang>     Message language, e.g. GERMAN or AMERICAN
-  --install-mode <mode>         I18N or MONOLINGUAL, default I18N
   --module <name>               PIT module name
   --apex-workspace <name>       APEX workspace for install-apex
   --apex-app-id <id>            APEX application id for install-apex
@@ -39,7 +38,6 @@ Environment variables:
   PIT_CLIENT_PW
   PIT_SERVICE
   PIT_DEFAULT_LANGUAGE
-  PIT_INSTALL_MODE
   PIT_MODULE
   PIT_APEX_WORKSPACE
   PIT_APEX_APP_ID
@@ -93,11 +91,6 @@ while [ $# -gt 0 ]; do
     --default-language)
       require_option_value "$1" "${2:-}"
       export DEFAULT_LANGUAGE="$2"
-      shift 2
-      ;;
-    --install-mode)
-      require_option_value "$1" "${2:-}"
-      export PIT_INSTALL_MODE="$2"
       shift 2
       ;;
     --module)

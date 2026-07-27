@@ -16,17 +16,10 @@ if /I "%DefaultLanguage%"=="AMERICAN" goto language_ok
 echo Unsupported default language: %DefaultLanguage%. Expected GERMAN or AMERICAN.
 goto error
 :language_ok
-set /p PitInstallMode=Enter install mode (I18N or MONOLINGUAL, default I18N):
-if "%PitInstallMode%"=="" set PitInstallMode=I18N
-if /I "%PitInstallMode%"=="I18N" goto mode_ok
-if /I "%PitInstallMode%"=="MONOLINGUAL" goto mode_ok
-echo Unsupported install mode: %PitInstallMode%. Expected I18N or MONOLINGUAL.
-goto error
-:mode_ok
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage% %PitInstallMode%
+sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage%
 
 :end
 popd

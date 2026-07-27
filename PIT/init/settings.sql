@@ -18,37 +18,6 @@ define C_FALSE="'N'";
 define EXCEPTION_PREFIX=''
 define EXCEPTION_POSTFIX='ERR'
 
--- Choose the view implementation.
--- I18N resolves translations through PIT_PMG_LANGUAGE_V.
--- MONOLINGUAL filters PIT_MESSAGE_V and PIT_TRANSLATABLE_ITEM_V directly on DEFAULT_LANGUAGE.
-col pit_pmg_language_view new_val PIT_PMG_LANGUAGE_VIEW format a128
-col pit_message_view new_val PIT_MESSAGE_VIEW format a128
-col pit_translatable_item_view new_val PIT_TRANSLATABLE_ITEM_VIEW format a128
-
-with mode as (
-       select upper('&1.') install_mode
-         from dual)
-select case install_mode
-         when 'MONOLINGUAL' then 'pit_pmg_default_language_v'
-         else 'pit_pmg_language_v'
-       end pit_pmg_language_view,
-       case install_mode
-         when 'MONOLINGUAL' then 'pit_message_default_language_v'
-         else 'pit_message_v'
-       end pit_message_view,
-       case install_mode
-         when 'MONOLINGUAL' then 'pit_translatable_item_default_language_v'
-         else 'pit_translatable_item_v'
-       end pit_translatable_item_view
-  from mode;
-
-begin
-  if upper('&1.') not in ('I18N', 'MONOLINGUAL') then
-    raise_application_error(-20000, 'Installation mode &1. is not supported, please use I18N or MONOLINGUAL');
-  end if;
-end;
-/
-
 -- Don't change these
 col err_pre new_val ERR_PRE format a30
 col err_post new_val ERR_POST format a30

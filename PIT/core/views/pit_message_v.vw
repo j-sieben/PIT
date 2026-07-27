@@ -1,17 +1,11 @@
 create or replace view pit_message_v as
-select pms_name,
-       pms_pmg_name,
-       pmt_pml_name pms_pml_name,
-       pmt_text pms_text,
-       pmt_description pms_description,
-       pms_pse_id,
-       pms_custom_error,
-       pms_active_error
-  from pit_message
-  join pit_pmg_language_v
-    on pms_pmg_name = pgl_name
-  join pit_message_text
-    on pms_name = pmt_pms_name
-   and pgl_pml_name = pmt_pml_name;
+select m.*
+  from pit_message_language l
+  join pit_message_mv m
+    on m.pms_pml_name = l.pml_effective_name
+ where l.pml_name = substr(
+         sys_context('USERENV', 'LANGUAGE'),
+         1,
+         instr(sys_context('USERENV', 'LANGUAGE'), '_') - 1);
     
-comment on table pit_message_v is 'PIT_MESSAGE values in the actual session language or default language, if no translation exists';
+comment on table pit_message_v is 'Published PIT messages in the effective language of the current session.';

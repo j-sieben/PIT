@@ -1,6 +1,6 @@
 
 @init/init_apex.sql &1. &2. &3. &4.
-@init/settings.sql I18N
+@init/settings.sql
 
 prompt &h1.Checking installation prerequisites
 @install_scripts/check_apex_prerequisites.sql

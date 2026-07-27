@@ -91,17 +91,7 @@ begin
     execute_ddl('alter table pit_message drop column pms_description');
     execute_ddl('alter table pit_message drop column pms_pmst_name');
 
-    select count(*)
-      into l_has_pms_id
-      from user_tab_columns
-     where table_name = 'PIT_MESSAGE'
-       and column_name = 'PMS_ID';
-
-    if l_has_pms_id = 0 then
-      execute immediate 'alter table pit_message add pms_id &ORA_NAME_TYPE. generated always as (case when pms_name is not null then pms_name end) virtual';
-    end if;
     execute immediate 'alter table pit_message add constraint pit_message_pk primary key (pms_name)';
-    execute immediate 'alter table pit_message add constraint pms_id_u unique (pms_id)';
     execute immediate q'[
     create unique index pms_custom_error_u on pit_message(
       case
@@ -166,18 +156,7 @@ begin
     execute_ddl('drop table pit_message_text_mig purge');
   end if;
 
-  select count(*)
-    into l_has_pms_id
-    from user_tab_columns
-   where table_name = 'PIT_MESSAGE'
-     and column_name = 'PMS_ID';
-
-  if l_has_pms_id = 0 then
-    execute immediate 'alter table pit_message add pms_id &ORA_NAME_TYPE. generated always as (case when pms_name is not null then pms_name end) virtual';
-  end if;
-
   execute_ddl('alter table pit_message add constraint pit_message_pk primary key (pms_name)');
-  execute_ddl('alter table pit_message add constraint pms_id_u unique (pms_id)');
   execute_ddl(q'[
     create unique index pms_custom_error_u on pit_message(
       case
@@ -230,4 +209,3 @@ comment on column pit_message.pms_pmg_name is 'Unique message group name. Refere
 comment on column pit_message.pms_pse_id is 'Severity of the message. Reference to PIT_MESSAGE_SEVERITY';
 comment on column pit_message.pms_custom_error is 'Optional pointer to an Oracle error number. If null, no exception will be generated. To define custom errors, use -20000.';
 comment on column pit_message.pms_active_error is 'Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.';
-comment on column pit_message.pms_id is 'Virtual column as a surrogate primary key for references';

@@ -23,7 +23,7 @@ begin
 end;
 /
 
-@init/settings.sql I18N
+@init/settings.sql
 
 prompt
 prompt &h2.Register PIT module client

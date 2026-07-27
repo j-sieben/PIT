@@ -18,18 +18,7 @@ case "${DEFAULT_LANGUAGE}" in
     exit 1
     ;;
 esac
-PIT_INSTALL_MODE="$(pit_require_value "${PIT_INSTALL_MODE:-}" "" "Enter install mode (I18N or MONOLINGUAL, default I18N): ")"
-PIT_INSTALL_MODE="${PIT_INSTALL_MODE:-I18N}"
-PIT_INSTALL_MODE="$(printf '%s' "${PIT_INSTALL_MODE}" | tr '[:lower:]' '[:upper:]')"
-case "${PIT_INSTALL_MODE}" in
-  I18N|MONOLINGUAL)
-    ;;
-  *)
-    echo "Unsupported install mode: ${PIT_INSTALL_MODE}. Expected I18N or MONOLINGUAL." >&2
-    exit 1
-    ;;
-esac
 LOG_FILE="$(pit_log_path "Install_PIT.log")"
 
 pit_prepare_log "${LOG_FILE}"
-pit_run_sqlplus "${OWNER}" "${OWNERPWD}" "${SERVICE}" "./install_scripts/install.sql" "${LOG_FILE}" "${DEFAULT_LANGUAGE}" "${PIT_INSTALL_MODE}"
+pit_run_sqlplus "${OWNER}" "${OWNERPWD}" "${SERVICE}" "./install_scripts/install.sql" "${LOG_FILE}" "${DEFAULT_LANGUAGE}"

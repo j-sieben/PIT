@@ -56,4 +56,4 @@ select lower(data_type) || '(' || data_length || case char_used when 'B' then ' 
    and column_name = 'TABLE_NAME';
    
 set termout on
-@init/settings.sql &2.
+@init/settings.sql

@@ -7,7 +7,7 @@
   - LANGUAGE: Oracle language name of the language to install.
 */
 
-@init/init.sql &1. I18N
+@init/init.sql &1.
 
 prompt
 prompt &section.

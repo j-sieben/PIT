@@ -7,7 +7,7 @@ create table pit_mail_queue(
 	pmq_is_processed &FLAG_TYPE. default &C_FALSE.,
   constraint pk_pit_mail_queue primary key(pmq_id),
   constraint fk_pmq_pms_id foreign key(pmq_pms_id)
-    references pit_message(pms_id) on delete cascade,
+    references pit_message(pms_name) on delete cascade,
   constraint fk_pmq_pse_id foreign key(pmq_pse_id)
     references pit_message_severity(pse_id)
 ) organization index;

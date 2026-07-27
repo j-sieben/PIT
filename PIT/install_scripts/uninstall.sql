@@ -15,7 +15,7 @@ select case count(*) when 1 then 'true' else 'false' end with_context
    and object_name = 'UTL_CONTEXT';
 set termout on
 
-@init/init.sql &DEFAULT_LANGUAGE. I18N
+@init/init.sql &DEFAULT_LANGUAGE.
 
 prompt &section.
 prompt &h1.PL/SQL INSTRUMENTATION TOOLKIT (PIT) Deinstallation

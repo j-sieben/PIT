@@ -29,7 +29,7 @@ end;
 /
 set termout on
 
-@init/settings.sql I18N
+@init/settings.sql
 
 prompt &h2.Register Parameter Client
 @parameters/register_client.sql

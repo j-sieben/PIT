@@ -43,11 +43,6 @@ as
   C_DEFAULT_LANGUAGE constant number := 10;
   C_EXCEPTION_PREFIX constant varchar2(4) := '';
   C_EXCEPTION_POSTFIX constant varchar2(4) := 'ERR';
-  C_STATUS_SOURCE constant pit_message_status.pmst_name%type := 'SOURCE';
-  C_STATUS_SOURCE_COPY constant pit_message_status.pmst_name%type := 'SOURCE_COPY';
-  C_STATUS_TRANSLATED constant pit_message_status.pmst_name%type := 'TRANSLATED';
-  C_STATUS_REVISION_REQUIRED constant pit_message_status.pmst_name%type := 'REVISION_REQUIRED';
-
   /**
     Group: Private package variables
    */
@@ -63,6 +58,9 @@ as
   C_ERROR_ALREADY_ASSIGNED constant varchar2(200) := 'This Oracle error number is already assigned to message #ERRNO#';
   C_MESSAGE_DOES_NOT_EXIST constant varchar2(200) := 'Message #MESSAGE# does not exist.';
   C_SOURCE_TRANSLATION_DENIED constant varchar2(200) := 'Source language #LANGUAGE# must be maintained with MERGE_MESSAGE.';
+
+  procedure activate_language(
+    p_pml_name in pit_message_language.pml_name%type);
 
 
   /**
@@ -459,7 +457,7 @@ end;
     l_pmg_name pit_message_group.pmg_name%type;
   begin
     analyze_xliff(p_xliff, l_pml_name, l_pmg_name);
-    complete_translation_scope(l_pmg_name, l_pml_name);
+    activate_language(l_pml_name);
 
     merge into pit_message_text t
     using (select d.pms_name as pmst_pms_name,
@@ -470,10 +468,7 @@ end;
                        from pit_message_text o
                       where o.pmst_pms_name = d.pms_name
                         and o.pmst_pml_name = g_default_language)) as pmst_text,
-                  d.description_translation as pmst_description,
-                  case
-                  when l_pml_name = g_default_language then C_STATUS_SOURCE
-                  else C_STATUS_TRANSLATED end pmst_pmst_name
+                  d.description_translation as pmst_description
              from xmltable(
                     xmlnamespaces(default 'urn:oasis:names:tc:xliff:document:2.0'),
                     '/xliff/file/unit'
@@ -489,12 +484,11 @@ end;
     and t.pmst_pml_name = s.pmst_pml_name)
     when matched then update set
          t.pmst_text = s.pmst_text,
-         t.pmst_description = s.pmst_description,
-         t.pmst_pmst_name = s.pmst_pmst_name
+         t.pmst_description = s.pmst_description
     when not matched then insert
-         (pmst_pms_name, pmst_pml_name, pmst_text, pmst_description, pmst_pmst_name)
+         (pmst_pms_name, pmst_pml_name, pmst_text, pmst_description)
          values
-         (s.pmst_pms_name, s.pmst_pml_name, s.pmst_text, s.pmst_description, s.pmst_pmst_name);
+         (s.pmst_pms_name, s.pmst_pml_name, s.pmst_text, s.pmst_description);
 
     update pit_message_language
        set pml_default_order = greatest(pml_default_order, 50)
@@ -522,7 +516,7 @@ end;
     l_pmg_name pit_message_group.pmg_name%type;
   begin
     analyze_xliff(p_xliff, l_pml_name, l_pmg_name);
-    complete_translation_scope(l_pmg_name, l_pml_name);
+    activate_language(l_pml_name);
 
     merge into pit_translatable_item t
     using (select pti_id,
@@ -806,11 +800,11 @@ end;
     pipelined;
 
   function check_is_message(
-    p_message_name in pit_message_access_v.pms_id%type default null)
+    p_message_name in pit_message_access_v.pms_name%type default null)
     return boolean;
 
   function check_is_error(
-    p_message_name in pit_message_access_v.pms_id%type default null)
+    p_message_name in pit_message_access_v.pms_name%type default null)
     return boolean;
 
 end ]' || C_PACKAGE_NAME || ';';
@@ -874,6 +868,7 @@ end ]' || C_PACKAGE_NAME || ';';
       dbms_xslprocessor.clob2file(l_sql_text, p_directory, C_PACKAGE_NAME || '.pkg');
     else
       execute immediate l_sql_text;
+      dbms_mview.refresh('PIT_MESSAGE_MV', 'C');
     end if;
 
   end create_message_package;
@@ -923,60 +918,36 @@ end ]' || C_PACKAGE_NAME || ';';
 
 
   /**
-    Procedure: complete_translation_scope
-      Ensures that a message group is fully materialized in the requested language.
+    Procedure: activate_language
+      Materializes all translatable items for a language and activates its
+      global runtime mapping.
    */
-  procedure complete_translation_scope(
-    p_pmg_name in pit_message_group.pmg_name%type,
+  procedure activate_language(
     p_pml_name in pit_message_language.pml_name%type)
   as
     l_pml_name pit_message_language.pml_name%type;
-    l_is_default boolean;
   begin
     l_pml_name := upper(p_pml_name);
-    l_is_default := l_pml_name = g_default_language;
-
-    merge into pit_translation_scope t
-    using (select upper(p_pmg_name) ptsc_pmg_name,
-                  l_pml_name ptsc_pml_name,
-                  l_is_default ptsc_is_default
-             from dual) s
-       on (t.ptsc_pmg_name = s.ptsc_pmg_name
-       and t.ptsc_pml_name = s.ptsc_pml_name)
-     when matched then update set
-          t.ptsc_is_default = s.ptsc_is_default
-     when not matched then insert(ptsc_pmg_name, ptsc_pml_name, ptsc_is_default)
-          values(s.ptsc_pmg_name, s.ptsc_pml_name, s.ptsc_is_default);
 
     if l_pml_name != g_default_language then
-      insert into pit_message_text(
-             pmst_pms_name, pmst_pml_name, pmst_text, pmst_description, pmst_pmst_name)
-      select d.pmst_pms_name, l_pml_name, d.pmst_text, d.pmst_description, C_STATUS_SOURCE_COPY
-        from pit_message m
-        join pit_message_text d
-          on d.pmst_pms_name = m.pms_name
-       where m.pms_pmg_name = upper(p_pmg_name)
-         and d.pmst_pml_name = g_default_language
-         and not exists (
-             select null
-               from pit_message_text t
-              where t.pmst_pms_name = d.pmst_pms_name
-                and t.pmst_pml_name = l_pml_name);
-
       insert into pit_translatable_item(
              pti_id, pti_pml_name, pti_pmg_name, pti_name, pti_display_name, pti_description)
       select d.pti_id, l_pml_name, d.pti_pmg_name, d.pti_name, d.pti_display_name, d.pti_description
         from pit_translatable_item d
-       where d.pti_pmg_name = upper(p_pmg_name)
-         and d.pti_pml_name = g_default_language
+       where d.pti_pml_name = g_default_language
          and not exists (
              select null
                from pit_translatable_item t
               where t.pti_id = d.pti_id
                 and t.pti_pmg_name = d.pti_pmg_name
                 and t.pti_pml_name = l_pml_name);
+
+      update pit_message_language
+         set pml_effective_name = pml_name,
+             pml_default_order = greatest(pml_default_order, 50)
+       where pml_name = l_pml_name;
     end if;
-  end complete_translation_scope;
+  end activate_language;
 
 
   /**
@@ -1027,7 +998,6 @@ end ]' || C_PACKAGE_NAME || ';';
      when not matched then insert(pmg_name, pmg_description, pmg_error_prefix, pmg_error_postfix)
           values(s.pmg_name, s.pmg_description, s.pmg_error_prefix, s.pmg_error_postfix);
 
-    complete_translation_scope(p_row.pmg_name, g_default_language);
   end merge_message_group;
 
 
@@ -1108,8 +1078,6 @@ end ]' || C_PACKAGE_NAME || ';';
     p_row in out nocopy pit_message_access_v%rowtype)
   as
     l_pml_name pit_message_access_v.pms_pml_name%type;
-    l_source pit_message_access_v%rowtype;
-    l_source_changed boolean := false;
   begin
     -- Initialization
     p_row.pms_name := pit_util.harmonize_sql_name(p_row.pms_name);
@@ -1117,28 +1085,8 @@ end ]' || C_PACKAGE_NAME || ';';
 
     validate_message(p_row);
 
-    if l_pml_name = g_default_language then
-      begin
-        select *
-          into l_source
-          from pit_message_access_v
-         where pms_name = p_row.pms_name
-           and pms_pml_name = g_default_language;
-
-        l_source_changed :=
-          clob_changed(l_source.pms_text, p_row.pms_text)
-          or clob_changed(l_source.pms_description, p_row.pms_description)
-          or coalesce(l_source.pms_pse_id, -1) != coalesce(p_row.pms_pse_id, -1)
-          or coalesce(l_source.pms_custom_error, 0) != coalesce(p_row.pms_custom_error, 0)
-          or coalesce(l_source.pms_pmg_name, chr(0)) != coalesce(upper(p_row.pms_pmg_name), chr(0));
-      exception
-        when no_data_found then
-          null;
-      end;
-    end if;
-
     if p_row.pms_pmg_name is not null and l_pml_name != g_default_language then
-      complete_translation_scope(p_row.pms_pmg_name, l_pml_name);
+      activate_language(l_pml_name);
     end if;
 
     merge into pit_message t
@@ -1161,50 +1109,19 @@ end ]' || C_PACKAGE_NAME || ';';
     using (select p_row.pms_name pmst_pms_name,
                   l_pml_name pmst_pml_name,
                   p_row.pms_text pmst_text,
-                  p_row.pms_description pmst_description,
-                  case
-                  when l_pml_name = g_default_language then C_STATUS_SOURCE
-                  else C_STATUS_TRANSLATED end pmst_pmst_name
+                  p_row.pms_description pmst_description
              from dual) s
        on (t.pmst_pms_name = s.pmst_pms_name and t.pmst_pml_name = s.pmst_pml_name)
      when matched then update set
           t.pmst_text = s.pmst_text,
-          t.pmst_description = s.pmst_description,
-          t.pmst_pmst_name = s.pmst_pmst_name
+          t.pmst_description = s.pmst_description
      when not matched then insert
-            (pmst_pms_name, pmst_pml_name, pmst_text, pmst_description, pmst_pmst_name)
+            (pmst_pms_name, pmst_pml_name, pmst_text, pmst_description)
           values
-            (s.pmst_pms_name, s.pmst_pml_name, s.pmst_text, s.pmst_description, s.pmst_pmst_name);
+            (s.pmst_pms_name, s.pmst_pml_name, s.pmst_text, s.pmst_description);
 
-    if p_row.pms_pmg_name is not null and l_pml_name = g_default_language then
-      for scope in (
-        select ptsc_pml_name
-          from pit_translation_scope
-         where ptsc_pmg_name = upper(p_row.pms_pmg_name)
-           and ptsc_pml_name != g_default_language)
-      loop
-        complete_translation_scope(p_row.pms_pmg_name, scope.ptsc_pml_name);
-      end loop;
-
-      if l_source_changed then
-        update pit_message_text t
-           set (t.pmst_text, t.pmst_description) = (
-                 select s.pmst_text, s.pmst_description
-                   from pit_message_text s
-                  where s.pmst_pms_name = t.pmst_pms_name
-                    and s.pmst_pml_name = g_default_language)
-         where t.pmst_pms_name = p_row.pms_name
-           and t.pmst_pml_name != g_default_language
-           and t.pmst_pmst_name = C_STATUS_SOURCE_COPY;
-
-        update pit_message_text
-           set pmst_pmst_name = C_STATUS_REVISION_REQUIRED
-         where pmst_pms_name = p_row.pms_name
-           and pmst_pml_name != g_default_language
-           and pmst_pmst_name = C_STATUS_TRANSLATED;
-      end if;
-    elsif p_row.pms_pml_name != g_default_language then
-      register_translation(p_row.pms_pml_name);
+    if l_pml_name != g_default_language then
+      register_translation(l_pml_name);
     end if;
     
     commit;
@@ -1324,7 +1241,7 @@ end ]' || C_PACKAGE_NAME || ';';
     validate_translatable_item(p_row);
 
     if p_row.pti_pmg_name is not null and l_pml_name != g_default_language then
-      complete_translation_scope(p_row.pti_pmg_name, l_pml_name);
+      activate_language(l_pml_name);
     end if;
 
     merge into pit_translatable_item t
@@ -1346,14 +1263,19 @@ end ]' || C_PACKAGE_NAME || ';';
            values(s.pti_id, s.pti_pmg_name, s.pti_pml_name, s.pti_name, s.pti_display_name, s.pti_description);
 
     if p_row.pti_pmg_name is not null and l_pml_name = g_default_language then
-      for scope in (
-        select ptsc_pml_name
-          from pit_translation_scope
-         where ptsc_pmg_name = upper(p_row.pti_pmg_name)
-           and ptsc_pml_name != g_default_language)
-      loop
-        complete_translation_scope(p_row.pti_pmg_name, scope.ptsc_pml_name);
-      end loop;
+      insert into pit_translatable_item(
+             pti_id, pti_pml_name, pti_pmg_name, pti_name, pti_display_name, pti_description)
+      select p_row.pti_id, l.pml_name, p_row.pti_pmg_name,
+             p_row.pti_name, p_row.pti_display_name, p_row.pti_description
+        from pit_message_language l
+       where l.pml_effective_name = l.pml_name
+         and l.pml_name != g_default_language
+         and not exists (
+             select null
+               from pit_translatable_item t
+              where t.pti_id = p_row.pti_id
+                and t.pti_pmg_name = p_row.pti_pmg_name
+                and t.pti_pml_name = l.pml_name);
     end if;
   end merge_translatable_item;
 
@@ -1681,16 +1603,24 @@ end ]' || C_PACKAGE_NAME || ';';
       when C_TARGET_PMS then
         delete from pit_message_text
          where pmst_pml_name = upper(p_pml_name);
-
-        delete from pit_translation_scope
-         where ptsc_pml_name = upper(p_pml_name)
-           and ptsc_is_default = false;
       when C_TARGET_PTI then
         delete from pit_translatable_item
          where pti_pml_name = upper(p_pml_name);
       else
         null;
     end case;
+
+    update pit_message_language l
+       set pml_effective_name = default
+     where pml_name = upper(p_pml_name)
+       and not exists (
+             select null
+               from pit_message_text t
+              where t.pmst_pml_name = l.pml_name)
+       and not exists (
+             select null
+               from pit_translatable_item i
+              where i.pti_pml_name = l.pml_name);
   end delete_translation;
 
 
@@ -1703,9 +1633,10 @@ end ]' || C_PACKAGE_NAME || ';';
   as
   begin
     update pit_message_language
-       set pml_default_order = 50
+       set pml_default_order = 50,
+           pml_effective_name = pml_name
      where pml_name = p_pml_name
-       and pml_default_order = 0;
+       and (pml_default_order = 0 or pml_effective_name != pml_name);
 
   end register_translation;
 

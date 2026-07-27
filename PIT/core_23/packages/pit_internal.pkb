@@ -349,7 +349,7 @@ as
     select pms_name
       into l_pms_name
       from pit_message
-     where pms_id = p_message_name
+     where pms_name = p_message_name
        and pms_custom_error is not null;
        
     return l_pms_name;
@@ -999,7 +999,7 @@ as
     select pms_pse_id
       into l_pse_id
       from pit_message
-     where pms_id = p_message_name;
+     where pms_name = p_message_name;
     return l_pse_id;
   exception
     when NO_DATA_FOUND then
@@ -1242,7 +1242,7 @@ as
           select pms_pse_id
             into l_severity
             from pit_message
-           where pms_id = p_message_name;
+           where pms_name = p_message_name;
         end if;
         if g_collect_least_severity.exists(l_error_code) then
           l_result := l_severity < g_collect_least_severity(l_error_code);

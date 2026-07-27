@@ -8,7 +8,6 @@
     pms_pse_id - Severity of the message. Reference to PIT_MESSAGE_SEVERITY.
     pms_custom_error - Optional pointer to an Oracle error number. If null, no exception will be generated. To define custom errors, use -20000.
     pms_active_error - Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.
-    pms_id - Virtual column as a surrogate primary key for references.
 */
 create table if not exists pit_message(
    pms_name &ORA_NAME_TYPE.,
@@ -16,9 +15,7 @@ create table if not exists pit_message(
    pms_pse_id number(3,0),
    pms_custom_error number,
    pms_active_error number,
-   pms_id &ORA_NAME_TYPE. generated always as (case when pms_name is not null then pms_name end) virtual,
    constraint pit_message_pk primary key (pms_name),
-   constraint pms_id_u unique (pms_id),
    constraint pms_pmg_name_fk foreign key (pms_pmg_name)
       references pit_message_group(pmg_name),
    constraint pms_pse_id_fk foreign key (pms_pse_id)
@@ -31,7 +28,6 @@ comment on column pit_message.pms_pmg_name is 'Unique message group name. Refere
 comment on column pit_message.pms_pse_id is 'Severity of the message. Reference to PIT_MESSAGE_SEVERITY';
 comment on column pit_message.pms_custom_error is 'Optional pointer to an Oracle error number. If null, no exception will be generated. To define custom errors, use -20000.';
 comment on column pit_message.pms_active_error is 'Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.';
-comment on column pit_message.pms_id is 'Virtual column as a surrogate primary key for references';
 
 
 -- Unique conditional index to prevent server errors to be initialized more than once

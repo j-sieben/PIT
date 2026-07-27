@@ -11,8 +11,12 @@ create table pit_message_language(
    pml_name varchar2(50 byte),
    pml_display_name varchar2(50 char),
    pml_default_order number(3,0),
+   pml_effective_name varchar2(50 byte) default on null '&DEFAULT_LANGUAGE.',
    constraint pit_message_language_pk primary key(pml_name)
 ) organization index ;
+
+alter table pit_message_language add constraint pml_effective_name_fk
+  foreign key (pml_effective_name) references pit_message_language(pml_name);
 
 create index idx_pml_default_order on pit_message_language(
   case when pml_default_order > 0 then pml_default_order end);
@@ -20,5 +24,6 @@ create index idx_pml_default_order on pit_message_language(
 comment on column pit_message_language.pml_name is 'Unique name for message language, primary key';
 comment on column pit_message_language.pml_display_name is 'Display name, used for APEX application';
 comment on column pit_message_language.pml_default_order is 'Sorting column to select message in  respective language. Highest number wins. Default-language := 10, 0=language not supported';
+comment on column pit_message_language.pml_effective_name is 'Language containing the materialized runtime values for this session language.';
 
 comment on table pit_message_language is 'Lookup-table for message languages.';

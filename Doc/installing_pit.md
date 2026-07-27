@@ -41,7 +41,10 @@ If you want to install `PIT` from the sql installation scripts directly, make su
 
 It is possible to adjust some settings before installing `PIT`. First, `PIT` is designed to be internationalized from ground up. As a basis, you need to define a default language for `PIT`. It is important to understand that any message you create must exists in this default language at least. You may translate it to other languages later, but you won't be able to just have a message in a language other than the default language. So, as a best practice, choose the best language for your needs and make this the default language. `PIT` supports `AMERICAN` and `GERMAN` as languages out of the box. You adjust your default language by passing it in as a parameter when installing `PIT`. 
 
-If your installation does not need runtime language selection, you can install `PIT` in `MONOLINGUAL` mode. In this mode, the message views filter directly on the default language instead of resolving the effective language for each message group. This improves performance because the multilingual language-resolution check is no longer part of the message lookup. The default mode remains `I18N`, which keeps the internationalized views.
+Runtime language selection uses one unified model. Languages without translations
+map directly to the default language, while translated languages use a published
+materialized message store. A separate monolingual installation mode is therefore
+not required.
 
 ### Choose the default tablespace
 
@@ -109,10 +112,9 @@ I recommend installing `PIT` in a dedicated utility owner and grant access to ot
 
 `PIT` internal messages are delivered in `GERMAN` and `AMERICAN`. Messages are located in various folders under `message/<LANGUAGE>/MessageGroup_PIT.sql` and can be translated or changed as you like. You can also use the built in translation service to translate the internal messages. How to do this is described [here](https://github.com/j-sieben/PIT/blob/master/Doc/translating_messages.md).
 
-The installation script expects these parameters:
+The installation script expects this parameter:
 
 - `DEFAULT_LANGUAGE`: Oracle language name of the default language for all messages.
-- `[INSTALL_MODE]`: Optional view implementation mode. `I18N` keeps the internationalized message views and is the default. `MONOLINGUAL` installs message views that filter directly on `DEFAULT_LANGUAGE`.
 
 So here's an example on how to install `PIT` on a windows system:
 
@@ -128,12 +130,6 @@ SQL> @pit_install AMERICAN
 ```
 
 This example will install `PIT` with `AMERICAN` as the default language for messages, the tables are stored in the derfault tablespace of the actual user. All parameters are case insensitive. Using the batch file is straightforward, simply start `install.bat` and follow the instructions on the console. This is true for all other installation steps, so I won't discuss them in any detail anymore.
-
-To install a monolingual setup, pass `MONOLINGUAL` as the second parameter:
-
-```
-SQL> @install_scripts/install.sql GERMAN MONOLINGUAL
-```
 
 ## Uninstall `PIT`
 To uninstall `PIT`, simply call `pit_uninstall.sql` from the installation folder. This script requires you to connect to the `PIT` owner and to all granted client users to avoid having to connect as a DBA user. No parameters are required.

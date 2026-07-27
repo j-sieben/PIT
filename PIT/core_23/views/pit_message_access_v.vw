@@ -5,10 +5,8 @@ select pms_name,
        pmst_text pms_text,
        pmst_description pms_description,
        pms_pse_id,
-       pmst_pmst_name pms_pmst_name,
        pms_custom_error,
-       pms_active_error,
-       pms_id
+       pms_active_error
   from pit_message
   join pit_message_text
     on pmst_pms_name = pms_name;

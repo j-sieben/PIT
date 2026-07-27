@@ -11,6 +11,5 @@ select pms_name,
          else 'NONE'
        end pms_error_type,
        pms_custom_error,
-       pms_active_error,
-       pms_id
+       pms_active_error
   from table(pit_app_api.get_pit_message_table);
