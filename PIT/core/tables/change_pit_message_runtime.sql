@@ -17,6 +17,7 @@ begin
   execute_ddl('drop index idx_pmt_pmst_name_fk');
   execute_ddl('alter table pit_message_text drop column pmt_pmst_name');
   execute_ddl('alter table pit_message drop constraint pms_id_u');
+  execute_ddl('drop index pms_id_u');
   execute_ddl('alter table pit_message drop column pms_id cascade constraints');
   execute_ddl('alter table pit_mail_queue add constraint fk_pmq_pms_id foreign key(pmq_pms_id) references pit_message(pms_name) on delete cascade');
   execute_ddl('drop view pit_pmg_language_v');
