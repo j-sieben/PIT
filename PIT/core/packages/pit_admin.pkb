@@ -1100,12 +1100,35 @@ end ]' || C_PACKAGE_NAME || ';';
     l_default_language pit_message_access_v.pms_pml_name%type;
     l_pml_name pit_message_access_v.pms_pml_name%type;
     l_is_default_language boolean;
+    l_message_exists number;
+    l_requires_exception pit_message_severity.pse_requires_exception%type;
   begin
     -- Initialization
     p_row.pms_name := pit_util.harmonize_sql_name(p_row.pms_name);
     p_row.pms_pmg_name := pit_util.harmonize_sql_name(p_row.pms_pmg_name);
     l_default_language := get_default_language;
     p_row.pms_pml_name := coalesce(upper(p_row.pms_pml_name), l_default_language);
+
+    select count(*)
+      into l_message_exists
+      from pit_message
+     where pms_name = p_row.pms_name;
+
+    if l_message_exists = 0 then
+      select pse_requires_exception
+        into l_requires_exception
+        from pit_message_severity
+       where pse_id = p_row.pms_pse_id;
+
+      case l_requires_exception
+        when 'MANDATORY' then
+          p_row.pms_error := coalesce(p_row.pms_error, C_MAX_ERROR);
+        when 'NONE' then
+          p_row.pms_error := null;
+        else
+          null;
+      end case;
+    end if;
 
     validate_message(p_row);
 

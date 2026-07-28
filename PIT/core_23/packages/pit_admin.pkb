@@ -1078,10 +1078,33 @@ end ]' || C_PACKAGE_NAME || ';';
     p_row in out nocopy pit_message_access_v%rowtype)
   as
     l_pml_name pit_message_access_v.pms_pml_name%type;
+    l_message_exists number;
+    l_requires_exception pit_message_severity.pse_requires_exception%type;
   begin
     -- Initialization
     p_row.pms_name := pit_util.harmonize_sql_name(p_row.pms_name);
     l_pml_name := upper(coalesce(p_row.pms_pml_name, g_default_language));
+
+    select count(*)
+      into l_message_exists
+      from pit_message
+     where pms_name = p_row.pms_name;
+
+    if l_message_exists = 0 then
+      select pse_requires_exception
+        into l_requires_exception
+        from pit_message_severity
+       where pse_id = p_row.pms_pse_id;
+
+      case l_requires_exception
+        when 'MANDATORY' then
+          p_row.pms_custom_error := coalesce(p_row.pms_custom_error, C_MAX_ERROR);
+        when 'NONE' then
+          p_row.pms_custom_error := null;
+        else
+          null;
+      end case;
+    end if;
 
     validate_message(p_row);
 
