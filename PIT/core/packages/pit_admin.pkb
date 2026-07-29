@@ -437,8 +437,7 @@ end;
 
   /**
     Procedure: activate_language
-      Materializes all translatable items for a language and activates its
-      global runtime mapping.
+      Activates the global runtime mapping for a language.
    */
   procedure activate_language(
     p_pml_name in pit_message_language.pml_name%type)
@@ -450,18 +449,6 @@ end;
     l_pml_name := upper(p_pml_name);
 
     if l_pml_name != l_default_language then
-      insert into pit_translatable_item(
-             pti_id, pti_pml_name, pti_pmg_name, pti_name, pti_display_name, pti_description)
-      select d.pti_id, l_pml_name, d.pti_pmg_name, d.pti_name, d.pti_display_name, d.pti_description
-        from pit_translatable_item d
-       where d.pti_pml_name = l_default_language
-         and not exists (
-             select null
-               from pit_translatable_item t
-              where t.pti_id = d.pti_id
-                and t.pti_pmg_name = d.pti_pmg_name
-                and t.pti_pml_name = l_pml_name);
-
       update pit_message_language
          set pml_effective_name = pml_name,
              pml_default_order = greatest(pml_default_order, 50)
@@ -604,6 +591,7 @@ end;
           s.pti_name, s.pti_display_name, s.pti_description);
 
     register_translation(l_pml_name);
+    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
     
     commit;
   exception
@@ -900,6 +888,7 @@ end ]' || C_PACKAGE_NAME || ';';
       execute immediate l_sql_text;
       dbms_session.reset_package;
       dbms_mview.refresh('PIT_MESSAGE_MV', 'C');
+      dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
     end if;
 
   end create_message_package;
@@ -1316,21 +1305,7 @@ end ]' || C_PACKAGE_NAME || ';';
       when not matched then insert(pti_id, pti_pmg_name, pti_pml_name, pti_name, pti_display_name, pti_description)
            values(s.pti_id, s.pti_pmg_name, s.pti_pml_name, s.pti_name, s.pti_display_name, s.pti_description);
 
-    if p_row.pti_pmg_name is not null and l_pml_name = l_default_language then
-      insert into pit_translatable_item(
-             pti_id, pti_pml_name, pti_pmg_name, pti_name, pti_display_name, pti_description)
-      select p_row.pti_id, l.pml_name, p_row.pti_pmg_name,
-             p_row.pti_name, p_row.pti_display_name, p_row.pti_description
-        from pit_message_language l
-       where l.pml_effective_name = l.pml_name
-         and l.pml_name != l_default_language
-         and not exists (
-             select null
-               from pit_translatable_item t
-              where t.pti_id = p_row.pti_id
-                and t.pti_pmg_name = p_row.pti_pmg_name
-                and t.pti_pml_name = l.pml_name);
-    end if;
+    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
   end merge_translatable_item;
 
 
@@ -1371,6 +1346,7 @@ end ]' || C_PACKAGE_NAME || ';';
     delete from pit_translatable_item
      where pti_id = p_pti_id
        and pti_pmg_name = p_pti_pmg_name;
+    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
   end delete_translatable_item;
 
 
@@ -1680,6 +1656,8 @@ end ]' || C_PACKAGE_NAME || ';';
              select null
                from pit_translatable_item i
               where i.pti_pml_name = l.pml_name);
+
+    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
   end delete_translation;
 
 

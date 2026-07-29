@@ -25,6 +25,7 @@ prompt &h2.Merge initial data
 prompt &h2.Create access views
 @&tools.install_view pit_message_access_v
 @&tools.install_view pit_message_mv
+@&tools.install_view pit_translatable_item_mv
 
 prompt &h2.Create type declarations
 @&tools.install_type_spec char_table

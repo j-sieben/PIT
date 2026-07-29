@@ -104,6 +104,15 @@ begin
     p_pms_pml_name => 'GERMAN',
     p_error_number => -29471);
 
+  pit_admin.merge_message(
+    p_pms_name => 'ORA_USER_CANCELLATION',
+    p_pms_pmg_name => 'ORA',
+    p_pms_text => q'^Der Benutzer hat den Abbruch der aktuellen Aufgabe angefordert^',
+    p_pms_description => q'^^',
+    p_pms_pse_id => pit.LEVEL_ERROR,
+    p_pms_pml_name => 'GERMAN',
+    p_error_number => -1013);
+
   commit;
   pit_admin.create_message_package;
 end;
