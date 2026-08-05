@@ -133,5 +133,6 @@ begin
   );
 
   commit;
+  pit_admin.harmonize_translatable_items;
 end;
 /

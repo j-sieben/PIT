@@ -298,6 +298,18 @@ as
 
 
   /**
+    Procedure: harmonize_translatable_items
+      Completes a set of translatable-item changes by rebuilding
+      PIT_TRANSLATABLE_ITEM_MV. Call this method once after all items of an
+      installation or export script have been merged.
+
+    Side effects:
+      Performs a complete refresh of PIT_TRANSLATABLE_ITEM_MV.
+   */
+  procedure harmonize_translatable_items;
+
+
+  /**
     Procedure: delete_translatable_item
       Procedure to create a or change a translatable item and all its translations.
 

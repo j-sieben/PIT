@@ -371,7 +371,7 @@ end;
     l_chunk pit_util.max_char;
     C_CR constant pit_util.sign_type := chr(10);
     C_START constant pit_util.max_sql_char := q'~set define off#CR##CR#begin#CR#~';
-    C_END constant pit_util.max_sql_char := q'~#CR#  commit;#CR#end;#CR#/#CR##CR#set define on~';
+    C_END constant pit_util.max_sql_char := q'~#CR#  commit;#CR#  pit_admin.harmonize_translatable_items;#CR#end;#CR#/#CR##CR#set define on~';
     C_PTI_TEMPLATE constant varchar2(300) := q'~
   pit_admin.merge_translatable_item(
     p_pti_id => '#PTI_ID#',
@@ -548,8 +548,6 @@ end;
           s.pti_name, s.pti_display_name, s.pti_description);
 
     register_translation(l_pml_name);
-    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
-    
     commit;
   exception
     when others then
@@ -870,7 +868,6 @@ end ]' || C_PACKAGE_NAME || ';';
     else
       execute immediate l_sql_text;
       dbms_mview.refresh('PIT_MESSAGE_MV', 'C');
-      dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
     end if;
 
   end create_message_package;
@@ -1274,7 +1271,6 @@ end ]' || C_PACKAGE_NAME || ';';
       when not matched then insert(pti_id, pti_pmg_name, pti_pml_name, pti_name, pti_display_name, pti_description)
            values(s.pti_id, s.pti_pmg_name, s.pti_pml_name, s.pti_name, s.pti_display_name, s.pti_description);
 
-    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
   end merge_translatable_item;
 
 
@@ -1304,6 +1300,17 @@ end ]' || C_PACKAGE_NAME || ';';
 
 
   /**
+    Procedure: harmonize_translatable_items
+      See: <PIT_ADMIN.harmonize_translatable_items>
+   */
+  procedure harmonize_translatable_items
+  as
+  begin
+    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
+  end harmonize_translatable_items;
+
+
+  /**
     Procedure: delete_translatable_item
       See <PIT_ADMIN.delete_translatable_item>
    */
@@ -1315,7 +1322,6 @@ end ]' || C_PACKAGE_NAME || ';';
     delete from pit_translatable_item
      where pti_id = p_pti_id
        and pti_pmg_name = p_pti_pmg_name;
-    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
   end delete_translatable_item;
 
 
@@ -1621,7 +1627,6 @@ end ]' || C_PACKAGE_NAME || ';';
                from pit_translatable_item i
               where i.pti_pml_name = l.pml_name);
 
-    dbms_mview.refresh('PIT_TRANSLATABLE_ITEM_MV', 'C');
   end delete_translation;
 
 
