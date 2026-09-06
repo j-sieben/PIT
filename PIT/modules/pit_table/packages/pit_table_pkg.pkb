@@ -25,22 +25,61 @@ as
       p_id - ID of the entry, taken from <PIT_CALL_STACK_TYPE> or <PIT_LOG_STATE_TYPE>
       p_pse_id - Severity of the entry. 70 if CALL_STACK entry
       p_params - Instance of <MSG_PARAMS>
+      p_log_date - Parent message timestamp; defaults to current time for trace/state entries
    */
   procedure persist_params(
     p_id in pit_table_params.ptp_id%type,
     p_pse_id in pit_table_params.ptp_pse_id%type,
-    p_params in msg_params)
+    p_params in msg_params,
+    p_log_date in timestamp default null)
   as
   begin
     if p_params is not null then
       insert into pit_table_params(ptp_id, ptp_pse_id, ptp_log_date, ptp_param_name, ptp_param_value)
-      select p_id, p_pse_id, localtimestamp, p_param, p_value
+      select p_id, p_pse_id, coalesce(p_log_date, localtimestamp), p_param, p_value
         from table(p_params)
        where p_param is not null;
     end if;
   end persist_params;
   
   
+  /**
+    Procedure: persist_affected_ids
+      Store object references separately from trace/state parameters.
+      The first non-null value for each name wins; unnamed/null entries are ignored.
+      Normal PIT messages, call stacks and states use distinct PIT_LOG_SEQ IDs.
+   */
+  procedure persist_affected_ids(
+    p_message in message_type)
+  as
+    type names_type is table of boolean index by varchar2(32767);
+    l_names names_type;
+    l_params msg_params := msg_params();
+    l_index pls_integer;
+  begin
+    if p_message.affected_ids is not null then
+      l_index := p_message.affected_ids.first;
+      while l_index is not null loop
+        if p_message.affected_ids(l_index) is not null then
+          if p_message.affected_ids(l_index).p_param is not null
+             and p_message.affected_ids(l_index).p_value is not null then
+            if not l_names.exists(p_message.affected_ids(l_index).p_param) then
+              l_names(p_message.affected_ids(l_index).p_param) := true;
+              l_params.extend;
+              l_params(l_params.last) := p_message.affected_ids(l_index);
+            end if;
+          end if;
+        end if;
+        l_index := p_message.affected_ids.next(l_index);
+      end loop;
+    elsif p_message.affected_id is not null then
+      l_params.extend;
+      l_params(1) := msg_param('ID', p_message.affected_id);
+    end if;
+    persist_params(p_message.id, p_message.severity, l_params, p_message.creation_time);
+  end persist_affected_ids;
+
+
   /**
     Procedure: log_enter_leave
       Method logs enter or leave method calls
@@ -86,6 +125,7 @@ as
       (p_message.id, p_message.creation_time, substr(p_message.session_id, 1, 64), substr(p_message.user_name, 1, 30),
        p_message.message_text, p_message.message_name, pit_util.cast_to_msg_args_char(p_message.message_args), 
        p_message.stack, p_message.backtrace, p_message.severity);
+    persist_affected_ids(p_message);
   end log_exception;
   
   
@@ -134,6 +174,11 @@ as
     p_severity_greater_equal in number default null)
   as
   begin
+    -- Remove references using the parent timestamp, including legacy timestamp differences.
+    delete from pit_table_params
+     where ptp_id in (select log_id from pit_table_log
+                       where log_date <= p_date_until
+                         and log_severity >= coalesce(p_severity_greater_equal, 0));
     delete from pit_table_log
      where log_date <= p_date_until
        and log_severity >= coalesce(p_severity_greater_equal, 0);
@@ -141,7 +186,7 @@ as
      where cls_log_date <= p_date_until;
     delete from pit_table_params
      where ptp_log_date <= p_date_until
-       and ptp_pse_id > coalesce(p_severity_greater_equal, 0);
+       and ptp_pse_id >= coalesce(p_severity_greater_equal, 0);
   end purge_log;
 
 

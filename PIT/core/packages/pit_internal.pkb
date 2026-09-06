@@ -527,6 +527,7 @@ as
                               p_message_name => p_message_name, 
                               p_msg_args => p_msg_args, 
                               p_affected_id => p_affected_id, 
+                              p_affected_ids => p_affected_ids,
                               p_error_code => p_error_code, 
                               p_read_only => false);
         -- Persist severity of calling environment with message
@@ -542,6 +543,7 @@ as
                               p_message_name => 'PIT_SQL_ERROR', 
                               p_msg_args => p_msg_args, 
                               p_affected_id => p_affected_id, 
+                              p_affected_ids => p_affected_ids,
                               p_error_code => p_error_code, 
                               p_read_only => false);
       else 
@@ -599,6 +601,7 @@ as
                           p_message_name => 'PIT_SQL_ERROR', 
                           p_msg_args => p_msg_args, 
                           p_affected_id => p_affected_id, 
+                          p_affected_ids => p_affected_ids,
                           p_error_code => p_error_code, 
                           p_read_only => false);
     l_log_level := coalesce(p_log_threshold, C_LEVEL_ALL);
