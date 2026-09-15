@@ -9,10 +9,10 @@ declare
       end if;
   end execute_ddl;
 begin
-  execute_ddl(q'[delete from pit_message_text where pmst_pmst_name = 'SOURCE_COPY']');
-  execute_ddl('alter table pit_message_text drop constraint pmst_pmst_name_fk');
-  execute_ddl('alter table pit_message_text drop constraint pmst_pmst_name_nn');
-  execute_ddl('alter table pit_message_text drop column pmst_pmst_name');
+  execute_ddl(q'[delete from pit_message_text where pmt_pmst_name = 'SOURCE_COPY']');
+  execute_ddl('alter table pit_message_text drop constraint pmt_pmst_name_fk');
+  execute_ddl('alter table pit_message_text drop constraint pmt_pmst_name_nn');
+  execute_ddl('alter table pit_message_text drop column pmt_pmst_name');
   execute_ddl('alter table pit_message drop constraint pms_id_u');
   execute_ddl('drop index pms_id_u');
   execute_ddl('alter table pit_message drop column pms_id cascade constraints');

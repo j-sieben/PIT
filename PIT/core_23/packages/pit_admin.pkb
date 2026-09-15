@@ -460,15 +460,15 @@ end;
     activate_language(l_pml_name);
 
     merge into pit_message_text t
-    using (select d.pms_name as pmst_pms_name,
-                  l_pml_name pmst_pml_name,
+    using (select d.pms_name as pmt_pms_name,
+                  l_pml_name pmt_pml_name,
                   -- if only description is translated, get orginal text to avoid NOT NULL constraint error
                   coalesce(d.text_translation,
-                    (select pmst_text
+                    (select pmt_text
                        from pit_message_text o
-                      where o.pmst_pms_name = d.pms_name
-                        and o.pmst_pml_name = g_default_language)) as pmst_text,
-                  d.description_translation as pmst_description
+                      where o.pmt_pms_name = d.pms_name
+                        and o.pmt_pml_name = g_default_language)) as pmt_text,
+                  d.description_translation as pmt_description
              from xmltable(
                     xmlnamespaces(default 'urn:oasis:names:tc:xliff:document:2.0'),
                     '/xliff/file/unit'
@@ -480,15 +480,15 @@ end;
              join pit_message m
                on m.pms_name = d.pms_name
             where d.text_translation || d.description_translation is not null) s
-    on (t.pmst_pms_name = s.pmst_pms_name
-    and t.pmst_pml_name = s.pmst_pml_name)
+    on (t.pmt_pms_name = s.pmt_pms_name
+    and t.pmt_pml_name = s.pmt_pml_name)
     when matched then update set
-         t.pmst_text = s.pmst_text,
-         t.pmst_description = s.pmst_description
+         t.pmt_text = s.pmt_text,
+         t.pmt_description = s.pmt_description
     when not matched then insert
-         (pmst_pms_name, pmst_pml_name, pmst_text, pmst_description)
+         (pmt_pms_name, pmt_pml_name, pmt_text, pmt_description)
          values
-         (s.pmst_pms_name, s.pmst_pml_name, s.pmst_text, s.pmst_description);
+         (s.pmt_pms_name, s.pmt_pml_name, s.pmt_text, s.pmt_description);
 
     update pit_message_language
        set pml_default_order = greatest(pml_default_order, 50)
@@ -1115,19 +1115,19 @@ end ]' || C_PACKAGE_NAME || ';';
             (s.pms_name, s.pms_pmg_name, s.pms_pse_id, s.pms_custom_error);
 
     merge into pit_message_text t
-    using (select p_row.pms_name pmst_pms_name,
-                  l_pml_name pmst_pml_name,
-                  p_row.pms_text pmst_text,
-                  p_row.pms_description pmst_description
+    using (select p_row.pms_name pmt_pms_name,
+                  l_pml_name pmt_pml_name,
+                  p_row.pms_text pmt_text,
+                  p_row.pms_description pmt_description
              from dual) s
-       on (t.pmst_pms_name = s.pmst_pms_name and t.pmst_pml_name = s.pmst_pml_name)
+       on (t.pmt_pms_name = s.pmt_pms_name and t.pmt_pml_name = s.pmt_pml_name)
      when matched then update set
-          t.pmst_text = s.pmst_text,
-          t.pmst_description = s.pmst_description
+          t.pmt_text = s.pmt_text,
+          t.pmt_description = s.pmt_description
      when not matched then insert
-            (pmst_pms_name, pmst_pml_name, pmst_text, pmst_description)
+            (pmt_pms_name, pmt_pml_name, pmt_text, pmt_description)
           values
-            (s.pmst_pms_name, s.pmst_pml_name, s.pmst_text, s.pmst_description);
+            (s.pmt_pms_name, s.pmt_pml_name, s.pmt_text, s.pmt_description);
 
     if l_pml_name != g_default_language then
       register_translation(l_pml_name);
@@ -1607,7 +1607,7 @@ end ]' || C_PACKAGE_NAME || ';';
     case p_target
       when C_TARGET_PMS then
         delete from pit_message_text
-         where pmst_pml_name = upper(p_pml_name);
+         where pmt_pml_name = upper(p_pml_name);
       when C_TARGET_PTI then
         delete from pit_translatable_item
          where pti_pml_name = upper(p_pml_name);
@@ -1621,7 +1621,7 @@ end ]' || C_PACKAGE_NAME || ';';
        and not exists (
              select null
                from pit_message_text t
-              where t.pmst_pml_name = l.pml_name)
+              where t.pmt_pml_name = l.pml_name)
        and not exists (
              select null
                from pit_translatable_item i

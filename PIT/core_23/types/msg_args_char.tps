@@ -1,4 +1,3 @@
-whenever sqlerror continue
 create or replace type msg_args_char force is 
   /** 
     Type: msg_args_char
@@ -6,4 +5,3 @@ create or replace type msg_args_char force is
    */
   varray(20) of varchar2(4000 byte)
 /
-whenever sqlerror exit

@@ -10,6 +10,7 @@ prompt &s1.Grant user rights to &PIT_USER.
 
 prompt &s1.Create queue table for PIT_MAIL
 @&tools.check_has_table pit_mail_queue
+@&install_dir.remove_obsolete_objects.sql
 
 prompt &s1.Create parameters and messages
 @&tools.run_script ParameterGroup_PIT

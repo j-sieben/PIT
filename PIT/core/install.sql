@@ -13,14 +13,17 @@ prompt &h2.Create tables
 @&tools.check_has_column pit_message_severity pse_requires_exception
 @&tools.check_has_table pit_trace_level
 @&tools.check_has_table pit_message
-@&table_dir.change_pit_message.sql
+@&table_dir.prepare_pit_message_migration.sql
+@&install_dir.remove_obsolete_objects.sql
+@&table_dir.ensure_pit_message_keys.sql
 @&tools.check_has_table pit_message_text
+@&table_dir.finish_pit_message_migration.sql
 @&tools.check_has_table pit_internal_log
 
 prompt &h2.Merge initial data
 @&tools.run_script merge_languages
 @&tools.check_has_column pit_message_language pml_effective_name
-@&table_dir.change_pit_message_runtime.sql
+@&tools.check_has_constraint pit_message_language pml_effective_name_fk tools/null.sql &table_dir.add_pml_effective_name_fk.sql
 
 prompt &h2.Create access views
 @&tools.install_view pit_message_access_v
@@ -101,3 +104,6 @@ prompt &h2.Create CORE package implementations
 @&tools.install_package_body pit_context
 @&tools.install_package_body pit_internal
 @&tools.install_package_body pit_notification_util
+
+@&tools.compile_invalid_objects.sql
+@&install_dir.verify_schema.sql

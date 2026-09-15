@@ -9,9 +9,9 @@ declare
       end if;
   end execute_ddl;
 begin
-  delete from pit_message_text 
+  /*delete from pit_message_text
    where pmt_pmst_name = 'SOURCE_COPY';
-   
+   */
   execute_ddl('alter table pit_message_text drop constraint pmt_pmst_name_fk');
   execute_ddl('alter table pit_message_text drop constraint pmt_pmst_name_nn');
   execute_ddl('drop index idx_pmt_pmst_name_fk');

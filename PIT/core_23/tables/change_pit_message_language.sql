@@ -9,13 +9,13 @@ begin
     into l_has_message_text
     from user_tab_columns
    where table_name = 'PIT_MESSAGE_TEXT'
-     and column_name = 'PMST_PML_NAME';
+     and column_name = 'PMT_PML_NAME';
 
   select count(*)
     into l_has_status
     from user_tab_columns
    where table_name = 'PIT_MESSAGE_TEXT'
-     and column_name = 'PMST_PMST_NAME';
+     and column_name = 'PMT_PMST_NAME';
 
   if l_has_message_text > 0 and l_has_status > 0 then
     execute immediate q'[
@@ -25,8 +25,8 @@ begin
           or exists (
                select null
                  from pit_message_text t
-                where t.pmst_pml_name = l.pml_name
-                  and (t.pmst_pmst_name is null or t.pmst_pmst_name != 'SOURCE_COPY'))]';
+                where t.pmt_pml_name = l.pml_name
+                  and (t.pmt_pmst_name is null or t.pmt_pmst_name != 'SOURCE_COPY'))]';
   elsif l_has_message_text > 0 then
     execute immediate q'[
       update pit_message_language l
@@ -35,7 +35,7 @@ begin
           or exists (
                select null
                  from pit_message_text t
-                where t.pmst_pml_name = l.pml_name)]';
+                where t.pmt_pml_name = l.pml_name)]';
   end if;
 end;
 /

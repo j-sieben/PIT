@@ -41,6 +41,30 @@ That SQL script:
    - `pit_file`
    - `pit_mail` is prepared but commented out in the main installer
 
+## Core Schema Convergence
+
+The CORE installers separate creation, migration, cleanup, and verification:
+
+1. ensure the base tables;
+2. normalize legacy CORE_23 `PMST_*` names where applicable;
+3. capture legacy `PIT_MESSAGE` text rows in `PIT_MESSAGE_TEXT_MIG`;
+4. run `remove_obsolete_objects.sql`;
+5. ensure the current `PIT_MESSAGE` keys and `PIT_MESSAGE_TEXT` table;
+6. merge and validate captured message text rows;
+7. install the remaining views, types, and packages;
+8. recompile invalid objects in the installation schema;
+9. run `verify_schema.sql`.
+
+`tools/compile_invalid_objects.sql` calls `DBMS_UTILITY.COMPILE_SCHEMA` with
+`COMPILE_ALL => FALSE`, so valid objects are not recompiled. This also repairs
+application objects that were temporarily invalidated by replacement of PIT
+types or package specifications. Verification runs only after this dependency
+recompilation.
+
+`clean_up_install.sql` remains the full uninstall path. Optional modules own
+their upgrade cleanup; in particular, `pit_mail` repairs its queue foreign key
+in `modules/pit_mail/remove_obsolete_objects.sql`.
+
 ## Client Install Flow
 
 `./pit.sh install-client` dispatches to `install_scripts/install_client.sh`.

@@ -10,7 +10,15 @@ Start here:
 - [architecture.md](architecture.md) - core packages, objects, modules, data flow
 - [installation.md](installation.md) - install command flow and SQL*Plus wrappers
 - [commands.md](commands.md) - `pit.sh` command mapping
+- [ddl-check-map.md](ddl-check-map.md) - DDL migration scripts and reusable checks
 - [known-issues.md](known-issues.md) - observed issues and local fixes
+
+Maintenance rule:
+
+- Do not use Graphify for this PL/SQL repository.
+- Check these maps against the source when starting an investigation.
+- Update the relevant map whenever code changes alter structure, dependencies,
+  install order, or reusable tooling.
 
 Repository root notes:
 
