@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:core/tables/pit_translatable_item.tbl",{114:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Central translatable item repository in various languages.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:core/tables/pit_translatable_item.tbl",{113:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Central translatable item repository in various languages.</div></div>"});

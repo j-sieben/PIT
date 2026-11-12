@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("Database:pit_trace_level","pit_trace_level");NDSummary.OnSummaryLoaded("Database:pit_trace_level",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[847,0,0,"pit_trace_level"]]);
+﻿NDFramePage.OnPageTitleLoaded("Database:pit_trace_level","pit_trace_level");NDSummary.OnSummaryLoaded("Database:pit_trace_level",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[849,0,0,"pit_trace_level"]]);

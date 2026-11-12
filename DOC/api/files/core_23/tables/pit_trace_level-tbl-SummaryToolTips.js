@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:core_23/tables/pit_trace_level.tbl",{847:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Lookup-table for trace levels.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:core_23/tables/pit_trace_level.tbl",{849:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Lookup-table for trace levels.</div></div>"});

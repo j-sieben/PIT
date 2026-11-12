@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core/tables/pit_translatable_item.tbl","pit_translatable_item.tbl");NDSummary.OnSummaryLoaded("File:core/tables/pit_translatable_item.tbl",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[114,0,0,"pit_translatable_item","pit_translatable_item"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:core/tables/pit_translatable_item.tbl","pit_translatable_item.tbl");NDSummary.OnSummaryLoaded("File:core/tables/pit_translatable_item.tbl",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[113,0,0,"pit_translatable_item","pit_translatable_item"]]);

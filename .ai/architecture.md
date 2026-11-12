@@ -65,6 +65,11 @@ Key types:
 - `PIT/core/types/pit_context_type.*` - log/trace/module context
 - `PIT/core/types/pit_call_stack_type.*` - trace/call-stack state
 - `PIT/core/types/msg_args*` / `msg_params*` - message argument containers
+- `PIT/core/types/msg_param*.tps` / `*.tpb` and their `core_23` counterparts
+  define named parameter values. RAW constructors store the first 200 bytes as
+  RAWTOHEX text (at most 400 hex characters), followed by the full RAW length
+  as ` (<length> byte)`; BLOB constructors store only
+  `[BLOB], <length> byte`. Both overloads exist in regular and SQL-Boolean variants.
 - `PIT/core/types/pit_default_adapter.*` - default session adapter
 
 ## Output Modules

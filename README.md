@@ -25,7 +25,7 @@ begin
   pit.enter_mandatory(
     p_params => msg_params(msg_param('order_id', p_order_id)));
   -- Process the order here.
-  pit.raise_info(msg.ORDER_PROCESSED, msg_args(to_char(p_order_id)));
+  pit.raise_info(msg.ORDER_PROCESSED, msg_args(p_order_id));
   pit.leave_mandatory;
 exception
   when others then

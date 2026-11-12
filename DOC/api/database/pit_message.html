@@ -8,7 +8,7 @@
 
 <script type="text/javascript">var q = window.location.search;if (q.startsWith("?Theme=")){var t = q.slice(7);var e = t.indexOf(";");if (e != -1){  t = t.slice(0, e);  }document.documentElement.classList.add(t + "Theme")}</script>
 
-<a name="Topic840"></a><div class="CTopic TDatabaseTable LSQL first">
+<a name="Topic843"></a><div class="CTopic TDatabaseTable LSQL first">
  <div class="CTitle">pit_message</div>
  <div class="CBody"><p>Central log message repository in various languages.</p><div class="CHeading">Fields</div><table class="CDefinitionList"><tr><td class="CDLEntry">pms_name</td><td class="CDLDefinition"><p>Unique message name. Used to reference the message as a constant in package MSG.</p></td></tr><tr><td class="CDLEntry">pms_pmg_name</td><td class="CDLDefinition"><p>Unique message group name. Reference to PIT_MESSAGE_GROUP.</p></td></tr><tr><td class="CDLEntry">pms_pse_id</td><td class="CDLDefinition"><p>Severity of the message. Reference to PIT_MESSAGE_SEVERITY.</p></td></tr><tr><td class="CDLEntry">pms_custom_error</td><td class="CDLDefinition"><p>Optional pointer to an Oracle error number. If null, no exception will be generated. To define custom errors, use -20000.</p></td></tr><tr><td class="CDLEntry">pms_active_error</td><td class="CDLDefinition"><p>Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.</p></td></tr></table></div>
 </div>

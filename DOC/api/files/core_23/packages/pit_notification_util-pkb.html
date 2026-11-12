@@ -8,35 +8,35 @@
 
 <script type="text/javascript">var q = window.location.search;if (q.startsWith("?Theme=")){var t = q.slice(7);var e = t.indexOf(";");if (e != -1){  t = t.slice(0, e);  }document.documentElement.classList.add(t + "Theme")}</script>
 
-<a name="PIT_NOTIFICATION_UTIL_Body"></a><a name="Topic928"></a><div class="CTopic TClass LSQL first">
+<a name="PIT_NOTIFICATION_UTIL_Body"></a><a name="Topic934"></a><div class="CTopic TClass LSQL first">
  <div class="CTitle">PIT_NOTIFICATION_UTIL Body</div>
  <div class="CBody"><p>Implements functionality to pass a message to a websocket server.</p><div class="CHeading">Author</div><p>Juergen Sieben, ConDeS GmbH</p><p>Published under MIT licence</p></div>
 </div>
 
-<a name="PIT_NOTIFICATION_UTIL_Body.Helper_Methods"></a><a name="Topic929"></a><div class="CTopic TGroup LSQL">
+<a name="PIT_NOTIFICATION_UTIL_Body.Helper_Methods"></a><a name="Topic935"></a><div class="CTopic TGroup LSQL">
  <div class="CTitle">Helper Methods</div>
 </div>
 
-<a name="PIT_NOTIFICATION_UTIL_Body.format_message"></a><a name="Topic930"></a><div class="CTopic TFunction LSQL">
+<a name="PIT_NOTIFICATION_UTIL_Body.format_message"></a><a name="Topic936"></a><div class="CTopic TFunction LSQL">
  <div class="CTitle">format_message</div>
- <div id="NDPrototype930" class="NDPrototype PContent WideForm"><div class="PSection PParameterSection PascalStyle"><div class="PParameterCells" data-WideColumnCount="4" data-NarrowColumnCount="3"><div class="PBeforeParameters" data-WideGridArea="1/1/2/2" data-NarrowGridArea="1/1/2/4" style="grid-area:1/1/2/2"><span class="SHKeyword">function</span> format_message(</div><div class="PName InFirstParameterColumn" data-WideGridArea="1/2/2/3" data-NarrowGridArea="2/1/3/2" style="grid-area:1/2/2/3">p_message&nbsp;</div><div class="PType InLastParameterColumn" data-WideGridArea="1/3/2/4" data-NarrowGridArea="2/2/3/3" style="grid-area:1/3/2/4"><span class="SHKeyword">in</span> <a href="../../../index.html#File:core/types/message_type.tps:message_type" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,197);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >message_type</a></div><div class="PAfterParameters" data-WideGridArea="1/4/2/5" data-NarrowGridArea="3/1/4/4" style="grid-area:1/4/2/5">)</div></div></div><div class="PSection PPlainSection"><span class="SHKeyword">return</span> <span class="SHKeyword">clob</span></div></div>
+ <div id="NDPrototype936" class="NDPrototype PContent WideForm"><div class="PSection PParameterSection PascalStyle"><div class="PParameterCells" data-WideColumnCount="4" data-NarrowColumnCount="3"><div class="PBeforeParameters" data-WideGridArea="1/1/2/2" data-NarrowGridArea="1/1/2/4" style="grid-area:1/1/2/2"><span class="SHKeyword">function</span> format_message(</div><div class="PName InFirstParameterColumn" data-WideGridArea="1/2/2/3" data-NarrowGridArea="2/1/3/2" style="grid-area:1/2/2/3">p_message&nbsp;</div><div class="PType InLastParameterColumn" data-WideGridArea="1/3/2/4" data-NarrowGridArea="2/2/3/3" style="grid-area:1/3/2/4"><span class="SHKeyword">in</span> <a href="../../../index.html#File:core/types/message_type.tps:message_type" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,199);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >message_type</a></div><div class="PAfterParameters" data-WideGridArea="1/4/2/5" data-NarrowGridArea="3/1/4/4" style="grid-area:1/4/2/5">)</div></div></div><div class="PSection PPlainSection"><span class="SHKeyword">return</span> <span class="SHKeyword">clob</span></div></div>
  <div class="CBody"><p>Method to convert a message_type message into a clob.&nbsp; Conventions used: Notification messages have three reserved message args:</p><table class="CDefinitionList"><tr><td class="CDLEntry">1</td><td class="CDLDefinition"><p>Room, defines the room the message is assigned to</p></td></tr><tr><td class="CDLEntry">2</td><td class="CDLDefinition"><p>Event, defines the event that caused the message to be sent</p></td></tr><tr><td class="CDLEntry">3</td><td class="CDLDefinition"><p>action, optional definition of a method that is to be executed client side to handle the message</p></td></tr><tr><td class="CDLEntry">Normal message args have to be passed as argument 4</td><td class="CDLDefinition"><p>50.</p></td></tr></table></div>
 </div>
 
-<a name="PIT_NOTIFICATION_UTIL_Body.check_http_status"></a><a name="Topic931"></a><div class="CTopic TFunction LSQL">
+<a name="PIT_NOTIFICATION_UTIL_Body.check_http_status"></a><a name="Topic937"></a><div class="CTopic TFunction LSQL">
  <div class="CTitle">check_http_status</div>
- <div id="NDPrototype931" class="NDPrototype PContent"><div class="PSection PPlainSection"><span class="SHKeyword">procedure</span> check_http_status</div></div>
+ <div id="NDPrototype937" class="NDPrototype PContent"><div class="PSection PPlainSection"><span class="SHKeyword">procedure</span> check_http_status</div></div>
  <div class="CBody"><p>Method checks the response of the REST call.</p></div>
 </div>
 
-<a name="PIT_NOTIFICATION_UTIL_Body.Interface"></a><a name="Topic932"></a><div class="CTopic TGroup LSQL">
+<a name="PIT_NOTIFICATION_UTIL_Body.Interface"></a><a name="Topic938"></a><div class="CTopic TGroup LSQL">
  <div class="CTitle">Interface</div>
 </div>
 
-<a name="PIT_NOTIFICATION_UTIL_Body.notify"></a><a name="Topic933"></a><div class="CTopic TFunction LSQL last">
+<a name="PIT_NOTIFICATION_UTIL_Body.notify"></a><a name="Topic939"></a><div class="CTopic TFunction LSQL last">
  <div class="CTitle">notify</div>
- <div id="NDPrototype933" class="NDPrototype PContent WideForm"><div class="PSection PParameterSection PascalStyle"><div class="PParameterCells" data-WideColumnCount="4" data-NarrowColumnCount="3"><div class="PBeforeParameters" data-WideGridArea="1/1/2/2" data-NarrowGridArea="1/1/2/4" style="grid-area:1/1/2/2"><span class="SHKeyword">procedure</span> notify(</div><div class="PName InFirstParameterColumn" data-WideGridArea="1/2/2/3" data-NarrowGridArea="2/1/3/2" style="grid-area:1/2/2/3">p_message&nbsp;</div><div class="PType InLastParameterColumn" data-WideGridArea="1/3/2/4" data-NarrowGridArea="2/2/3/3" style="grid-area:1/3/2/4"><span class="SHKeyword">in</span> <a href="../../../index.html#File:core/types/message_type.tps:message_type" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,197);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >message_type</a></div><div class="PAfterParameters" data-WideGridArea="1/4/2/5" data-NarrowGridArea="3/1/4/4" style="grid-area:1/4/2/5">)</div></div></div></div>
- <div class="CBody"><p>See: <a href="../../../index.html#File:core/packages/pit_notification_util.pks:PIT_NOTIFICATION_UTIL.notify" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,221);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >PIT_NOTIFICATION_UTIL.notify</a></p></div>
+ <div id="NDPrototype939" class="NDPrototype PContent WideForm"><div class="PSection PParameterSection PascalStyle"><div class="PParameterCells" data-WideColumnCount="4" data-NarrowColumnCount="3"><div class="PBeforeParameters" data-WideGridArea="1/1/2/2" data-NarrowGridArea="1/1/2/4" style="grid-area:1/1/2/2"><span class="SHKeyword">procedure</span> notify(</div><div class="PName InFirstParameterColumn" data-WideGridArea="1/2/2/3" data-NarrowGridArea="2/1/3/2" style="grid-area:1/2/2/3">p_message&nbsp;</div><div class="PType InLastParameterColumn" data-WideGridArea="1/3/2/4" data-NarrowGridArea="2/2/3/3" style="grid-area:1/3/2/4"><span class="SHKeyword">in</span> <a href="../../../index.html#File:core/types/message_type.tps:message_type" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,199);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >message_type</a></div><div class="PAfterParameters" data-WideGridArea="1/4/2/5" data-NarrowGridArea="3/1/4/4" style="grid-area:1/4/2/5">)</div></div></div></div>
+ <div class="CBody"><p>See: <a href="../../../index.html#File:core/packages/pit_notification_util.pks:PIT_NOTIFICATION_UTIL.notify" target="_top" onmouseover="NDContentPage.OnLinkMouseOver(event,449);" onmouseout="NDContentPage.OnLinkMouseOut(event);" >PIT_NOTIFICATION_UTIL.notify</a></p></div>
 </div>
 
 </body></html>

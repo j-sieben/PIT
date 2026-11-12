@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:core_23/tables/pit_message_text.tbl",{844:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Language specific message text repository.</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:core_23/tables/pit_message_text.tbl",{847:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Language specific message text repository.</div></div>"});
