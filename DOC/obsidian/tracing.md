@@ -30,7 +30,9 @@ exception
 end;
 ```
 
-`MSG_PARAMS` is a collection of named `MSG_PARAM` values. Its constructors support several datatypes, so you do not need to convert every value to text yourself. A `RAW` value is represented as hexadecimal text using at most its first 200 bytes (400 hex characters), followed by the original length in bytes, for example `A1B2 (2 byte)`. This also makes UUID values readable while retaining the full length when a longer value is truncated. A `BLOB` value is represented only by its length in bytes, in the form `[BLOB], <length> byte`; its contents are not read. You can also pass `p_params` to exit calls and [exception](glossary/exception.md) handlers to record results available at that point.
+`MSG_PARAMS` is a collection of named `MSG_PARAM` values. Its constructors support several datatypes, so you do not need to convert every value to text yourself. A `RAW` value is represented as hexadecimal text using at most its first 200 bytes (400 hex characters), followed by the original length in bytes, for example `A1B2 (2 byte)`. This also makes UUID values readable while retaining the full length when a longer value is truncated. A `BLOB` value is represented only by its length in bytes, in the form `[BLOB], <length> byte`; its contents are not read. It is also possible to pass boolean values in, they are represented by the strings `true` and `false`.
+
+You can also pass `p_params` to exit calls and [exception](glossary/exception.md) handlers to record results available at that point.
 
 PIT normally discovers the package and action through `UTL_CALL_STACK`. Each `enter` variant has an optional `p_action` argument for the method name. Set it explicitly for methods that the compiler inlines into their callers: the compiled code no longer contains a separate call from which PIT could determine the original method name.
 
