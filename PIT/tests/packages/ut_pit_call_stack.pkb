@@ -261,6 +261,72 @@ as
     ut.expect(g_call_stack_tab(1).call_level).to_equal(2);
   end push_twice_pop_stack;
   
+  procedure nested_own_time
+  as
+    l_entry pit_call_stack_type;
+    l_entries pit_call_stack.pit_call_stack_tab;
+    l_own_time integer := 0;
+    l_own_cpu integer := 0;
+    l_child_cpu integer := 0;
+
+    procedure push_entry(p_action in varchar2) is
+    begin
+      l_entry := pit_call_stack.push_stack(
+        p_user_name => g_user_name,
+        p_session_id => g_client_info,
+        p_module => g_module,
+        p_action => p_action,
+        p_client_info => g_client_info,
+        p_params => null,
+        p_trace_level => g_trace_level,
+        p_trace_context => g_context);
+    end push_entry;
+
+    -- Consume measurable CPU time without requiring a sleep privilege.
+    procedure work(p_parent in boolean) is
+      l_start_time integer := dbms_utility.get_time;
+      l_start_cpu integer := dbms_utility.get_cpu_time;
+    begin
+      loop
+        exit when dbms_utility.get_cpu_time - l_start_cpu >= 20;
+      end loop;
+      if p_parent then
+        l_own_time := l_own_time + dbms_utility.get_time - l_start_time;
+        l_own_cpu := l_own_cpu + dbms_utility.get_cpu_time - l_start_cpu;
+      end if;
+    end work;
+  begin
+    pit.set_context(
+      p_log_level => pit.level_all,
+      p_trace_level => pit.trace_all,
+      p_trace_timing => true,
+      p_log_modules => 'PIT_CONSOLE');
+    g_context := pit.get_active_context;
+    push_entry('PARENT');
+    work(true);
+    for i in 1 .. 2 loop
+      push_entry('CHILD');
+      work(false);
+      l_entries := pit_call_stack.pop_stack(null, null);
+      l_child_cpu := l_child_cpu + l_entries(1).total_cpu;
+      work(true);
+    end loop;
+    l_entries := pit_call_stack.pop_stack(null, null);
+
+    -- All three parent segments must survive both pause/resume transitions.
+    -- Allow two timer ticks for separately sampled measurement boundaries.
+    ut.expect(l_entries(1).elapsed).to_be_greater_or_equal(l_own_time - 2);
+    ut.expect(l_entries(1).elapsed_cpu).to_be_greater_or_equal(l_own_cpu - 2);
+    ut.expect(l_entries(1).total_cpu).to_be_greater_or_equal(
+      l_entries(1).elapsed_cpu + l_child_cpu - 2);
+    pit.reset_context;
+  exception
+    when others then
+      pit_call_stack.initialize;
+      pit.reset_context;
+      raise;
+  end nested_own_time;
+
   --
   -- test pop_stack   --
   procedure pop_stack_fatal

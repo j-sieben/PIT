@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core_23/types/msg_params.tps","msg_params.tps");NDSummary.OnSummaryLoaded("File:core_23/types/msg_params.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[890,0,0,"Types","Types"],[891,0,1,"msg_params","msg_params"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/types/msg_params.tps","msg_params.tps");NDSummary.OnSummaryLoaded("File:core_23/types/msg_params.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[884,0,0,"Types","Types"],[885,0,1,"msg_params","msg_params"]]);

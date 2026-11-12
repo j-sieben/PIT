@@ -46,6 +46,9 @@ as
   --%test(... empties the call stack if a fatal error has occurred)
   procedure pop_stack_fatal;
   
+  --%test(... preserves parent own runtime and CPU time across helper calls)
+  procedure nested_own_time;
+
   --%endcontext
   
   --%context (Method LONG_OP)

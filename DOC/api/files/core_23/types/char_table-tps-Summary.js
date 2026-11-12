@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core_23/types/char_table.tps","char_table.tps");NDSummary.OnSummaryLoaded("File:core_23/types/char_table.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[900,0,0,"Types","Types"],[901,0,1,"char_table","char_table"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/types/char_table.tps","char_table.tps");NDSummary.OnSummaryLoaded("File:core_23/types/char_table.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[882,0,0,"Types","Types"],[883,0,1,"char_table","char_table"]]);

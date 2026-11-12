@@ -48,7 +48,9 @@ Important internals:
   The required reason documents the caller’s intent; it is not processed.
 - `PIT/core/packages/pit_context.*` - active context, module loading, module
   availability, log/trace decisions
-- `PIT/core/packages/pit_call_stack.*` - call-stack tracking and tracing
+- `PIT/core/packages/pit_call_stack.*` - call-stack tracking and tracing.
+  Both core variants persist the parent entry after pause and resume so own
+  runtime/CPU accumulate across helpers while excluding their traced time.
 - `PIT/core/packages/pit_util.*` - shared utility types/constants/helpers.
   `get_call_stack` reads the current dynamic stack with the configured package
   filter. `get_error_stack` reads all Oracle error messages and the exception
@@ -70,6 +72,9 @@ Key types:
   RAWTOHEX text (at most 400 hex characters), followed by the full RAW length
   as ` (<length> byte)`; BLOB constructors store only
   `[BLOB], <length> byte`. Both overloads exist in regular and SQL-Boolean variants.
+  The regular MSG_ARGS constructor joins ordered values with commas, limits
+  each value to 200 characters and assigns the result to `p_value`; the name
+  stays in `p_param`. Output modules format the pair.
 - `PIT/core/types/pit_default_adapter.*` - default session adapter
 
 ## Output Modules

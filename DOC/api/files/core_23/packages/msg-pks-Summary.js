@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core_23/packages/msg.pks","msg.pks");NDSummary.OnSummaryLoaded("File:core_23/packages/msg.pks",[["SQL","SQL"]],[["Classes","Class"]],[[933,0,0,"MSG","MSG"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/packages/msg.pks","msg.pks");NDSummary.OnSummaryLoaded("File:core_23/packages/msg.pks",[["SQL","SQL"]],[["Classes","Class"]],[[939,0,0,"MSG","MSG"]]);

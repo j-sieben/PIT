@@ -75,6 +75,7 @@ as
           l_predecessor := g_call_stack(l_last_entry - 1);
           -- Resume time measurement
           l_predecessor.resume();
+          g_call_stack(l_last_entry - 1) := l_predecessor;
           
           -- set application info to the predecessor
           maintain_application_info(l_predecessor.app_module, l_predecessor.app_action, l_predecessor.client_info);
@@ -131,6 +132,7 @@ as
     if pit_context.trace_timing and l_last_entry > 0 then
       l_call_stack_entry := g_call_stack(l_last_entry);
       l_call_stack_entry.pause();
+      g_call_stack(l_last_entry) := l_call_stack_entry;
     end if;
     
     maintain_application_info(p_module, p_action, p_client_info);

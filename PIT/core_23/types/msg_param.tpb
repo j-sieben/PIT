@@ -167,6 +167,7 @@ as
         end if;
       end loop;
     end if;
+    self.p_value := l_value;
     return;
    end;
 

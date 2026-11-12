@@ -1,1 +1,1 @@
-﻿NDSummary.OnToolTipsLoaded("File:core_23/types/char_table.tps",{901:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Basic char table, used in many methods</div></div>"});
+﻿NDSummary.OnToolTipsLoaded("File:core_23/types/char_table.tps",{883:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Basic char table, used in many methods</div></div>"});

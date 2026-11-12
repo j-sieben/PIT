@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core/tables/pit_message_severity.tbl","pit_message_severity.tbl");NDSummary.OnSummaryLoaded("File:core/tables/pit_message_severity.tbl",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[117,0,0,"pit_message_severity","pit_message_severity"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:core/tables/pit_message_severity.tbl","pit_message_severity.tbl");NDSummary.OnSummaryLoaded("File:core/tables/pit_message_severity.tbl",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[116,0,0,"pit_message_severity","pit_message_severity"]]);

@@ -1,1 +1,1 @@
-﻿NDFramePage.OnPageTitleLoaded("File:core_23/views/pit_message_language_v.vw","pit_message_language_v.vw");NDSummary.OnSummaryLoaded("File:core_23/views/pit_message_language_v.vw",[["SQL","SQL"]],[["Views","DatabaseView"]],[[1563,0,0,"pit_message_language_v","pit_message_language_v"]]);
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/views/pit_message_language_v.vw","pit_message_language_v.vw");NDSummary.OnSummaryLoaded("File:core_23/views/pit_message_language_v.vw",[["SQL","SQL"]],[["Views","DatabaseView"]],[[1528,0,0,"pit_message_language_v","pit_message_language_v"]]);
