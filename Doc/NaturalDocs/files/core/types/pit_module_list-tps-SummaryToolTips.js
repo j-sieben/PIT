@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("File:core/types/pit_module_list.tps",{155:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">List type of PIT_MODULE_META</div></div>"});

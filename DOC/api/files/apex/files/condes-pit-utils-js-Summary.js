@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:apex/files/condes.pit.utils.js","condes.pit.utils.js");NDSummary.OnSummaryLoaded("File:apex/files/condes.pit.utils.js",[["JavaScript","JavaScript"]],[["Functions","Function"],["Groups","Group"]],[[1,0,1,"Functions","Functions"],[2,0,0,"predefineErrorTypeIfNull","predefineErrorTypeIfNull"]]);

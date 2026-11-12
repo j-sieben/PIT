@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("and",["Constant"],[["and",,[["PIT","Trace and log level constants",,,0,"File:core_23/packages/pit.pks:PIT.Trace_and_log_level_constants","SQLClass:PIT:Trace_and_log_level_constants"]]]]);

@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:core_23/types/pit_args.tps",{869:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Array of up to 50 entries of type &lt;ora_name_type&gt;.&nbsp; Is used to pass in a variable&nbsp; list of parameter values</div></div>"});

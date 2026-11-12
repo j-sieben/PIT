@@ -408,7 +408,18 @@ as
     p_affected_ids in msg_params default null,
     p_error_code in varchar2 default null,
     p_params in msg_params default null);
-  
+
+
+  /**
+    Procedure: ignore_exception
+      Explicitly ignores an exception and closes its actual call stack entry.cursor
+
+    Parameter:
+      p_reason - Required documentation on why this exception can be ignored. Documentory only.
+   */
+  procedure ignore_exception(
+    p_reason in varchar2);
+
   
   /** 
     Procedure: stop

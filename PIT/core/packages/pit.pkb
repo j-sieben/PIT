@@ -368,6 +368,14 @@ as
   end handle_exception;
 
 
+  procedure ignore_exception(
+    p_reason in varchar2)
+  as
+  begin
+    pit_internal.ignore_error;
+  end ignore_exception;
+
+
   procedure stop(
     p_message_name in varchar2 default null,
     p_msg_args in msg_args default null,

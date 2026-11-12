@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("act",["Function"],[["activate_language",,[["PIT_ADMIN Body",,,,0,"File:core_23/packages/pit_admin.pkb:PIT_ADMIN_Body.activate_language","SQLClass:PIT_ADMIN_Body:activate_language"]]]]);

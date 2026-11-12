@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SQLClass:PIT_NOTIFICATION_UTIL","PIT_NOTIFICATION_UTIL");NDSummary.OnSummaryLoaded("SQLClass:PIT_NOTIFICATION_UTIL",[["SQL","SQL"]],[["Classes","Class"],["Functions","Function"],["Groups","Group"]],[[945,0,0,"PIT_NOTIFICATION_UTIL"],[946,0,2,"Public Methods","Public_Methods"],[947,0,1,"notify","notify"]]);

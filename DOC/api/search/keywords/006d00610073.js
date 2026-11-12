@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("mas",["Type"],[["master",,[["PIT_APP_API","Types for editing master data",,,0,"File:core_23/packages/pit_app_api.pks:PIT_APP_API.Types_for_editing_master_data","SQLClass:PIT_APP_API:Types_for_editing_master_data"]]]]);

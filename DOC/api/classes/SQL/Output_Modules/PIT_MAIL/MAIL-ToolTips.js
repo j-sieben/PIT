@@ -1,0 +1,1 @@
+﻿NDContentPage.OnToolTipsLoaded({1809:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Record to store a user name and its email address</div></div>",1810:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Nested table of address_rec.</div></div>"});

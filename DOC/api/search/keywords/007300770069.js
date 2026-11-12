@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("swi",["Constant"],[["switches",,[["PIT_ADMIN","Installation switches",,,0,"File:core_23/packages/pit_admin.pks:PIT_ADMIN.Installation_switches","SQLClass:PIT_ADMIN:Installation_switches"]]]]);

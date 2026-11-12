@@ -1,1 +1,0 @@
-﻿NDContentPage.OnToolTipsLoaded({131:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Basic array of MESSAGE_TYPE parameters</div></div>",157:"<div class=\"NDToolTip TType LSQL\"><div class=\"TTSummary\">Core message type. Is used to collect the message, severity and other useful information around messages</div></div>"});

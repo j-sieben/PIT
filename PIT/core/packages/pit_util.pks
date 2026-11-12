@@ -127,12 +127,19 @@ as
 
   /** 
     Function: get_error_stack
-      Wrapper around UTL_CALL_STACK to get the call stack
-      
+      Returns all Oracle error messages and the exception backtrace.
+      Unlike the dynamic call stack, the backtrace retains the error origin.
+
+    Parameters:
+      p_filter_backtrace - Apply OMIT_PIT_IN_STACK and OMIT_PKG_IN_STACK
+        to backtrace units when true. Defaults to false for a complete
+        backtrace. Error messages are never filtered.
+
     Returns:
-      formatted error stack.
+      formatted error stack followed by the exception backtrace.
    */
-  function get_error_stack
+  function get_error_stack(
+    p_filter_backtrace in boolean default false)
     return varchar2;
   
   

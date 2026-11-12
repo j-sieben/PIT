@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("reg",["Function"],[["register_translation",,[["PIT_ADMIN Body",,,,0,"File:core/packages/pit_admin.pkb:PIT_ADMIN_Body.register_translation","SQLClass:PIT_ADMIN_Body:register_translation"],["PIT_ADMIN",,,,0,"File:core/packages/pit_admin.pks:PIT_ADMIN.register_translation","SQLClass:PIT_ADMIN:register_translation"]]]]);

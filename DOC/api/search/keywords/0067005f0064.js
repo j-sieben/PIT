@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("g_d",["Variable"],[["g_default_language",,[["PIT_ADMIN Body",,,,0,"File:core_23/packages/pit_admin.pkb:PIT_ADMIN_Body.g_default_language","SQLClass:PIT_ADMIN_Body:g_default_language"]]]]);

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/tables/pit_message_text.tbl","pit_message_text.tbl");NDSummary.OnSummaryLoaded("File:core_23/tables/pit_message_text.tbl",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[844,0,0,"pit_message_text","pit_message_text"]]);

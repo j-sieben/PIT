@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("ign",["Function"],[["ignore_subprogram",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.ignore_subprogram","SQLClass:PIT_UTIL_Body:ignore_subprogram"]]]]);

@@ -1,1 +1,0 @@
-﻿NDSummary.OnToolTipsLoaded("SQLClass:MSG",{172:"<div class=\"NDToolTip TClass LSQL\"><div class=\"TTSummary\">Auto generated package holding constants for any PIT message.</div></div>"});

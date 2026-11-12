@@ -1,1 +1,0 @@
-﻿NDMenu.OnSectionLoaded("database.js",[[1,"pit_message_language_v"]]);

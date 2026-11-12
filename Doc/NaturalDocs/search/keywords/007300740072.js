@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("str",["Function"],[["string_to_table",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.string_to_table","SQLClass:PIT_UTIL_Body:string_to_table"],["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.string_to_table","SQLClass:PIT_UTIL:string_to_table"]]]]);

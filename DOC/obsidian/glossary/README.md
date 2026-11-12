@@ -1,0 +1,32 @@
+# Glossary
+
+Use these definitions when reading the handbook. Each term has its own page and links back to the relevant chapter.
+
+- [Affected reference](affected-reference.md)
+- [Assertion](assertion.md)
+- [Collection mode](collection-mode.md)
+- [Context](context.md)
+- [Context toggle](context-toggle.md)
+- [Dynamic call stack](dynamic-call-stack.md)
+- [Error code](error-code.md)
+- [Error stack](error-stack.md)
+- [Exception](exception.md)
+- [Exception backtrace](exception-backtrace.md)
+- [Fire threshold](fire-threshold.md)
+- [ICU](icu.md)
+- [Instrumented call stack](instrumented-call-stack.md)
+- [Log level](log-level.md)
+- [Message](message.md)
+- [Message argument](message-argument.md)
+- [Message group](message-group.md)
+- [Output module](output-module.md)
+- [Parameter](parameter.md)
+- [Publication](publication.md)
+- [Realm](realm.md)
+- [Session adapter](session-adapter.md)
+- [Severity](severity.md)
+- [Trace level](trace-level.md)
+- [Translatable item](translatable-item.md)
+- [XLIFF](xliff.md)
+
+[Handbook](../README.md)

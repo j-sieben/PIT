@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("to_",["Function"],[["to_bool",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.to_bool","SQLClass:PIT_UTIL_Body:to_bool"],["PIT_UTIL",,,,0,"File:core/packages/pit_util.pks:PIT_UTIL.to_bool","SQLClass:PIT_UTIL:to_bool"]]]]);

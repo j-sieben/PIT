@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("File:core/tables/pit_message_group.tbl",{115:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Optional message group, used to export groupwise.</div></div>"});

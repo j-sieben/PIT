@@ -1,0 +1,1 @@
+﻿NDSummary.OnToolTipsLoaded("Database:pit_internal_log",{846:"<div class=\"NDToolTip TDatabaseTable LSQL\"><div class=\"TTSummary\">Stores internal PIT message in case of non reportable, internal errors.</div></div>"});

@@ -73,3 +73,19 @@ to preserve proxy-user compatibility while avoiding password exposure.
 The `.bat` scripts under `PIT/install_scripts` have independent SQL*Plus calls.
 They are not used by `PIT/pit.sh`. They already use direct SQL*Plus logon strings,
 not the broken `/nolog` heredoc pattern.
+
+## Collection stop does not handle LEVEL_SEVERE
+
+Both `PIT/core/packages/pit_internal.pkb` and its `core_23` counterpart implement
+`set_collect_mode(false)` with cases only for `C_LEVEL_ERROR` and `C_LEVEL_FATAL`.
+A most-severe finding of `C_LEVEL_SEVERE` therefore does not produce a bulk
+exception. Inspect the returned collection or use error-level assertions for
+normal validation. Documented in `DOC/obsidian/collect_messages.md`; runtime unchanged.
+
+## PIT_TABLE diagnostic capacity
+
+`get_error_stack` can return more than the 2000 characters allowed by
+`PIT/modules/pit_table/tables/pit_table_log.tbl` for `LOG_MESSAGE_BACKTRACE`.
+The insert in `pit_table_pkg.log_exception` performs no truncation. Long
+diagnostics can exceed column capacity. `LOG_MESSAGE_STACK` separately stores
+the dynamic stack; no concatenation occurs in this module. See `DOC/obsidian/output_modules.md`.

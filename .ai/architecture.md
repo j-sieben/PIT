@@ -14,7 +14,7 @@ Important API areas:
 - Trace constants: `trace_off`, `trace_mandatory`, `trace_optional`,
   `trace_detailed`, `trace_all`
 - Logging: `raise_*`, `log`, `log_state`, `tweet`, `notify`, `print`
-- Exceptions: `handle_exception`, `stop`, `reraise_exception`, `handle_panic`
+- Exceptions: `handle_exception`, `ignore_exception`, `stop`, `reraise_exception`, `handle_panic`
 - Tracing: `enter_*`, `leave_*`, `long_op`
 - Assertions: `assert*`
 - Message collection: `start_message_collection`, `stop_message_collection`,
@@ -42,11 +42,19 @@ Responsibilities:
 Important internals:
 
 - `PIT/core/packages/pit_internal.*` - message construction, routing, errors,
-  collection mode, assertions
+  collection mode, assertions. In both `core` and `core_23`,
+  `pit.ignore_exception(p_reason)` delegates to `pit_internal.ignore_error`,
+  which clears the active message and calls `leave(C_TRACE_MANDATORY, null)`.
+  The required reason documents the caller’s intent; it is not processed.
 - `PIT/core/packages/pit_context.*` - active context, module loading, module
   availability, log/trace decisions
 - `PIT/core/packages/pit_call_stack.*` - call-stack tracking and tracing
-- `PIT/core/packages/pit_util.*` - shared utility types/constants/helpers
+- `PIT/core/packages/pit_util.*` - shared utility types/constants/helpers.
+  `get_call_stack` reads the current dynamic stack with the configured package
+  filter. `get_error_stack` reads all Oracle error messages and the exception
+  backtrace; its optional `p_filter_backtrace => true` applies the same package
+  filter only to backtrace units. Error messages are always unfiltered.
+  The same behavior is maintained in `PIT/core_23/packages/pit_util.*`.
 
 ## Object Types
 

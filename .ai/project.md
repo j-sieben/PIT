@@ -16,7 +16,15 @@ client schemas.
 
 ## Important Locations
 
-- `README.md` - conceptual overview and usage examples
+- `README.md` - short introduction and handbook entry points
+- `DOC/README.md` - documentation entry points for the vault and generated API
+- `DOC/obsidian/README.md` - English Markdown handbook index and Obsidian vault entry point
+- `DOC/obsidian/images` - handbook images within the vault
+- `DOC/obsidian/glossary/*.md` - one definition per term, linked on first prose use per page
+- `DOC/api` - generated Natural Docs API reference (previously `Doc/NaturalDocs`)
+- `ND/Project.txt`, `ND/Languages.txt` - portable API build configuration and PL/SQL extension mappings
+- `tools/check_documentation.py` - handbook links, anchors, casing and glossary checks
+- `PIT/Doc` - separate legacy generated HTML, not the current handbook/API output
 - `PIT/pit.sh` - Unix command dispatcher for installs/uninstalls
 - `PIT/install_scripts/*.sh` - shell wrappers around SQL*Plus
 - `PIT/install_scripts/*.sql` - top-level SQL*Plus install/uninstall scripts

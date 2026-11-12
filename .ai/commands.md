@@ -69,3 +69,16 @@ Find SQL*Plus usage:
 ```bash
 rg -n "pit_run_sqlplus|sqlplus|/nolog|connect " PIT/install_scripts PIT/pit.sh -g '*.sh'
 ```
+
+## Documentation
+
+From the repository root:
+
+```sh
+NaturalDocs -p ND -r
+python3 tools/check_documentation.py
+```
+
+Natural Docs generates `DOC/api` from `PIT`; repository-specific SQL extension
+mappings are in `ND/Languages.txt`. `--fix-glossary` on the Python checker adds
+missing first-prose-mention links. Handbook structure and glossary live in `DOC/obsidian`.

@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("boo",["Type"],[["boolean",,[["PIT_UTIL",,,,0,"File:core_23/packages/pit_util.pks:PIT_UTIL.boolean","SQLClass:PIT_UTIL:boolean"]]]]);

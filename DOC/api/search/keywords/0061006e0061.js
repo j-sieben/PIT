@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("ana",["Function"],[["analyze_xliff",,[["PIT_ADMIN Body",,,,0,"File:core_23/packages/pit_admin.pkb:PIT_ADMIN_Body.analyze_xliff","SQLClass:PIT_ADMIN_Body:analyze_xliff"]]]]);

@@ -1,0 +1,1 @@
+﻿NDMenu.OnSectionLoaded("database.js",[[1,"pit_internal_log"],[1,"pit_message"],[1,"pit_message_group"],[1,"pit_message_language"],[1,"pit_message_language_v"],[1,"pit_message_severity"],[1,"pit_message_text"],[1,"pit_trace_level"],[1,"pit_translatable_item"]]);

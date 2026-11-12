@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("res",["Function"],[["reset_context",,[["PIT",,,,0,"File:core/packages/pit.pks:PIT.reset_context","SQLClass:PIT:reset_context"],["pit_context",,,,0,"File:context/packages/utl_context.pks:pit_context.reset_context","SQLClass:pit_context:reset_context"]]],["resume",,[[,,,,0,"File:core/types/pit_call_stack_type.tps:resume"]]]]);

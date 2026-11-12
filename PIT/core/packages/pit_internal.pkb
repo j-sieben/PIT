@@ -598,7 +598,7 @@ as
   begin
     -- initialize
     g_active_message := get_message(
-                          p_message_name => 'PIT_SQL_ERROR', 
+                          p_message_name => p_message_name,
                           p_msg_args => p_msg_args, 
                           p_affected_id => p_affected_id, 
                           p_affected_ids => p_affected_ids,
@@ -959,6 +959,18 @@ as
     pit_call_stack.initialize;
     raise_error(C_LEVEL_FATAL, C_PIT_PANIC, null, null, null, C_PIT_PANIC);
   end handle_panic;
+
+
+  /**
+    Procedure ignore_error
+      See <PIT_INTERNAL.ignore_error>
+   */
+  procedure ignore_error
+  as
+  begin
+    g_active_message := null;
+    leave(C_TRACE_MANDATORY, null);
+  end ignore_error;
 
 
   /**

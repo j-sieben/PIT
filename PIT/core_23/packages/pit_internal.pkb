@@ -850,6 +850,18 @@ as
 
 
   /**
+    Procedure ignore_error
+      See <PIT_INTERNAL.ignore_error>
+   */
+  procedure ignore_error
+  as
+  begin
+    g_active_message := null;
+    leave(C_TRACE_MANDATORY, null);
+  end ignore_error;
+
+
+  /**
     Procedure: purge_log
       See <PIT_INTERNAL.purge_log>
    */

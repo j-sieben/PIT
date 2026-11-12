@@ -224,6 +224,13 @@ as
    */
   procedure handle_panic;
 
+
+  /**
+    Procedure: ignore_error
+      Method explicitly ignores an error and closes the actual call stack entry.
+   */
+  procedure ignore_error;
+
   
   /** 
     Procedure: leave

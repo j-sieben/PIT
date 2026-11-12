@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/types/pit_message_table.tps","pit_message_table.tps");NDSummary.OnSummaryLoaded("File:core_23/types/pit_message_table.tps",[["SQL","SQL"]],[["Groups","Group"],["Types","Type"]],[[850,0,0,"Types","Types"],[851,0,1,"pit_message_table","pit_message_table"]]);

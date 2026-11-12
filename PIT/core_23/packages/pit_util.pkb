@@ -250,30 +250,39 @@ as
     Function: get_error_stack
       See <PIT_UTIL.get_error_stack>
    */
-  function get_error_stack
+  function get_error_stack(
+    p_filter_backtrace in boolean default false)
     return varchar2
   as
-    l_depth binary_integer;
     l_stack max_char;
+    l_unit varchar2(4000);
+    l_subprogram varchar2(4000);
   begin
-    l_depth := utl_call_stack.error_depth;
-    
     append(l_stack, param.get_string('PIT_ERROR_STACK_TEMPLATE', C_PARAMETER_GROUP));
 
-    for i in 1 .. l_depth loop
-      begin
-        if not ignore_subprogram(utl_call_stack.subprogram(i)(1)) then
-          append(l_stack,
-            lpad(to_char(utl_call_stack.unit_line(i), 'fm99999999'), 7) || ' '  ||
-            rpad(coalesce(to_char(utl_call_stack.owner(i)), ' '), 16) ||
-            utl_call_stack.concatenate_subprogram(utl_call_stack.subprogram(i)));
-        end if;
-      exception
-        when utl_call_stack.BAD_DEPTH_INDICATOR then
-          append(l_stack, 'Bad depth indicator error raised');
-      end;
+    -- Error depth indexes error messages, never dynamic call-stack entries.
+    -- Keep every error, including errors raised by PIT itself.
+    for i in 1 .. utl_call_stack.error_depth loop
+      append(l_stack,
+        lpad(to_char(i, 'fm99999'), 5) || ' ' ||
+        to_char(utl_call_stack.error_number(i)) || ' ' ||
+        utl_call_stack.error_msg(i));
     end loop;
-    
+
+    append(l_stack, '* Error Backtrace');
+    append(l_stack, 'Line    Object');
+    for i in 1 .. utl_call_stack.backtrace_depth loop
+      l_unit := utl_call_stack.backtrace_unit(i);
+      -- BACKTRACE_UNIT is schema-qualified; the existing filter expects
+      -- the package/unit name without the owner.
+      l_subprogram := substr(l_unit, instr(l_unit, '.') + 1);
+      if not p_filter_backtrace or not ignore_subprogram(l_subprogram) then
+        append(l_stack,
+          lpad(to_char(utl_call_stack.backtrace_line(i), 'fm99999999'), 7) ||
+          ' ' || l_unit);
+      end if;
+    end loop;
+
     return l_stack;
   end get_error_stack;
   

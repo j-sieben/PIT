@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("File:core_23/tables/pit_message_language.tbl","pit_message_language.tbl");NDSummary.OnSummaryLoaded("File:core_23/tables/pit_message_language.tbl",[["SQL","SQL"]],[["Tables","DatabaseTable"]],[[841,0,0,"pit_message_language","pit_message_language"]]);

@@ -1,1 +1,0 @@
-﻿NDSearch.OnPrefixDataLoaded("g_o",["Variable"],[["g_omit_pit_in_stack",,[["PIT_UTIL Body",,,,0,"File:core/packages/pit_util.pkb:PIT_UTIL_Body.g_omit_pit_in_stack","SQLClass:PIT_UTIL_Body:g_omit_pit_in_stack"]]]]);

@@ -21,8 +21,8 @@ comment on column pit_table_log.log_user_name is 'Connected database user';
 comment on column pit_table_log.log_message_text is 'Log message text';
 comment on column pit_table_log.log_message_name is 'Name of the PIT message. Can be used together wit MESSAGE_ARGS to construct a log in any language';
 comment on column pit_table_log.log_message_args is 'MSG_ARG instance. Can be used together wit MESSAGE_NAME to construct a log in any language';
-comment on column pit_table_log.log_message_stack is 'Error stack in case of error';
-comment on column pit_table_log.log_message_backtrace is 'Call stack in case of error';
+comment on column pit_table_log.log_message_stack is 'Call stack in case of error';
+comment on column pit_table_log.log_message_backtrace is 'Error stack in case of error';
 comment on column pit_table_log.log_severity is 'Severity of the message logged';
 
 create index idx_pit_table_log_ses_user on pit_table_log(log_session_id, log_user_name);
