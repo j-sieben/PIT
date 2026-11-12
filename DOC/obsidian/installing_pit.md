@@ -10,7 +10,11 @@ The installer chooses `core_23` and `parameters_23` on database releases 23 and 
 
 Choose the default language before installation. The supplied [message](glossary/message.md) sets include `AMERICAN` and `GERMAN`. Every message and [translatable item](glossary/translatable-item.md) needs a default-language definition; other languages are translations of it.
 
-Local settings in `PIT/init/settings.sql` control flag representation for the regular installation and the [exception](glossary/exception.md) prefix and postfix. Release 23 and later use native Boolean values instead of the flag substitution. Review the initialization files before changing schema-wide conventions.
+Local settings in `PIT/init/settings.sql` control flag representation for the regular installation and the [exception](glossary/exception.md) prefix and postfix. For databases without native SQL Boolean support, choose the Boolean representation with `FLAG_TYPE`, `C_TRUE` and `C_FALSE`, for example `CHAR(1)` with `Y`/`N` or `NUMBER(1,0)` with `1`/`0`. On Oracle Database 23 and later, which support native SQL Boolean values, the installer fixes these settings to `BOOLEAN`, `TRUE` and `FALSE` and uses them automatically. Any manually selected flag representation is overridden on those versions. Review the initialization files before changing schema-wide conventions.
+
+The regular installation exposes the selected representation through subtype `pit_util.flag_type` and the values `pit_util.C_TRUE` and `pit_util.C_FALSE`. Use these in application declarations and comparisons instead of repeating a concrete datatype or hardcoding flag values. This keeps the representation in one place and makes migration to a database with native SQL Boolean support easier.
+
+In the current `core_23` interface, `pit_util.C_TRUE` and `pit_util.C_FALSE` return native `BOOLEAN` values, while declarations use `BOOLEAN` directly; that variant does not declare the `flag_type` subtype. When migrating application code to it, replace references to `pit_util.flag_type` with `BOOLEAN`. Comparisons using the PIT true and false values can retain those names.
 
 ## Install the owner
 
