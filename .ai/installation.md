@@ -133,3 +133,10 @@ The service prompt accepts the SQL*Plus connect identifier. Examples:
 
 If a TNS alias works in direct SQL*Plus, it should work through `pit.sh` after
 the shared runner fix.
+
+## ORA message group imports
+
+`core/messages/{AMERICAN,GERMAN}/MessageGroup_ORA.sql` and the corresponding
+`core_23` scripts merge the group and messages without deleting `ORA` first.
+Existing translations and messages added by clients or other components remain
+when core messages are reimported.

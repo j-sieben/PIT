@@ -1,5 +1,4 @@
 begin
-  pit_admin.delete_message_group('ORA', true);
   
   pit_admin.merge_message_group(
     p_pmg_name => 'ORA',
