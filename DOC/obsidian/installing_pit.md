@@ -29,6 +29,109 @@ The wrapper prompts for missing values and passwords. Options override environme
 
 The install sequence is [parameters](glossary/parameter.md), optional [context](glossary/context.md) support, core, then [output modules](glossary/output-module.md): console, table, APEX if available, and file. Mail is installed separately. Core installation includes schema migration, recompilation of invalid objects and final verification. Keep the installation logs and resolve reported errors before running application code.
 
+## Product version and source provenance
+
+`VERSION` at the repository root contains `1.3` (Major.Minor). Both core variants
+expose `pit.get_version()` as `Major.Minor.CommitCount` and
+`pit.get_git_commit()` as the full Git commit hash:
+
+```sql
+select pit.get_version(), pit.get_git_commit() from dual;
+```
+
+These functions replace the old numeric `PIT.version` constant (previously `1.2`,
+available only in the regular core). Callers must migrate from `PIT.version` to
+`PIT.get_version()` and handle a string containing three components.
+No version package or table is created.
+
+The owner installation starters (`PIT/pit.sh install` on Unix and
+`PIT\pit.bat install` on Windows, including their direct `install.sh`/`install.bat`
+wrappers) prepare the values automatically before opening a database connection.
+Windows uses the existing Windows PowerShell dependency; Unix uses Bash and Git.
+There is no additional build step. Other installation commands do not replace
+`PIT` and therefore do not change its recorded version.
+
+For a Git checkout, preparation requires a clean index and working tree,
+including no untracked, non-ignored files, and complete history. Commit any
+intentional settings changes before installation. Default logs under `PIT/logs`
+are ignored. Shallow and partial clones, replacement refs, grafts and missing
+Git objects are rejected. The helper resolves the full commit hash once, counts
+**all commits reachable from that hash**, including merged branches, using
+`git rev-list --count <hash>`, and uses that same hash for diff checks and export.
+Changing Major or Minor never resets the count. Prepared export metadata cannot
+override an existing Git checkout.
+
+Installation logs show the version and commit. SQL*Plus enables `&` substitution
+before loading the body, replacing `&PIT_VERSION.` and `&PIT_GIT_COMMIT.` directly
+in the two return statements. The stored database source contains fixed strings.
+At the end, the installer recompiles invalid schema objects, requires a valid
+`PIT` specification and body, and compares both functions through a SQL query
+against the supplied values. SQL errors return a failing process exit status.
+
+### Prepare an installation package without Git
+
+Create a new destination **outside** a clean, complete source checkout. From the
+repository root on Unix:
+
+```sh
+bash PIT/install_scripts/version.sh --export "/tmp/PIT release"
+```
+
+On Windows:
+
+```powershell
+powershell.exe -NoProfile -File PIT/install_scripts/version.ps1 -Mode Export -Destination "C:\releases\PIT release"
+```
+
+Both commands export the selected commit and add `.pit-version` at the export
+root, containing exactly two lines: product version and full commit hash. Package
+that whole directory, including this metadata file and `VERSION`. Use the normal
+installation starters from the exported directory. Bare `git archive` or a source
+download without prepared metadata is insufficient and installation fails.
+
+Metadata is trusted release data, not a cryptographic signature of the exported
+files; distribute the export through a trusted channel and preserve its contents.
+A Git checkout always validates Git and never falls back to metadata when dirty
+or incomplete. The export helpers do not modify tracked source files.
+
+### Reinstall an individual body from source
+
+Generate definitions from the same trusted checkout/export before connecting.
+From the repository root on Unix:
+
+```sh
+bash PIT/install_scripts/version.sh > /tmp/pit-version.sql
+```
+
+On Windows:
+
+```powershell
+$definitions = powershell.exe -NoProfile -File PIT/install_scripts/version.ps1 -Mode Sql
+if ($LASTEXITCODE -ne 0) { throw "Version preparation failed" }
+$definitions | Set-Content -Encoding ASCII "$env:TEMP\pit-version.sql"
+```
+
+Require a successful helper exit before continuing. In SQL*Plus or SQLcl, from
+the `PIT` directory, load that definitions file, validate the values, then load
+the body matching the installed core variant:
+
+```sql
+whenever oserror exit failure rollback
+whenever sqlerror exit failure rollback
+@/tmp/pit-version.sql
+@init/init_version.sql &PIT_VERSION. &PIT_GIT_COMMIT.
+@core/packages/pit.pkb
+-- For the native Boolean installation use @core_23/packages/pit.pkb instead.
+@tools/verify_version.sql
+```
+
+On Windows substitute the actual temporary file path and quote it when it contains
+spaces. Definitions must come from the helper; positional SQL arguments are not
+an untrusted-input interface. The same requirement applies when invoking the main
+SQL installer directly: `@install_scripts/install.sql AMERICAN <version> <hash>`.
+Use the starters to perform automatic provenance checks. Recompiling stored
+source with `alter package pit compile body` does not need these variables.
+
 ## Optional global context
 
 The context prerequisite check looks for access to `DBA_CONTEXT` and either an existing `PIT_CTX_<owner>` context or permission to create it. If the prerequisites are available, the context framework is installed. Otherwise PIT uses local context state.

@@ -1,5 +1,9 @@
+set define &
+set verify off
+define PIT_INSTALL_LANGUAGE=&1.
+@init/init_version.sql &2. &3.
 
-@init/init.sql &1.
+@init/init.sql &PIT_INSTALL_LANGUAGE.
 
 define install_script_dir=install_scripts/
 define tool_dir=tools/
@@ -46,6 +50,9 @@ prompt &h1.Installing PIT output modules
 
 prompt
 prompt &section.
+@tools/compile_invalid_objects.sql
+@tools/verify_version.sql
+
 prompt &h1.Finished PIT-Installation
 
 exit

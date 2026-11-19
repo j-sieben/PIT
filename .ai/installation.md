@@ -140,3 +140,25 @@ the shared runner fix.
 `core_23` scripts merge the group and messages without deleting `ORA` first.
 Existing translations and messages added by clients or other components remain
 when core messages are reimported.
+
+## Version Preparation and Verification
+
+Only the full owner installer replaces the selected versioned object, `PIT`.
+Before connecting, `install.sh` calls `version.sh`; `install.bat` calls
+`version.ps1`. The helpers reject dirty, shallow, partial or incomplete Git
+checkouts (including replacement refs/grafts), resolve one full commit hash and
+count all commits reachable from it. `VERSION` provides Major.Minor. Without
+`.git`, validated `.pit-version` export metadata and matching `VERSION` are
+required. A present Git checkout never falls back to prepared metadata.
+
+`install.sql` receives language, version and hash. It saves the language before
+`init/init_version.sql` captures the version and hash, because nested SQL*Plus
+scripts overwrite positional arguments. Named definitions survive nested calls.
+`init/init.sql` preserves failing SQL exit status. The PIT body enables `&`
+substitution explicitly. After all modules, the top-level installer recompiles
+invalid objects and runs `tools/verify_version.sql`, checking valid PIT spec/body
+and both values through SQL. Version and commit appear in the installation log.
+
+Direct body installs require helper-generated definitions and
+`init/init_version.sql`, followed by `tools/verify_version.sql`. Recompilation of
+stored source needs no definitions. See the handbook's installation chapter.

@@ -89,3 +89,13 @@ normal validation. Documented in `DOC/obsidian/collect_messages.md`; runtime unc
 The insert in `pit_table_pkg.log_exception` performs no truncation. Long
 diagnostics can exceed column capacity. `LOG_MESSAGE_STACK` separately stores
 the dynamic stack; no concatenation occurs in this module. See `DOC/obsidian/output_modules.md`.
+
+## Version Provenance Constraints
+
+Owner installation now requires clean, complete Git sources or a prepared export.
+The tracked `PIT/init/settings.sql` must be committed after customization.
+Untracked non-ignored files also block preparation; default `PIT/logs/` is ignored.
+Prepared `.pit-version` data identifies a trusted release but does not authenticate
+later modifications to an exported directory. Bare source archives lack it.
+The old numeric `PIT.version` constant was replaced by string-valued
+`PIT.get_version()` and `PIT.get_git_commit()` in both core variants.

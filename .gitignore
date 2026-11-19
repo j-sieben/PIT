@@ -1,3 +1,7 @@
 
 *.svn-base
 PIT/init/settings.sql
+
+# Generated installation logs must not make a clean checkout dirty.
+/PIT/logs/
+/tests/__pycache__/

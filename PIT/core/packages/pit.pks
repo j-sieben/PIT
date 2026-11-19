@@ -13,6 +13,29 @@ as
    */
 
   /**
+    Group: Product version
+   */
+  /**
+    Function: get_version
+      Returns the installed product version as Major.Minor.CommitCount.
+
+    Returns:
+      Version fixed at installation, with the total reachable Git commit count.
+   */
+  function get_version
+    return varchar2;
+
+  /**
+    Function: get_git_commit
+      Returns the full Git commit hash used for this installation.
+
+    Returns:
+      Full commit hash fixed at installation.
+   */
+  function get_git_commit
+    return varchar2;
+
+  /**
     Group: Public Constants
    */
   /**
@@ -57,7 +80,6 @@ as
       TYPE_TIMESTAMP - Constant for type checks
       TYPE_XML - Constant for type checks
   */
-  version constant number(3,1) := 1.2;
   format_icu constant pit_util.ora_name_type := 'FORMAT_ICU';
     
   function type_integer return varchar2 deterministic;  

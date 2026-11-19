@@ -5,7 +5,7 @@ set feedback off
 set lines 120
 set pages 9999
 
-whenever sqlerror exit
+whenever sqlerror exit failure rollback
 set termout off
 
 define section="********************************************************************************"
@@ -35,7 +35,7 @@ select value default_language, user pit_user
  where parameter = 'LANGUAGE'
    and value = upper('&1.')
    and value in ('GERMAN', 'AMERICAN');
-   
+
 set termout on
 begin
   if '&DEFAULT_LANGUAGE.' is null then
@@ -54,6 +54,6 @@ select lower(data_type) || '(' || data_length || case char_used when 'B' then ' 
   from all_tab_columns
  where table_name = 'USER_TABLES'
    and column_name = 'TABLE_NAME';
-   
+
 set termout on
 @init/settings.sql

@@ -61,3 +61,14 @@ The main installer then uses:
 - `core/install.sql` or `core_23/install.sql`
 
 The 23c variants account for native Boolean behavior.
+
+## Version and Release Files
+
+- `VERSION` - central Major.Minor product version
+- `PIT/install_scripts/version.sh`, `version.ps1` - provenance checks, SQL
+  definitions and Git-free release directory export
+- `.pit-version` - generated release-only two-line metadata at the export root;
+  never preferred over a Git checkout
+- `PIT/init/init_version.sql` - capture and validate version arguments
+- `PIT/tools/verify_version.sql` - final PIT validity and SQL-callability check
+- `tests/test_version.py` - isolated Git/export and mocked installer tests

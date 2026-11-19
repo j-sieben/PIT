@@ -1,6 +1,17 @@
 @echo off
+setlocal
 for %%I in ("%~dp0..") do set PIT_DIR=%%~fI
 pushd "%PIT_DIR%"
+if errorlevel 1 exit /b 1
+set "VersionFile=%TEMP%\pit-version-%RANDOM%-%RANDOM%.txt"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0version.ps1" -Mode Values > "%VersionFile%"
+if errorlevel 1 (
+  del "%VersionFile%"
+  goto error
+)
+for /f "usebackq tokens=1,2 delims==" %%a in ("%VersionFile%") do set "%%a=%%b"
+del "%VersionFile%"
+
 set /p InstallUser=Enter owner schema for PIT:
 
 set "PWD=powershell.exe -Command " ^
@@ -19,7 +30,8 @@ goto error
 
 set nls_lang=GERMAN_GERMANY.AL32UTF8
 
-sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage%
+sqlplus %InstallUser%/"%PWD%"@%SID%  @install_scripts/install.sql %DefaultLanguage% %PIT_VERSION% %PIT_GIT_COMMIT%
+if errorlevel 1 goto error
 
 :end
 popd

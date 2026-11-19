@@ -3,6 +3,11 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "${SCRIPT_DIR}/common.sh"
 
+# Validate provenance before log creation, prompts or any database connection.
+version_definitions="$("${SCRIPT_DIR}/version.sh")"
+PIT_VERSION="$(printf '%s\n' "$version_definitions" | sed -n 's/^define PIT_VERSION=//p')"
+PIT_GIT_COMMIT="$(printf '%s\n' "$version_definitions" | sed -n 's/^define PIT_GIT_COMMIT=//p')"
+
 pit_init
 
 OWNER="$(pit_require_value "${OWNER:-}" "${PIT_OWNER:-}" "Enter owner schema for PIT: ")"
@@ -21,4 +26,4 @@ esac
 LOG_FILE="$(pit_log_path "Install_PIT.log")"
 
 pit_prepare_log "${LOG_FILE}"
-pit_run_sqlplus "${OWNER}" "${OWNERPWD}" "${SERVICE}" "./install_scripts/install.sql" "${LOG_FILE}" "${DEFAULT_LANGUAGE}"
+pit_run_sqlplus "${OWNER}" "${OWNERPWD}" "${SERVICE}" "./install_scripts/install.sql" "${LOG_FILE}" "${DEFAULT_LANGUAGE}" "${PIT_VERSION}" "${PIT_GIT_COMMIT}"

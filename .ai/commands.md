@@ -82,3 +82,25 @@ python3 tools/check_documentation.py
 Natural Docs generates `DOC/api` from `PIT`; repository-specific SQL extension
 mappings are in `ND/Languages.txt`. `--fix-glossary` on the Python checker adds
 missing first-prose-mention links. Handbook structure and glossary live in `DOC/obsidian`.
+
+## Product Version and Release Export
+
+From the repository root:
+
+```bash
+bash PIT/install_scripts/version.sh                 # SQL*Plus definitions
+bash PIT/install_scripts/version.sh --export "/tmp/PIT release"
+python3 -m unittest discover -s tests -p 'test_version.py'
+```
+
+Windows equivalents:
+
+```powershell
+powershell.exe -NoProfile -File PIT/install_scripts/version.ps1 -Mode Sql
+powershell.exe -NoProfile -File PIT/install_scripts/version.ps1 -Mode Export -Destination "C:\releases\PIT release"
+```
+
+Exports require a new external destination and add `.pit-version` to the archived
+commit. Full owner install wrappers prepare metadata automatically; client,
+module and APEX installs do not replace the `PIT` body. The Windows dispatcher
+uses grouped command branches so dispatch and failure codes reach the caller.

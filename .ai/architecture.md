@@ -126,3 +126,12 @@ Features:
 
 PIT uses parameter group `PIT`; the parameter framework itself can also be reused
 outside PIT.
+
+## Product Version API
+
+Both `core/packages/pit.*` and `core_23/packages/pit.*` expose
+`get_version return varchar2` and `get_git_commit return varchar2`. They return
+installation-time literals substituted from `PIT_VERSION` and `PIT_GIT_COMMIT`
+in the body. Root `VERSION` owns Major.Minor (initially 1.3); the patch component
+is the total Git commit count reachable from the selected full commit hash.
+The old regular-core-only numeric `PIT.version` constant has been removed.

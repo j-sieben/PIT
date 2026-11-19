@@ -2,15 +2,42 @@
 set COMMAND=%~1
 
 if "%COMMAND%"=="" goto :usage
-if /I "%COMMAND%"=="install" call "%~dp0install_scripts\install.bat" & goto :eof
-if /I "%COMMAND%"=="install-client" call "%~dp0install_scripts\install_client.bat" & goto :eof
-if /I "%COMMAND%"=="install-apex" call "%~dp0install_scripts\install_apex.bat" & goto :eof
-if /I "%COMMAND%"=="install-module" call "%~dp0install_scripts\install_module.bat" & goto :eof
-if /I "%COMMAND%"=="install-module-client" call "%~dp0install_scripts\install_module_client.bat" & goto :eof
-if /I "%COMMAND%"=="uninstall" call "%~dp0install_scripts\uninstall.bat" & goto :eof
-if /I "%COMMAND%"=="uninstall-client" call "%~dp0install_scripts\uninstall_client.bat" & goto :eof
-if /I "%COMMAND%"=="uninstall-module" call "%~dp0install_scripts\uninstall_module.bat" & goto :eof
-if /I "%COMMAND%"=="uninstall-module-client" call "%~dp0install_scripts\uninstall_module_client.bat" & goto :eof
+if /I "%COMMAND%"=="install" (
+  call "%~dp0install_scripts\install.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="install-client" (
+  call "%~dp0install_scripts\install_client.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="install-apex" (
+  call "%~dp0install_scripts\install_apex.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="install-module" (
+  call "%~dp0install_scripts\install_module.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="install-module-client" (
+  call "%~dp0install_scripts\install_module_client.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="uninstall" (
+  call "%~dp0install_scripts\uninstall.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="uninstall-client" (
+  call "%~dp0install_scripts\uninstall_client.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="uninstall-module" (
+  call "%~dp0install_scripts\uninstall_module.bat"
+  exit /b
+)
+if /I "%COMMAND%"=="uninstall-module-client" (
+  call "%~dp0install_scripts\uninstall_module_client.bat"
+  exit /b
+)
 if /I "%COMMAND%"=="help" goto :usage
 if /I "%COMMAND%"=="-h" goto :usage
 if /I "%COMMAND%"=="--help" goto :usage

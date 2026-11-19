@@ -13,6 +13,29 @@ as
    */
 
   /**
+    Group: Product version
+   */
+  /**
+    Function: get_version
+      Returns the installed product version as Major.Minor.CommitCount.
+
+    Returns:
+      Version fixed at installation, with the total reachable Git commit count.
+   */
+  function get_version
+    return varchar2;
+
+  /**
+    Function: get_git_commit
+      Returns the full Git commit hash used for this installation.
+
+    Returns:
+      Full commit hash fixed at installation.
+   */
+  function get_git_commit
+    return varchar2;
+
+  /**
     Group: Public Constants
    */
   /**

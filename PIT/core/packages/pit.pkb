@@ -1,3 +1,4 @@
+set define &
 create or replace package body pit
 as
 
@@ -11,6 +12,22 @@ as
   
   
   /******************************* INTERFACE ************************************/
+  function get_version
+    return varchar2
+  as
+  begin
+    return '&PIT_VERSION.';
+  end get_version;
+
+
+  function get_git_commit
+    return varchar2
+  as
+  begin
+    return '&PIT_GIT_COMMIT.';
+  end get_git_commit;
+
+
   procedure initialize
   as
   begin
