@@ -18,3 +18,4 @@ prompt &h3.Revoke rights and drop synonyms
 @tools/revoke_access.sql select PIT_LOG
 
 @tools/revoke_access.sql read PIT_TRANSLATABLE_ITEM_TV
+@tools/revoke_access.sql read PIT_EFFECTIVE_LANGUAGE_V

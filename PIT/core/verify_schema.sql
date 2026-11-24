@@ -59,6 +59,15 @@ declare
 begin
   select count(*) into l_count
     from user_objects
+   where object_name = 'PIT_EFFECTIVE_LANGUAGE_V'
+     and object_type = 'VIEW'
+     and status = 'VALID';
+  if l_count = 0 then
+    add_error('Missing or invalid CORE view: PIT_EFFECTIVE_LANGUAGE_V');
+  end if;
+
+  select count(*) into l_count
+    from user_objects
    where object_name = 'PIT_TRANSLATABLE_ITEM_TV'
      and object_type = 'VIEW'
      and status = 'VALID';

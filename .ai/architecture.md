@@ -138,6 +138,10 @@ The old regular-core-only numeric `PIT.version` constant has been removed.
 
 ## Technical Views
 
+- `core/views/pit_effective_language_v.vw` and the identical `core_23` view
+  expose `PML_EFFECTIVE_NAME` from `PIT_MESSAGE_LANGUAGE` for the session
+  language extracted from `SYS_CONTEXT('USERENV', 'LANGUAGE')`.
+
 - `core/views/pit_translatable_item_tv.vw` and the identical `core_23` view
   expose published translatable items from `PIT_TRANSLATABLE_ITEM_MV` for all
   effective runtime languages, including `PTI_PML_NAME`. Unlike

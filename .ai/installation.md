@@ -172,3 +172,12 @@ grant `READ WITH GRANT OPTION`, and registration creates a client synonym.
 Client removal revokes `READ` and drops the synonym; full CORE uninstall drops
 the view. Existing clients receive access by rerunning `install-client` after
 the owner installation.
+
+## Effective Language View Client Access
+
+Both CORE installers create `PIT_EFFECTIVE_LANGUAGE_V` after the effective
+language column is ensured. Shared schema verification requires a valid view.
+Both client grant scripts grant `READ WITH GRANT OPTION`; registration creates
+a synonym. Client removal revokes `READ` and drops the synonym, and the existing
+full CORE cleanup drops the view. Existing clients receive access by rerunning
+`install-client` after the owner installation.
