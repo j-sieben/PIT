@@ -59,6 +59,7 @@ prompt &h2.Create views
 @&tools.install_view pit_message_group_v
 @&tools.install_view pit_message_language_v
 @&tools.install_view pit_translatable_item_v
+@&tools.install_view pit_translatable_item_tv
 @&tools.install_view pit_message_v
 @&tools.install_view pit_message_severity_v
 @&tools.install_view pit_trace_level_v

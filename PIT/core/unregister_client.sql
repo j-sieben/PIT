@@ -22,3 +22,4 @@ prompt &h3.Drop Tables and Views
 @&tool_dir.drop_object.sql pit_message_v
 @&tool_dir.drop_object.sql pit_message_language_v
 @&tool_dir.drop_object.sql pit_translatable_item_v
+@&tool_dir.drop_object.sql pit_translatable_item_tv

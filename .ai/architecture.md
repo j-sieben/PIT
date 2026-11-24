@@ -135,3 +135,11 @@ installation-time literals substituted from `PIT_VERSION` and `PIT_GIT_COMMIT`
 in the body. Root `VERSION` owns Major.Minor (initially 1.3); the patch component
 is the total Git commit count reachable from the selected full commit hash.
 The old regular-core-only numeric `PIT.version` constant has been removed.
+
+## Technical Views
+
+- `core/views/pit_translatable_item_tv.vw` and the identical `core_23` view
+  expose published translatable items from `PIT_TRANSLATABLE_ITEM_MV` for all
+  effective runtime languages, including `PTI_PML_NAME`. Unlike
+  `PIT_TRANSLATABLE_ITEM_V`, the technical view does not filter by session language.
+- Definition verified against `B3M_UTILS Rack` on 2026-11-24.

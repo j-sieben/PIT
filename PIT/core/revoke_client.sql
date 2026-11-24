@@ -16,3 +16,5 @@ prompt &h3.Revoke rights and drop synonyms
 -- Tables and Views
 @tools/revoke_access.sql select PIT_CALL_STACK
 @tools/revoke_access.sql select PIT_LOG
+
+@tools/revoke_access.sql read PIT_TRANSLATABLE_ITEM_TV

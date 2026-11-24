@@ -29,3 +29,4 @@ prompt &h3.Views
 @tools/grant_access_with_grant.sql read pit_message_group_v
 @tools/grant_access_with_grant.sql read pit_message_v
 @tools/grant_access_with_grant.sql read pit_translatable_item_v
+@tools/grant_access_with_grant.sql read pit_translatable_item_tv

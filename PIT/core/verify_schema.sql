@@ -57,6 +57,15 @@ declare
   end require_constraint;
 
 begin
+  select count(*) into l_count
+    from user_objects
+   where object_name = 'PIT_TRANSLATABLE_ITEM_TV'
+     and object_type = 'VIEW'
+     and status = 'VALID';
+  if l_count = 0 then
+    add_error('Missing or invalid CORE view: PIT_TRANSLATABLE_ITEM_TV');
+  end if;
+
   require_column('PIT_MESSAGE', 'PMS_NAME');
   require_column('PIT_MESSAGE_TEXT', 'PMT_PMS_NAME');
   require_column('PIT_MESSAGE_TEXT', 'PMT_PML_NAME');

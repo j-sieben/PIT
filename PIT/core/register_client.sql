@@ -25,3 +25,4 @@ prompt &h3.Create synonyms
 @&tool_dir.create_synonym.sql pit_message_v
 @&tool_dir.create_synonym.sql pit_message_language_v
 @&tool_dir.create_synonym.sql pit_translatable_item_v
+@&tool_dir.create_synonym.sql pit_translatable_item_tv

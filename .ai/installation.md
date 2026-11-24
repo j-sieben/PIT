@@ -162,3 +162,13 @@ and both values through SQL. Version and commit appear in the installation log.
 Direct body installs require helper-generated definitions and
 `init/init_version.sql`, followed by `tools/verify_version.sql`. Recompilation of
 stored source needs no definitions. See the handbook's installation chapter.
+
+## Technical View Client Access
+
+Both CORE installers create `PIT_TRANSLATABLE_ITEM_TV` after its materialized
+source. `verify_schema.sql` requires the view to exist and be valid (CORE_23
+delegates to the regular CORE verification script). Both client grant scripts
+grant `READ WITH GRANT OPTION`, and registration creates a client synonym.
+Client removal revokes `READ` and drops the synonym; full CORE uninstall drops
+the view. Existing clients receive access by rerunning `install-client` after
+the owner installation.
