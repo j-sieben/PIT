@@ -155,7 +155,10 @@ required. A present Git checkout never falls back to prepared metadata.
 `init/init_version.sql` captures the version and hash, because nested SQL*Plus
 scripts overwrite positional arguments. Named definitions survive nested calls.
 `init/init.sql` preserves failing SQL exit status. The PIT body enables `&`
-substitution explicitly. After all modules, the top-level installer recompiles
+substitution explicitly with `set define on`. Use this form when restoring the
+default substitution character, including generated PARAM_ADMIN exports;
+SQL*Plus 23.3 rejects the bare `set define &` form with SP2-0317. After all
+modules, the top-level installer recompiles
 invalid objects and runs `tools/verify_version.sql`, checking valid PIT spec/body
 and both values through SQL. Version and commit appear in the installation log.
 
@@ -181,3 +184,27 @@ Both client grant scripts grant `READ WITH GRANT OPTION`; registration creates
 a synonym. Client removal revokes `READ` and drops the synonym, and the existing
 full CORE cleanup drops the view. Existing clients receive access by rerunning
 `install-client` after the owner installation.
+
+## Legacy Message Migration SQL
+
+`core/scripts/merge_languages.sql` inserts a missing default language before
+the bulk MERGE, explicitly referencing itself through PML_EFFECTIVE_NAME. This
+ensures the self-referencing foreign key has a parent before other rows use the
+column default. Existing rows and effective-language mappings are preserved.
+For legacy tables without PML_EFFECTIVE_NAME, the seed uses the old columns;
+the existing subsequent column migration installs the effective-language field.
+CORE_23 delegates its language import to this shared script.
+
+`core/tables/prepare_pit_message_migration.sql` captures texts before cleanup;
+CORE_23 delegates its prepare/finish stages to CORE. The older
+`change_pit_message.sql` files still contain separate migration implementations
+in both variants. All three CTAS implementations infer SOURCE/TRANSLATED for
+legacy rows without PMS_PMT_NAME using a SQL literal: embedded apostrophes are
+doubled with REPLACE before DBMS_ASSERT.ENQUOTE_LITERAL. CTAS cannot accept
+binds; the subsequent DELETE still uses a language bind. The legacy-layout
+dictionary guards skip capture on fresh/current schemas and repeated installs.
+
+`tests/test_installer_sql.py` checks CTAS construction, DML binds, literal/text
+round trips (SQLite, not Oracle), CORE_23 stage delegation, and DEFINE commands.
+Set SQLPLUS to a SQL*Plus binary to enable its database-free /nolog smoke test.
+Oracle installation/upgrade validation requires a separate disposable schema.

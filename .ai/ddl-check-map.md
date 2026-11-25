@@ -193,6 +193,15 @@ Implemented CORE stages:
 
 ## Oracle 23c Strategy
 
+`core/tables/pit_message.tbl` and `core_23/tables/pit_message.tbl` create
+`PMS_CUSTOM_ERROR_U` as a separate function-based unique index, not an inline
+UNIQUE constraint. Its CASE expression maps NULL and -20000 to NULL, permitting
+repeated values; all other error numbers must be unique. Both current installers
+use `check_has_table` to skip the creation script for an existing table, then
+`ensure_pit_message_keys.sql` checks USER_INDEXES before creating a missing index
+(CORE_23 delegates to CORE). The older `change_pit_message.sql` scripts use the
+same index expression but are not included by these installers.
+
 The `core_23` table definitions already use `CREATE TABLE IF NOT EXISTS`, and
 some indexes use `CREATE INDEX IF NOT EXISTS`. Oracle 23c also supports
 `IF EXISTS` on supported `ALTER` and `DROP` DDL statements. Prefer these native

@@ -1,5 +1,5 @@
 -- Capture arguments before nested SQL*Plus scripts overwrite positional values.
-set define &
+set define on
 set verify off
 whenever oserror exit failure rollback
 whenever sqlerror exit failure rollback

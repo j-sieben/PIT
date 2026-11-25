@@ -53,10 +53,11 @@ begin
                pms_text pmt_text,
                pms_description pmt_description,
                case pms_pml_name
-                 when :default_language then 'SOURCE'
+                 when ]' || dbms_assert.enquote_literal(
+                   replace(l_default_language, '''', '''''')) || q'[ then 'SOURCE'
                  else 'TRANSLATED'
                end pmt_pmst_name
-          from pit_message]' using l_default_language;
+          from pit_message]';
     else
       raise_application_error(-20000,
         'Legacy PIT_MESSAGE layout contains PMS_PML_NAME but no PMS_TEXT column.');

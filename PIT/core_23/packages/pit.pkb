@@ -1,4 +1,4 @@
-set define &
+set define on
 create or replace package body pit
 as
 

@@ -13,7 +13,7 @@ create table pit_message_severity(
   pse_id number,
   pse_name varchar2(50 byte),
   pse_pti_id varchar2(50 char),
-  pse_pti_pmg_id varchar2(50 byte) default on null 'PIT' constraint pse_pti_pmg_id_chk check (pse_pti_pmg_id_chk = 'PIT'),
+  pse_pti_pmg_id varchar2(50 byte) default on null 'PIT' constraint pse_pti_pmg_id_chk check (pse_pti_pmg_id = 'PIT'),
   pse_requires_exception varchar2(10 byte) default on null 'NONE' constraint pse_requires_exception_chk check(pse_requires_exception in ('NONE', 'OPTIONAL', 'MANDATORY')),
   constraint pit_message_severity_pk primary key (pse_id),
   constraint fk_pse_pti_id foreign key(pse_pti_id, pse_pti_pmg_id)

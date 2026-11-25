@@ -101,4 +101,4 @@ begin
   commit;
 end;
 /
-set define &
+set define on

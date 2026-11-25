@@ -881,7 +881,7 @@ begin
   
   param_admin.set_import_mode(false);
   commit;
-end;~' || chr(10) || '/' || chr(10) || 'set define &' || chr(10);
+end;~' || chr(10) || '/' || chr(10) || 'set define on' || chr(10);
 
   begin
     dbms_lob.createtemporary(l_script, false, dbms_lob.call);

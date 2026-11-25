@@ -1,4 +1,4 @@
-set define &
+set define on
 prompt Verifying PIT version &PIT_VERSION. Git commit &PIT_GIT_COMMIT.
 declare
   l_valid pls_integer;

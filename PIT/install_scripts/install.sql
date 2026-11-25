@@ -1,4 +1,4 @@
-set define &
+set define on
 set verify off
 define PIT_INSTALL_LANGUAGE=&1.
 @init/init_version.sql &2. &3.
