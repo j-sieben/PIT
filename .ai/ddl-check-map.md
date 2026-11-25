@@ -248,3 +248,16 @@ Update this file when a reusable check is added or removed, when the conditional
 execution contract changes, or when table migrations move to another location.
 Detailed one-off findings belong in a task report unless they establish a stable
 project convention.
+
+## Identifier Lengths
+
+`tools/ensure_identifier_length.sql <table> <column>` converges a stored VARCHAR2
+identifier to `VARCHAR2(128 BYTE)`, checking both DATA_LENGTH and CHAR_USED before
+issuing DDL. Missing columns, incompatible data, and unexpected DDL failures stop
+the installer. No data is truncated. Virtual columns are not modified directly.
+
+CORE, PARAMETERS, PIT_TABLE, and PIT_MAIL own explicit column lists in
+`tables/ensure_identifier_lengths.sql`. CORE_23 and PARAMETERS_23 delegate to the
+shared lists. Each installer runs its list after its current tables/columns exist
+and before dependent views/packages are recreated. This upgrades existing tables
+that `check_has_table` otherwise leaves unchanged.

@@ -17,7 +17,7 @@ as
   /**
     Types: PL/SQL subtypes
       c_max_length - Maximum length of strings
-      ora_name_type - Name of an Oracle object. 30 byte up to version 11, 128 byte afterwards
+      ora_name_type - Name of an Oracle object. 128 byte
       boolean - Boolean flag. Type is defined upon installation of PIT. Must be "SQL savvy"
       max_char - 32 KByte Varchar2
       max_sql_char - Maximium SQL VARCHAR2 legnth. As extended char length is stored as a length delimited CLOB,
@@ -176,7 +176,7 @@ as
       Method retrieves the maximum length of a message for a given message group.
       
       The length is calculated by the maximum length of an Oracle name minus the
-      length of the actual error prefix of that message group.
+      byte length of the error prefix and postfix (including underscores) of that message group.
       
     Parameter: 
       p_pmg_name - Name of the message group to get the maximum length for.

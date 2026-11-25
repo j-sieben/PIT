@@ -43,12 +43,8 @@ define C_FALSE="'N'";
 --define C_TRUE=1;
 --define C_FALSE=0;
    
-col ora_name_type new_val ORA_NAME_TYPE format a30
-col ora_max_length new_val ORA_MAX_LENGTH format a30
-select 'varchar2(' || data_length || ' byte)' ora_name_type, data_length ora_max_length
-  from all_tab_columns
- where table_name = 'USER_TABLES'
-   and column_name = 'TABLE_NAME';
+define ORA_NAME_TYPE="varchar2(128 byte)"
+define ORA_MAX_LENGTH=128
 
 define INSTALL_ON_DEV = false
 

@@ -208,3 +208,11 @@ dictionary guards skip capture on fresh/current schemas and repeated installs.
 round trips (SQLite, not Oracle), CORE_23 stage delegation, and DEFINE commands.
 Set SQLPLUS to a SQL*Plus binary to enable its database-free /nolog smoke test.
 Oracle installation/upgrade validation requires a separate disposable schema.
+
+## 128-byte identifiers
+
+The owner/client/APEX/module initialization scripts define ORA_NAME_TYPE as
+`varchar2(128 byte)` and ORA_MAX_LENGTH as 128. CORE and PARAMETERS (including
+23c), PIT_TABLE, and PIT_MAIL run `tables/ensure_identifier_lengths.sql` before
+recreating their dependent program units. The shared helper and column-list
+ownership are documented in `ddl-check-map.md`.

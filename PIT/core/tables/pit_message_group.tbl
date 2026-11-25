@@ -9,7 +9,7 @@
     pmg_error_postfix - Optional postfix for exception names derived from the message name.
 */
 create table pit_message_group(
-  pmg_name varchar2(50 byte),
+  pmg_name &ORA_NAME_TYPE.,
   pmg_description varchar2(200 char),
   pmg_error_prefix varchar2(6 byte) default '&EXCEPTION_PREFIX.',
   pmg_error_postfix varchar2(6 byte) default '&EXCEPTION_POSTFIX.',

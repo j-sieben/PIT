@@ -152,26 +152,11 @@ as
   as
     l_predefined_error pit_util.predefined_error_rec;
     l_message pit_util.max_sql_char;
-    l_message_length binary_integer;
-    l_max_length binary_integer;
-    C_MSG_TOO_LONG constant pit_util.max_sql_char :=
-      q'~Message "#MESSAGE#" must not exceed #MAX_LENGTH# chars but is #LENGTH#.~';
     C_ERROR_MUST_BE_NEGATIVE constant pit_util.small_char :=
       q'~Predefined error numbers must be negative.~';
     C_PREDEFINED_ERROR constant pit_util.small_char :=
       q'~Error number #ERROR# is a predefined Oracle error named #NAME# in #OWNER#.#PKG#. Please don't overwrite Oracle predefined errors.~';
   begin
-
-    l_message_length := length(p_row.pms_name);
-    l_max_length := pit_util.get_max_message_length(p_row.pms_pmg_name);
-
-    if l_message_length > l_max_length then
-      l_message := pit_util.bulk_replace(C_MSG_TOO_LONG, char_table(
-                     '#MESSAGE#', p_row.pms_name,
-                     '#MAX_LENGTH#', l_max_length,
-                     '#LENGTH#', l_message_length));
-       raise_application_error(-20000, l_message);
-    end if;
 
     if p_row.pms_error >= 0 then
        raise_application_error(-20000, C_ERROR_MUST_BE_NEGATIVE);
@@ -1036,7 +1021,26 @@ end ]' || C_PACKAGE_NAME || ';';
   procedure validate_message(
     p_row in out nocopy pit_message_access_v%rowtype)
   as
+    l_message pit_util.max_sql_char;
+    l_message_length binary_integer;
+    l_max_length binary_integer;
+    C_MSG_TOO_LONG constant pit_util.max_sql_char :=
+      q'~Message "#MESSAGE#" must not exceed #MAX_LENGTH# bytes but is #LENGTH#.~';
   begin
+    l_message_length := lengthb(p_row.pms_name);
+    l_max_length := pit_util.c_max_length;
+    if p_row.pms_error is not null then
+      -- The generated exception identifier includes the group's affixes.
+      l_max_length := pit_util.get_max_message_length(p_row.pms_pmg_name);
+    end if;
+
+    if l_message_length > l_max_length then
+      l_message := pit_util.bulk_replace(C_MSG_TOO_LONG, char_table(
+                     '#MESSAGE#', p_row.pms_name,
+                     '#MAX_LENGTH#', l_max_length,
+                     '#LENGTH#', l_message_length));
+       raise_application_error(-20000, l_message);
+    end if;
 
     case
     when p_row.pms_error is not null

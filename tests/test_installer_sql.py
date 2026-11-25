@@ -179,7 +179,7 @@ class TableDefinitionTests(unittest.TestCase):
                 definition = ' '.join(column[1].lower().split())
                 if path.parent.parent.name == 'core':
                     self.assertEqual(definition,
-                                     "varchar2(50 byte) default on null 'pit' "
+                                     "&ora_name_type. default on null 'pit' "
                                      "constraint pse_pti_pmg_id_chk check (pse_pti_pmg_id = 'pit')")
                     expression = re.search(r'check\s*\((.*?)\)', column[1], re.I)[1]
                     # Execute the actual CHECK expression, without translating
@@ -191,7 +191,7 @@ class TableDefinitionTests(unittest.TestCase):
                         with self.assertRaises(sqlite3.IntegrityError):
                             db.execute("insert into severity values ('OTHER')")
                 else:
-                    self.assertEqual(definition, "varchar2(50 char) default on null 'pit'")
+                    self.assertEqual(definition, "&ora_name_type. default on null 'pit'")
 
 
 class DefineTests(unittest.TestCase):

@@ -24,6 +24,7 @@ prompt &h2.Merge initial data
 @&tools.run_script merge_languages
 @&tools.check_has_column pit_message_language pml_effective_name
 @&tools.check_has_constraint pit_message_language pml_effective_name_fk tools/null.sql &table_dir.add_pml_effective_name_fk.sql
+@&table_dir.ensure_identifier_lengths.sql
 
 prompt &h2.Create access views
 @&tools.install_view pit_message_access_v

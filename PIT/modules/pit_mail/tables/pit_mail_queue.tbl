@@ -1,6 +1,6 @@
 create table pit_mail_queue(
   pmq_id number, 
-	pmq_pms_id varchar2(50 byte), 
+	pmq_pms_id &ORA_NAME_TYPE.,
 	pmq_pse_id number, 
 	pmq_message_text clob, 
 	pmq_log_date date default sysdate, 

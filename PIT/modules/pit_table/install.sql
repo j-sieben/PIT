@@ -6,6 +6,7 @@ prompt &s1.Create tables
 @&tools.check_has_table pit_table_log
 @&tools.check_has_table pit_table_call_stack
 @&tools.check_has_table pit_table_params
+@&table_dir.ensure_identifier_lengths.sql
 
 prompt &s1.Create types and packages
 @&tools.install_type_spec pit_table

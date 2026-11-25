@@ -1,5 +1,5 @@
 alter table pit_message_language add
-  pml_effective_name varchar2(50 byte) default on null '&DEFAULT_LANGUAGE.';
+  pml_effective_name &ORA_NAME_TYPE. default on null '&DEFAULT_LANGUAGE.';
 
 declare
   l_has_message_text number;

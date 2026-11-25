@@ -14,8 +14,8 @@
 */
 create table pit_translatable_item(
    pti_id &ORA_NAME_TYPE.,
-   pti_pml_name varchar2(50 byte),
-   pti_pmg_name varchar2(50 byte),
+   pti_pml_name &ORA_NAME_TYPE.,
+   pti_pmg_name &ORA_NAME_TYPE.,
    pti_name varchar2(200 char),
    pti_display_name varchar2(200 char),
    pti_description clob,

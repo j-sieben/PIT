@@ -8,10 +8,10 @@
     pml_default_order - Sorting column to select message in respective language. Highest number wins. Default-language := 10, 0=language not supported.
 */
 create table pit_message_language(
-   pml_name varchar2(50 byte),
+   pml_name &ORA_NAME_TYPE.,
    pml_display_name varchar2(50 char),
    pml_default_order number(3,0),
-   pml_effective_name varchar2(50 byte) default on null '&DEFAULT_LANGUAGE.',
+   pml_effective_name &ORA_NAME_TYPE. default on null '&DEFAULT_LANGUAGE.',
    constraint pit_message_language_pk primary key(pml_name)
 ) organization index ;
 

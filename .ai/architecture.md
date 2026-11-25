@@ -147,3 +147,12 @@ The old regular-core-only numeric `PIT.version` constant has been removed.
   effective runtime languages, including `PTI_PML_NAME`. Unlike
   `PIT_TRANSLATABLE_ITEM_V`, the technical view does not filter by session language.
 - Definition verified against `B3M_UTILS Rack` on 2026-11-24.
+
+## Identifier contract
+
+PIT names and identifiers (including message/parameter groups and foreign-key
+references) use 128 BYTE storage via ORA_NAME_TYPE in all installation modes.
+Both PIT_ADMIN variants validate message names in bytes. Names for generated
+exceptions reserve byte space for the group's prefix/postfix and underscores;
+messages without exceptions can use all 128 bytes. PIT_UTIL computes this budget
+from C_MAX_LENGTH and LENGTHB rather than database dictionary display widths.

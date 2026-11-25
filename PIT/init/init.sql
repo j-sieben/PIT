@@ -46,14 +46,9 @@ end;
 
 set termout off
 
--- Define length of ORA_NAME_TYPE according to oracle version
-col ora_name_type new_val ORA_NAME_TYPE format a128
-col ora_max_length new_val ORA_MAX_LENGTH format a128
-
-select lower(data_type) || '(' || data_length || case char_used when 'B' then ' byte)' else ' char)' end ora_name_type, data_length ora_max_length
-  from all_tab_columns
- where table_name = 'USER_TABLES'
-   and column_name = 'TABLE_NAME';
+-- PIT identifiers use an explicit byte limit, independent of NLS length semantics.
+define ORA_NAME_TYPE="varchar2(128 byte)"
+define ORA_MAX_LENGTH=128
 
 set termout on
 @init/settings.sql

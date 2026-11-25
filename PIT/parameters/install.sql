@@ -7,6 +7,7 @@ prompt &h2.Create parameter tables
 @&tools.check_has_table parameter_type
 @&tools.check_has_table parameter_tab
 @&tools.check_has_table parameter_local
+@&table_dir.ensure_identifier_lengths.sql
 
 prompt &h2.Create parameter view
 @&tools.install_view parameter_core_v

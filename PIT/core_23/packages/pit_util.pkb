@@ -98,17 +98,11 @@ as
   procedure initialize_pmg_max_length
   as
     cursor pmg_length_cur is
-      with ora_name_length as (
-             select data_length
-               from all_tab_columns
-              where table_name = 'USER_TABLES'
-                and column_name = 'TABLE_NAME')
-      select pmg_name, 
-             data_length - 
-             (case when pmg_error_prefix is not null then length(pmg_error_prefix) + 1 else 0 end + 
-             case when pmg_error_postfix is not null then length(pmg_error_postfix) + 1 else 0 end) allowed_length
-        from pit_message_group
-       cross join ora_name_length;
+      select pmg_name,
+             c_max_length -
+             (case when pmg_error_prefix is not null then lengthb(pmg_error_prefix) + 1 else 0 end +
+             case when pmg_error_postfix is not null then lengthb(pmg_error_postfix) + 1 else 0 end) allowed_length
+        from pit_message_group;
   begin
     g_pmg_allowed_length.delete;
     for pmg in pmg_length_cur loop
@@ -490,7 +484,7 @@ as
     l_name max_sql_char;
   begin
     if p_max_length is not null then
-      if length(p_name) > p_max_length then
+      if lengthb(p_name) > p_max_length then
         raise_application_error(-20000, replace(C_MAX_LENGTH, '#MAX_LENGTH#', p_max_length));
       end if;
     end if;
@@ -525,7 +519,7 @@ as
     C_SETTING_REGEX constant varchar2(200) := '^(((10|20|30|40|50|60|70)\|(10|20|30|40|50)\|(' || true || '|' || false || ')\|[A-Z_]+(\:[A-Z_]+)*)|(10\|10\|' || false || '\|))$';
   begin
     -- context name must not be longer than 10 byte under C_MAX_LENGTH
-    if length(p_context_name) > C_MAX_LENGTH - 10 then 
+    if lengthb(p_context_name) > C_MAX_LENGTH - 10 then
       raise_application_error(-20000, replace(C_NAME_TOO_LONG, '#MAX_LENGTH#', C_MAX_LENGTH - 10));
     end if;
     -- check context pattern

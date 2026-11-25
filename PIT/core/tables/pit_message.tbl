@@ -10,8 +10,8 @@
     pms_active_error - Effective error number processed by PIT_ADMIN.CREATE_MESSAGE_PACKAGE. Remains null if no custom error is configured.
 */
 create table pit_message(
-  pms_name varchar2(50 byte),
-  pms_pmg_name varchar2(50 byte),
+  pms_name &ORA_NAME_TYPE.,
+  pms_pmg_name &ORA_NAME_TYPE.,
   pms_pse_id number(3,0),
   pms_custom_error number,
   pms_active_error number,
